@@ -1115,14 +1115,56 @@ const setLocal = d => localStorage.setItem(LOCAL_KEY, JSON.stringify(d));
 const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; return d; };
 const saveLocalData = (uid,d) => { const l=getLocal(); l[uid]=d; setLocal(l); };
 
-// Use local data as primary (Supabase for auth + plan sync)
+// Save to both local and Supabase
 const getUserData = uid => { cData = getLocalData(uid); return cData; };
-const saveUserData = (uid,d) => { cData=d; saveLocalData(uid,d); syncPlanToSupabase(uid,d.plan); };
+const saveUserData = (uid,d) => {
+  cData=d;
+  saveLocalData(uid,d);
+  syncToSupabase(uid,d);
+};
+
+async function syncToSupabase(uid, d) {
+  try {
+    // Save all user data to Supabase user_data table
+    const dataToSync = {
+      properties: d.properties||[],
+      bookings: d.bookings||[],
+      messages: d.messages||[],
+      tasks: d.tasks||[],
+      reviews: d.reviews||[],
+      icals: d.icals||[],
+      staff: d.staff||[],
+      plan: d.plan||'free',
+      darkMode: d.darkMode||false,
+      onboarded: d.onboarded||false,
+      reviewAuto: d.reviewAuto||{enabled:true},
+      gsDismissed: d.gsDismissed||false,
+      websiteBuilt: d.websiteBuilt||false,
+      trialStarted: d.trialStarted||null
+    };
+    await sb.from('user_data').upsert({
+      user_id: uid,
+      data_type: 'main',
+      data: dataToSync,
+      updated_at: new Date().toISOString()
+    }, {onConflict:'user_id,data_type'});
+    // Also sync plan to profiles
+    await sb.from('profiles').upsert({id:uid, plan:d.plan, updated_at:new Date().toISOString()}, {onConflict:'id'});
+  } catch(e) { /* silent fail — local is backup */ }
+}
+
+async function loadFromSupabase(uid) {
+  try {
+    const {data, error} = await sb.from('user_data').select('data').eq('user_id', uid).eq('data_type','main').single();
+    if(error || !data) return null;
+    return data.data;
+  } catch(e) { return null; }
+}
 
 async function syncPlanToSupabase(uid, plan) {
   try {
     await sb.from('profiles').upsert({id:uid, plan, updated_at: new Date().toISOString()}, {onConflict:'id'});
-  } catch(e) { /* silent fail — local data is source of truth */ }
+  } catch(e) {}
 }
 
 // ════════════════════════════════════════════
@@ -1171,13 +1213,21 @@ async function doLogin() {
     const user = data.user;
     cUid = user.id;
     cUser = {email:user.email, name:user.user_metadata?.full_name||email.split('@')[0]};
+    // Load cloud data first
+    const cloudData = await loadFromSupabase(cUid);
+    if(cloudData) {
+      const localData = getLocalData(cUid);
+      const merged = {...cloudData};
+      if(localData.apiKey && !cloudData.apiKey) merged.apiKey = localData.apiKey;
+      saveLocalData(cUid, merged);
+    }
     getUserData(cUid);
-    applyDark(cData.darkMode||false);
-    // Fetch plan from Supabase
+    // Sync plan
     try {
       const {data:profile} = await sb.from('profiles').select('plan,full_name').eq('id',cUid).single();
       if(profile){cData.plan=profile.plan||cData.plan;if(profile.full_name)cUser.name=profile.full_name;saveLocalData(cUid,cData);}
     } catch(e){}
+    applyDark(cData.darkMode||false);
     ['landing','login','signup','onboard'].forEach(n=>{const el=document.getElementById('screen-'+n);if(el)el.style.display='none';});
     launchApp(cUser);
   } catch(e) {
@@ -1284,15 +1334,22 @@ function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg
 //  BOOT — check existing session
 // ════════════════════════════════════════════
 async function bootApp() {
-  // Show loading state
   document.getElementById('screen-login').style.display='flex';
-  // Check if already logged in
   const {data:{session}} = await sb.auth.getSession();
   if(session?.user) {
     cUid = session.user.id;
     cUser = {email:session.user.email, name:session.user.user_metadata?.full_name||session.user.email.split('@')[0]};
+    // Load from Supabase first, fall back to local
+    const cloudData = await loadFromSupabase(cUid);
+    if(cloudData) {
+      // Merge cloud data into local (cloud wins for data, preserve local apiKey if set)
+      const localData = getLocalData(cUid);
+      const merged = {...cloudData};
+      if(localData.apiKey && !cloudData.apiKey) merged.apiKey = localData.apiKey;
+      saveLocalData(cUid, merged);
+    }
     getUserData(cUid);
-    // Fetch plan from Supabase and sync locally
+    // Fetch plan from profiles
     try {
       const {data:profile} = await sb.from('profiles').select('plan,full_name').eq('id',cUid).single();
       if(profile) {
@@ -1300,13 +1357,12 @@ async function bootApp() {
         if(profile.full_name) cUser.name = profile.full_name;
         saveLocalData(cUid, cData);
       }
-    } catch(e) {}
+    } catch(e){}
     applyDark(cData.darkMode||false);
     ['landing','login','signup','onboard'].forEach(n=>{const el=document.getElementById('screen-'+n);if(el)el.style.display='none';});
     launchApp(cUser);
     return;
   }
-  // No session — show landing
   showScreen('landing');
 }
 
