@@ -1256,12 +1256,6 @@ select{color:var(--txt)!important;}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-// Fallback if Supabase CDN fails
-if(typeof supabase === 'undefined') {
-  document.write('<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"><\/script>');
-}
-</script>
-<script>
 // ════════════════════════════════════════════
 //  SUPABASE CONFIG
 // ════════════════════════════════════════════
@@ -3386,4 +3380,13 @@ function buildDemoData(){
 //  INIT
 // ════════════════════════════════════════════
 // Listen for auth state changes including password recovery
-sb.auth.onAuthStateChange((event, session)
+sb.auth.onAuthStateChange((event, session) => {
+  if(event === 'PASSWORD_RECOVERY') {
+    showScreen('reset');
+  }
+});
+
+window.addEventListener('load', () => { bootApp(); });
+</script>
+</body>
+</html>
