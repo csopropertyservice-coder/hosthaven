@@ -1501,19 +1501,40 @@ async function aiDraft(convId,type){
   st.innerHTML=`<div class="spinner"></div> Claude is drafting…`;
   const lastGuest=[...c.messages].reverse().find(m=>m.role==='guest')?.text||'';
   const prop=cData.properties.find(p=>p.id===c.propId);
-  const user=gs().users[cUid];
-  const prompts={reply:`You are ${user.name}, a warm Airbnb host. Guest ${c.guestName} at ${c.propName||'your property'} wrote: "${lastGuest}". Write a friendly, helpful 2-4 sentence reply. Sign off naturally.`,checkin:`You are ${user.name}. Write a warm check-in message for ${c.guestName} at ${prop?.name||'the property'}. Door code: ${prop?.doorCode||'[code]'}, WiFi: ${prop?.wifi||'[name]'} / ${prop?.wifiPw||'[pw]'}, Parking: ${prop?.parking||'see listing'}. Keep it under 5 sentences.`,tips:`You are a friendly local Airbnb host named ${user.name}. Recommend 2-3 local restaurants and 1-2 activities near ${prop?.name||'your property'} to ${c.guestName}. Sound like a local friend.`,rules:`You are ${user.name}. Write a friendly house rules reminder to ${c.guestName}: no smoking, no parties, quiet 10pm-8am. Keep it warm and brief.`};
+  const userName = cUser?.name || 'Your Host';
+  const prompts={
+    reply:`You are ${userName}, a warm Airbnb host. Guest ${c.guestName} at ${c.propName||'your property'} wrote: "${lastGuest}". Write a friendly, helpful 2-4 sentence reply. Sign off naturally.`,
+    checkin:`You are ${userName}. Write a warm check-in message for ${c.guestName} at ${prop?.name||'the property'}. Door code: ${prop?.doorCode||'[code]'}, WiFi: ${prop?.wifi||'[name]'} / ${prop?.wifiPw||'[pw]'}, Parking: ${prop?.parking||'see listing'}. Keep it under 5 sentences.`,
+    tips:`You are a friendly local Airbnb host named ${userName}. Recommend 2-3 local restaurants and 1-2 activities near ${prop?.name||'your property'} to ${c.guestName}. Sound like a local friend.`,
+    rules:`You are ${userName}. Write a friendly house rules reminder to ${c.guestName}: no smoking, no parties, quiet 10pm-8am. Keep it warm and brief.`
+  };
   const apiKey=cData.apiKey;
+  const fb={
+    reply:`Hi ${c.guestName}! Thanks for reaching out — happy to help! ${lastGuest.toLowerCase().includes('early')?'Early check-in around 1pm should work perfectly!':'Let me know how I can assist.'} Looking forward to hosting you! 😊`,
+    checkin:`Hi ${c.guestName}! Excited for your stay at ${prop?.name||'the property'}! 🔑 Door: ${prop?.doorCode||'[see confirmation]'} | WiFi: ${prop?.wifi||'[see welcome book]'} / ${prop?.wifiPw||''} | Parking: ${prop?.parking||'see listing'}. Check-in after 3pm, checkout by 11am. Message me anytime!`,
+    tips:`Hi ${c.guestName}! For food: 🍳 Morning Plate (amazing brunch nearby), 🍝 Nonna's Kitchen (best pasta in the area), ☕ Grounds & Grains (my daily coffee spot). For activities — the weekend farmers market on Main St is a must! Enjoy ✨`,
+    rules:`Hi ${c.guestName}! Quick friendly note — quiet hours after 10pm, no smoking indoors, and please keep guests to the listed count. Other than that, make yourself completely at home! 🏡`
+  };
   try{
-    if(!apiKey)throw new Error('no key');
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:prompts[type]}]})});
+    if(!apiKey) throw new Error('no key');
+    // Add 10 second timeout
+    const controller = new AbortController();
+    const timeout = setTimeout(()=>controller.abort(), 10000);
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      signal: controller.signal,
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:prompts[type]}]})
+    });
+    clearTimeout(timeout);
     const data=await res.json();
+    if(data.error) throw new Error(data.error.message);
     ta.value=data.content?.[0]?.text||'Could not generate.';
     st.innerHTML=`<span style="color:var(--sage)">✓ Ready — edit before sending</span>`;
   } catch(e){
-    const fb={reply:`Hi ${c.guestName}! Thanks for reaching out — happy to help! ${lastGuest.toLowerCase().includes('early')?'Early check-in around 1pm should work perfectly!':'Let me know how I can assist.'} Looking forward to hosting you! 😊`,checkin:`Hi ${c.guestName}! Excited for your stay at ${prop?.name||'the property'}! 🔑 Door: ${prop?.doorCode||'#4821'} | WiFi: ${prop?.wifi||'Property_WiFi'} / ${prop?.wifiPw||'welcome2024'} | Parking: ${prop?.parking||'see listing'}. Check-in after 3pm, checkout by 11am. Message me anytime!`,tips:`Hi ${c.guestName}! For food: 🍳 Morning Plate (amazing brunch nearby), 🍝 Nonna's Kitchen (best pasta in the area), ☕ Grounds & Grains (my daily coffee spot). For activities — the weekend farmers market on Main St is a must! Enjoy ✨`,rules:`Hi ${c.guestName}! Quick friendly note — quiet hours after 10pm, no smoking indoors, and please keep guests to the listed count. Other than that, make yourself completely at home! 🏡`};
-    if(!apiKey)st.innerHTML=`<span style="color:var(--gold)">⚡ Demo draft — add API key in Settings for live AI</span>`;
-    else st.innerHTML=`<span style="color:var(--terra)">API error — showing demo</span>`;
+    if(!apiKey) st.innerHTML=`<span style="color:var(--gold)">⚡ Demo draft — add API key in Settings for live AI</span>`;
+    else if(e.name==='AbortError') st.innerHTML=`<span style="color:var(--terra)">Timed out — showing demo draft</span>`;
+    else st.innerHTML=`<span style="color:var(--terra)">API error: ${e.message} — showing demo</span>`;
     ta.value=fb[type];
   }
   document.querySelectorAll('.ai-btn').forEach(b=>b.classList.remove('loading'));
