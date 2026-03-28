@@ -1475,6 +1475,12 @@ async function doSignup() {
         getUserData(cUid);
       }
       ['landing','login','signup','onboard'].forEach(n=>{const el=document.getElementById('screen-'+n);if(el)el.style.display='none';});
+      // Notify admin of new signup
+      fetch('https://vdnyqwpznsysrvyvbqga.supabase.co/functions/v1/send-notification', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM'},
+        body:JSON.stringify({type:'new_signup',hostEmail:ADMIN_EMAIL,data:{name,email}})
+      }).catch(()=>{});
       if(!cData.onboarded) { startOnboard(cUser); } else { launchApp(cUser); }
     } else {
       showErr('signup-err','Something went wrong. Please try again.');
@@ -1900,6 +1906,29 @@ function deleteProperty() {
   toast(`"${p.name}" deleted`);
   renderAll();
 }
+// ════════════════════════════════════════════
+//  EMAIL NOTIFICATIONS
+// ════════════════════════════════════════════
+async function sendNotification(type, data) {
+  try {
+    const hostEmail = cUser?.email;
+    if(!hostEmail) { console.log('No host email'); return; }
+    console.log('Sending notification:', type, 'to', hostEmail);
+    const res = await fetch('https://vdnyqwpznsysrvyvbqga.supabase.co/functions/v1/send-notification', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM`,
+      },
+      body: JSON.stringify({ type, hostEmail, data }),
+    });
+    const result = await res.json();
+    console.log('Notification result:', res.status, JSON.stringify(result));
+  } catch(e) {
+    console.error('Notification error:', e.message);
+  }
+}
+
 function addBooking(){
   const propId=document.getElementById('mb-prop').value;
   const guest=document.getElementById('mb-guest').value.trim();
@@ -1910,6 +1939,15 @@ function addBooking(){
   const b={id:'b_'+Date.now(),propId,propName:prop?.name||'Property',propEmoji:prop?.emoji||'🏠',propGradient:prop?.gradient||'pi1',guestName:guest,guestEmail:document.getElementById('mb-email').value,numGuests:parseInt(document.getElementById('mb-nguests').value)||2,checkin:cin,checkout:cout,nights,price:parseFloat(document.getElementById('mb-price').value)||0,status:document.getElementById('mb-status').value,source:document.getElementById('mb-source').value,created:Date.now()};
   cData.bookings.push(b);saveUserData(cUid,cData);closeModal('add-booking-modal');
   toast(`Booking for ${guest} added!`);renderAll();
+  // Send email notification
+  sendNotification('new_booking', {
+    guestName: b.guestName,
+    propName: b.propName,
+    checkin: b.checkin||'TBD',
+    checkout: b.checkout||'TBD',
+    numGuests: b.numGuests,
+    price: b.price
+  });
 }
 // ════════════════════════════════════════════
 //  TEAM ACCESS
@@ -2423,8 +2461,20 @@ function renderBookings(){
       <div class="row-info"><div class="row-title">${b.propName} — ${b.guestName}</div><div class="row-sub">👤 ${b.numGuests} guests · ${b.nights}n · ${b.source}</div></div>
       <span class="pill ${spc[b.status]||'pill-blue'}">${b.status}</span>
       <div style="text-align:right"><div class="row-price">$${b.price.toLocaleString()}</div><div class="row-date">${b.checkin||'TBD'} → ${b.checkout||'TBD'}</div></div>
-      <button class="btn btn-ghost" style="font-size:10px;padding:4px 9px;flex-shrink:0" onclick="event.stopPropagation();openEditBooking('${b.id}')">✏️ Edit</button>
+      <div style="display:flex;gap:4px;flex-shrink:0">
+        <button class="btn btn-ghost" style="font-size:10px;padding:4px 9px" onclick="event.stopPropagation();openEditBooking('${b.id}')">✏️ Edit</button>
+        <button class="btn btn-ghost" style="font-size:10px;padding:4px 9px;color:var(--terra)" onclick="event.stopPropagation();deleteBooking('${b.id}','${b.guestName}')">🗑</button>
+      </div>
     </div>`).join('');
+}
+
+function deleteBooking(id, guestName) {
+  if(!confirm(`Delete booking for ${guestName}? This cannot be undone.`)) return;
+  cData.bookings = cData.bookings.filter(b=>b.id!==id);
+  saveUserData(cUid, cData);
+  toast(`Booking for ${guestName} deleted`);
+  renderAll();
+  if(bookFilter==='calendar') renderBookingCalendar();
 }
 
 function openEditBooking(id) {
@@ -2498,6 +2548,12 @@ function addConversation(){
   cData.messages.push(conv);saveUserData(cUid,cData);closeModal('add-message-modal');
   document.getElementById('mm-name').value='';document.getElementById('mm-msg').value='';
   toast('Conversation started!');renderMessages();updateBadges();
+  // Send email notification
+  sendNotification('new_message', {
+    guestName: name,
+    propName: prop?.name||'your property',
+    message: msg
+  });
 }
 function renderMessages(){
   const list=document.getElementById('msg-conv-list');
