@@ -910,7 +910,7 @@ async function doLogin() {
   const pw=document.getElementById('login-pw').value;
   if(!email||!pw){showErr('login-err','Please enter email and password');return;}
   const loginBtn = document.querySelector('#screen-login .btn-pri');
-  if(loginBtn){loginBtn.textContent='Signing in…';loginBtn.disabled=true;}
+  if(loginBtn){loginBtn.textContent='Signing in…';loginBtn.disabled=true;loginBtn.style.opacity='.7';}
   try {
     const {data,error} = await sb.auth.signInWithPassword({email,password:pw});
     if(error) throw error;
@@ -919,11 +919,17 @@ async function doLogin() {
     cUser = {email:user.email, name:user.user_metadata?.full_name||email.split('@')[0]};
     getUserData(cUid);
     applyDark(cData.darkMode||false);
+    // Fetch plan from Supabase
+    try {
+      const {data:profile} = await sb.from('profiles').select('plan,full_name').eq('id',cUid).single();
+      if(profile){cData.plan=profile.plan||cData.plan;if(profile.full_name)cUser.name=profile.full_name;saveLocalData(cUid,cData);}
+    } catch(e){}
+    ['landing','login','signup','onboard'].forEach(n=>{const el=document.getElementById('screen-'+n);if(el)el.style.display='none';});
     launchApp(cUser);
   } catch(e) {
-    showErr('login-err', e.message==='Invalid login credentials'?'Invalid email or password':e.message);
+    showErr('login-err', e.message==='Invalid login credentials'?'Invalid email or password — try signing up first':e.message);
   } finally {
-    if(loginBtn){loginBtn.textContent='Sign In →';loginBtn.disabled=false;}
+    if(loginBtn){loginBtn.textContent='Sign In →';loginBtn.disabled=false;loginBtn.style.opacity='1';}
   }
 }
 
