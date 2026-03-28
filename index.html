@@ -1164,7 +1164,7 @@ select{color:var(--txt)!important;}
 
 <div class="modal-bg" id="add-task-modal"><div class="modal"><h2>🧹 Add Task</h2><div class="fi"><label>Title</label><input id="mt-title" placeholder="Deep clean — Sunset Loft"></div><div class="fi"><label>Property</label><select id="mt-prop"><option value="">None</option></select></div><div class="g2"><div class="fi"><label>Assigned To</label><input id="mt-assign" placeholder="Maria G."></div><div class="fi"><label>Due Date</label><input id="mt-due" type="date"></div></div><div class="fi"><label>Priority</label><select id="mt-pri"><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-task-modal')">Cancel</button><button class="btn btn-pri" onclick="addTask()">Add Task</button></div></div></div>
 
-<div class="modal-bg" id="add-ical-modal"><div class="modal"><h2>🔄 Add iCal Calendar</h2><div class="fi"><label>Calendar Name</label><input id="ic-name" placeholder="Airbnb — Sunset Loft"></div><div class="fi"><label>Property</label><select id="ic-prop"><option value="">None</option></select></div><div class="fi"><label>iCal URL</label><input id="ic-url" placeholder="https://www.airbnb.com/calendar/ical/…"></div><div class="fi"><label>Source</label><select id="ic-source"><option value="airbnb">Airbnb</option><option value="vrbo">VRBO</option><option value="booking_com">Booking.com</option><option value="other">Other</option></select></div><div style="background:var(--sand);border-radius:8px;padding:12px;font-size:12px;color:var(--txt2);line-height:1.6;margin-bottom:4px">⚡ <strong>Note:</strong> Because this app runs locally in your browser, live iCal sync requires a server. This saves your URL and simulates the sync. For live sync, deploy to Netlify and add a serverless function.</div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-ical-modal')">Cancel</button><button class="btn btn-pri" onclick="addICal()">Save & Sync</button></div></div></div>
+<div class="modal-bg" id="add-ical-modal"><div class="modal"><h2>🔄 Add iCal Calendar</h2><div class="fi"><label>Calendar Name</label><input id="ic-name" placeholder="Airbnb — Sunset Loft"></div><div class="fi"><label>Property</label><select id="ic-prop"><option value="">None</option></select></div><div class="fi"><label>iCal URL</label><input id="ic-url" placeholder="https://www.airbnb.com/calendar/ical/…"></div><div class="fi"><label>Source</label><select id="ic-source"><option value="airbnb">Airbnb</option><option value="vrbo">VRBO</option><option value="booking_com">Booking.com</option><option value="other">Other</option></select></div><div style="background:var(--sand);border-radius:8px;padding:12px;font-size:12px;color:var(--txt2);line-height:1.6;margin-bottom:4px">📅 <strong>How to get your Airbnb iCal URL:</strong> Go to Airbnb → Calendar → Availability → Export Calendar → Copy Link</div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-ical-modal')">Cancel</button><button class="btn btn-pri" onclick="addICal()">Save & Sync</button></div></div></div>
 
 <div class="modal-bg" id="invite-team-modal"><div class="modal">
   <h2>👥 Invite Team Member</h2>
@@ -2736,22 +2736,105 @@ function renderTasks(){
 // ════════════════════════════════════════════
 //  ICAL
 // ════════════════════════════════════════════
-function addICal(){
-  const name=document.getElementById('ic-name').value.trim();const url=document.getElementById('ic-url').value.trim();
+async function addICal(){
+  const name=document.getElementById('ic-name').value.trim();
+  const url=document.getElementById('ic-url').value.trim();
   if(!name||!url){toast('Fill in name and URL');return;}
-  const propId=document.getElementById('ic-prop').value;const prop=cData.properties.find(p=>p.id===propId);
-  const ic={id:'ic_'+Date.now(),name,url,propId,propName:prop?.name||'',source:document.getElementById('ic-source').value,lastSync:new Date().toLocaleString(),status:'synced',created:Date.now()};
-  if(!cData.icals)cData.icals=[];cData.icals.push(ic);saveUserData(cUid,cData);closeModal('add-ical-modal');
-  ['ic-name','ic-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  toast(`"${name}" calendar saved! Simulating sync…`);
-  setTimeout(()=>toast('✓ Calendar synced! 3 bookings imported'),2000);
-  renderICals();
+  const propId=document.getElementById('ic-prop').value;
+  const prop=cData.properties.find(p=>p.id===propId);
+  const btn=document.querySelector('#add-ical-modal .btn-pri');
+  if(btn){btn.textContent='Syncing…';btn.disabled=true;}
+  try {
+    const result = await syncIcalUrl(url, propId, prop?.name||'');
+    const ic={id:'ic_'+Date.now(),name,url,propId,propName:prop?.name||'',source:document.getElementById('ic-source').value,lastSync:new Date().toLocaleString(),status:'synced',created:Date.now()};
+    if(!cData.icals)cData.icals=[];cData.icals.push(ic);
+    saveUserData(cUid,cData);
+    closeModal('add-ical-modal');
+    ['ic-name','ic-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    toast(`✓ "${name}" synced! ${result.count} booking${result.count!==1?'s':''} imported`);
+    renderICals();renderBookings();
+  } catch(e) {
+    toast('Sync failed: '+e.message);
+  } finally {
+    if(btn){btn.textContent='Save & Sync';btn.disabled=false;}
+  }
 }
+
+async function syncIcalUrl(url, propId, propName) {
+  const res = await fetch('https://vdnyqwpznsysrvyvbqga.supabase.co/functions/v1/ical-sync', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM`,
+    },
+    body: JSON.stringify({ url }),
+  });
+  const data = await res.json();
+  if(data.error) throw new Error(data.error);
+
+  // Merge imported bookings — avoid duplicates by icalUid
+  const existing = new Set(cData.bookings.map(b=>b.icalUid).filter(Boolean));
+  let added = 0;
+  for(const b of data.bookings) {
+    if(!existing.has(b.icalUid)) {
+      const prop = cData.properties.find(p=>p.id===propId);
+      cData.bookings.push({
+        ...b,
+        id: 'ical_'+Date.now()+'_'+Math.random().toString(36).slice(2),
+        propId: propId||'',
+        propName: propName||'Imported',
+        propEmoji: prop?.emoji||'📅',
+        propGradient: prop?.gradient||'pi1',
+      });
+      added++;
+    }
+  }
+  saveUserData(cUid, cData);
+  return { count: added };
+}
+
+async function syncNow(icalId) {
+  const ic = (cData.icals||[]).find(x=>x.id===icalId);
+  if(!ic) return;
+  const btn = document.getElementById('sync-btn-'+icalId);
+  if(btn){btn.textContent='Syncing…';btn.disabled=true;}
+  try {
+    const result = await syncIcalUrl(ic.url, ic.propId, ic.propName);
+    ic.lastSync = new Date().toLocaleString();
+    ic.status = 'synced';
+    saveUserData(cUid, cData);
+    toast(`✓ Synced! ${result.count} new booking${result.count!==1?'s':''} imported`);
+    renderICals();renderBookings();
+  } catch(e) {
+    toast('Sync failed: '+e.message);
+    ic.status = 'error';
+    saveUserData(cUid, cData);
+    renderICals();
+  } finally {
+    if(btn){btn.textContent='🔄 Sync Now';btn.disabled=false;}
+  }
+}
+
 function renderICals(){
   const list=document.getElementById('ical-list');if(!list)return;
   const icals=cData.icals||[];
-  if(!icals.length){list.innerHTML=`<div class="empty-state"><div class="es-i">🔄</div><h3>No calendars synced</h3><p>Add an iCal link from Airbnb or VRBO</p></div>`;return;}
-  list.innerHTML=icals.map(ic=>`<div class="ical-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div><div style="font-size:14px;font-weight:600;color:var(--txt)">${ic.name}</div><div style="font-size:11px;color:var(--txt3);margin-top:2px">${ic.propName||'No property'} · ${ic.source}</div></div><span class="ical-status ical-ok">✓ Synced</span></div><div style="font-size:11px;color:var(--txt3);margin-bottom:10px;font-family:monospace;background:var(--sand);padding:6px 9px;border-radius:5px;word-break:break-all">${ic.url.substring(0,60)}…</div><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--txt3)">Last sync: ${ic.lastSync}</span><button class="btn btn-ghost" style="font-size:10px;padding:3px 9px;margin-left:auto" onclick="toast('Syncing now…');setTimeout(()=>toast('✓ Sync complete'),1500)">🔄 Sync Now</button><button class="btn btn-ghost" style="font-size:10px;padding:3px 9px;color:var(--terra)" onclick="removeICal('${ic.id}')">Remove</button></div></div>`).join('');
+  if(!icals.length){list.innerHTML=`<div class="empty-state"><div class="es-i">🔄</div><h3>No calendars synced</h3><p>Add an iCal link from Airbnb or VRBO to import bookings automatically</p></div>`;return;}
+  list.innerHTML=icals.map(ic=>`
+    <div class="ical-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div>
+          <div style="font-size:14px;font-weight:600;color:var(--txt)">${ic.name}</div>
+          <div style="font-size:11px;color:var(--txt3);margin-top:2px">${ic.propName||'No property'} · ${ic.source}</div>
+        </div>
+        <span class="ical-status ${ic.status==='error'?'ical-err':'ical-ok'}">${ic.status==='error'?'⚠ Error':'✓ Synced'}</span>
+      </div>
+      <div style="font-size:11px;color:var(--txt3);margin-bottom:10px;font-family:monospace;background:var(--sand);padding:6px 9px;border-radius:5px;word-break:break-all">${ic.url.substring(0,60)}…</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="font-size:11px;color:var(--txt3)">Last sync: ${ic.lastSync||'Never'}</span>
+        <button id="sync-btn-${ic.id}" class="btn btn-ghost" style="font-size:10px;padding:3px 9px;margin-left:auto" onclick="syncNow('${ic.id}')">🔄 Sync Now</button>
+        <button class="btn btn-ghost" style="font-size:10px;padding:3px 9px;color:var(--terra)" onclick="removeICal('${ic.id}')">Remove</button>
+      </div>
+    </div>`).join('');
 }
 function removeICal(id){cData.icals=(cData.icals||[]).filter(x=>x.id!==id);saveUserData(cUid,cData);renderICals();toast('Calendar removed');}
 
