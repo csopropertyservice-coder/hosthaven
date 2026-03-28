@@ -563,6 +563,7 @@ select{color:var(--txt)!important;}
         <div class="sb-item" onclick="nav('reports',this)"><span class="ico">📄</span>Reports</div>
         <div class="sb-item" onclick="nav('reviews',this)"><span class="ico">⭐</span>Reviews</div>
         <div class="sb-item" onclick="nav('settings',this)"><span class="ico">⚙️</span>Settings</div>
+        <div class="sb-item" id="admin-nav-item" style="display:none" onclick="nav('admin',this)"><span class="ico">👑</span>Admin Panel</div>
       </nav>
       <div class="sb-foot">
         <div class="sb-user">
@@ -786,6 +787,36 @@ select{color:var(--txt)!important;}
   </div><!-- /shell -->
 </div><!-- /app -->
 
+<!-- ██ ADMIN PANEL ████████████████████████ -->
+<div class="page" id="page-admin">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+    <div>
+      <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:500;color:var(--txt)">👑 Admin Panel</div>
+      <div style="font-size:13px;color:var(--txt2);margin-top:3px">Manage all users and subscriptions</div>
+    </div>
+    <button class="btn btn-pri" onclick="renderAdmin()">🔄 Refresh</button>
+  </div>
+
+  <!-- Stats row -->
+  <div class="g4" style="margin-bottom:20px">
+    <div class="kpi k1"><div class="kpi-label">Total Users</div><div class="kpi-val" id="adm-total">0</div><span class="delta up">registered</span></div>
+    <div class="kpi k2"><div class="kpi-label">Paid Users</div><div class="kpi-val" id="adm-paid">0</div><span class="delta up">subscribed</span></div>
+    <div class="kpi k3"><div class="kpi-label">Pro Plan</div><div class="kpi-val" id="adm-pro">0</div><span class="delta up">$79/mo each</span></div>
+    <div class="kpi k4"><div class="kpi-label">Est. MRR</div><div class="kpi-val" id="adm-mrr">$0</div><span class="delta up">monthly</span></div>
+  </div>
+
+  <!-- User table -->
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-title">All Users</div>
+      <input id="adm-search" placeholder="🔍 Search by email or name…" style="background:var(--sand);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;color:var(--txt);font-family:'DM Sans',sans-serif;outline:none;width:220px" oninput="renderAdmin()">
+    </div>
+    <div class="card-body" id="admin-user-table">
+      <div class="empty-state"><div class="es-i">👥</div><p>No users yet</p></div>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════════════════════════════════
      MODALS
 ══════════════════════════════════════ -->
@@ -816,6 +847,11 @@ const getUserData = uid => { const s=gs(); if(!s.userData)s.userData={}; if(!s.u
 const saveUserData = (uid,d) => { const s=gs(); if(!s.userData)s.userData={}; s.userData[uid]=d; ss(s); };
 
 let cUid=null, cData=null, activeConvId=null, wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
+
+// ════════════════════════════════════════════
+//  ADMIN CONFIG — change this to YOUR email
+// ════════════════════════════════════════════
+const ADMIN_EMAIL = 'csopropertyservice@gmail.com'; // ← PUT YOUR EMAIL HERE
 
 // ════════════════════════════════════════════
 //  DARK MODE
@@ -898,11 +934,22 @@ function launchApp(user) {
   document.getElementById('sb-uemail').textContent=user.email;
   const init=user.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
   document.getElementById('sb-av').textContent=init;
+
+  // ── Admin check ──────────────────────────
+  const isAdmin = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+  if(isAdmin) {
+    cData.plan='business'; // admin always gets business plan
+    saveUserData(cUid,cData);
+    const adminNav=document.getElementById('admin-nav-item');
+    if(adminNav) adminNav.style.display='flex';
+  }
+  // ─────────────────────────────────────────
+
   const plan=cData.plan||'free';
-  document.getElementById('sb-plan').textContent=plan==='free'?'⭐ Free':plan==='pro'?'🚀 Pro':'💼 Business';
+  document.getElementById('sb-plan').textContent=isAdmin?'👑 Admin':plan==='free'?'⭐ Free':plan==='pro'?'🚀 Pro':'💼 Business';
   document.getElementById('set-name').value=user.name;
   document.getElementById('set-email').value=user.email;
-  document.getElementById('set-plan').textContent=plan==='free'?'Free Plan — 1 property':plan==='pro'?'Pro — up to 10 properties':'Business — unlimited';
+  document.getElementById('set-plan').textContent=isAdmin?'Admin — Unlimited (all features)':plan==='free'?'Free Plan — 1 property':plan==='pro'?'Pro — up to 10 properties':'Business — unlimited';
   if(cData.apiKey)document.getElementById('set-api-key').value=cData.apiKey;
   document.getElementById('wb-host').value=user.name;
   document.getElementById('wb-email').value=user.email;
@@ -962,7 +1009,7 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 //  NAV
 // ════════════════════════════════════════════
-const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Pricing',cleaning:'Tasks',ical:'iCal Sync',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'Reviews',settings:'Settings'};
+const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Pricing',cleaning:'Tasks',ical:'iCal Sync',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'Reviews',settings:'Settings',admin:'👑 Admin Panel'};
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
@@ -974,6 +1021,7 @@ function nav(id,el){
   if(id==='portal')renderPortal();
   if(id==='reports')renderReports();
   if(id==='analytics')renderAnalytics();
+  if(id==='admin')renderAdmin();
 }
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sb-overlay').classList.add('show');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('show');}
@@ -982,6 +1030,98 @@ function closeSidebar(){document.getElementById('sidebar').classList.remove('ope
 //  RENDER ALL
 // ════════════════════════════════════════════
 function renderAll(){renderDashboard();renderProperties();renderBookings();renderMessages();renderTasks();renderPricing();renderPortal();renderAnalytics();renderReports();renderReviews();renderICals();updateBadges();}
+
+// ════════════════════════════════════════════
+//  ADMIN PANEL
+// ════════════════════════════════════════════
+function renderAdmin() {
+  const s = gs();
+  const users = s.users || {};
+  const userData = s.userData || {};
+  const search = (document.getElementById('adm-search')?.value||'').toLowerCase();
+
+  const allUsers = Object.keys(users).map(uid => ({
+    uid, ...users[uid], data: userData[uid] || {}
+  })).filter(u =>
+    !search || u.email.toLowerCase().includes(search) || (u.name||'').toLowerCase().includes(search)
+  );
+
+  // Stats
+  const paid = allUsers.filter(u => u.data.plan && u.data.plan !== 'free');
+  const pro = allUsers.filter(u => u.data.plan === 'pro');
+  const biz = allUsers.filter(u => u.data.plan === 'business');
+  const mrr = (pro.length * 79) + (biz.length * 199);
+  document.getElementById('adm-total').textContent = allUsers.length;
+  document.getElementById('adm-paid').textContent = paid.length;
+  document.getElementById('adm-pro').textContent = pro.length;
+  document.getElementById('adm-mrr').textContent = '$' + mrr.toLocaleString();
+
+  const table = document.getElementById('admin-user-table');
+  if (!allUsers.length) {
+    table.innerHTML = `<div class="empty-state"><div class="es-i">👥</div><p>No users yet</p></div>`;
+    return;
+  }
+
+  const planColor = p => p==='business'?'pill-blue':p==='pro'?'pill-green':'pill-amber';
+  const planLabel = p => p==='business'?'💼 Business':p==='pro'?'🚀 Pro':'⭐ Free';
+
+  table.innerHTML = `
+    <table class="report-table" style="width:100%">
+      <thead><tr>
+        <th>User</th><th>Email</th><th>Plan</th>
+        <th>Properties</th><th>Bookings</th><th>Joined</th><th>Actions</th>
+      </tr></thead>
+      <tbody>
+        ${allUsers.map(u => {
+          const props = (u.data.properties||[]).length;
+          const books = (u.data.bookings||[]).length;
+          const plan = u.data.plan||'free';
+          const isThisAdmin = u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+          const joined = u.uid.startsWith('demo') ? 'Demo' : new Date(parseInt(u.uid.split('_')[1]||Date.now())).toLocaleDateString();
+          return `<tr>
+            <td style="font-weight:500">${u.name||'Unknown'}${isThisAdmin?' 👑':''}</td>
+            <td style="font-size:12px;color:var(--txt2)">${u.email}</td>
+            <td><span class="pill ${planColor(plan)}">${planLabel(plan)}</span></td>
+            <td style="text-align:center">${props}</td>
+            <td style="text-align:center">${books}</td>
+            <td style="font-size:11px;color:var(--txt3)">${joined}</td>
+            <td>
+              ${isThisAdmin ? '<span style="font-size:11px;color:var(--txt3)">You</span>' : `
+              <div style="display:flex;gap:5px;flex-wrap:wrap">
+                <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="upgradePlan('${u.uid}','pro')">→ Pro</button>
+                <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="upgradePlan('${u.uid}','business')">→ Biz</button>
+                <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--txt3)" onclick="upgradePlan('${u.uid}','free')">→ Free</button>
+                <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra)" onclick="deleteUser('${u.uid}','${u.name||u.email}')">🗑</button>
+              </div>`}
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>`;
+}
+
+function upgradePlan(uid, plan) {
+  const s = gs();
+  if (!s.userData) s.userData = {};
+  if (!s.userData[uid]) s.userData[uid] = {};
+  s.userData[uid].plan = plan;
+  const limits = {free:1, pro:10, business:999};
+  s.userData[uid].max_listings = limits[plan];
+  ss(s);
+  renderAdmin();
+  const user = s.users[uid];
+  toast(`✓ ${user?.name||user?.email} upgraded to ${plan}!`);
+}
+
+function deleteUser(uid, name) {
+  if (!confirm(`Delete user "${name}"? This cannot be undone.`)) return;
+  const s = gs();
+  delete s.users[uid];
+  if (s.userData) delete s.userData[uid];
+  ss(s);
+  renderAdmin();
+  toast(`User "${name}" deleted`);
+}
 
 // ════════════════════════════════════════════
 //  PROPERTIES
@@ -1299,13 +1439,7 @@ function openModal(id){
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.addEventListener('click',e=>{if(e.target.classList.contains('modal-bg'))e.target.classList.remove('open');});
 function toast(msg){const el=document.getElementById('toast-el');el.textContent=msg;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2800);}
-function openStripe(plan){
-  const links={
-    pro: https:'//buy.stripe.com/cNi8wO2EtdfT8wdbo44sE00'
-    business: 'https://buy.stripe.com/aFafZg2EtdfTcMt9fW4sE01'
-  };
-  window.open(links[plan],'_blank');
-}
+function openStripe(plan){toast(`To activate ${plan}: Go to stripe.com → Payment Links → Paste your link into the code at line ~700`);}
 
 // ════════════════════════════════════════════
 //  DEMO DATA
