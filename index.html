@@ -332,6 +332,42 @@ select{color:var(--txt)!important;}
 .tpri.high{background:#FBF0EC;color:var(--terra);} .tpri.medium{background:#FEF7E6;color:#9B6B1A;} .tpri.low{background:#EBF5EC;color:var(--sage);}
 [data-theme="dark"] .tpri.high{background:rgba(196,105,58,.2);} [data-theme="dark"] .tpri.medium{background:rgba(200,168,75,.15);} [data-theme="dark"] .tpri.low{background:rgba(107,143,113,.2);}
 
+/* MOBILE OPTIMIZATIONS */
+@media(max-width:768px){
+  .content{padding:14px;}
+  .g4{grid-template-columns:repeat(2,1fr)!important;}
+  .g3{grid-template-columns:repeat(2,1fr)!important;}
+  .g2{grid-template-columns:1fr!important;}
+  .kpi-val{font-size:24px!important;}
+  .msg-layout{grid-template-columns:1fr!important;height:auto!important;}
+  .msg-list-panel{height:200px;}
+  .wb-layout{grid-template-columns:1fr!important;height:auto!important;}
+  .gp-layout{grid-template-columns:1fr!important;}
+  .gp-frame{height:300px!important;}
+  #dash-main-grid{grid-template-columns:1fr!important;}
+  .land-feat-grid{grid-template-columns:1fr!important;}
+  .land-plans{grid-template-columns:1fr!important;}
+  .land-h1{font-size:36px!important;letter-spacing:-1px!important;}
+  .land-nav-links{display:none!important;}
+  .land-nav{padding:14px 20px!important;}
+  .land-hero{padding:100px 16px 60px!important;}
+  .land-stats{gap:20px!important;}
+  .land-features,.land-pricing{padding:48px 20px!important;}
+}
+@media(max-width:500px){
+  .g4{grid-template-columns:1fr!important;}
+  .kpi{padding:14px 16px!important;}
+  .kpi-val{font-size:22px!important;}
+  .topbar{padding:0 14px!important;}
+  .topbar-title{font-size:16px!important;}
+}
+@media(hover:none){
+  .sb-item{padding:11px 10px!important;}
+  .row{padding:14px 0!important;}
+  .task-card{padding:14px!important;}
+  .btn{min-height:40px!important;}
+}
+
 /* SETTINGS */
 .setting-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border);}
 .setting-row:last-child{border-bottom:none;}
@@ -565,6 +601,7 @@ select{color:var(--txt)!important;}
         <div class="sb-item" onclick="nav('messages',this)"><span class="ico">💬</span>Messages<span class="sb-badge" id="sb-m-badge" style="display:none">0</span></div>
         <div class="sb-item" onclick="nav('pricing',this)"><span class="ico">💰</span>Pricing</div>
         <div class="sb-item" onclick="nav('cleaning',this)"><span class="ico">🧹</span>Tasks</div>
+        <div class="sb-item" onclick="nav('staff',this)"><span class="ico">👥</span>Staff Portal</div>
         <div class="sb-item" onclick="nav('ical',this)"><span class="ico">🔄</span>iCal Sync<span class="sb-new">NEW</span></div>
         <div class="sb-sec" style="margin-top:8px">✨ Features</div>
         <div class="sb-item" onclick="nav('website',this)"><span class="ico">🌐</span>Website Builder</div>
@@ -849,11 +886,64 @@ select{color:var(--txt)!important;}
 </div>
 
 <!-- ██ REVIEWS ████████████████████████████ -->
+<!-- ██ STAFF PORTAL ████████████████████████ -->
+<div class="page" id="page-staff">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div>
+      <div style="font-size:13px;color:var(--txt2)">Manage your cleaning staff and share task views</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost" onclick="openModal('add-staff-modal')">+ Add Staff</button>
+      <button class="btn btn-pri" onclick="openModal('add-task-modal')">+ Add Task</button>
+    </div>
+  </div>
+
+  <!-- Staff cards -->
+  <div class="g3" id="staff-grid" style="margin-bottom:20px">
+    <div class="empty-state" style="grid-column:1/-1"><div class="es-i">👥</div><h3>No staff added yet</h3><p>Add your cleaners and maintenance staff to assign tasks</p><button class="btn btn-pri" onclick="openModal('add-staff-modal')" style="margin-top:10px">Add First Staff Member</button></div>
+  </div>
+
+  <!-- Staff task view -->
+  <div class="card" id="staff-tasks-card" style="display:none">
+    <div class="card-hd">
+      <div class="card-title" id="staff-task-title">Tasks</div>
+      <button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="copyStaffLink()">🔗 Copy Staff Link</button>
+    </div>
+    <div class="card-body" id="staff-task-list"></div>
+  </div>
+</div>
+
+<!-- ██ REVIEW AUTOMATION ████████████████████ -->
 <div class="page" id="page-reviews">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
     <div style="font-size:13px;color:var(--txt2)" id="reviews-count">0 reviews</div>
     <button class="btn btn-pri" onclick="openModal('add-review-modal')">+ Add Review</button>
   </div>
+
+  <!-- Review Request Automation -->
+  <div class="card" style="margin-bottom:16px;border-left:3px solid var(--gold)">
+    <div class="card-hd">
+      <div class="card-title">⭐ Review Request Automation</div>
+      <div class="toggle on" id="review-auto-toggle" onclick="toggleReviewAuto()"><div class="toggle-knob"></div></div>
+    </div>
+    <div class="card-body">
+      <div style="font-size:13px;color:var(--txt2);margin-bottom:14px;line-height:1.5">Automatically send review requests when a booking is marked <strong>Completed</strong>. Copies a message to your clipboard ready to send via Airbnb.</div>
+      <div class="g2">
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Review Message Template</div>
+          <textarea id="review-template" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);font-family:'DM Sans',sans-serif;resize:vertical;min-height:100px;outline:none" placeholder="Customize your review request message…">Hi {guest_name}! 🌟 Thank you so much for staying at {property_name}! We loved having you. If you enjoyed your stay, it would mean the world to us if you could leave a review — it takes just 2 minutes and helps us so much. Hope to host you again soon! 😊</textarea>
+          <button class="btn btn-sage" style="margin-top:8px" onclick="saveReviewTemplate()">Save Template</button>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Pending Review Requests</div>
+          <div id="review-requests-list">
+            <div style="font-size:13px;color:var(--txt3)">Mark bookings as "Completed" to trigger review requests</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="reviews-list"><div class="empty-state"><div class="es-i">⭐</div><h3>No reviews yet</h3><button class="btn btn-pri" onclick="openModal('add-review-modal')" style="margin-top:10px">Add Review</button></div></div>
 </div>
 
@@ -965,6 +1055,13 @@ select{color:var(--txt)!important;}
 
 <div class="modal-bg" id="add-ical-modal"><div class="modal"><h2>🔄 Add iCal Calendar</h2><div class="fi"><label>Calendar Name</label><input id="ic-name" placeholder="Airbnb — Sunset Loft"></div><div class="fi"><label>Property</label><select id="ic-prop"><option value="">None</option></select></div><div class="fi"><label>iCal URL</label><input id="ic-url" placeholder="https://www.airbnb.com/calendar/ical/…"></div><div class="fi"><label>Source</label><select id="ic-source"><option value="airbnb">Airbnb</option><option value="vrbo">VRBO</option><option value="booking_com">Booking.com</option><option value="other">Other</option></select></div><div style="background:var(--sand);border-radius:8px;padding:12px;font-size:12px;color:var(--txt2);line-height:1.6;margin-bottom:4px">⚡ <strong>Note:</strong> Because this app runs locally in your browser, live iCal sync requires a server. This saves your URL and simulates the sync. For live sync, deploy to Netlify and add a serverless function.</div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-ical-modal')">Cancel</button><button class="btn btn-pri" onclick="addICal()">Save & Sync</button></div></div></div>
 
+<div class="modal-bg" id="add-staff-modal"><div class="modal"><h2>👥 Add Staff Member</h2>
+  <div class="g2"><div class="fi"><label>Full Name</label><input id="sf-name" placeholder="Maria G."></div><div class="fi"><label>Role</label><select id="sf-role" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="cleaner">🧹 Cleaner</option><option value="handyman">🔧 Handyman</option><option value="manager">👔 Manager</option><option value="other">Other</option></select></div></div>
+  <div class="g2"><div class="fi"><label>Phone</label><input id="sf-phone" placeholder="+1 555 000 0000" type="tel"></div><div class="fi"><label>Email</label><input id="sf-email" placeholder="staff@email.com" type="email"></div></div>
+  <div class="fi"><label>Notes</label><textarea id="sf-notes" placeholder="Available Mon-Fri, prefers morning shifts…"></textarea></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-staff-modal')">Cancel</button><button class="btn btn-pri" onclick="addStaff()">Add Staff</button></div>
+</div></div>
+
 <div class="modal-bg" id="add-review-modal"><div class="modal"><h2>⭐ Add Review</h2><div class="fi"><label>Guest Name</label><input id="mr-name"></div><div class="fi"><label>Property</label><select id="mr-prop"><option value="">None</option></select></div><div class="fi"><label>Rating (1–5)</label><input id="mr-rating" type="number" min="1" max="5" value="5"></div><div class="fi"><label>Review</label><textarea id="mr-content" placeholder="Amazing stay…"></textarea></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-review-modal')">Cancel</button><button class="btn btn-pri" onclick="addReview()">Add</button></div></div></div>
 
 <div class="toast" id="toast-el"></div>
@@ -993,7 +1090,7 @@ let wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
 const LOCAL_KEY = 'hh_local_v1';
 const getLocal = () => { try{return JSON.parse(localStorage.getItem(LOCAL_KEY))||{};}catch{return {};} };
 const setLocal = d => localStorage.setItem(LOCAL_KEY, JSON.stringify(d));
-const getLocalData = uid => { const l=getLocal(); return l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],plan:'free',apiKey:'',darkMode:false,onboarded:false}; };
+const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; return d; };
 const saveLocalData = (uid,d) => { const l=getLocal(); l[uid]=d; setLocal(l); };
 
 // Use local data as primary (Supabase for auth + plan sync)
@@ -1300,7 +1397,7 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 //  NAV
 // ════════════════════════════════════════════
-const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Pricing',cleaning:'Tasks',ical:'iCal Sync',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'Reviews',settings:'Settings',admin:'👑 Admin Panel'};
+const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Pricing',cleaning:'Tasks',staff:'👥 Staff Portal',ical:'iCal Sync',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews & Automation',settings:'Settings',admin:'👑 Admin Panel'};
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
@@ -1313,6 +1410,8 @@ function nav(id,el){
   if(id==='reports')renderReports();
   if(id==='analytics'){renderAnalytics();}
   if(id==='admin')setTimeout(()=>renderAdmin(),50);
+  if(id==='staff')renderStaff();
+  if(id==='reviews')setTimeout(()=>checkReviewRequests(),100);
 }
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sb-overlay').classList.add('show');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('show');}
@@ -1320,7 +1419,7 @@ function closeSidebar(){document.getElementById('sidebar').classList.remove('ope
 // ════════════════════════════════════════════
 //  RENDER ALL
 // ════════════════════════════════════════════
-function renderAll(){renderDashboard();renderProperties();renderBookings();renderMessages();renderTasks();renderPricing();renderPortal();renderAnalytics();renderReports();renderReviews();renderICals();updateBadges();}
+function renderAll(){renderDashboard();renderProperties();renderBookings();renderMessages();renderTasks();renderPricing();renderPortal();renderAnalytics();renderReports();renderReviews();renderICals();renderStaff();updateBadges();}
 
 // ════════════════════════════════════════════
 //  ADMIN PANEL
@@ -1532,8 +1631,171 @@ function addBooking(){
   toast(`Booking for ${guest} added!`);renderAll();
 }
 // ════════════════════════════════════════════
-//  ANNUAL BILLING TOGGLE
+//  STAFF PORTAL
 // ════════════════════════════════════════════
+function addStaff() {
+  const name = document.getElementById('sf-name').value.trim();
+  if(!name){toast('Enter staff name');return;}
+  if(!cData.staff) cData.staff=[];
+  const roleEmojis={cleaner:'🧹',handyman:'🔧',manager:'👔',other:'👤'};
+  const role=document.getElementById('sf-role').value;
+  const member={
+    id:'s_'+Date.now(), name,role,
+    phone:document.getElementById('sf-phone').value,
+    email:document.getElementById('sf-email').value,
+    notes:document.getElementById('sf-notes').value,
+    emoji:roleEmojis[role]||'👤',
+    created:Date.now()
+  };
+  cData.staff.push(member);
+  saveUserData(cUid,cData);
+  closeModal('add-staff-modal');
+  ['sf-name','sf-phone','sf-email','sf-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  toast(`${name} added to staff!`);
+  renderStaff();
+}
+
+function renderStaff() {
+  const grid=document.getElementById('staff-grid');
+  if(!grid)return;
+  const staff=cData.staff||[];
+  if(!staff.length){
+    grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="es-i">👥</div><h3>No staff yet</h3><p>Add your cleaners and maintenance staff</p><button class="btn btn-pri" onclick="openModal('add-staff-modal')" style="margin-top:10px">Add Staff</button></div>`;
+    document.getElementById('staff-tasks-card').style.display='none';
+    return;
+  }
+  const roleColors={cleaner:'#F5E6D3',handyman:'#D3E8E0',manager:'#D3DCE8',other:'#E8E3D3'};
+  const roleTextColors={cleaner:'#C4693A',handyman:'#4A7D50',manager:'#2E4460',other:'#6B5A2E'};
+  grid.innerHTML=staff.map(s=>{
+    const tasks=cData.tasks.filter(t=>t.assignee===s.name);
+    const pending=tasks.filter(t=>!t.done).length;
+    const done=tasks.filter(t=>t.done).length;
+    return `<div class="card" style="cursor:pointer" onclick="showStaffTasks('${s.id}')">
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="width:44px;height:44px;border-radius:50%;background:${roleColors[s.role]||'#EDE8DE'};color:${roleTextColors[s.role]||'#6B5D52'};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${s.emoji}</div>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--txt)">${s.name}</div>
+            <div style="font-size:11px;color:var(--txt3);text-transform:capitalize">${s.role}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:10px">
+          <div style="background:var(--sand);border-radius:7px;padding:7px 10px;flex:1;text-align:center">
+            <div style="font-size:18px;font-family:'Fraunces',serif;color:var(--terra)">${pending}</div>
+            <div style="font-size:10px;color:var(--txt3)">Pending</div>
+          </div>
+          <div style="background:var(--sand);border-radius:7px;padding:7px 10px;flex:1;text-align:center">
+            <div style="font-size:18px;font-family:'Fraunces',serif;color:var(--sage)">${done}</div>
+            <div style="font-size:10px;color:var(--txt3)">Done</div>
+          </div>
+        </div>
+        ${s.phone?`<div style="font-size:12px;color:var(--txt2)">📞 ${s.phone}</div>`:''}
+        <div style="display:flex;gap:6px;margin-top:10px">
+          <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:11px" onclick="event.stopPropagation();showStaffTasks('${s.id}')">View Tasks</button>
+          <button class="btn btn-ghost" style="font-size:11px;padding:6px 8px;color:var(--terra)" onclick="event.stopPropagation();deleteStaff('${s.id}','${s.name}')">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showStaffTasks(staffId) {
+  const s = (cData.staff||[]).find(x=>x.id===staffId);
+  if(!s) return;
+  const card=document.getElementById('staff-tasks-card');
+  const title=document.getElementById('staff-task-title');
+  const list=document.getElementById('staff-task-list');
+  if(!card||!title||!list) return;
+  const tasks=cData.tasks.filter(t=>t.assignee===s.name);
+  title.textContent=`${s.emoji} ${s.name}'s Tasks`;
+  card.style.display='block';
+  card.dataset.staffId=staffId;
+  if(!tasks.length){list.innerHTML=`<div style="font-size:13px;color:var(--txt3);padding:10px 0">No tasks assigned to ${s.name} yet. Add tasks in the Tasks page.</div>`;return;}
+  list.innerHTML=tasks.map(t=>`
+    <div class="task-card" onclick="toggleTask('${t.id}');showStaffTasks('${staffId}')">
+      <div class="task-cb${t.done?' done':''}"> ${t.done?'✓':''}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:500;color:var(--txt);${t.done?'text-decoration:line-through;opacity:.5':''}">${t.title}</div>
+        <div style="font-size:11px;color:var(--txt3);margin-top:2px">${t.propName||'No property'} ${t.due?'· Due '+t.due:''}</div>
+      </div>
+      <span class="tpri ${t.priority}">${t.priority}</span>
+    </div>`).join('');
+  card.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function copyStaffLink() {
+  const card=document.getElementById('staff-tasks-card');
+  const staffId=card?.dataset.staffId;
+  const s=(cData.staff||[]).find(x=>x.id===staffId);
+  if(!s){toast('Select a staff member first');return;}
+  // In a real app this would be a unique URL — for now copy a shareable message
+  const tasks=cData.tasks.filter(t=>t.assignee===s.name&&!t.done);
+  const taskList=tasks.map(t=>`• ${t.title}${t.due?' (Due: '+t.due+')':''}`).join('\n');
+  const msg=`Hi ${s.name}! Here are your current tasks:\n\n${taskList||'No pending tasks'}\n\nPlease update your status when complete. - via HostHaven`;
+  navigator.clipboard.writeText(msg).then(()=>toast('Task list copied to clipboard! Send to '+s.name)).catch(()=>toast('Copy failed — try again'));
+}
+
+function deleteStaff(id, name) {
+  if(!confirm(`Remove ${name} from staff?`)) return;
+  cData.staff=(cData.staff||[]).filter(x=>x.id!==id);
+  saveUserData(cUid,cData);
+  renderStaff();
+  toast(`${name} removed`);
+}
+
+// ════════════════════════════════════════════
+//  REVIEW AUTOMATION
+// ════════════════════════════════════════════
+let reviewAutoEnabled = true;
+
+function toggleReviewAuto() {
+  reviewAutoEnabled = !reviewAutoEnabled;
+  const t=document.getElementById('review-auto-toggle');
+  if(t){t.className='toggle '+(reviewAutoEnabled?'on':'off');}
+  toast('Review automation '+(reviewAutoEnabled?'enabled':'disabled'));
+  if(!cData.reviewAuto)cData.reviewAuto={};
+  cData.reviewAuto.enabled=reviewAutoEnabled;
+  saveUserData(cUid,cData);
+}
+
+function saveReviewTemplate() {
+  const tmpl=document.getElementById('review-template')?.value;
+  if(!cData.reviewAuto)cData.reviewAuto={};
+  cData.reviewAuto.template=tmpl;
+  saveUserData(cUid,cData);
+  toast('Review template saved! ✓');
+}
+
+function checkReviewRequests() {
+  const el=document.getElementById('review-requests-list');
+  if(!el) return;
+  const completed=cData.bookings.filter(b=>b.status==='completed');
+  const reviewed=cData.reviews.map(r=>r.bookingId);
+  const pending=completed.filter(b=>!reviewed.includes(b.id));
+  if(!pending.length){el.innerHTML=`<div style="font-size:13px;color:var(--sage)">✓ All completed bookings have been reviewed!</div>`;return;}
+  el.innerHTML=pending.map(b=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:17px">${b.propEmoji||'🏠'}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--txt)">${b.guestName}</div><div style="font-size:11px;color:var(--txt3)">${b.propName} · ${b.checkout||'TBD'}</div></div>
+      <button class="btn btn-pri" style="font-size:11px;padding:5px 10px" onclick="sendReviewRequest('${b.id}')">📋 Copy Request</button>
+    </div>`).join('');
+}
+
+function sendReviewRequest(bookingId) {
+  const b=cData.bookings.find(x=>x.id===bookingId);
+  if(!b) return;
+  const tmpl=(cData.reviewAuto?.template)||`Hi {guest_name}! 🌟 Thank you for staying at {property_name}! If you enjoyed your stay, we'd love a review — it really helps us. Hope to host you again! 😊`;
+  const msg=tmpl.replace('{guest_name}',b.guestName).replace('{property_name}',b.propName);
+  navigator.clipboard.writeText(msg).then(()=>toast(`Review request for ${b.guestName} copied! Paste into Airbnb messaging.`)).catch(()=>toast('Copy failed'));
+}
+
+// Auto-trigger review request when booking marked complete
+function onBookingCompleted(booking) {
+  if(!reviewAutoEnabled) return;
+  setTimeout(()=>{
+    toast(`⭐ ${booking.guestName}'s stay is complete! Go to Reviews to send a review request.`);
+  }, 500);
+}
 let isAnnual = false;
 function toggleBilling() {
   isAnnual = !isAnnual;
@@ -1690,11 +1952,75 @@ function showCalDay(dateStr) {
 }
 function renderBookings(){
   const list=document.getElementById('bookings-list');
-  let bs=[...cData.bookings];if(bookFilter!=='all')bs=bs.filter(b=>b.status===bookFilter);
+  let bs=[...cData.bookings];
+  if(bookFilter!=='all'&&bookFilter!=='calendar')bs=bs.filter(b=>b.status===bookFilter);
   bs.sort((a,b)=>b.created-a.created);
   if(!bs.length){list.innerHTML=`<div class="empty-state"><div class="es-i">📅</div><h3>No bookings</h3><button class="btn btn-pri" onclick="openModal('add-booking-modal')" style="margin-top:10px">Add Booking</button></div>`;return;}
   const spc={confirmed:'pill-green',pending:'pill-amber',completed:'pill-blue',cancelled:'pill-red'};
-  list.innerHTML=bs.map(b=>`<div class="row"><div class="row-thumb ${b.propGradient||'pi1'}">${b.propEmoji||'🏠'}</div><div class="row-info"><div class="row-title">${b.propName} — ${b.guestName}</div><div class="row-sub">👤 ${b.numGuests} guests · ${b.nights}n · ${b.source}</div></div><span class="pill ${spc[b.status]||'pill-blue'}">${b.status}</span><div><div class="row-price">$${b.price.toLocaleString()}</div><div class="row-date">${b.checkin||'TBD'} → ${b.checkout||'TBD'}</div></div></div>`).join('');
+  list.innerHTML=bs.map(b=>`
+    <div class="row">
+      <div class="row-thumb ${b.propGradient||'pi1'}">${b.propEmoji||'🏠'}</div>
+      <div class="row-info"><div class="row-title">${b.propName} — ${b.guestName}</div><div class="row-sub">👤 ${b.numGuests} guests · ${b.nights}n · ${b.source}</div></div>
+      <span class="pill ${spc[b.status]||'pill-blue'}">${b.status}</span>
+      <div style="text-align:right"><div class="row-price">$${b.price.toLocaleString()}</div><div class="row-date">${b.checkin||'TBD'} → ${b.checkout||'TBD'}</div></div>
+      <button class="btn btn-ghost" style="font-size:10px;padding:4px 9px;flex-shrink:0" onclick="event.stopPropagation();openEditBooking('${b.id}')">✏️ Edit</button>
+    </div>`).join('');
+}
+
+function openEditBooking(id) {
+  const b = cData.bookings.find(x=>x.id===id);
+  if(!b) return;
+  // Populate dropdowns
+  const propSel = document.getElementById('mb-prop');
+  if(propSel) propSel.innerHTML = cData.properties.map(p=>`<option value="${p.id}" ${p.id===b.propId?'selected':''}>${p.emoji} ${p.name}</option>`).join('');
+  document.getElementById('mb-guest').value = b.guestName||'';
+  document.getElementById('mb-email').value = b.guestEmail||'';
+  document.getElementById('mb-cin').value = b.checkin||'';
+  document.getElementById('mb-cout').value = b.checkout||'';
+  document.getElementById('mb-nguests').value = b.numGuests||2;
+  document.getElementById('mb-price').value = b.price||0;
+  document.getElementById('mb-status').value = b.status||'confirmed';
+  document.getElementById('mb-source').value = b.source||'airbnb';
+  // Change modal title and button to edit mode
+  const modal = document.querySelector('#add-booking-modal h2');
+  if(modal) modal.textContent = '✏️ Edit Booking';
+  const saveBtn = document.querySelector('#add-booking-modal .btn-pri');
+  if(saveBtn) { saveBtn.textContent = 'Save Changes'; saveBtn.onclick = ()=>saveEditBooking(id); }
+  document.getElementById('add-booking-modal').classList.add('open');
+}
+
+function saveEditBooking(id) {
+  const b = cData.bookings.find(x=>x.id===id);
+  if(!b) return;
+  const propId = document.getElementById('mb-prop').value;
+  const prop = cData.properties.find(p=>p.id===propId);
+  const cin = document.getElementById('mb-cin').value;
+  const cout = document.getElementById('mb-cout').value;
+  b.propId = propId;
+  b.propName = prop?.name||b.propName;
+  b.propEmoji = prop?.emoji||b.propEmoji;
+  b.propGradient = prop?.gradient||b.propGradient;
+  b.guestName = document.getElementById('mb-guest').value.trim()||b.guestName;
+  b.guestEmail = document.getElementById('mb-email').value;
+  b.checkin = cin;
+  b.checkout = cout;
+  b.nights = cin&&cout?Math.max(1,Math.round((new Date(cout)-new Date(cin))/86400000)):b.nights;
+  b.numGuests = parseInt(document.getElementById('mb-nguests').value)||b.numGuests;
+  b.price = parseFloat(document.getElementById('mb-price').value)||b.price;
+  b.status = document.getElementById('mb-status').value;
+  b.source = document.getElementById('mb-source').value;
+  saveUserData(cUid,cData);
+  closeModal('add-booking-modal');
+  // Reset modal back to add mode
+  const modal = document.querySelector('#add-booking-modal h2');
+  if(modal) modal.textContent = '📅 Add Booking';
+  const saveBtn = document.querySelector('#add-booking-modal .btn-pri');
+  if(saveBtn) { saveBtn.textContent = 'Add Booking'; saveBtn.onclick = addBooking; }
+  toast('Booking updated! ✓');
+  // Trigger review automation if marked complete
+  if(b.status==='completed') onBookingCompleted(b);
+  renderAll();
+  if(bookFilter==='calendar') renderBookingCalendar();
 }
 
 // ════════════════════════════════════════════
