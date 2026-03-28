@@ -3284,6 +3284,8 @@ document.addEventListener('keydown', e=>{
   if((e.metaKey||e.ctrlKey) && e.key==='k') { e.preventDefault(); openSearch(); }
   if(e.key==='Escape') { closeModal('search-modal'); }
 });
+
+function openStripe(plan){
   const links={
     pro:'https://buy.stripe.com/cNi8wO2EtdfT8wdbo44sE00',
     business:'https://buy.stripe.com/aFafZg2EtdfTcMt9fW4sE01'
