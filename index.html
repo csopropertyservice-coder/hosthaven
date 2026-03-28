@@ -1188,17 +1188,15 @@ async function renderAdmin() {
   table.innerHTML = `<div style="text-align:center;padding:20px;color:var(--txt3)"><div class="spinner" style="margin:0 auto 8px"></div>Loading users…</div>`;
 
   try {
-    // Get all profiles
-    let {data:profiles, error} = await sb.from('profiles').select('*').order('created_at',{ascending:false});
-    if(error) throw error;
-
-    // If no profiles found, try to sync from auth (admin only workaround)
-    if(!profiles || profiles.length === 0) {
-      table.innerHTML = `<div class="empty-state"><div class="es-i">👥</div><h3>No users yet</h3><p>Users will appear here when they sign up on your live site</p></div>`;
-      document.getElementById('adm-total').textContent='0';
-      document.getElementById('adm-paid').textContent='0';
-      document.getElementById('adm-pro').textContent='0';
-      document.getElementById('adm-mrr').textContent='$0';
+    const {data:profiles, error} = await sb.from('profiles').select('*').order('created_at',{ascending:false});
+    
+    // Debug — show raw result
+    if(error) {
+      table.innerHTML=`<div class="empty-state"><div class="es-i">⚠️</div><h3>Supabase Error</h3><p style="font-size:11px;word-break:break-all">${JSON.stringify(error)}</p></div>`;
+      return;
+    }
+    if(!profiles || profiles.length===0) {
+      table.innerHTML=`<div class="empty-state"><div class="es-i">👥</div><h3>No users found</h3><p>Supabase returned 0 rows. Data exists in DB but query returned empty.</p><p style="font-size:11px;margin-top:8px">User ID: ${cUid}</p></div>`;
       return;
     }
 
@@ -1242,7 +1240,7 @@ async function renderAdmin() {
       </tbody>
     </table>`;
   } catch(e) {
-    table.innerHTML=`<div class="empty-state"><div class="es-i">⚠️</div><h3>Database not set up</h3><p>${e.message}</p><button class="btn btn-pri" onclick="setupSupabase()" style="margin-top:10px">View Setup SQL</button></div>`;
+    table.innerHTML=`<div class="empty-state"><div class="es-i">⚠️</div><h3>JavaScript Error</h3><p style="font-size:11px;word-break:break-all">${e.message}</p></div>`;
   }
 }
 
