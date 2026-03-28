@@ -650,6 +650,8 @@ select{color:var(--txt)!important;}
         <div class="sb-item" onclick="nav('analytics',this)"><span class="ico">📈</span>Analytics</div>
         <div class="sb-item" onclick="nav('reports',this)"><span class="ico">📄</span>Reports</div>
         <div class="sb-item" onclick="nav('reviews',this)"><span class="ico">⭐</span>Reviews</div>
+        <div class="sb-item" onclick="nav('expenses',this)"><span class="ico">💸</span>Expenses</div>
+        <div class="sb-item" onclick="nav('blacklist',this)"><span class="ico">🚫</span>Guest Blacklist</div>
         <div class="sb-item" onclick="nav('settings',this)"><span class="ico">⚙️</span>Settings</div>
         <div class="sb-item" id="team-nav-item" style="display:none" onclick="nav('team',this)"><span class="ico">👥</span>Team Access</div>
         <div class="sb-item" id="admin-nav-item" style="display:none" onclick="nav('admin',this)"><span class="ico">👑</span>Admin Panel</div>
@@ -821,12 +823,42 @@ select{color:var(--txt)!important;}
 <!-- ██ PRICING ████████████████████████████ -->
 <div class="page" id="page-pricing">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-    <div style="font-size:13px;color:var(--txt2)">Manage nightly rates per property</div>
-    <button class="btn btn-pri" onclick="toast('Smart pricing enabled! Rates adjust ±15% based on demand.')">⚡ Smart Pricing</button>
+    <div style="font-size:13px;color:var(--txt2)">Manage nightly rates, discounts, and seasonal pricing</div>
   </div>
-  <div class="g2">
-    <div class="card"><div class="card-hd"><div class="card-title">Property Rates</div></div><div class="card-body" id="pricing-list"><div class="empty-state"><div class="es-i">💰</div><p>Add properties first</p></div></div></div>
-    <div class="card"><div class="card-hd"><div class="card-title">April 2026</div></div><div class="card-body"><div class="cal-grid"><div class="cal-h">S</div><div class="cal-h">M</div><div class="cal-h">T</div><div class="cal-h">W</div><div class="cal-h">T</div><div class="cal-h">F</div><div class="cal-h">S</div><div class="cal-d" style="background:transparent"></div><div class="cal-d" style="background:transparent"></div><div class="cal-d avail">1</div><div class="cal-d avail">2</div><div class="cal-d booked">3</div><div class="cal-d booked">4</div><div class="cal-d booked">5</div><div class="cal-d booked">6</div><div class="cal-d booked">7</div><div class="cal-d avail">8</div><div class="cal-d avail">9</div><div class="cal-d avail">10</div><div class="cal-d booked">11</div><div class="cal-d booked">12</div><div class="cal-d booked">13</div><div class="cal-d avail">14</div><div class="cal-d avail">15</div><div class="cal-d booked">16</div><div class="cal-d booked">17</div><div class="cal-d booked">18</div><div class="cal-d booked">19</div><div class="cal-d booked">20</div><div class="cal-d avail">21</div><div class="cal-d avail">22</div><div class="cal-d avail">23</div><div class="cal-d booked">24</div><div class="cal-d booked">25</div><div class="cal-d today booked">26</div><div class="cal-d blocked">27</div><div class="cal-d blocked">28</div><div class="cal-d avail">29</div><div class="cal-d avail">30</div></div><div style="display:flex;gap:12px;margin-top:10px"><div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--txt3)"><div style="width:8px;height:8px;border-radius:2px;background:var(--terra)"></div>Booked</div><div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--txt3)"><div style="width:8px;height:8px;border-radius:2px;background:var(--sand);border:1px solid var(--tan)"></div>Open</div><div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--txt3)"><div style="width:8px;height:8px;border-radius:2px;background:var(--espresso)"></div>Blocked</div></div></div></div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card"><div class="card-hd"><div class="card-title">💰 Base Rates</div></div><div class="card-body" id="pricing-list"><div class="empty-state"><div class="es-i">💰</div><p>Add properties first</p></div></div></div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">🧮 Discount Calculator</div></div>
+      <div class="card-body">
+        <div style="font-size:12px;color:var(--txt2);margin-bottom:12px;line-height:1.5">Calculate the final price after applying weekly or monthly discounts.</div>
+        <div class="fi"><label>Base Nightly Rate ($)</label><input id="disc-rate" type="number" placeholder="100" oninput="calcDiscount()"></div>
+        <div class="fi"><label>Number of Nights</label><input id="disc-nights" type="number" placeholder="7" oninput="calcDiscount()"></div>
+        <div class="fi"><label>Discount %</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+            <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" onclick="setDiscount(10)">10% Weekly</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" onclick="setDiscount(20)">20% Monthly</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" onclick="setDiscount(15)">15% Custom</button>
+          </div>
+          <input id="disc-pct" type="number" placeholder="10" oninput="calcDiscount()" min="0" max="100">
+        </div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;margin-top:4px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:var(--txt2)">Subtotal</span><span style="font-size:13px;color:var(--txt)" id="disc-subtotal">$0</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:var(--txt2)">Discount</span><span style="font-size:13px;color:var(--sage)" id="disc-savings">-$0</span></div>
+          <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border)"><span style="font-size:14px;font-weight:600;color:var(--txt)">Guest Pays</span><span style="font-family:'Fraunces',serif;font-size:22px;color:var(--terra)" id="disc-final">$0</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seasonal Pricing -->
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-title">🌿 Seasonal Pricing Rules</div>
+      <button class="btn btn-pri" style="font-size:11px;padding:4px 10px" onclick="openModal('add-season-modal')">+ Add Season</button>
+    </div>
+    <div class="card-body" id="seasons-list">
+      <div style="font-size:13px;color:var(--txt3);text-align:center;padding:16px">No seasonal rules yet — add peak season, holiday, or low season pricing</div>
+    </div>
   </div>
 </div>
 
@@ -965,7 +997,7 @@ select{color:var(--txt)!important;}
 
   <div class="g2">
     <div class="card"><div class="card-hd"><div class="card-title">Revenue by Property</div></div><div class="card-body" id="an-by-prop"><div class="empty-state" style="padding:20px"><p>Add bookings to see breakdown</p></div></div></div>
-    <div class="card"><div class="card-hd"><div class="card-title">Booking Sources</div></div><div class="card-body" id="an-sources"><div class="src-item"><div class="src-hd"><span>Airbnb</span><strong>—</strong></div><div class="src-bar"><div class="src-fill" style="width:0%;background:var(--terra)"></div></div></div><div class="src-item"><div class="src-hd"><span>VRBO</span><strong>—</strong></div><div class="src-bar"><div class="src-fill" style="width:0%;background:var(--sage)"></div></div></div><div class="src-item"><div class="src-hd"><span>Direct</span><strong>—</strong></div><div class="src-bar"><div class="src-fill" style="width:0%;background:var(--gold)"></div></div></div><div class="src-item"><div class="src-hd"><span>Other</span><strong>—</strong></div><div class="src-bar"><div class="src-fill" style="width:0%;background:var(--navy)"></div></div></div></div></div>
+    <div class="card"><div class="card-hd"><div class="card-title">Booking Sources</div></div><div class="card-body" id="source-chart"><div style="font-size:12px;color:var(--txt3);text-align:center;padding:16px">Add bookings to see source breakdown</div></div></div>
   </div>
 </div>
 
@@ -1103,6 +1135,45 @@ select{color:var(--txt)!important;}
   </div><!-- /shell -->
 </div><!-- /app -->
 
+<!-- ██ EXPENSES ████████████████████████████ -->
+<div class="page" id="page-expenses">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Track property expenses and calculate true profit</div>
+    <button class="btn btn-pri" onclick="openModal('add-expense-modal')">+ Add Expense</button>
+  </div>
+  <!-- Summary cards -->
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Total Revenue</div><div class="kpi-val" id="exp-revenue">$0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Total Expenses</div><div class="kpi-val" id="exp-total">$0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Net Profit</div><div class="kpi-val" id="exp-profit">$0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Profit Margin</div><div class="kpi-val" id="exp-margin">0%</div></div>
+  </div>
+  <!-- Expense list -->
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-title">All Expenses</div>
+      <button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="exportExpensesCSV()">↓ Export CSV</button>
+    </div>
+    <div class="card-body" id="expenses-list">
+      <div class="empty-state"><div class="es-i">💸</div><h3>No expenses yet</h3><p>Track cleaning fees, repairs, supplies, and more</p><button class="btn btn-pri" onclick="openModal('add-expense-modal')" style="margin-top:10px">Add First Expense</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ BLACKLIST ████████████████████████████ -->
+<div class="page" id="page-blacklist">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Flag guests you never want to host again</div>
+    <button class="btn btn-pri" onclick="openModal('add-blacklist-modal')">+ Flag Guest</button>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">🚫 Flagged Guests</div></div>
+    <div class="card-body" id="blacklist-list">
+      <div class="empty-state"><div class="es-i">🚫</div><h3>No flagged guests</h3><p>Add guests you want to avoid in the future</p></div>
+    </div>
+  </div>
+</div>
+
 <!-- ██ TEAM ACCESS ████████████████████████ -->
 <div class="page" id="page-team">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
@@ -1226,7 +1297,7 @@ select{color:var(--txt)!important;}
   <button class="btn btn-ghost btn-w" style="margin-top:8px" onclick="closeModal('error-modal')">Dismiss</button>
 </div></div>
 
-<div class="modal-bg" id="add-property-modal"><div class="modal"><h2>🏠 Add Property</h2><div class="g2"><div class="fi"><label>Name</label><input id="mp-name" placeholder="Sunset Loft"></div><div class="fi"><label>Emoji</label><input id="mp-emoji" value="🏡"></div></div><div class="fi"><label>Location</label><input id="mp-loc" placeholder="Downtown, New York"></div><div class="fi"><label>Description</label><textarea id="mp-desc" placeholder="A beautiful place…"></textarea></div><div class="g2"><div class="fi"><label>Nightly Rate ($)</label><input id="mp-rate" type="number" placeholder="120"></div><div class="fi"><label>Max Guests</label><input id="mp-guests" type="number" placeholder="4"></div></div><div class="g2"><div class="fi"><label>WiFi Name</label><input id="mp-wifi"></div><div class="fi"><label>WiFi Password</label><input id="mp-wifipw"></div></div><div class="g2"><div class="fi"><label>Door Code</label><input id="mp-door" placeholder="#4821"></div><div class="fi"><label>Parking</label><input id="mp-parking" placeholder="Spot B3"></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-property-modal')">Cancel</button><button class="btn btn-pri" onclick="addProperty()">Add Property</button></div></div></div>
+<div class="modal-bg" id="add-property-modal"><div class="modal"><h2>🏠 Add Property</h2><div class="g2"><div class="fi"><label>Name</label><input id="mp-name" placeholder="Sunset Loft"></div><div class="fi"><label>Emoji</label><input id="mp-emoji" value="🏡"></div></div><div class="fi"><label>Location</label><input id="mp-loc" placeholder="Downtown, New York"></div><div class="fi"><label>Description</label><textarea id="mp-desc" placeholder="A beautiful place…"></textarea></div><div class="g2"><div class="fi"><label>Nightly Rate ($)</label><input id="mp-rate" type="number" placeholder="120"></div><div class="fi"><label>Max Guests</label><input id="mp-guests" type="number" placeholder="4"></div></div><div class="g2"><div class="fi"><label>WiFi Name</label><input id="mp-wifi"></div><div class="fi"><label>WiFi Password</label><input id="mp-wifipw"></div></div><div class="g2"><div class="fi"><label>Door Code</label><input id="mp-door" placeholder="#4821"></div><div class="fi"><label>Parking</label><input id="mp-parking" placeholder="Spot B3"></div></div><div class="fi"><label>Property Photo (optional)</label><input type="file" id="mp-photo" accept="image/*" onchange="previewPhoto('mp-photo','mp-photo-preview')" style="font-size:12px"><div id="mp-photo-preview" style="margin-top:8px"></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-property-modal')">Cancel</button><button class="btn btn-pri" onclick="addProperty()">Add Property</button></div></div></div>
 
 <div class="modal-bg" id="edit-property-modal"><div class="modal" style="width:min(580px,96vw)">
   <input type="hidden" id="ep-id">
@@ -1264,6 +1335,7 @@ select{color:var(--txt)!important;}
     <div class="fi"><label>Parking Info</label><input id="ep-parking"></div>
   </div>
   <div class="fi"><label>Property Notes (private)</label><textarea id="ep-notes" placeholder="e.g. Boiler needs reset sometimes, neighbor contact: John 555-1234, spare key under mat…" style="min-height:70px"></textarea></div>
+  <div class="fi"><label>Update Photo (optional)</label><input type="file" id="ep-photo" accept="image/*" onchange="previewPhoto('ep-photo','ep-photo-preview')" style="font-size:12px"><div id="ep-photo-preview" style="margin-top:8px"></div></div>
 
   <!-- Recent bookings -->
   <div style="margin-top:4px">
@@ -1313,6 +1385,84 @@ select{color:var(--txt)!important;}
   <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-staff-modal')">Cancel</button><button class="btn btn-pri" onclick="addStaff()">Add Staff</button></div>
 </div></div>
 
+<div class="modal-bg" id="add-season-modal"><div class="modal"><h2>🌿 Add Seasonal Pricing</h2>
+  <div class="fi"><label>Season Name</label><input id="sea-name" placeholder="Summer Peak, Holiday Season, Low Season…"></div>
+  <div class="g2">
+    <div class="fi"><label>Start Date</label><input id="sea-start" type="date"></div>
+    <div class="fi"><label>End Date</label><input id="sea-end" type="date"></div>
+  </div>
+  <div class="fi"><label>Pricing Adjustment</label>
+    <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" onclick="document.getElementById('sea-adj').value='+25';document.getElementById('sea-type').value='percent'">+25% Peak</button>
+      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" onclick="document.getElementById('sea-adj').value='+50';document.getElementById('sea-type').value='percent'">+50% Holiday</button>
+      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" onclick="document.getElementById('sea-adj').value='-20';document.getElementById('sea-type').value='percent'">-20% Low</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <input id="sea-adj" placeholder="+25 or -10" style="flex:1;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)">
+      <select id="sea-type" style="background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)">
+        <option value="percent">% change</option>
+        <option value="fixed">$ fixed rate</option>
+      </select>
+    </div>
+  </div>
+  <div class="fi"><label>Apply to</label><select id="sea-prop" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="">All Properties</option></select></div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" onclick="closeModal('add-season-modal')">Cancel</button>
+    <button class="btn btn-pri" onclick="addSeason()">Save Season</button>
+  </div>
+</div></div>
+
+<div class="modal-bg" id="add-expense-modal"><div class="modal"><h2>💸 Add Expense</h2>
+  <div class="fi"><label>Description</label><input id="exp-desc" placeholder="Cleaning fee, supplies, repair…"></div>
+  <div class="g2">
+    <div class="fi"><label>Amount ($)</label><input id="exp-amount" type="number" placeholder="0.00"></div>
+    <div class="fi"><label>Date</label><input id="exp-date" type="date"></div>
+  </div>
+  <div class="fi"><label>Category</label>
+    <select id="exp-cat" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)">
+      <option value="cleaning">🧹 Cleaning</option>
+      <option value="supplies">🛒 Supplies</option>
+      <option value="repair">🔧 Repair & Maintenance</option>
+      <option value="utilities">💡 Utilities</option>
+      <option value="mortgage">🏠 Mortgage / Rent</option>
+      <option value="insurance">🛡 Insurance</option>
+      <option value="tax">📋 Tax & Fees</option>
+      <option value="other">📦 Other</option>
+    </select>
+  </div>
+  <div class="fi"><label>Property</label><select id="exp-prop"><option value="">All Properties</option></select></div>
+  <div class="fi"><label>Notes (optional)</label><input id="exp-notes" placeholder="Additional details…"></div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" onclick="closeModal('add-expense-modal')">Cancel</button>
+    <button class="btn btn-pri" onclick="addExpense()">Add Expense</button>
+  </div>
+</div></div>
+
+<div class="modal-bg" id="add-blacklist-modal"><div class="modal"><h2>🚫 Flag Guest</h2>
+  <div style="background:rgba(196,105,58,.08);border:1px solid var(--terra-l);border-radius:8px;padding:12px;font-size:12px;color:var(--txt2);margin-bottom:14px;line-height:1.5">This list is private and only visible to you. Use it to remember guests you don't want to host again.</div>
+  <div class="g2">
+    <div class="fi"><label>Guest Name</label><input id="bl-name" placeholder="John Smith"></div>
+    <div class="fi"><label>Email (optional)</label><input id="bl-email" type="email" placeholder="guest@email.com"></div>
+  </div>
+  <div class="fi"><label>Reason</label>
+    <select id="bl-reason" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)">
+      <option value="property_damage">🏚 Property damage</option>
+      <option value="noise">🔊 Noise complaints</option>
+      <option value="unauthorized_guests">👥 Unauthorized guests</option>
+      <option value="smoking">🚬 Smoking inside</option>
+      <option value="cleanliness">🗑 Left property in bad condition</option>
+      <option value="late_checkout">⏰ Repeated late checkout</option>
+      <option value="bad_reviews">⭐ Left unfair review</option>
+      <option value="other">❌ Other</option>
+    </select>
+  </div>
+  <div class="fi"><label>Notes</label><textarea id="bl-notes" placeholder="What happened? Add any details for future reference…" style="min-height:70px"></textarea></div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" onclick="closeModal('add-blacklist-modal')">Cancel</button>
+    <button class="btn btn-pri" style="background:var(--terra)" onclick="addToBlacklist()">Flag Guest</button>
+  </div>
+</div></div>
+
 <div class="modal-bg" id="add-review-modal"><div class="modal"><h2>⭐ Add Review</h2><div class="fi"><label>Guest Name</label><input id="mr-name"></div><div class="fi"><label>Property</label><select id="mr-prop"><option value="">None</option></select></div><div class="fi"><label>Rating (1–5)</label><input id="mr-rating" type="number" min="1" max="5" value="5"></div><div class="fi"><label>Review</label><textarea id="mr-content" placeholder="Amazing stay…"></textarea></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-review-modal')">Cancel</button><button class="btn btn-pri" onclick="addReview()">Add</button></div></div></div>
 
 <div class="modal-bg" id="search-modal"><div class="modal" style="max-width:520px">
@@ -1352,7 +1502,7 @@ let wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
 const LOCAL_KEY = 'hh_local_v1';
 const getLocal = () => { try{return JSON.parse(localStorage.getItem(LOCAL_KEY))||{};}catch{return {};} };
 const setLocal = d => localStorage.setItem(LOCAL_KEY, JSON.stringify(d));
-const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; return d; };
+const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],expenses:[],blacklist:[],seasons:[],plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; if(!d.expenses)d.expenses=[]; if(!d.blacklist)d.blacklist=[]; if(!d.seasons)d.seasons=[]; return d; };
 const saveLocalData = (uid,d) => { const l=getLocal(); l[uid]=d; setLocal(l); };
 
 // Save to both local and Supabase
@@ -1808,7 +1958,7 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 //  NAV
 // ════════════════════════════════════════════
-const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',ical:'iCal Sync',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews & Automation',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
+const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',ical:'iCal Sync',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews & Automation',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel',expenses:'💸 Expenses',blacklist:'🚫 Guest Blacklist'};
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
@@ -1826,6 +1976,9 @@ function nav(id,el){
   if(id==='staff'){renderStaff();setTimeout(()=>{showChecklist('turnover',document.querySelector('#checklist-tabs button'));},150);}
   if(id==='reviews')setTimeout(()=>checkReviewRequests(),100);
   if(id==='team')setTimeout(()=>renderTeam(),50);
+  if(id==='expenses')setTimeout(()=>renderExpenses(),50);
+  if(id==='blacklist')setTimeout(()=>renderBlacklist(),50);
+  if(id==='pricing')setTimeout(()=>{renderPricing();renderSeasons();},50);
 }
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sb-overlay').classList.add('show');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('show');}
@@ -1942,21 +2095,23 @@ CREATE POLICY "Public profiles" ON public.profiles FOR ALL USING (true);`);
 //  PROPERTIES
 // ════════════════════════════════════════════
 const GRADS=['pi1','pi2','pi3','pi4','pi5','pi6'];
-function addProperty(){
+async function addProperty(){
   const name=document.getElementById('mp-name').value.trim();
   if(!name){toast('Enter a property name');return;}
   if((cData.plan||'free')==='free'&&cData.properties.length>=1){closeModal('add-property-modal');showUpgradeModal('You\'ve reached the free plan limit of 1 property.');return;}
-  const p={id:'p_'+Date.now(),name,emoji:document.getElementById('mp-emoji').value||'🏡',location:document.getElementById('mp-loc').value||'',description:document.getElementById('mp-desc').value||'',rate:parseFloat(document.getElementById('mp-rate').value)||100,maxGuests:parseInt(document.getElementById('mp-guests').value)||2,wifi:document.getElementById('mp-wifi').value||'',wifiPw:document.getElementById('mp-wifipw').value||'',doorCode:document.getElementById('mp-door').value||'',parking:document.getElementById('mp-parking').value||'',occupancy:Math.floor(Math.random()*25)+65,rating:(4.7+Math.random()*.3).toFixed(2),gradient:GRADS[cData.properties.length%6],created:Date.now()};
+  const photo = await getPhotoData('mp-photo');
+  const p={id:'p_'+Date.now(),name,emoji:document.getElementById('mp-emoji').value||'🏡',location:document.getElementById('mp-loc').value||'',description:document.getElementById('mp-desc').value||'',rate:parseFloat(document.getElementById('mp-rate').value)||100,maxGuests:parseInt(document.getElementById('mp-guests').value)||2,wifi:document.getElementById('mp-wifi').value||'',wifiPw:document.getElementById('mp-wifipw').value||'',doorCode:document.getElementById('mp-door').value||'',parking:document.getElementById('mp-parking').value||'',photo:photo||null,occupancy:Math.floor(Math.random()*25)+65,rating:(4.7+Math.random()*.3).toFixed(2),gradient:GRADS[cData.properties.length%6],created:Date.now()};
   cData.properties.push(p);saveUserData(cUid,cData);closeModal('add-property-modal');
   ['mp-name','mp-loc','mp-desc','mp-rate','mp-guests','mp-wifi','mp-wifipw','mp-door','mp-parking'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('mp-emoji').value='🏡';
+  document.getElementById('mp-photo-preview').innerHTML='';
   toast(`"${name}" added! 🏠`);renderAll();
 }
 function renderProperties(){
   const grid=document.getElementById('props-grid');const count=document.getElementById('props-count');
   const props=cData.properties;count.textContent=props.length+' propert'+(props.length===1?'y':'ies');
   if(!props.length){grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="es-i">🏠</div><h3>No properties yet</h3><button class="btn btn-pri" onclick="openModal('add-property-modal')" style="margin-top:10px">Add First</button></div>`;return;}
-  grid.innerHTML=props.map(p=>{const bs=cData.bookings.filter(b=>b.propId===p.id&&b.status!=='cancelled');return `<div class="prop-card" onclick="openPropertyDetail('${p.id}')"><div class="prop-img ${p.gradient}">${p.emoji}</div><div class="prop-body"><div class="prop-name">${p.name}</div><div class="prop-loc">📍 ${p.location||'No location'}</div><div class="prop-stats"><div class="prop-stat">⭐ <strong>${p.rating}</strong></div><div class="prop-stat">💰 <strong>$${p.rate}/night</strong></div><div class="prop-stat">📅 <strong>${bs.length} stays</strong></div></div></div><div class="prop-foot"><span style="font-size:10px;color:var(--txt3)">${p.occupancy}%</span><div class="occ-bar"><div class="occ-fill" style="width:${p.occupancy}%"></div></div><span style="font-size:10px;color:var(--txt3)">occ.</span></div></div>`;}).join('');
+  grid.innerHTML=props.map(p=>{const bs=cData.bookings.filter(b=>b.propId===p.id&&b.status!=='cancelled');return `<div class="prop-card" onclick="openPropertyDetail('${p.id}')"><div class="prop-img ${p.gradient}" style="${p.photo?'background-image:url('+p.photo+');background-size:cover;background-position:center;font-size:0':''}"><span style="font-size:32px">${p.photo?'':p.emoji}</span></div><div class="prop-body"><div class="prop-name">${p.name}</div><div class="prop-loc">📍 ${p.location||'No location'}</div><div class="prop-stats"><div class="prop-stat">⭐ <strong>${p.rating}</strong></div><div class="prop-stat">💰 <strong>$${p.rate}/night</strong></div><div class="prop-stat">📅 <strong>${bs.length} stays</strong></div></div></div><div class="prop-foot"><span style="font-size:10px;color:var(--txt3)">${p.occupancy}%</span><div class="occ-bar"><div class="occ-fill" style="width:${p.occupancy}%"></div></div><span style="font-size:10px;color:var(--txt3)">occ.</span></div></div>`;}).join('');
 }
 
 function openPropertyDetail(propId) {
@@ -2069,6 +2224,25 @@ function addBooking(){
   const b={id:'b_'+Date.now(),propId,propName:prop?.name||'Property',propEmoji:prop?.emoji||'🏠',propGradient:prop?.gradient||'pi1',guestName:guest,guestEmail:document.getElementById('mb-email').value,numGuests:parseInt(document.getElementById('mb-nguests').value)||2,checkin:cin,checkout:cout,nights,price:parseFloat(document.getElementById('mb-price').value)||0,status:document.getElementById('mb-status').value,source:document.getElementById('mb-source').value,notes:document.getElementById('mb-notes')?.value||'',created:Date.now()};
   cData.bookings.push(b);saveUserData(cUid,cData);closeModal('add-booking-modal');
   toast(`Booking for ${guest} added!`);renderAll();
+  // Auto-create cleaning task on checkout date
+  if(cout) {
+    const cleanTask = {
+      id:'t_'+Date.now(),
+      title:`Turnover clean — ${prop?.name||'Property'}`,
+      propId,
+      propName:prop?.name||'Property',
+      assignee:'',
+      due:cout,
+      priority:'high',
+      done:false,
+      created:Date.now(),
+      autoCreated:true
+    };
+    if(!cData.tasks) cData.tasks=[];
+    cData.tasks.push(cleanTask);
+    saveUserData(cUid,cData);
+    toast(`Booking added! 🧹 Cleaning task auto-created for ${cout}`);
+  }
   // Send email notification
   sendNotification('new_booking', {
     guestName: b.guestName,
@@ -2553,7 +2727,271 @@ function onBookingCompleted(booking) {
   }, 500);
 }
 // ════════════════════════════════════════════
-//  LEGAL — TERMS & PRIVACY
+//  EXPENSES
+// ════════════════════════════════════════════
+function addExpense() {
+  const desc = document.getElementById('exp-desc').value.trim();
+  const amount = parseFloat(document.getElementById('exp-amount').value)||0;
+  const date = document.getElementById('exp-date').value;
+  if(!desc||!amount){toast('Enter description and amount');return;}
+  if(!cData.expenses) cData.expenses=[];
+  const exp = {
+    id:'ex_'+Date.now(),
+    desc, amount, date,
+    cat: document.getElementById('exp-cat').value,
+    propId: document.getElementById('exp-prop').value,
+    notes: document.getElementById('exp-notes').value,
+    created: Date.now()
+  };
+  cData.expenses.push(exp);
+  saveUserData(cUid,cData);
+  closeModal('add-expense-modal');
+  ['exp-desc','exp-amount','exp-date','exp-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  toast(`Expense of $${amount} added!`);
+  renderExpenses();
+}
+
+function deleteExpense(id) {
+  cData.expenses = (cData.expenses||[]).filter(e=>e.id!==id);
+  saveUserData(cUid,cData);
+  renderExpenses();
+  toast('Expense deleted');
+}
+
+function renderExpenses() {
+  const expenses = cData.expenses||[];
+  const revenue = cData.bookings.filter(b=>b.status!=='cancelled').reduce((s,b)=>s+b.price,0);
+  const totalExp = expenses.reduce((s,e)=>s+e.amount,0);
+  const profit = revenue - totalExp;
+  const margin = revenue ? Math.round(profit/revenue*100) : 0;
+
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('exp-revenue','$'+revenue.toLocaleString());
+  set('exp-total','$'+totalExp.toLocaleString());
+  set('exp-profit',(profit>=0?'+$':'-$')+Math.abs(profit).toLocaleString());
+  set('exp-margin',margin+'%');
+
+  const profitEl = document.getElementById('exp-profit');
+  if(profitEl) profitEl.style.color = profit>=0?'var(--sage)':'var(--terra)';
+
+  const list = document.getElementById('expenses-list');
+  if(!list) return;
+  if(!expenses.length){
+    list.innerHTML='<div class="empty-state"><div class="es-i">💸</div><h3>No expenses yet</h3><p>Track cleaning fees, repairs, supplies, and more</p><button class="btn btn-pri" onclick="openModal(\'add-expense-modal\')" style="margin-top:10px">Add First Expense</button></div>';
+    return;
+  }
+  const catEmojis={cleaning:'🧹',supplies:'🛒',repair:'🔧',utilities:'💡',mortgage:'🏠',insurance:'🛡',tax:'📋',other:'📦'};
+  const sorted = [...expenses].sort((a,b)=>new Date(b.date||b.created)-new Date(a.date||a.created));
+  list.innerHTML = sorted.map(e=>`
+    <div class="row" style="cursor:default">
+      <div style="font-size:22px;flex-shrink:0">${catEmojis[e.cat]||'📦'}</div>
+      <div class="row-info">
+        <div class="row-title">${e.desc}</div>
+        <div class="row-sub">${e.cat} · ${e.date||'No date'}${e.notes?' · '+e.notes:''}</div>
+      </div>
+      <div class="row-price" style="color:var(--terra)">-$${e.amount.toLocaleString()}</div>
+      <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra);flex-shrink:0" onclick="deleteExpense('${e.id}')">🗑</button>
+    </div>`).join('');
+}
+
+function exportExpensesCSV() {
+  const expenses = cData.expenses||[];
+  if(!expenses.length){toast('No expenses to export');return;}
+  const header = 'Date,Description,Category,Amount,Property,Notes';
+  const rows = expenses.map(e=>`"${e.date||''}","${e.desc}","${e.cat}",${e.amount},"${e.propId?cData.properties.find(p=>p.id===e.propId)?.name||'':'All'}","${e.notes||''}"`);
+  const csv = header+'\n'+rows.join('\n');
+  const a = document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='hosthaven-expenses-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  toast('Expenses exported! ✓');
+}
+
+// ════════════════════════════════════════════
+//  GUEST BLACKLIST
+// ════════════════════════════════════════════
+function addToBlacklist() {
+  const name = document.getElementById('bl-name').value.trim();
+  if(!name){toast('Enter guest name');return;}
+  if(!cData.blacklist) cData.blacklist=[];
+  const reasonLabels={property_damage:'Property damage',noise:'Noise complaints',unauthorized_guests:'Unauthorized guests',smoking:'Smoking inside',cleanliness:'Left in bad condition',late_checkout:'Late checkout',bad_reviews:'Unfair review',other:'Other'};
+  const entry = {
+    id:'bl_'+Date.now(),
+    name,
+    email: document.getElementById('bl-email').value,
+    reason: document.getElementById('bl-reason').value,
+    reasonLabel: reasonLabels[document.getElementById('bl-reason').value]||'Other',
+    notes: document.getElementById('bl-notes').value,
+    created: Date.now()
+  };
+  cData.blacklist.push(entry);
+  saveUserData(cUid,cData);
+  closeModal('add-blacklist-modal');
+  ['bl-name','bl-email','bl-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  toast(`${name} flagged`);
+  renderBlacklist();
+}
+
+function removeFromBlacklist(id) {
+  if(!confirm('Remove this guest from the blacklist?')) return;
+  cData.blacklist = (cData.blacklist||[]).filter(b=>b.id!==id);
+  saveUserData(cUid,cData);
+  renderBlacklist();
+  toast('Guest removed from blacklist');
+}
+
+function renderBlacklist() {
+  const list = document.getElementById('blacklist-list');
+  if(!list) return;
+  const bl = cData.blacklist||[];
+  if(!bl.length){
+    list.innerHTML='<div class="empty-state"><div class="es-i">🚫</div><h3>No flagged guests</h3><p>Add guests you want to avoid in the future</p></div>';
+    return;
+  }
+  list.innerHTML = bl.map(g=>`
+    <div class="row" style="cursor:default">
+      <div style="width:38px;height:38px;border-radius:50%;background:rgba(196,105,58,.12);color:var(--terra);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🚫</div>
+      <div class="row-info">
+        <div class="row-title">${g.name}</div>
+        <div class="row-sub">${g.email?g.email+' · ':''}${g.reasonLabel}${g.notes?' · "'+g.notes+'"':''}</div>
+      </div>
+      <div style="font-size:11px;color:var(--txt3);flex-shrink:0">${new Date(g.created).toLocaleDateString()}</div>
+      <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;flex-shrink:0" onclick="removeFromBlacklist('${g.id}')">Remove</button>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════
+//  DISCOUNT CALCULATOR
+// ════════════════════════════════════════════
+function setDiscount(pct) {
+  const el = document.getElementById('disc-pct');
+  if(el){el.value=pct;calcDiscount();}
+}
+
+function calcDiscount() {
+  const rate = parseFloat(document.getElementById('disc-rate')?.value)||0;
+  const nights = parseInt(document.getElementById('disc-nights')?.value)||0;
+  const pct = parseFloat(document.getElementById('disc-pct')?.value)||0;
+  const subtotal = rate * nights;
+  const savings = Math.round(subtotal * pct/100 * 100)/100;
+  const final = subtotal - savings;
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('disc-subtotal','$'+subtotal.toLocaleString());
+  set('disc-savings','-$'+savings.toLocaleString());
+  set('disc-final','$'+final.toLocaleString());
+}
+
+// ════════════════════════════════════════════
+//  SEASONAL PRICING
+// ════════════════════════════════════════════
+function addSeason() {
+  const name = document.getElementById('sea-name').value.trim();
+  const start = document.getElementById('sea-start').value;
+  const end = document.getElementById('sea-end').value;
+  const adj = document.getElementById('sea-adj').value.trim();
+  if(!name||!start||!end||!adj){toast('Fill in all fields');return;}
+  if(!cData.seasons) cData.seasons=[];
+  cData.seasons.push({
+    id:'s_'+Date.now(), name, start, end, adj,
+    type: document.getElementById('sea-type').value,
+    propId: document.getElementById('sea-prop').value,
+    created: Date.now()
+  });
+  saveUserData(cUid,cData);
+  closeModal('add-season-modal');
+  toast(`"${name}" season added!`);
+  renderSeasons();
+}
+
+function deleteSeason(id) {
+  cData.seasons = (cData.seasons||[]).filter(s=>s.id!==id);
+  saveUserData(cUid,cData);
+  renderSeasons();
+  toast('Season deleted');
+}
+
+function renderSeasons() {
+  const list = document.getElementById('seasons-list');
+  if(!list) return;
+  const seasons = cData.seasons||[];
+  if(!seasons.length){
+    list.innerHTML='<div style="font-size:13px;color:var(--txt3);text-align:center;padding:16px">No seasonal rules yet — add peak season, holiday, or low season pricing</div>';
+    return;
+  }
+  list.innerHTML = seasons.map(s=>{
+    const prop = cData.properties.find(p=>p.id===s.propId);
+    const adj = parseFloat(s.adj);
+    const color = adj>0?'var(--sage)':'var(--terra)';
+    return `<div class="row" style="cursor:default">
+      <div style="font-size:22px">🌿</div>
+      <div class="row-info">
+        <div class="row-title">${s.name}</div>
+        <div class="row-sub">${s.start} → ${s.end}${prop?' · '+prop.name:' · All properties'}</div>
+      </div>
+      <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:${color}">${adj>0?'+':''}${s.adj}${s.type==='percent'?'%':'$'}</div>
+      <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra);flex-shrink:0" onclick="deleteSeason('${s.id}')">🗑</button>
+    </div>`;
+  }).join('');
+}
+
+function renderPricing(){
+  const list=document.getElementById('pricing-list');if(!list)return;
+  const props=cData.properties;
+  if(!props.length){list.innerHTML=`<div class="empty-state"><div class="es-i">💰</div><p>Add properties first</p></div>`;return;}
+  list.innerHTML=props.map(p=>`<div class="row" style="cursor:default"><div style="font-size:18px">${p.emoji}</div><div class="row-info"><div class="row-title">${p.name}</div><div class="row-sub">${p.location}</div></div><div style="text-align:right"><div style="font-family:'Fraunces',serif;font-size:20px;color:var(--txt)">$${p.rate}</div><div style="font-size:10px;color:var(--txt3)">per night</div></div><button class="btn btn-ghost" style="font-size:10px;padding:4px 9px" onclick="openPropertyDetail('${p.id}')">Edit Rate</button></div>`).join('');
+  renderSeasons();
+}
+
+// ════════════════════════════════════════════
+//  PHOTO UPLOAD
+// ════════════════════════════════════════════
+function previewPhoto(inputId, previewId) {
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  if(!input||!preview||!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    preview.innerHTML=`<img src="${e.target.result}" style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">`;
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function getPhotoData(inputId) {
+  return new Promise(resolve=>{
+    const input = document.getElementById(inputId);
+    if(!input||!input.files[0]){resolve(null);return;}
+    const reader = new FileReader();
+    reader.onload = e=>resolve(e.target.result);
+    reader.readAsDataURL(input.files[0]);
+  });
+}
+
+// ════════════════════════════════════════════
+//  BOOKING SOURCE ANALYTICS
+// ════════════════════════════════════════════
+function renderBookingSourceChart() {
+  const chartEl = document.getElementById('source-chart');
+  if(!chartEl) return;
+  const bookings = cData.bookings.filter(b=>b.status!=='cancelled');
+  if(!bookings.length){chartEl.innerHTML='<div style="font-size:12px;color:var(--txt3);text-align:center;padding:16px">Add bookings to see source breakdown</div>';return;}
+  const sources={};
+  bookings.forEach(b=>{const s=b.source||'other';sources[s]=(sources[s]||0)+1;});
+  const total=bookings.length;
+  const colors={airbnb:'#FF5A5F',vrbo:'#3D82BE',direct:'var(--sage)',other:'var(--gold)',booking_com:'#003580'};
+  const labels={airbnb:'Airbnb',vrbo:'VRBO',direct:'Direct',other:'Other',booking_com:'Booking.com'};
+  chartEl.innerHTML=Object.entries(sources).sort((a,b)=>b[1]-a[1]).map(([src,count])=>{
+    const pct=Math.round(count/total*100);
+    return `<div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:12px;color:var(--txt)">${labels[src]||src}</span>
+        <span style="font-size:12px;color:var(--txt3)">${count} booking${count>1?'s':''} (${pct}%)</span>
+      </div>
+      <div style="background:var(--border);border-radius:4px;height:8px;overflow:hidden">
+        <div style="width:${pct}%;height:100%;background:${colors[src]||'var(--terra)'};border-radius:4px;transition:width .4s"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
 // ════════════════════════════════════════════
 function showLegal(type) {
   const title = document.getElementById('legal-title');
@@ -3326,19 +3764,8 @@ function renderAnalytics(){
     }
   }
 
-  // Booking sources breakdown
-  const srcEl = document.getElementById('an-sources');
-  if(srcEl && bookings.length) {
-    const sources = {airbnb:0,vrbo:0,direct:0,other:0};
-    bookings.forEach(b=>{ const s=b.source||'other'; sources[s]=(sources[s]||0)+b.price; });
-    const totalSrc = Object.values(sources).reduce((s,v)=>s+v,1);
-    const srcColors = {airbnb:'var(--terra)',vrbo:'var(--sage)',direct:'var(--gold)',other:'var(--navy)'};
-    srcEl.innerHTML = Object.entries(sources).filter(([,v])=>v>0).map(([k,v])=>`
-      <div class="src-item">
-        <div class="src-hd"><span style="text-transform:capitalize">${k}</span><strong>${Math.round(v/totalSrc*100)}%</strong></div>
-        <div class="src-bar"><div class="src-fill" style="width:${Math.round(v/totalSrc*100)}%;background:${srcColors[k]}"></div></div>
-      </div>`).join('');
-  }
+  // Booking sources breakdown - dynamic chart
+  renderBookingSourceChart();
 }
 
 // ════════════════════════════════════════════
@@ -3554,13 +3981,16 @@ function updateBadges(){
   if(bb){bb.textContent=pending;bb.style.display=pending?'':'none';}if(mb){mb.textContent=unread;mb.style.display=unread?'':'none';}
 }
 function openModal(id){
-  const drops=[{sel:'mb-prop',ph:'<option value="">Select property…</option>'},{sel:'mm-prop',ph:'<option value="">None</option>'},{sel:'mt-prop',ph:'<option value="">None</option>'},{sel:'mr-prop',ph:'<option value="">None</option>'},{sel:'ic-prop',ph:'<option value="">None</option>'}];
+  const drops=[{sel:'mb-prop',ph:'<option value="">Select property…</option>'},{sel:'mm-prop',ph:'<option value="">None</option>'},{sel:'mt-prop',ph:'<option value="">None</option>'},{sel:'mr-prop',ph:'<option value="">None</option>'},{sel:'ic-prop',ph:'<option value="">None</option>'},{sel:'exp-prop',ph:'<option value="">All Properties</option>'},{sel:'sea-prop',ph:'<option value="">All Properties</option>'}];
   drops.forEach(({sel,ph})=>{const el=document.getElementById(sel);if(el)el.innerHTML=ph+cData.properties.map(p=>`<option value="${p.id}">${p.emoji} ${p.name}</option>`).join('');});
-  // Populate booking dropdown in message modal
   const bookingDrop = document.getElementById('mm-booking');
   if(bookingDrop) {
     bookingDrop.innerHTML = '<option value="">No booking</option>' +
       cData.bookings.filter(b=>b.status!=='cancelled').map(b=>`<option value="${b.id}">${b.guestName} · ${b.propName} · ${b.checkin||'TBD'}</option>`).join('');
+  }
+  if(id==='add-expense-modal') {
+    const dateEl = document.getElementById('exp-date');
+    if(dateEl && !dateEl.value) dateEl.value = new Date().toISOString().slice(0,10);
   }
   document.getElementById(id).classList.add('open');
 }
