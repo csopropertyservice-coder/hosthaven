@@ -978,7 +978,7 @@ async function doSignup() {
   if(!name||!email||!pw){showErr('signup-err','Please fill in all fields');return;}
   if(pw.length<8){showErr('signup-err','Password must be 8+ characters');return;}
   const btn=document.querySelector('#screen-signup .btn-pri');
-  if(btn){btn.textContent='Creating account…';btn.disabled=true;}
+  if(btn){btn.textContent='Creating account…';btn.disabled=true;btn.style.opacity='.7';}
   try {
     const {data,error} = await sb.auth.signUp({
       email, password:pw,
@@ -990,16 +990,31 @@ async function doSignup() {
       cUser = {email, name};
       getUserData(cUid);
       applyDark(false);
-      // Create profile in Supabase
-      await sb.from('profiles').upsert({id:cUid, email, full_name:name, plan:'free'}, {onConflict:'id'});
-      startOnboard(cUser);
+      // Insert profile into Supabase so admin panel can see them
+      await sb.from('profiles').upsert({
+        id: cUid,
+        email,
+        full_name: name,
+        plan: 'free',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }, {onConflict:'id'});
+      // Auto sign in immediately after signup
+      const {data:signInData, error:signInError} = await sb.auth.signInWithPassword({email, password:pw});
+      if(!signInError && signInData.user) {
+        cUid = signInData.user.id;
+        cUser = {email, name};
+        getUserData(cUid);
+      }
+      ['landing','login','signup','onboard'].forEach(n=>{const el=document.getElementById('screen-'+n);if(el)el.style.display='none';});
+      if(!cData.onboarded) { startOnboard(cUser); } else { launchApp(cUser); }
     } else {
-      showErr('signup-err','Please check your email to confirm your account, then log in.');
+      showErr('signup-err','Something went wrong. Please try again.');
     }
   } catch(e) {
-    showErr('signup-err', e.message.includes('already registered')?'Email already registered. Try logging in.':e.message);
+    showErr('signup-err', e.message.includes('already registered')||e.message.includes('already been registered')?'Email already registered — try logging in instead.':e.message);
   } finally {
-    if(btn){btn.textContent='Create Account →';btn.disabled=false;}
+    if(btn){btn.textContent='Create Account →';btn.disabled=false;btn.style.opacity='1';}
   }
 }
 
@@ -1152,14 +1167,24 @@ function renderAll(){renderDashboard();renderProperties();renderBookings();rende
 async function renderAdmin() {
   const table = document.getElementById('admin-user-table');
   const search = (document.getElementById('adm-search')?.value||'').toLowerCase();
-  table.innerHTML = `<div style="text-align:center;padding:20px;color:var(--txt3)">Loading users…</div>`;
+  table.innerHTML = `<div style="text-align:center;padding:20px;color:var(--txt3)"><div class="spinner" style="margin:0 auto 8px"></div>Loading users…</div>`;
 
   try {
-    // Fetch all profiles from Supabase
-    const {data:profiles, error} = await sb.from('profiles').select('*').order('created_at',{ascending:false});
+    // Get all profiles
+    let {data:profiles, error} = await sb.from('profiles').select('*').order('created_at',{ascending:false});
     if(error) throw error;
 
-    let allUsers = profiles || [];
+    // If no profiles found, try to sync from auth (admin only workaround)
+    if(!profiles || profiles.length === 0) {
+      table.innerHTML = `<div class="empty-state"><div class="es-i">👥</div><h3>No users yet</h3><p>Users will appear here when they sign up on your live site</p></div>`;
+      document.getElementById('adm-total').textContent='0';
+      document.getElementById('adm-paid').textContent='0';
+      document.getElementById('adm-pro').textContent='0';
+      document.getElementById('adm-mrr').textContent='$0';
+      return;
+    }
+
+    let allUsers = profiles;
     if(search) allUsers = allUsers.filter(u => u.email?.toLowerCase().includes(search) || u.full_name?.toLowerCase().includes(search));
 
     const pro = allUsers.filter(u=>u.plan==='pro');
@@ -1171,8 +1196,6 @@ async function renderAdmin() {
     document.getElementById('adm-paid').textContent=paid.length;
     document.getElementById('adm-pro').textContent=pro.length;
     document.getElementById('adm-mrr').textContent='$'+mrr.toLocaleString();
-
-    if(!allUsers.length){table.innerHTML=`<div class="empty-state"><div class="es-i">👥</div><p>No users yet — they appear here when people sign up</p></div>`;return;}
 
     const planColor=p=>p==='business'?'pill-blue':p==='pro'?'pill-green':'pill-amber';
     const planLabel=p=>p==='business'?'💼 Business':p==='pro'?'🚀 Pro':'⭐ Free';
@@ -1189,7 +1212,7 @@ async function renderAdmin() {
             <td style="font-size:12px;color:var(--txt2)">${u.email||'—'}</td>
             <td><span class="pill ${planColor(plan)}">${planLabel(plan)}</span></td>
             <td style="font-size:11px;color:var(--txt3)">${joined}</td>
-            <td>${isMe?'<span style="font-size:11px;color:var(--txt3)">You</span>':`
+            <td>${isMe?`<span style="font-size:11px;color:var(--txt3)">You (Admin)</span>`:`
               <div style="display:flex;gap:5px;flex-wrap:wrap">
                 <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="upgradePlan('${u.id}','${u.email||''}','${u.full_name||'User'}','pro')">→ Pro</button>
                 <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="upgradePlan('${u.id}','${u.email||''}','${u.full_name||'User'}','business')">→ Biz</button>
@@ -1201,7 +1224,7 @@ async function renderAdmin() {
       </tbody>
     </table>`;
   } catch(e) {
-    table.innerHTML=`<div class="empty-state"><div class="es-i">⚠️</div><p>Could not load users. Make sure your Supabase profiles table exists.</p><button class="btn btn-pri" onclick="setupSupabase()" style="margin-top:10px">Setup Database</button></div>`;
+    table.innerHTML=`<div class="empty-state"><div class="es-i">⚠️</div><h3>Database not set up</h3><p>${e.message}</p><button class="btn btn-pri" onclick="setupSupabase()" style="margin-top:10px">View Setup SQL</button></div>`;
   }
 }
 
