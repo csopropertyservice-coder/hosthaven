@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HostHaven — Smarter Airbnb Management</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23C4693A'/><text y='.9em' font-size='70' x='12'>🏡</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
@@ -213,7 +214,7 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 /* CONTENT */
 .main-area { flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden; }
 .content { padding:24px;flex:1; }
-@media(max-width:600px){ .content { padding:16px; } }
+@media(max-width:600px){ .content { padding:16px; } .g4{grid-template-columns:repeat(2,1fr)!important;} #dash-main-grid{grid-template-columns:1fr!important;} #dash-quick-actions button{font-size:11px!important;padding:6px 10px!important;} .kpi-val{font-size:22px!important;} }
 .page { display:none;animation:fadeUp .3s ease both; }
 .page.active { display:block; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)} }
@@ -699,16 +700,44 @@ select{color:var(--txt)!important;}
     </div>
   </div>
 
-  <div class="g4" style="margin-bottom:18px">
-    <div class="kpi k1"><div class="kpi-label">Revenue This Month</div><div class="kpi-val" id="kpi-rev">$0</div><span class="delta up">↑ live</span></div>
-    <div class="kpi k2"><div class="kpi-label">Active Bookings</div><div class="kpi-val" id="kpi-book">0</div><span class="delta up">confirmed</span></div>
-    <div class="kpi k3"><div class="kpi-label">Properties</div><div class="kpi-val" id="kpi-props">0</div><span class="delta up">active</span></div>
-    <div class="kpi k4"><div class="kpi-label">Unread Messages</div><div class="kpi-val" id="kpi-msgs">0</div></div>
+  <!-- Quick Actions Strip -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px" id="dash-quick-actions">
+    <button class="btn btn-pri" onclick="openModal('add-booking-modal')" style="font-size:12px;padding:7px 14px">📅 Add Booking</button>
+    <button class="btn btn-ghost" onclick="openModal('add-message-modal')" style="font-size:12px;padding:7px 14px">💬 New Message</button>
+    <button class="btn btn-ghost" onclick="openModal('add-property-modal')" style="font-size:12px;padding:7px 14px">🏠 Add Property</button>
+    <button class="btn btn-ghost" onclick="nav('ical',document.querySelector('[onclick*=ical]'))" style="font-size:12px;padding:7px 14px">🔄 Sync iCal</button>
+    <button class="btn btn-ghost" onclick="openSearch()" style="font-size:12px;padding:7px 14px;margin-left:auto">🔍 Search</button>
   </div>
+
+  <!-- Today's alerts -->
+  <div id="dash-alerts" style="margin-bottom:14px"></div>
+
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1" style="cursor:pointer" onclick="nav('bookings',document.querySelector('[onclick*=bookings]'))"><div class="kpi-label">Revenue This Month</div><div class="kpi-val" id="kpi-rev">$0</div><span class="delta up" id="kpi-rev-delta">↑ live</span></div>
+    <div class="kpi k2" style="cursor:pointer" onclick="nav('bookings',document.querySelector('[onclick*=bookings]'))"><div class="kpi-label">Active Bookings</div><div class="kpi-val" id="kpi-book">0</div><span class="delta up">confirmed</span></div>
+    <div class="kpi k3" style="cursor:pointer" onclick="nav('properties',document.querySelector('[onclick*=properties]'))"><div class="kpi-label">Occupancy Rate</div><div class="kpi-val" id="kpi-occ">0%</div><span class="delta up" id="kpi-occ-delta">this month</span></div>
+    <div class="kpi k4" style="cursor:pointer" onclick="nav('messages',document.querySelector('[onclick*=messages]'))"><div class="kpi-label">Unread Messages</div><div class="kpi-val" id="kpi-msgs">0</div><span class="delta" id="kpi-msgs-delta">messages</span></div>
+  </div>
+
   <div style="display:grid;grid-template-columns:1fr 340px;gap:14px;margin-bottom:14px" id="dash-main-grid">
     <div class="card"><div class="card-hd"><div class="card-title">Upcoming Bookings</div><button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="nav('bookings',document.querySelector('[onclick*=bookings]'))">All →</button></div><div class="card-body" id="dash-bookings"><div class="empty-state"><div class="es-i">📅</div><h3>No bookings yet</h3><button class="btn btn-pri" onclick="openModal('add-booking-modal')" style="margin-top:10px">Add Booking</button></div></div></div>
     <div class="card"><div class="card-hd"><div class="card-title">Recent Messages</div><button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="nav('messages',document.querySelector('[onclick*=messages]'))">All →</button></div><div class="card-body" id="dash-msgs" style="padding-top:8px"><div class="empty-state" style="padding:24px 10px"><div class="es-i">💬</div><p>No messages yet</p></div></div></div>
   </div>
+
+  <!-- Revenue mini chart -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-hd">
+      <div class="card-title">Revenue Last 6 Months</div>
+      <div style="font-size:12px;color:var(--txt3)" id="dash-rev-total"></div>
+    </div>
+    <div class="card-body">
+      <div id="dash-rev-chart" style="display:flex;align-items:flex-end;gap:6px;height:80px;padding-top:8px">
+        <div style="font-size:12px;color:var(--txt3)">Add bookings to see revenue trend</div>
+      </div>
+      <div id="dash-rev-labels" style="display:flex;gap:6px;margin-top:6px"></div>
+    </div>
+  </div>
+
   <div class="card"><div class="card-hd"><div class="card-title">Your Properties</div><button class="btn btn-pri" style="font-size:11px;padding:4px 10px" onclick="openModal('add-property-modal')">+ Add</button></div><div class="card-body" id="dash-props"><div class="empty-state"><div class="es-i">🏠</div><h3>No properties yet</h3><button class="btn btn-pri" onclick="openModal('add-property-modal')" style="margin-top:10px">Add Property</button></div></div></div>
 </div>
 
@@ -3390,18 +3419,97 @@ function renderReviews(){
 // ════════════════════════════════════════════
 function renderDashboard(){
   renderGettingStarted();
-  const bookings=cData.bookings.filter(b=>b.status!=='cancelled');const rev=bookings.reduce((s,b)=>s+b.price,0);const unread=cData.messages.filter(m=>m.unread).length;
+  const now = new Date();
+  const today = now.toISOString().slice(0,10);
+  const tomorrow = new Date(now.getTime()+86400000).toISOString().slice(0,10);
+  const thisMonth = now.toISOString().slice(0,7);
+
+  const bookings = cData.bookings.filter(b=>b.status!=='cancelled');
+  const thisMonthBookings = bookings.filter(b=>b.checkin?.startsWith(thisMonth));
+  const rev = thisMonthBookings.reduce((s,b)=>s+b.price,0);
+  const unread = cData.messages.filter(m=>m.unread).length;
+
+  // Occupancy rate this month
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  const bookedDays = thisMonthBookings.reduce((s,b)=>s+(b.nights||0),0);
+  const occ = cData.properties.length ? Math.min(100, Math.round(bookedDays/(daysInMonth*cData.properties.length)*100)) : 0;
+
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  set('kpi-rev','$'+rev.toLocaleString());set('kpi-book',bookings.length);set('kpi-props',cData.properties.length);set('kpi-msgs',unread);
-  const dbEl=document.getElementById('dash-bookings');const recent=[...cData.bookings].sort((a,b)=>b.created-a.created).slice(0,4);
-  if(!recent.length)dbEl.innerHTML=`<div class="empty-state"><div class="es-i">📅</div><h3>No bookings yet</h3><button class="btn btn-pri" onclick="openModal('add-booking-modal')" style="margin-top:10px">Add Booking</button></div>`;
-  else{const spc={confirmed:'pill-green',pending:'pill-amber',completed:'pill-blue',cancelled:'pill-red'};dbEl.innerHTML=recent.map(b=>`<div class="row"><div class="row-thumb ${b.propGradient||'pi1'}">${b.propEmoji||'🏠'}</div><div class="row-info"><div class="row-title">${b.propName} — ${b.guestName}</div><div class="row-sub">${b.checkin||'TBD'} → ${b.checkout||'TBD'}</div></div><span class="pill ${spc[b.status]||'pill-blue'}">${b.status}</span><div class="row-price">$${b.price.toLocaleString()}</div></div>`).join('');}
-  const dmEl=document.getElementById('dash-msgs');const recentMsgs=[...cData.messages].sort((a,b)=>b.created-a.created).slice(0,4);
-  if(!recentMsgs.length)dmEl.innerHTML=`<div class="empty-state" style="padding:20px 10px"><div class="es-i">💬</div><p>No messages</p></div>`;
-  else dmEl.innerHTML=recentMsgs.map(m=>{const last=m.messages[m.messages.length-1];return `<div class="msg-li" onclick="nav('messages',document.querySelector('[onclick*=messages]'));setTimeout(()=>openConv('${m.id}'),50)"><div class="msg-av" style="background:${m.avatarBg};color:${m.avatarColor}">${m.initials}</div><div style="flex:1;min-width:0"><div class="msg-li-name">${m.guestName}</div><div class="msg-li-prev">${last.text.substring(0,40)}…</div></div>${m.unread?`<div style="width:6px;height:6px;background:var(--terra);border-radius:50%"></div>`:''}</div>`;}).join('');
-  const dpEl=document.getElementById('dash-props');
-  if(!cData.properties.length)dpEl.innerHTML=`<div class="empty-state"><div class="es-i">🏠</div><h3>No properties yet</h3><button class="btn btn-pri" onclick="openModal('add-property-modal')" style="margin-top:10px">Add First</button></div>`;
-  else dpEl.innerHTML=`<div class="g3">`+cData.properties.map(p=>`<div class="prop-card"><div class="prop-img ${p.gradient}">${p.emoji}</div><div class="prop-body"><div class="prop-name">${p.name}</div><div class="prop-loc">📍 ${p.location||'No location'}</div><div class="prop-stats"><div class="prop-stat">⭐ <strong>${p.rating}</strong></div><div class="prop-stat">💰 <strong>$${p.rate}/n</strong></div></div></div></div>`).join('')+`</div>`;
+  set('kpi-rev','$'+rev.toLocaleString());
+  set('kpi-book',bookings.filter(b=>b.status==='confirmed').length);
+  set('kpi-occ',occ+'%');
+  set('kpi-msgs',unread);
+
+  const occDelta = document.getElementById('kpi-occ-delta');
+  if(occDelta) { occDelta.textContent = occ >= 70 ? '↑ great' : occ >= 40 ? '↑ good' : 'this month'; occDelta.className = 'delta '+(occ>=40?'up':''); }
+  const msgsDelta = document.getElementById('kpi-msgs-delta');
+  if(msgsDelta) { msgsDelta.textContent = unread > 0 ? 'need reply' : 'all read'; msgsDelta.className = 'delta '+(unread>0?'':'up'); }
+
+  // Today's alerts
+  const alertsEl = document.getElementById('dash-alerts');
+  if(alertsEl) {
+    const checkinsToday = bookings.filter(b=>b.checkin===today);
+    const checkoutsToday = bookings.filter(b=>b.checkout===today);
+    const checkoutsTomorrow = bookings.filter(b=>b.checkout===tomorrow);
+    const pendingCount = cData.bookings.filter(b=>b.status==='pending').length;
+    let alerts = [];
+    if(checkinsToday.length) alerts.push(`<div style="display:flex;align-items:center;gap:10px;background:rgba(107,143,113,.12);border:1px solid var(--sage);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--txt)">🟢 <strong>${checkinsToday.length} check-in${checkinsToday.length>1?'s':''} today</strong> — ${checkinsToday.map(b=>b.guestName).join(', ')}</div>`);
+    if(checkoutsToday.length) alerts.push(`<div style="display:flex;align-items:center;gap:10px;background:rgba(196,105,58,.08);border:1px solid var(--terra-l);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--txt)">🔴 <strong>${checkoutsToday.length} checkout${checkoutsToday.length>1?'s':''} today</strong> — ${checkoutsToday.map(b=>b.guestName).join(', ')}</div>`);
+    if(checkoutsTomorrow.length) alerts.push(`<div style="display:flex;align-items:center;gap:10px;background:rgba(200,168,75,.1);border:1px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--txt)">🟡 <strong>${checkoutsTomorrow.length} checkout${checkoutsTomorrow.length>1?'s':''} tomorrow</strong> — ${checkoutsTomorrow.map(b=>b.guestName).join(', ')}</div>`);
+    if(pendingCount) alerts.push(`<div style="display:flex;align-items:center;gap:10px;background:rgba(200,168,75,.1);border:1px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--txt)" onclick="nav('bookings',document.querySelector('[onclick*=bookings]'))" style="cursor:pointer">⏳ <strong>${pendingCount} pending booking${pendingCount>1?'s':''}</strong> awaiting confirmation <span style="margin-left:auto;font-size:11px;color:var(--terra)">Review →</span></div>`);
+    alertsEl.innerHTML = alerts.length ? `<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">${alerts.join('')}</div>` : '';
+  }
+
+  // Recent bookings
+  const dbEl = document.getElementById('dash-bookings');
+  const recent = [...cData.bookings].sort((a,b)=>{
+    const aDate = new Date(a.checkin||0); const bDate = new Date(b.checkin||0);
+    return aDate - bDate;
+  }).filter(b=>b.status!=='cancelled'&&b.status!=='completed').slice(0,5);
+  if(!recent.length) dbEl.innerHTML=`<div class="empty-state"><div class="es-i">📅</div><h3>No upcoming bookings</h3><button class="btn btn-pri" onclick="openModal('add-booking-modal')" style="margin-top:10px">Add Booking</button></div>`;
+  else {
+    const spc={confirmed:'pill-green',pending:'pill-amber',completed:'pill-blue',cancelled:'pill-red'};
+    dbEl.innerHTML=recent.map(b=>`<div class="row"><div class="row-thumb ${b.propGradient||'pi1'}">${b.propEmoji||'🏠'}</div><div class="row-info"><div class="row-title">${b.propName} — ${b.guestName}</div><div class="row-sub">${b.checkin||'TBD'} → ${b.checkout||'TBD'} · ${b.nights||0} nights</div></div><span class="pill ${spc[b.status]||'pill-blue'}">${b.status}</span><div class="row-price">$${b.price.toLocaleString()}</div></div>`).join('');
+  }
+
+  // Recent messages
+  const dmEl = document.getElementById('dash-msgs');
+  const recentMsgs = [...cData.messages].sort((a,b)=>b.created-a.created).slice(0,4);
+  if(!recentMsgs.length) dmEl.innerHTML=`<div class="empty-state" style="padding:20px 10px"><div class="es-i">💬</div><p>No messages</p></div>`;
+  else dmEl.innerHTML=recentMsgs.map(m=>{const last=m.messages[m.messages.length-1];return `<div class="msg-li" onclick="nav('messages',document.querySelector('[onclick*=messages]'));setTimeout(()=>openConv('${m.id}'),50)"><div class="msg-av" style="background:${m.avatarBg};color:${m.avatarColor}">${m.initials}</div><div style="flex:1;min-width:0"><div class="msg-li-name" style="font-weight:${m.unread?700:500}">${m.guestName}</div><div class="msg-li-prev">${last.text.substring(0,40)}…</div></div>${m.unread?`<div style="width:6px;height:6px;background:var(--terra);border-radius:50%;flex-shrink:0"></div>`:''}</div>`;}).join('');
+
+  // Revenue chart - last 6 months
+  const months = [];
+  for(let i=5;i>=0;i--) {
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    const key = d.toISOString().slice(0,7);
+    const label = d.toLocaleString('default',{month:'short'});
+    const rev = bookings.filter(b=>b.checkin?.startsWith(key)).reduce((s,b)=>s+b.price,0);
+    months.push({key,label,rev});
+  }
+  const maxRev = Math.max(...months.map(m=>m.rev), 1);
+  const totalRev = bookings.reduce((s,b)=>s+b.price,0);
+  set('dash-rev-total','Total: $'+totalRev.toLocaleString());
+  const chartEl = document.getElementById('dash-rev-chart');
+  const labelsEl = document.getElementById('dash-rev-labels');
+  if(chartEl && months.some(m=>m.rev>0)) {
+    chartEl.innerHTML = months.map((m,i)=>{
+      const h = Math.max(4, Math.round((m.rev/maxRev)*72));
+      const isThis = i===5;
+      return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="font-size:10px;color:var(--txt3)">${m.rev>0?'$'+m.rev.toLocaleString():''}</div>
+        <div style="width:100%;height:${h}px;background:${isThis?'var(--terra)':'var(--border2)'};border-radius:4px 4px 0 0;transition:height .4s ease"></div>
+      </div>`;
+    }).join('');
+    if(labelsEl) labelsEl.innerHTML = months.map(m=>`<div style="flex:1;font-size:10px;color:var(--txt3);text-align:center">${m.label}</div>`).join('');
+  } else if(chartEl) {
+    chartEl.innerHTML = '<div style="font-size:12px;color:var(--txt3);padding:20px 0">Add bookings to see revenue trend</div>';
+  }
+
+  // Properties
+  const dpEl = document.getElementById('dash-props');
+  if(!cData.properties.length) dpEl.innerHTML=`<div class="empty-state"><div class="es-i">🏠</div><h3>No properties yet</h3><button class="btn btn-pri" onclick="openModal('add-property-modal')" style="margin-top:10px">Add First</button></div>`;
+  else dpEl.innerHTML=`<div class="g3">`+cData.properties.map(p=>`<div class="prop-card"><div class="prop-img ${p.gradient}">${p.emoji}</div><div class="prop-body"><div class="prop-name">${p.name}</div><div class="prop-loc">📍 ${p.location||'No location'}</div><div class="prop-stats"><div class="prop-stat">⭐ <strong>${p.rating||'—'}</strong></div><div class="prop-stat">💰 <strong>$${p.rate}/n</strong></div></div></div></div>`).join('')+`</div>`;
 }
 
 // ════════════════════════════════════════════
