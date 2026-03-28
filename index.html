@@ -1498,15 +1498,33 @@ function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg
 //  BOOT — check existing session
 // ════════════════════════════════════════════
 async function bootApp() {
+  // Show loading screen instead of login while checking session
+  ['landing','login','signup','onboard','forgot','reset'].forEach(s=>{
+    const el=document.getElementById('screen-'+s);
+    if(el) el.style.display='none';
+  });
+  // Show a minimal loading indicator
+  document.body.insertAdjacentHTML('beforeend',`
+    <div id="boot-loader" style="position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px">
+      <div style="width:44px;height:44px;background:var(--terra);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px">🏡</div>
+      <div style="font-family:'Fraunces',serif;font-size:20px;color:var(--txt);letter-spacing:-.3px">HostHaven</div>
+      <div class="spinner"></div>
+    </div>`);
+
   // Check for password reset token in URL hash
   const hash = window.location.hash;
   if(hash.includes('type=recovery')) {
     const {data:{session}} = await sb.auth.getSession();
-    if(session) { showScreen('reset'); return; }
+    if(session) {
+      document.getElementById('boot-loader')?.remove();
+      showScreen('reset');
+      return;
+    }
   }
 
-  document.getElementById('screen-login').style.display='flex';
   const {data:{session}} = await sb.auth.getSession();
+  document.getElementById('boot-loader')?.remove();
+
   if(session?.user) {
     cUid = session.user.id;
     cUser = {email:session.user.email, name:session.user.user_metadata?.full_name||session.user.email.split('@')[0]};
