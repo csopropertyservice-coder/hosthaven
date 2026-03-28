@@ -822,7 +822,54 @@ select{color:var(--txt)!important;}
 ══════════════════════════════════════ -->
 <div class="modal-bg" id="add-property-modal"><div class="modal"><h2>🏠 Add Property</h2><div class="g2"><div class="fi"><label>Name</label><input id="mp-name" placeholder="Sunset Loft"></div><div class="fi"><label>Emoji</label><input id="mp-emoji" value="🏡"></div></div><div class="fi"><label>Location</label><input id="mp-loc" placeholder="Downtown, New York"></div><div class="fi"><label>Description</label><textarea id="mp-desc" placeholder="A beautiful place…"></textarea></div><div class="g2"><div class="fi"><label>Nightly Rate ($)</label><input id="mp-rate" type="number" placeholder="120"></div><div class="fi"><label>Max Guests</label><input id="mp-guests" type="number" placeholder="4"></div></div><div class="g2"><div class="fi"><label>WiFi Name</label><input id="mp-wifi"></div><div class="fi"><label>WiFi Password</label><input id="mp-wifipw"></div></div><div class="g2"><div class="fi"><label>Door Code</label><input id="mp-door" placeholder="#4821"></div><div class="fi"><label>Parking</label><input id="mp-parking" placeholder="Spot B3"></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-property-modal')">Cancel</button><button class="btn btn-pri" onclick="addProperty()">Add Property</button></div></div></div>
 
-<div class="modal-bg" id="add-booking-modal"><div class="modal"><h2>📅 Add Booking</h2><div class="fi"><label>Property</label><select id="mb-prop"></select></div><div class="g2"><div class="fi"><label>Guest Name</label><input id="mb-guest" placeholder="Marcus Kim"></div><div class="fi"><label>Guest Email</label><input id="mb-email" type="email"></div></div><div class="g2"><div class="fi"><label>Check-in</label><input id="mb-cin" type="date"></div><div class="fi"><label>Check-out</label><input id="mb-cout" type="date"></div></div><div class="g2"><div class="fi"><label>Guests</label><input id="mb-nguests" type="number" value="2"></div><div class="fi"><label>Total Price ($)</label><input id="mb-price" type="number"></div></div><div class="fi"><label>Status</label><select id="mb-status"><option value="confirmed">Confirmed</option><option value="pending">Pending</option><option value="completed">Completed</option></select></div><div class="fi"><label>Source</label><select id="mb-source"><option value="airbnb">Airbnb</option><option value="vrbo">VRBO</option><option value="direct">Direct</option><option value="other">Other</option></select></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-booking-modal')">Cancel</button><button class="btn btn-pri" onclick="addBooking()">Add Booking</button></div></div></div>
+<div class="modal-bg" id="edit-property-modal"><div class="modal" style="width:min(580px,96vw)">
+  <input type="hidden" id="ep-id">
+  <h2>🏠 Edit Property</h2>
+
+  <!-- Stats bar -->
+  <div style="display:flex;gap:12px;margin-bottom:20px">
+    <div style="background:var(--sand);border-radius:10px;padding:12px 16px;flex:1;text-align:center">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);margin-bottom:4px">Total Revenue</div>
+      <div style="font-family:'Fraunces',serif;font-size:22px;color:var(--txt)" id="ep-rev">$0</div>
+    </div>
+    <div style="background:var(--sand);border-radius:10px;padding:12px 16px;flex:1;text-align:center">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);margin-bottom:4px">Total Stays</div>
+      <div style="font-family:'Fraunces',serif;font-size:22px;color:var(--txt)" id="ep-stays">0</div>
+    </div>
+  </div>
+
+  <!-- Edit fields -->
+  <div class="g2">
+    <div class="fi"><label>Property Name</label><input id="ep-name"></div>
+    <div class="fi"><label>Emoji</label><input id="ep-emoji"></div>
+  </div>
+  <div class="fi"><label>Location</label><input id="ep-loc"></div>
+  <div class="fi"><label>Description</label><textarea id="ep-desc"></textarea></div>
+  <div class="g2">
+    <div class="fi"><label>Nightly Rate ($)</label><input id="ep-rate" type="number"></div>
+    <div class="fi"><label>Max Guests</label><input id="ep-guests" type="number"></div>
+  </div>
+  <div class="g2">
+    <div class="fi"><label>WiFi Name</label><input id="ep-wifi"></div>
+    <div class="fi"><label>WiFi Password</label><input id="ep-wifipw"></div>
+  </div>
+  <div class="g2">
+    <div class="fi"><label>Door Code</label><input id="ep-door"></div>
+    <div class="fi"><label>Parking Info</label><input id="ep-parking"></div>
+  </div>
+
+  <!-- Recent bookings -->
+  <div style="margin-top:4px">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);margin-bottom:8px">Recent Bookings</div>
+    <div id="ep-bookings"></div>
+  </div>
+
+  <div class="modal-foot">
+    <button class="btn btn-ghost" style="color:var(--terra);border-color:var(--terra-l);margin-right:auto" onclick="deleteProperty()">🗑 Delete Property</button>
+    <button class="btn btn-ghost" onclick="closeModal('edit-property-modal')">Cancel</button>
+    <button class="btn btn-pri" onclick="saveProperty()">Save Changes</button>
+  </div>
+</div></div><div class="modal"><h2>📅 Add Booking</h2><div class="fi"><label>Property</label><select id="mb-prop"></select></div><div class="g2"><div class="fi"><label>Guest Name</label><input id="mb-guest" placeholder="Marcus Kim"></div><div class="fi"><label>Guest Email</label><input id="mb-email" type="email"></div></div><div class="g2"><div class="fi"><label>Check-in</label><input id="mb-cin" type="date"></div><div class="fi"><label>Check-out</label><input id="mb-cout" type="date"></div></div><div class="g2"><div class="fi"><label>Guests</label><input id="mb-nguests" type="number" value="2"></div><div class="fi"><label>Total Price ($)</label><input id="mb-price" type="number"></div></div><div class="fi"><label>Status</label><select id="mb-status"><option value="confirmed">Confirmed</option><option value="pending">Pending</option><option value="completed">Completed</option></select></div><div class="fi"><label>Source</label><select id="mb-source"><option value="airbnb">Airbnb</option><option value="vrbo">VRBO</option><option value="direct">Direct</option><option value="other">Other</option></select></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-booking-modal')">Cancel</button><button class="btn btn-pri" onclick="addBooking()">Add Booking</button></div></div></div>
 
 <div class="modal-bg" id="add-message-modal"><div class="modal"><h2>💬 New Conversation</h2><div class="fi"><label>Guest Name</label><input id="mm-name" placeholder="Marcus Kim"></div><div class="fi"><label>Property</label><select id="mm-prop"><option value="">None</option></select></div><div class="fi"><label>First Message</label><textarea id="mm-msg" placeholder="Hi! Quick question about check-in…"></textarea></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-message-modal')">Cancel</button><button class="btn btn-pri" onclick="addConversation()">Start</button></div></div></div>
 
@@ -1300,12 +1347,83 @@ function renderProperties(){
   const grid=document.getElementById('props-grid');const count=document.getElementById('props-count');
   const props=cData.properties;count.textContent=props.length+' propert'+(props.length===1?'y':'ies');
   if(!props.length){grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="es-i">🏠</div><h3>No properties yet</h3><button class="btn btn-pri" onclick="openModal('add-property-modal')" style="margin-top:10px">Add First</button></div>`;return;}
-  grid.innerHTML=props.map(p=>{const bs=cData.bookings.filter(b=>b.propId===p.id&&b.status!=='cancelled');return `<div class="prop-card"><div class="prop-img ${p.gradient}">${p.emoji}</div><div class="prop-body"><div class="prop-name">${p.name}</div><div class="prop-loc">📍 ${p.location||'No location'}</div><div class="prop-stats"><div class="prop-stat">⭐ <strong>${p.rating}</strong></div><div class="prop-stat">💰 <strong>$${p.rate}/night</strong></div><div class="prop-stat">📅 <strong>${bs.length}</strong></div></div></div><div class="prop-foot"><span style="font-size:10px;color:var(--txt3)">${p.occupancy}%</span><div class="occ-bar"><div class="occ-fill" style="width:${p.occupancy}%"></div></div><span style="font-size:10px;color:var(--txt3)">occ.</span></div></div>`;}).join('');
+  grid.innerHTML=props.map(p=>{const bs=cData.bookings.filter(b=>b.propId===p.id&&b.status!=='cancelled');return `<div class="prop-card" onclick="openPropertyDetail('${p.id}')"><div class="prop-img ${p.gradient}">${p.emoji}</div><div class="prop-body"><div class="prop-name">${p.name}</div><div class="prop-loc">📍 ${p.location||'No location'}</div><div class="prop-stats"><div class="prop-stat">⭐ <strong>${p.rating}</strong></div><div class="prop-stat">💰 <strong>$${p.rate}/night</strong></div><div class="prop-stat">📅 <strong>${bs.length} stays</strong></div></div></div><div class="prop-foot"><span style="font-size:10px;color:var(--txt3)">${p.occupancy}%</span><div class="occ-bar"><div class="occ-fill" style="width:${p.occupancy}%"></div></div><span style="font-size:10px;color:var(--txt3)">occ.</span></div></div>`;}).join('');
+}
+
+function openPropertyDetail(propId) {
+  const p = cData.properties.find(x=>x.id===propId);
+  if(!p) return;
+  const bookings = cData.bookings.filter(b=>b.propId===propId);
+  const revenue = bookings.filter(b=>b.status!=='cancelled').reduce((s,b)=>s+b.price,0);
+
+  // Populate edit modal
+  document.getElementById('ep-id').value = p.id;
+  document.getElementById('ep-name').value = p.name||'';
+  document.getElementById('ep-emoji').value = p.emoji||'🏡';
+  document.getElementById('ep-loc').value = p.location||'';
+  document.getElementById('ep-desc').value = p.description||'';
+  document.getElementById('ep-rate').value = p.rate||'';
+  document.getElementById('ep-guests').value = p.maxGuests||'';
+  document.getElementById('ep-wifi').value = p.wifi||'';
+  document.getElementById('ep-wifipw').value = p.wifiPw||'';
+  document.getElementById('ep-door').value = p.doorCode||'';
+  document.getElementById('ep-parking').value = p.parking||'';
+
+  // Populate bookings list in modal
+  const bList = document.getElementById('ep-bookings');
+  if(bookings.length) {
+    const spc={confirmed:'pill-green',pending:'pill-amber',completed:'pill-blue',cancelled:'pill-red'};
+    bList.innerHTML = bookings.slice(0,5).map(b=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--txt)">${b.guestName}</div><div style="font-size:11px;color:var(--txt3)">${b.checkin||'TBD'} → ${b.checkout||'TBD'}</div></div>
+        <span class="pill ${spc[b.status]||'pill-blue'}">${b.status}</span>
+        <div style="font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--txt)">$${b.price.toLocaleString()}</div>
+      </div>`).join('');
+  } else {
+    bList.innerHTML = `<div style="font-size:13px;color:var(--txt3);padding:12px 0">No bookings yet for this property</div>`;
+  }
+
+  // Stats
+  document.getElementById('ep-rev').textContent = '$'+revenue.toLocaleString();
+  document.getElementById('ep-stays').textContent = bookings.filter(b=>b.status!=='cancelled').length;
+
+  openModal('edit-property-modal');
 }
 
 // ════════════════════════════════════════════
 //  BOOKINGS
 // ════════════════════════════════════════════
+function saveProperty() {
+  const id = document.getElementById('ep-id').value;
+  const p = cData.properties.find(x=>x.id===id);
+  if(!p) return;
+  p.name = document.getElementById('ep-name').value.trim()||p.name;
+  p.emoji = document.getElementById('ep-emoji').value||'🏡';
+  p.location = document.getElementById('ep-loc').value;
+  p.description = document.getElementById('ep-desc').value;
+  p.rate = parseFloat(document.getElementById('ep-rate').value)||p.rate;
+  p.maxGuests = parseInt(document.getElementById('ep-guests').value)||p.maxGuests;
+  p.wifi = document.getElementById('ep-wifi').value;
+  p.wifiPw = document.getElementById('ep-wifipw').value;
+  p.doorCode = document.getElementById('ep-door').value;
+  p.parking = document.getElementById('ep-parking').value;
+  saveUserData(cUid,cData);
+  closeModal('edit-property-modal');
+  toast(`"${p.name}" updated! ✓`);
+  renderAll();
+}
+
+function deleteProperty() {
+  const id = document.getElementById('ep-id').value;
+  const p = cData.properties.find(x=>x.id===id);
+  if(!p) return;
+  if(!confirm(`Delete "${p.name}"? This cannot be undone.`)) return;
+  cData.properties = cData.properties.filter(x=>x.id!==id);
+  saveUserData(cUid,cData);
+  closeModal('edit-property-modal');
+  toast(`"${p.name}" deleted`);
+  renderAll();
+}
 function addBooking(){
   const propId=document.getElementById('mb-prop').value;
   const guest=document.getElementById('mb-guest').value.trim();
