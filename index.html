@@ -1254,7 +1254,13 @@ select{color:var(--txt)!important;}
 
 <div class="toast" id="toast-el"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+// Fallback if Supabase CDN fails
+if(typeof supabase === 'undefined') {
+  document.write('<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"><\/script>');
+}
+</script>
 <script>
 // ════════════════════════════════════════════
 //  SUPABASE CONFIG
