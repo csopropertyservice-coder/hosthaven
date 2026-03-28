@@ -534,6 +534,7 @@ select{color:var(--txt)!important;}
     <div class="fi"><label>Password</label><input id="login-pw" type="password" placeholder="••••••••" value="demo1234"></div>
     <button class="btn btn-pri btn-w" onclick="doLogin()">Sign In →</button>
     <div class="auth-switch">No account? <a onclick="showScreen('signup')">Create one free</a> · <a onclick="showScreen('landing')">Back to home</a></div>
+    <div class="auth-switch" style="margin-top:6px"><a onclick="showForgotPassword()" style="color:var(--txt3);font-size:12px">Forgot password?</a></div>
     <div class="auth-divider">or</div>
     <button class="btn btn-dark btn-w" onclick="loginDemo()">🚀 Launch Demo</button>
   </div>
@@ -550,6 +551,19 @@ select{color:var(--txt)!important;}
     <div class="fi"><label>Password</label><input id="signup-pw" type="password" placeholder="8+ characters"></div>
     <button class="btn btn-pri btn-w" onclick="doSignup()">Create Account →</button>
     <div class="auth-switch">Have an account? <a onclick="showScreen('login')">Sign in</a> · <a onclick="showScreen('landing')">Back to home</a></div>
+  </div>
+</div>
+
+<div id="screen-forgot" class="auth-wrap" style="display:none">
+  <div class="auth-card">
+    <div class="auth-logo"><div class="auth-logo-icon">🏡</div><div class="auth-logo-txt">HostHaven</div></div>
+    <div class="auth-title">Reset Password</div>
+    <div class="auth-sub">Enter your email and we'll send you a reset link</div>
+    <div class="auth-err" id="forgot-err"></div>
+    <div class="auth-err" id="forgot-success" style="display:none;background:rgba(107,143,113,.15);border-color:var(--sage);color:var(--sage)"></div>
+    <div class="fi"><label>Email</label><input id="forgot-email" type="email" placeholder="you@example.com"></div>
+    <button class="btn btn-pri btn-w" onclick="doForgotPassword()">Send Reset Link →</button>
+    <div class="auth-switch"><a onclick="showScreen('login')">← Back to login</a></div>
   </div>
 </div>
 
@@ -1186,12 +1200,41 @@ function toggleDark() {
 //  SCREENS
 // ════════════════════════════════════════════
 function showScreen(name) {
-  ['landing','login','signup','onboard'].forEach(s=>{
+  ['landing','login','signup','onboard','forgot'].forEach(s=>{
     const el=document.getElementById('screen-'+s);
     if(el) el.style.display = s===name ? (s==='landing'?'block':'flex') : 'none';
   });
   document.getElementById('app').classList.remove('visible');
   window.scrollTo(0,0);
+}
+
+function showForgotPassword() {
+  showScreen('forgot');
+  setTimeout(()=>{
+    const email = document.getElementById('login-email')?.value;
+    if(email) document.getElementById('forgot-email').value = email;
+  }, 50);
+}
+
+async function doForgotPassword() {
+  const email = document.getElementById('forgot-email').value.trim().toLowerCase();
+  if(!email){showErr('forgot-err','Please enter your email');return;}
+  const btn = document.querySelector('#screen-forgot .btn-pri');
+  if(btn){btn.textContent='Sending…';btn.disabled=true;btn.style.opacity='.7';}
+  try {
+    const {error} = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://csopropertyservice-coder.github.io/hosthaven'
+    });
+    if(error) throw error;
+    const errEl = document.getElementById('forgot-err');
+    const sucEl = document.getElementById('forgot-success');
+    if(errEl) errEl.style.display='none';
+    if(sucEl) { sucEl.textContent='✓ Reset link sent! Check your email inbox.'; sucEl.style.display='block'; }
+  } catch(e) {
+    showErr('forgot-err', e.message||'Something went wrong. Try again.');
+  } finally {
+    if(btn){btn.textContent='Send Reset Link →';btn.disabled=false;btn.style.opacity='1';}
+  }
 }
 function scrollToSection(id){
   const el=document.getElementById(id);
