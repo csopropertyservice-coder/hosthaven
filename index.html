@@ -625,10 +625,10 @@ select{color:var(--txt)!important;}
         <div class="sb-item" onclick="nav('bookings',this)"><span class="ico">📅</span>Bookings<span class="sb-badge" id="sb-b-badge" style="display:none">0</span></div>
         <div class="sb-sec" style="margin-top:8px">Management</div>
         <div class="sb-item" onclick="nav('messages',this)"><span class="ico">💬</span>Messages<span class="sb-badge" id="sb-m-badge" style="display:none">0</span></div>
-        <div class="sb-item" onclick="nav('pricing',this)"><span class="ico">💰</span>Pricing</div>
+        <div class="sb-item" onclick="nav('pricing',this)"><span class="ico">💰</span>Nightly Rates</div>
         <div class="sb-item" onclick="nav('cleaning',this)"><span class="ico">🧹</span>Tasks</div>
         <div class="sb-item" onclick="nav('staff',this)"><span class="ico">👥</span>Staff Portal</div>
-        <div class="sb-item" onclick="nav('ical',this)"><span class="ico">🔄</span>iCal Sync<span class="sb-new">NEW</span></div>
+        <div class="sb-item" onclick="nav('ical',this)"><span class="ico">🔄</span>iCal Sync</div>
         <div class="sb-sec" style="margin-top:8px">✨ Features</div>
         <div class="sb-item" onclick="nav('website',this)"><span class="ico">🌐</span>Website Builder</div>
         <div class="sb-item" onclick="nav('portal',this)"><span class="ico">🔑</span>Guest Portal</div>
@@ -653,8 +653,7 @@ select{color:var(--txt)!important;}
         <button class="icon-btn hamburger" onclick="openSidebar()">☰</button>
         <div class="topbar-title" id="page-title">Dashboard</div>
         <div class="topbar-r">
-          <div class="tb-search">🔍 Search…</div>
-          <div class="icon-btn" id="dark-toggle" onclick="toggleDark()" title="Toggle dark mode">🌙</div>
+          <div class="tb-search" onclick="openSearch()">🔍 Search guests, bookings…</div>
           <div class="icon-btn" onclick="toast('No new notifications')">🔔</div>
           <button class="btn btn-pri" style="font-size:12px;padding:7px 13px" onclick="openModal('add-property-modal')">+ Property</button>
           <button class="btn btn-ghost" style="font-size:11px;padding:6px 11px" onclick="doLogout()">Out</button>
@@ -802,7 +801,7 @@ select{color:var(--txt)!important;}
     <div style="font-size:13px;color:var(--txt2)">Build a public booking website — no Airbnb fees on direct bookings</div>
     <div style="display:flex;gap:8px">
       <button class="btn btn-ghost" onclick="toast('Draft saved!')">💾 Save</button>
-      <button class="btn btn-pri" onclick="toast('🎉 Published at hosthaven.co/'+getWbSlug())">🚀 Publish</button>
+      <button class="btn btn-pri" onclick="downloadWebsite()">⬇️ Download Website</button>
     </div>
   </div>
   <div class="wb-layout">
@@ -830,7 +829,7 @@ select{color:var(--txt)!important;}
       </div>
     </div>
     <div class="wb-preview">
-      <div class="wb-bar"><div class="wb-dots"><div class="wb-dot" style="background:#FF5F57"></div><div class="wb-dot" style="background:#FFBD2E"></div><div class="wb-dot" style="background:#28C840"></div></div><div class="wb-url" id="wb-url-bar">hosthaven.co/sunset-loft</div><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="toast('Opening preview…')">↗</button></div>
+      <div class="wb-bar"><div class="wb-dots"><div class="wb-dot" style="background:#FF5F57"></div><div class="wb-dot" style="background:#FFBD2E"></div><div class="wb-dot" style="background:#28C840"></div></div><div class="wb-url" id="wb-url-bar">Your booking website preview</div><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="downloadWebsite()">⬇️ Download</button></div>
       <iframe id="wb-iframe" class="wb-frame" title="Preview"></iframe>
     </div>
   </div>
@@ -840,11 +839,17 @@ select{color:var(--txt)!important;}
 <div class="page" id="page-portal">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
     <div style="font-size:13px;color:var(--txt2)">Personalized check-in pages for every guest</div>
-    <button class="btn btn-pri" onclick="toast('Portal link copied! 📋')">🔗 Copy Link</button>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost" onclick="downloadPortal()">⬇️ Download Page</button>
+      <button class="btn btn-pri" onclick="copyPortalHTML()">📋 Copy HTML</button>
+    </div>
   </div>
   <div class="gp-layout">
     <div class="gp-list"><div style="padding:12px 13px;border-bottom:1px solid var(--border)"><div style="font-family:'Fraunces',serif;font-size:13px;font-weight:500;color:var(--txt)">Active Guests</div></div><div id="portal-guest-list"><div class="empty-state" style="padding:24px 10px"><div class="es-i">🔑</div><p style="font-size:12px">Add bookings to generate portals</p></div></div></div>
-    <div class="gp-preview"><div class="gp-topbar"><div class="wb-dots"><div class="wb-dot" style="background:#FF5F57"></div><div class="wb-dot" style="background:#FFBD2E"></div><div class="wb-dot" style="background:#28C840"></div></div><div style="flex:1;background:rgba(255,255,255,.1);border-radius:4px;padding:3px 9px;font-size:10px;color:rgba(255,255,255,.45)" id="portal-url-bar">guest.hosthaven.co/…</div></div><iframe id="portal-iframe" class="gp-frame" title="Guest Portal"></iframe></div>
+    <div class="gp-preview"><div class="gp-topbar"><div class="wb-dots"><div class="wb-dot" style="background:#FF5F57"></div><div class="wb-dot" style="background:#FFBD2E"></div><div class="wb-dot" style="background:#28C840"></div></div><div style="flex:1;background:rgba(255,255,255,.1);border-radius:4px;padding:3px 9px;font-size:10px;color:rgba(255,255,255,.45)" id="portal-url-bar">Select a guest to preview their portal</div></div><iframe id="portal-iframe" class="gp-frame" title="Guest Portal"></iframe></div>
+  </div>
+  <div style="background:var(--sand);border-radius:10px;padding:12px 16px;margin-top:12px;font-size:12px;color:var(--txt2);line-height:1.6">
+    💡 <strong>How to share:</strong> Select a guest above, then click <strong>Download Page</strong> to get an HTML file you can host anywhere, or <strong>Copy HTML</strong> to paste into any website builder like Squarespace, Notion, or email it directly to your guest.
   </div>
 </div>
 
@@ -1222,6 +1227,17 @@ select{color:var(--txt)!important;}
 </div></div>
 
 <div class="modal-bg" id="add-review-modal"><div class="modal"><h2>⭐ Add Review</h2><div class="fi"><label>Guest Name</label><input id="mr-name"></div><div class="fi"><label>Property</label><select id="mr-prop"><option value="">None</option></select></div><div class="fi"><label>Rating (1–5)</label><input id="mr-rating" type="number" min="1" max="5" value="5"></div><div class="fi"><label>Review</label><textarea id="mr-content" placeholder="Amazing stay…"></textarea></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-review-modal')">Cancel</button><button class="btn btn-pri" onclick="addReview()">Add</button></div></div></div>
+
+<div class="modal-bg" id="search-modal"><div class="modal" style="max-width:520px">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+    <div style="font-size:18px">🔍</div>
+    <input id="search-input" placeholder="Search guests, bookings, properties…" style="flex:1;background:var(--input-bg);border:1.5px solid var(--terra);border-radius:8px;padding:10px 14px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)" oninput="runSearch(this.value)" autofocus>
+    <button class="btn btn-ghost" style="padding:6px 10px" onclick="closeModal('search-modal')">✕</button>
+  </div>
+  <div id="search-results" style="max-height:340px;overflow-y:auto">
+    <div style="text-align:center;padding:24px;color:var(--txt3);font-size:13px">Start typing to search…</div>
+  </div>
+</div></div>
 
 <div class="toast" id="toast-el"></div>
 
@@ -1699,7 +1715,7 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 //  NAV
 // ════════════════════════════════════════════
-const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Pricing',cleaning:'Tasks',staff:'👥 Staff Portal',ical:'iCal Sync',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews & Automation',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
+const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',ical:'iCal Sync',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews & Automation',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
@@ -2926,7 +2942,7 @@ function setWbTheme(primary,bg,el){wbTheme={primary,bg};document.querySelectorAl
 function toggleChip(el){el.classList.toggle('on');el.classList.toggle('off');el.textContent=el.classList.contains('on')?'✓ '+el.textContent.replace('✓ ',''):el.textContent.replace('✓ ','');updateWb();}
 function updateWb(){
   const n=document.getElementById('wb-name')?.value||'My Property';const tl=document.getElementById('wb-tagline')?.value||'';const desc=document.getElementById('wb-desc')?.value||'';const loc=document.getElementById('wb-loc')?.value||'';const price=document.getElementById('wb-price')?.value||'$0';const min=document.getElementById('wb-min')?.value||'1 night';const host=document.getElementById('wb-host')?.value||'Your Host';const email=document.getElementById('wb-email')?.value||'';
-  const slug=getWbSlug();const urlBar=document.getElementById('wb-url-bar');if(urlBar)urlBar.textContent=`hosthaven.co/${slug}`;
+  const slug=getWbSlug();const urlBar=document.getElementById('wb-url-bar');if(urlBar)urlBar.textContent=`Preview: ${n}`;
   const amenities=[...document.querySelectorAll('.amenity-chip.on')].map(a=>a.textContent.replace('✓ ','')).join(', ');
   const c=wbTheme.primary,bg=wbTheme.bg;
   const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Georgia,serif;background:${bg}}.hero{background:${c};color:#fff;padding:52px 32px 44px;text-align:center}.hero h1{font-size:40px;letter-spacing:-1px;font-weight:normal;margin-bottom:10px}.hero p{font-size:15px;opacity:.8;max-width:420px;margin:0 auto 6px;line-height:1.5}.hero small{font-size:11px;opacity:.55;letter-spacing:1px;text-transform:uppercase;font-family:sans-serif}.cta{display:inline-block;margin-top:22px;background:rgba(255,255,255,.2);color:#fff;padding:11px 26px;border-radius:28px;text-decoration:none;font-size:14px;border:1px solid rgba(255,255,255,.3);font-family:sans-serif}.sec{padding:32px;max-width:700px;margin:0 auto}.sec h2{font-size:20px;color:${c};margin-bottom:12px;font-weight:normal}.desc{font-size:14px;line-height:1.8;color:#4a3a2e}.pbox{background:#fff;border:1px solid #e0d8ce;border-radius:12px;padding:22px 26px;display:flex;align-items:center;justify-content:space-between;margin-top:12px}.pbig{font-size:40px;color:${c};letter-spacing:-1.5px}.pbook{background:${c};color:#fff;padding:11px 24px;border-radius:8px;font-size:13px;border:none;cursor:pointer;font-family:sans-serif}.ams{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.am{background:#fff;border:1px solid #e0d8ce;border-radius:18px;padding:4px 12px;font-size:12px;color:#4a3a2e;font-family:sans-serif}.hcard{background:#fff;border:1px solid #e0d8ce;border-radius:12px;padding:20px;display:flex;align-items:center;gap:16px}.hav{width:48px;height:48px;border-radius:50%;background:${c};color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px}hr{border:none;border-top:1px solid #e0d8ce}.foot{background:${c};color:rgba(255,255,255,.5);text-align:center;padding:16px;font-size:11px;font-family:sans-serif}</style></head><body><div class="hero"><h1>${n}</h1><p>${tl}</p><small>📍 ${loc}</small><br><a class="cta">Book Your Stay</a></div><div class="sec"><h2>About</h2><p class="desc">${desc}</p></div><hr><div class="sec"><h2>Pricing</h2><div class="pbox"><div><div class="pbig">${price}</div><div style="font-size:12px;color:#9b8e85;font-family:sans-serif">per night · Min ${min}</div></div><button class="pbook">Check Availability</button></div></div><hr><div class="sec"><h2>Amenities</h2><div class="ams">${amenities.split(', ').filter(Boolean).map(a=>`<span class="am">✓ ${a}</span>`).join('')}</div></div><hr><div class="sec"><h2>Your Host</h2><div class="hcard"><div class="hav">${host.split(' ').map(n=>n[0]).join('')}</div><div><div style="font-size:16px;color:#1c1410;margin-bottom:3px">${host}</div><div style="font-size:12px;color:#6b5d52;font-family:sans-serif">${email}</div></div></div></div><div class="foot">© 2026 ${n} · Powered by HostHaven</div></body></html>`;
@@ -2948,7 +2964,7 @@ function selectPortal(bookingId,el){
   const b=cData.bookings.find(x=>x.id===bookingId);if(!b)return;
   const prop=cData.properties.find(p=>p.id===b.propId);
   const user=cUser;const color='#C4693A';
-  document.getElementById('portal-url-bar').textContent=`guest.hosthaven.co/${b.guestName.toLowerCase().replace(/\s+/g,'-')}-${Date.now().toString(36)}`;
+  document.getElementById('portal-url-bar').textContent=`Guest portal for ${b.guestName} · ${b.propName}`;
   const firstName=b.guestName.split(' ')[0];
   const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Georgia,serif;background:#FAF7F2;min-height:100vh}.hdr{background:${color};padding:36px 24px;text-align:center;color:#fff}.hdr-e{font-size:48px;margin-bottom:12px}.hdr h1{font-size:26px;font-weight:normal;margin-bottom:5px;letter-spacing:-.3px}.hdr p{font-size:13px;opacity:.7;font-family:sans-serif}.wlc{background:#fff;margin:18px;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}.wlc h2{font-size:16px;color:${color};margin-bottom:8px;font-weight:normal}.wlc p{font-size:13px;line-height:1.7;color:#4a3a2e;font-family:sans-serif}.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 18px 10px}.ic{background:#fff;border-radius:11px;padding:16px;box-shadow:0 2px 7px rgba(0,0,0,.05)}.ic h3{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:8px;font-family:sans-serif}.code{font-size:34px;font-family:monospace;color:${color};letter-spacing:4px;font-weight:bold}.ir{display:flex;flex-direction:column;gap:2px;margin-bottom:7px}.il{font-size:9px;color:#9b8e85;font-family:sans-serif}.iv{font-size:13px;color:#1c1410;font-weight:600;font-family:sans-serif}.tl{background:#fff;border-radius:12px;margin:0 18px 10px;padding:16px;box-shadow:0 2px 7px rgba(0,0,0,.05)}.tl h3{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:12px;font-family:sans-serif}.ti{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}.td{width:28px;height:28px;border-radius:50%;background:${color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}.tt{font-size:12px;font-weight:500;color:#1c1410;font-family:sans-serif}.ts{font-size:10px;color:#9b8e85;font-family:sans-serif;margin-top:1px}.tips{background:#fff;border-radius:12px;margin:0 18px 12px;padding:16px;box-shadow:0 2px 7px rgba(0,0,0,.05)}.tip{display:flex;gap:7px;font-family:sans-serif;font-size:12px;color:#4a3a2e;line-height:1.5;margin-bottom:8px}.cta{display:block;margin:0 18px 24px;background:${color};color:#fff;padding:13px;border-radius:10px;text-align:center;font-size:13px;text-decoration:none;font-family:sans-serif}.foot{text-align:center;padding:12px;font-size:10px;color:#9b8e85;font-family:sans-serif;border-top:1px solid #e0d8ce}</style></head><body><div class="hdr"><div class="hdr-e">${prop?.emoji||'🏡'}</div><h1>Welcome, ${firstName}!</h1><p>${prop?.name||'Your Property'} · ${prop?.location||''}</p></div><div class="wlc"><h2>We're so happy you're here!</h2><p>Everything you need for your stay is right here. Reach out anytime if you need anything at all.</p></div><div class="cards"><div class="ic"><h3>Door Code</h3><div class="code">${prop?.doorCode||'See host'}</div></div><div class="ic"><h3>WiFi</h3><div class="ir"><div class="il">Network</div><div class="iv">${prop?.wifi||'See welcome book'}</div></div><div class="ir"><div class="il">Password</div><div class="iv">${prop?.wifiPw||'See welcome book'}</div></div></div><div class="ic"><h3>Check-in</h3><div class="iv" style="font-size:12px">${b.checkin||'TBD'}</div><div style="font-size:10px;color:#9b8e85;font-family:sans-serif;margin-top:2px">After 3:00 PM</div></div><div class="ic"><h3>Check-out</h3><div class="iv" style="font-size:12px">${b.checkout||'TBD'}</div><div style="font-size:10px;color:#9b8e85;font-family:sans-serif;margin-top:2px">By 11:00 AM</div></div></div><div class="ic" style="margin:0 18px 10px;padding:14px;border-radius:11px;background:#fff;box-shadow:0 2px 7px rgba(0,0,0,.05)"><h3 style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:6px;font-family:sans-serif">Parking</h3><div class="iv" style="font-size:12px">${prop?.parking||'See listing'}</div></div><div class="tl"><h3>Your Stay</h3><div class="ti"><div class="td">✈️</div><div><div class="tt">Arrive & Check In</div><div class="ts">${b.checkin||'Your check-in date'}</div></div></div><div class="ti"><div class="td">🏠</div><div><div class="tt">Enjoy Your Stay</div><div class="ts">Make yourself at home</div></div></div><div class="ti"><div class="td">👋</div><div><div class="tt">Check Out</div><div class="ts">${b.checkout||'Your checkout date'} · Leave key on counter</div></div></div></div><div class="tips"><h3 style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:10px;font-family:sans-serif">House Tips</h3><div class="tip"><span>🔇</span>Quiet hours 10pm–8am</div><div class="tip"><span>🚭</span>No smoking indoors</div><div class="tip"><span>🌟</span>We'd love a review after your stay!</div></div><a class="cta" href="mailto:${user?.email||'host@hosthaven.co'}">💬 Message Your Host</a><div class="foot">Powered by HostHaven</div></body></html>`;
   const iframe=document.getElementById('portal-iframe');const doc=iframe.contentDocument||iframe.contentWindow.document;doc.open();doc.write(html);doc.close();
@@ -3068,6 +3084,50 @@ function exportCSV(){
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='hosthaven-report-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
   toast('Report exported as CSV! ✓');
 }
+
+function getPortalHTML() {
+  const iframe = document.getElementById('portal-iframe');
+  if(!iframe) return null;
+  const doc = iframe.contentDocument || iframe.contentWindow?.document;
+  if(!doc || !doc.documentElement) return null;
+  return '<!DOCTYPE html>' + doc.documentElement.outerHTML;
+}
+
+function downloadPortal() {
+  const html = getPortalHTML();
+  if(!html || html.length < 100) { toast('Select a guest first to generate their portal'); return; }
+  const urlBar = document.getElementById('portal-url-bar');
+  const guestName = urlBar?.textContent?.replace('Guest portal for ','').split(' · ')[0] || 'guest';
+  const slug = guestName.toLowerCase().replace(/\s+/g,'-');
+  const a = document.createElement('a');
+  a.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(html);
+  a.download = 'hosthaven-portal-' + slug + '.html';
+  a.click();
+  toast('Portal downloaded! Share the HTML file with your guest ✓');
+}
+
+function copyPortalHTML() {
+  const html = getPortalHTML();
+  if(!html || html.length < 100) { toast('Select a guest first to generate their portal'); return; }
+  navigator.clipboard.writeText(html).then(()=>{
+    toast('Portal HTML copied! Paste into any website or email ✓');
+  }).catch(()=>toast('Copy failed — try downloading instead'));
+}
+
+function downloadWebsite() {
+  const iframe = document.getElementById('wb-iframe');
+  if(!iframe) { toast('Build your website first'); return; }
+  const doc = iframe.contentDocument || iframe.contentWindow?.document;
+  if(!doc || !doc.documentElement) { toast('Build your website first'); return; }
+  const html = '<!DOCTYPE html>' + doc.documentElement.outerHTML;
+  const name = document.getElementById('wb-name')?.value || 'my-property';
+  const slug = name.toLowerCase().replace(/\s+/g,'-');
+  const a = document.createElement('a');
+  a.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(html);
+  a.download = 'hosthaven-website-' + slug + '.html';
+  a.click();
+  toast('Website downloaded! Upload to any hosting service ✓');
+}
 function printReport(){
   renderReports();
   const content=document.getElementById('page-reports').innerHTML;
@@ -3147,7 +3207,83 @@ function openModal(id){
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.addEventListener('click',e=>{if(e.target.classList.contains('modal-bg'))e.target.classList.remove('open');});
 function toast(msg){const el=document.getElementById('toast-el');el.textContent=msg;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2800);}
-function openStripe(plan){
+function openSearch() {
+  document.getElementById('search-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('search-input')?.focus(), 100);
+}
+
+function runSearch(q) {
+  const results = document.getElementById('search-results');
+  if(!results) return;
+  const query = q.toLowerCase().trim();
+  if(!query) { results.innerHTML='<div style="text-align:center;padding:24px;color:var(--txt3);font-size:13px">Start typing to search…</div>'; return; }
+
+  const items = [];
+
+  // Search bookings
+  cData.bookings.filter(b=>
+    b.guestName?.toLowerCase().includes(query) ||
+    b.propName?.toLowerCase().includes(query) ||
+    b.guestEmail?.toLowerCase().includes(query)
+  ).forEach(b=>{
+    items.push({
+      icon: b.propEmoji||'📅',
+      title: b.guestName,
+      sub: b.propName + ' · ' + (b.checkin||'TBD') + ' → ' + (b.checkout||'TBD'),
+      badge: b.status,
+      action: `closeModal('search-modal');nav('bookings',document.querySelector('[onclick*=bookings]'))`
+    });
+  });
+
+  // Search properties
+  cData.properties.filter(p=>
+    p.name?.toLowerCase().includes(query) ||
+    p.location?.toLowerCase().includes(query)
+  ).forEach(p=>{
+    items.push({
+      icon: p.emoji||'🏠',
+      title: p.name,
+      sub: p.location||'No location',
+      badge: '$'+p.rate+'/night',
+      action: `closeModal('search-modal');openPropertyDetail('${p.id}')`
+    });
+  });
+
+  // Search messages
+  cData.messages.filter(m=>
+    m.guestName?.toLowerCase().includes(query) ||
+    m.propName?.toLowerCase().includes(query)
+  ).forEach(m=>{
+    items.push({
+      icon: '💬',
+      title: m.guestName,
+      sub: m.propName||'No property',
+      badge: m.unread?'unread':'',
+      action: `closeModal('search-modal');nav('messages',document.querySelector('[onclick*=messages]'));setTimeout(()=>openConv('${m.id}'),100)`
+    });
+  });
+
+  if(!items.length) {
+    results.innerHTML='<div style="text-align:center;padding:24px;color:var(--txt3);font-size:13px">No results for "'+q+'"</div>';
+    return;
+  }
+
+  results.innerHTML = items.map(item=>`
+    <div onclick="${item.action}" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='var(--sand)'" onmouseout="this.style.background=''">
+      <div style="font-size:20px;flex-shrink:0">${item.icon}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600;color:var(--txt)">${item.title}</div>
+        <div style="font-size:11px;color:var(--txt3)">${item.sub}</div>
+      </div>
+      ${item.badge?`<span class="pill pill-amber" style="font-size:10px">${item.badge}</span>`:''}
+    </div>`).join('');
+}
+
+// Keyboard shortcut for search
+document.addEventListener('keydown', e=>{
+  if((e.metaKey||e.ctrlKey) && e.key==='k') { e.preventDefault(); openSearch(); }
+  if(e.key==='Escape') { closeModal('search-modal'); }
+});
   const links={
     pro:'https://buy.stripe.com/cNi8wO2EtdfT8wdbo44sE00',
     business:'https://buy.stripe.com/aFafZg2EtdfTcMt9fW4sE01'
