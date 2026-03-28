@@ -606,6 +606,8 @@ select{color:var(--txt)!important;}
       <div class="ob-step future" id="ob-s3">3</div>
       <div class="ob-line" id="ob-l3"></div>
       <div class="ob-step future" id="ob-s4">4</div>
+      <div class="ob-line" id="ob-l4"></div>
+      <div class="ob-step future" id="ob-s5">5</div>
     </div>
     <div id="ob-content"></div>
     <div class="ob-nav">
@@ -1910,10 +1912,51 @@ function launchApp(user) {
 //  ONBOARDING
 // ════════════════════════════════════════════
 const obSteps=[
-  {title:"Welcome to HostHaven! 🎉",sub:"Let's get you set up in 4 quick steps. You can skip any step.",content:`<div style="background:var(--sand);border-radius:12px;padding:20px;text-align:center"><div style="font-size:52px;margin-bottom:12px">🏡</div><div style="font-family:'Fraunces',serif;font-size:18px;color:var(--txt);margin-bottom:8px">Your property management hub</div><div style="font-size:13px;color:var(--txt2);line-height:1.6">Dashboard · Bookings · AI Messaging · Guest Portals · Website Builder</div></div>`},
-  {title:"Add your first property",sub:"Tell us about where your guests will be staying.",content:`<div class="g2"><div class="fi"><label>Property Name</label><input id="ob-prop-name" placeholder="Sunset Loft"></div><div class="fi"><label>Emoji</label><input id="ob-prop-emoji" value="🏡"></div></div><div class="fi"><label>Location</label><input id="ob-prop-loc" placeholder="Downtown, New York"></div><div class="g2"><div class="fi"><label>Nightly Rate ($)</label><input id="ob-prop-rate" type="number" placeholder="100"></div><div class="fi"><label>Door Code</label><input id="ob-prop-door" placeholder="#4821"></div></div><div class="g2"><div class="fi"><label>WiFi Name</label><input id="ob-prop-wifi" placeholder="MyProperty_WiFi"></div><div class="fi"><label>WiFi Password</label><input id="ob-prop-wifipw" placeholder="password123"></div></div>`},
-  {title:"Add your Anthropic API key",sub:"Enables real AI-powered message drafting. Free to start at console.anthropic.com",content:`<div class="fi"><label>Anthropic API Key (optional)</label><input id="ob-api-key" type="password" placeholder="sk-ant-… (paste here or skip)"></div><div style="background:var(--sand);border-radius:10px;padding:14px;font-size:12px;color:var(--txt2);line-height:1.7"><strong style="color:var(--txt)">Why add this?</strong><br>→ AI Reply drafts guest messages in one click<br>→ Check-in info, local tips, house rules — instant<br>→ Costs ~$0.001 per message • $5 free credit to start</div>`},
-  {title:"You're all set! 🚀",sub:"Your account is ready. Here's what to explore first.",content:`<div style="display:flex;flex-direction:column;gap:10px"><div style="background:var(--sand);border-radius:10px;padding:13px;display:flex;gap:12px;align-items:center"><div style="font-size:22px">📅</div><div><div style="font-size:13px;font-weight:600;color:var(--txt)">Add your first booking</div><div style="font-size:12px;color:var(--txt2)">Track guests, revenue, and check-in dates</div></div></div><div style="background:var(--sand);border-radius:10px;padding:13px;display:flex;gap:12px;align-items:center"><div style="font-size:22px">🔑</div><div><div style="font-size:13px;font-weight:600;color:var(--txt)">Generate a guest portal</div><div style="font-size:12px;color:var(--txt2)">Personalized check-in pages for every guest</div></div></div><div style="background:var(--sand);border-radius:10px;padding:13px;display:flex;gap:12px;align-items:center"><div style="font-size:22px">🌐</div><div><div style="font-size:13px;font-weight:600;color:var(--txt)">Build your booking website</div><div style="font-size:12px;color:var(--txt2)">Publish a direct booking site in minutes</div></div></div></div>`}
+  {title:"Welcome to HostHaven! 🎉",sub:"Let's get you set up in a few quick steps. You can skip any step.",content:`
+    <div style="background:var(--sand);border-radius:12px;padding:20px;text-align:center;margin-bottom:14px">
+      <div style="font-size:52px;margin-bottom:12px">🏡</div>
+      <div style="font-family:'Fraunces',serif;font-size:18px;color:var(--txt);margin-bottom:8px">Your complete Airbnb management hub</div>
+      <div style="font-size:13px;color:var(--txt2);line-height:1.6">Everything you need to manage your properties like a pro</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:18px">📅</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Bookings & Calendar</div><div style="font-size:11px;color:var(--txt2)">Track all your guests and check-in dates</div></div></div>
+      <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:18px">🤖</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">AI Guest Messaging</div><div style="font-size:11px;color:var(--txt2)">One-click replies drafted by Claude AI</div></div></div>
+      <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:18px">🔑</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Guest Portals</div><div style="font-size:11px;color:var(--txt2)">Personalized check-in pages for every guest</div></div></div>
+      <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:18px">💸</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Revenue & Expense Tracking</div><div style="font-size:11px;color:var(--txt2)">See your true profit after expenses</div></div></div>
+      <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:18px">🧹</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Staff & Checklists</div><div style="font-size:11px;color:var(--txt2)">Manage cleaners with auto-generated tasks</div></div></div>
+    </div>`},
+  {title:"Add your first property",sub:"Tell us about your listing. You can always edit these details later.",content:`
+    <div class="g2"><div class="fi"><label>Property Name</label><input id="ob-prop-name" placeholder="Sunset Loft"></div><div class="fi"><label>Emoji</label><input id="ob-prop-emoji" value="🏡"></div></div>
+    <div class="fi"><label>Location</label><input id="ob-prop-loc" placeholder="Downtown, New York"></div>
+    <div class="g2"><div class="fi"><label>Nightly Rate ($)</label><input id="ob-prop-rate" type="number" placeholder="100"></div><div class="fi"><label>Door Code</label><input id="ob-prop-door" placeholder="#4821"></div></div>
+    <div class="g2"><div class="fi"><label>WiFi Name</label><input id="ob-prop-wifi" placeholder="MyProperty_WiFi"></div><div class="fi"><label>WiFi Password</label><input id="ob-prop-wifipw" placeholder="password123"></div></div>
+    <div style="background:var(--sand);border-radius:8px;padding:10px;font-size:11px;color:var(--txt2);line-height:1.5">💡 These details power your guest portals, AI messages, and check-in instructions automatically.</div>`},
+  {title:"Here's where everything lives",sub:"A quick tour of your sidebar navigation.",content:`
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:16px;flex-shrink:0">📅</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Bookings</div><div style="font-size:11px;color:var(--txt2)">Add bookings manually or sync from Airbnb via iCal. Auto-creates cleaning tasks on checkout day.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:16px;flex-shrink:0">💬</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Messages</div><div style="font-size:11px;color:var(--txt2)">Log guest conversations. Click AI Reply for instant drafted responses — check-in info, local tips, rules.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:16px;flex-shrink:0">🔄</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">iCal Sync</div><div style="font-size:11px;color:var(--txt2)">Paste your Airbnb/VRBO iCal URL to import bookings automatically. Syncs on every login.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:16px;flex-shrink:0">🧹</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Staff Portal</div><div style="font-size:11px;color:var(--txt2)">Add cleaners, assign tasks, and use the built-in turnover, pre-arrival, checkout & maintenance checklists.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:16px;flex-shrink:0">💸</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Expenses</div><div style="font-size:11px;color:var(--txt2)">Track cleaning fees, repairs, utilities. See your true profit after all expenses are deducted.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:16px;flex-shrink:0">💰</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Nightly Rates</div><div style="font-size:11px;color:var(--txt2)">Set base rates, add seasonal pricing rules, and use the discount calculator for weekly/monthly stays.</div></div></div>
+    </div>`},
+  {title:"More powerful features",sub:"Here's what else is waiting for you.",content:`
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:16px;flex-shrink:0">🔑</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Guest Portal</div><div style="font-size:11px;color:var(--txt2)">Download a personalized HTML check-in page for each guest with WiFi, door code, and local tips.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:16px;flex-shrink:0">🌐</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Website Builder</div><div style="font-size:11px;color:var(--txt2)">Build a direct booking website for your property. Download and host it anywhere.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:16px;flex-shrink:0">📈</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Analytics & Reports</div><div style="font-size:11px;color:var(--txt2)">Revenue forecasting, occupancy rates, booking source breakdown, and CSV exports for tax time.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:16px;flex-shrink:0">⭐</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Reviews</div><div style="font-size:11px;color:var(--txt2)">Log guest reviews and auto-send review requests when a booking is marked complete.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:16px;flex-shrink:0">🚫</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Guest Blacklist</div><div style="font-size:11px;color:var(--txt2)">Flag guests you never want to host again with reasons and private notes.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--sand);border-radius:8px"><span style="font-size:16px;flex-shrink:0">📝</span><div><div style="font-size:12px;font-weight:600;color:var(--txt)">Notes</div><div style="font-size:11px;color:var(--txt2)">Quick notes on your dashboard, plus private notes on every booking and property.</div></div></div>
+    </div>`},
+  {title:"You're all set! 🚀",sub:"Your 14-day Pro trial is active. Start by syncing your Airbnb calendar.",content:`
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="background:rgba(107,143,113,.12);border:1px solid var(--sage);border-radius:10px;padding:14px;display:flex;gap:12px;align-items:center"><div style="font-size:22px">🔄</div><div><div style="font-size:13px;font-weight:600;color:var(--txt)">Step 1 — Sync your Airbnb calendar</div><div style="font-size:12px;color:var(--txt2)">Go to iCal Sync → paste your Airbnb iCal URL → bookings import instantly</div></div></div>
+      <div style="background:var(--sand);border-radius:10px;padding:14px;display:flex;gap:12px;align-items:center"><div style="font-size:22px">💬</div><div><div style="font-size:13px;font-weight:600;color:var(--txt)">Step 2 — Try AI messaging</div><div style="font-size:12px;color:var(--txt2)">Go to Messages → start a conversation → click AI Reply</div></div></div>
+      <div style="background:var(--sand);border-radius:10px;padding:14px;display:flex;gap:12px;align-items:center"><div style="font-size:22px">🔑</div><div><div style="font-size:13px;font-weight:600;color:var(--txt)">Step 3 — Generate a guest portal</div><div style="font-size:12px;color:var(--txt2)">Go to Guest Portal → select a booking → download or copy the HTML</div></div></div>
+      <div style="background:var(--sand);border-radius:10px;padding:14px;display:flex;gap:12px;align-items:center"><div style="font-size:22px">💸</div><div><div style="font-size:13px;font-weight:600;color:var(--txt)">Step 4 — Track your expenses</div><div style="font-size:12px;color:var(--txt2)">Go to Expenses → add cleaning fees and repairs → see your real profit</div></div></div>
+      <div style="background:rgba(196,105,58,.08);border:1px solid var(--terra-l);border-radius:8px;padding:10px;font-size:11px;color:var(--txt2);line-height:1.5;text-align:center">Questions? Email us at <strong>csopropertyservice@gmail.com</strong> — we respond within 24 hours</div>
+    </div>`}
 ];
 
 function startOnboard(user) {
@@ -1926,14 +1969,15 @@ function startOnboard(user) {
 function renderObStep() {
   const step=obSteps[obStep-1];
   document.getElementById('ob-content').innerHTML=`<div class="ob-title">${step.title}</div><div class="ob-sub">${step.sub}</div>${step.content}`;
-  for(let i=1;i<=4;i++){
+  for(let i=1;i<=5;i++){
     const s=document.getElementById('ob-s'+i);
+    if(!s) continue;
     s.className='ob-step '+(i<obStep?'done':i===obStep?'active':'future');
     s.textContent=i<obStep?'✓':i;
-    if(i<4){const l=document.getElementById('ob-l'+i);l.className='ob-line '+(i<obStep?'done':'');}
+    if(i<5){const l=document.getElementById('ob-l'+i);if(l)l.className='ob-line '+(i<obStep?'done':'');}
   }
   document.getElementById('ob-back-btn').style.display=obStep>1?'':'none';
-  document.getElementById('ob-next-btn').textContent=obStep===4?'Launch Dashboard →':'Next →';
+  document.getElementById('ob-next-btn').textContent=obStep===5?'Launch Dashboard →':'Next →';
 }
 function obNext() {
   if(obStep===2){
@@ -1943,8 +1987,7 @@ function obNext() {
       cData.properties.push(prop);saveUserData(cUid,cData);
     }
   }
-  if(obStep===3){const k=document.getElementById('ob-api-key')?.value.trim();if(k){cData.apiKey=k;saveUserData(cUid,cData);}}
-  if(obStep===4){finishOnboard();return;}
+  if(obStep===5){finishOnboard();return;}
   obStep++;renderObStep();
 }
 function obBack(){if(obStep>1){obStep--;renderObStep();}}
@@ -2334,7 +2377,7 @@ const GS_STEPS = [
     id:'add_property',
     icon:'🏠',
     title:'Add your first property',
-    desc:'Add your Airbnb listing details — name, location, door code, WiFi',
+    desc:'Add your listing details — name, location, door code, WiFi, and optional photo',
     action:'openModal(\'add-property-modal\')',
     actionLabel:'Add Property',
     check: ()=> cData.properties.length > 0
@@ -2342,44 +2385,53 @@ const GS_STEPS = [
   {
     id:'add_booking',
     icon:'📅',
-    title:'Add your first booking',
-    desc:'Track your guests, check-in dates, and revenue',
-    action:'openModal(\'add-booking-modal\')',
-    actionLabel:'Add Booking',
+    title:'Add or sync your bookings',
+    desc:'Add manually or go to iCal Sync to import from Airbnb/VRBO automatically',
+    action:'nav(\'ical\',document.querySelector(\'[onclick*=ical]\'))',
+    actionLabel:'iCal Sync',
     check: ()=> cData.bookings.length > 0
   },
   {
-    id:'setup_portal',
-    icon:'🔑',
-    title:'Set up a guest portal',
-    desc:'Create a personalized check-in page for your guests',
-    action:'nav(\'portal\',document.querySelector(\'[onclick*=portal]\'))',
-    actionLabel:'Set Up Portal',
-    check: ()=> cData.bookings.length > 0 && cData.properties.length > 0
-  },
-  {
-    id:'add_api_key',
+    id:'try_ai',
     icon:'🤖',
-    title:'Enable AI messaging',
-    desc:'Add your Anthropic API key for one-click guest message drafting',
-    action:'nav(\'settings\',document.querySelector(\'[onclick*=settings]\'))',
-    actionLabel:'Go to Settings',
-    check: ()=> !!cData.apiKey
-  },
-  {
-    id:'add_message',
-    icon:'💬',
-    title:'Send your first message',
-    desc:'Reply to a guest or start a new conversation',
+    title:'Try AI messaging',
+    desc:'Go to Messages → start a conversation → click AI Reply for an instant draft',
     action:'nav(\'messages\',document.querySelector(\'[onclick*=messages]\'))',
     actionLabel:'Go to Messages',
     check: ()=> cData.messages.length > 0
   },
   {
+    id:'setup_portal',
+    icon:'🔑',
+    title:'Generate a guest portal',
+    desc:'Go to Guest Portal → select a guest → download their personalized check-in page',
+    action:'nav(\'portal\',document.querySelector(\'[onclick*=portal]\'))',
+    actionLabel:'Guest Portal',
+    check: ()=> cData.bookings.length > 0 && cData.properties.length > 0
+  },
+  {
+    id:'add_expense',
+    icon:'💸',
+    title:'Track your first expense',
+    desc:'Go to Expenses → add a cleaning fee or repair to see your true profit',
+    action:'nav(\'expenses\',document.querySelector(\'[onclick*=expenses]\'))',
+    actionLabel:'Add Expense',
+    check: ()=> (cData.expenses||[]).length > 0
+  },
+  {
+    id:'add_staff',
+    icon:'🧹',
+    title:'Set up your cleaning staff',
+    desc:'Go to Staff Portal → add a cleaner → use the interactive turnover checklist',
+    action:'nav(\'staff\',document.querySelector(\'[onclick*=staff]\'))',
+    actionLabel:'Staff Portal',
+    check: ()=> (cData.staff||[]).length > 0
+  },
+  {
     id:'build_website',
     icon:'🌐',
     title:'Build your booking website',
-    desc:'Launch a direct booking site to save on Airbnb fees',
+    desc:'Go to Website Builder → customize → download your direct booking site',
     action:'nav(\'website\',document.querySelector(\'[onclick*=website]\'))',
     actionLabel:'Build Website',
     check: ()=> cData.websiteBuilt
