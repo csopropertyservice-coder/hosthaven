@@ -2680,7 +2680,6 @@ async function aiDraft(convId,type){
     tips:`You are a friendly local Airbnb host named ${userName}. Recommend 2-3 local restaurants and 1-2 activities near ${prop?.name||'your property'} to ${c.guestName}. Sound like a local friend.`,
     rules:`You are ${userName}. Write a friendly house rules reminder to ${c.guestName}: no smoking, no parties, quiet 10pm-8am. Keep it warm and brief.`
   };
-  const apiKey=cData.apiKey;
   const fb={
     reply:`Hi ${c.guestName}! Thanks for reaching out — happy to help! ${lastGuest.toLowerCase().includes('early')?'Early check-in around 1pm should work perfectly!':'Let me know how I can assist.'} Looking forward to hosting you! 😊`,
     checkin:`Hi ${c.guestName}! Excited for your stay at ${prop?.name||'the property'}! 🔑 Door: ${prop?.doorCode||'[see confirmation]'} | WiFi: ${prop?.wifi||'[see welcome book]'} / ${prop?.wifiPw||''} | Parking: ${prop?.parking||'see listing'}. Check-in after 3pm, checkout by 11am. Message me anytime!`,
@@ -2688,25 +2687,20 @@ async function aiDraft(convId,type){
     rules:`Hi ${c.guestName}! Quick friendly note — quiet hours after 10pm, no smoking indoors, and please keep guests to the listed count. Other than that, make yourself completely at home! 🏡`
   };
   try{
-    if(!apiKey) throw new Error('no key');
-    // Add 10 second timeout
-    const controller = new AbortController();
-    const timeout = setTimeout(()=>controller.abort(), 10000);
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res = await fetch('https://vdnyqwpznsysrvyvbqga.supabase.co/functions/v1/ai-draft',{
       method:'POST',
-      signal: controller.signal,
-      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:prompts[type]}]})
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM'
+      },
+      body:JSON.stringify({prompt:prompts[type]})
     });
-    clearTimeout(timeout);
     const data=await res.json();
-    if(data.error) throw new Error(data.error.message);
-    ta.value=data.content?.[0]?.text||'Could not generate.';
+    if(data.error) throw new Error(data.error);
+    ta.value=data.text||fb[type];
     st.innerHTML=`<span style="color:var(--sage)">✓ Ready — edit before sending</span>`;
   } catch(e){
-    if(!apiKey) st.innerHTML=`<span style="color:var(--gold)">⚡ Demo draft — add API key in Settings for live AI</span>`;
-    else if(e.name==='AbortError') st.innerHTML=`<span style="color:var(--terra)">Timed out — showing demo draft</span>`;
-    else st.innerHTML=`<span style="color:var(--terra)">API error: ${e.message} — showing demo</span>`;
+    st.innerHTML=`<span style="color:var(--gold)">⚡ Demo draft</span>`;
     ta.value=fb[type];
   }
   document.querySelectorAll('.ai-btn').forEach(b=>b.classList.remove('loading'));
