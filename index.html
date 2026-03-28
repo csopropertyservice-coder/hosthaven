@@ -638,6 +638,28 @@ select{color:var(--txt)!important;}
 
 <!-- ██ DASHBOARD ████████████████████████████ -->
 <div class="page active" id="page-dashboard">
+
+  <!-- Getting Started Checklist -->
+  <div id="getting-started-card" class="card" style="margin-bottom:18px;border-left:3px solid var(--terra);display:none">
+    <div class="card-hd">
+      <div>
+        <div class="card-title">🚀 Getting Started</div>
+        <div style="font-size:12px;color:var(--txt2);margin-top:3px" id="gs-progress-text">Complete these steps to get the most out of HostHaven</div>
+      </div>
+      <button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="dismissGettingStarted()">Dismiss</button>
+    </div>
+    <div class="card-body">
+      <!-- Progress bar -->
+      <div style="background:var(--sand);border-radius:4px;height:6px;margin-bottom:18px;overflow:hidden">
+        <div id="gs-progress-bar" style="height:100%;background:linear-gradient(90deg,var(--terra),var(--gold));border-radius:4px;transition:width .4s ease;width:0%"></div>
+      </div>
+      <!-- Steps -->
+      <div style="display:flex;flex-direction:column;gap:10px" id="gs-steps">
+        <!-- Steps rendered by JS -->
+      </div>
+    </div>
+  </div>
+
   <div class="g4" style="margin-bottom:18px">
     <div class="kpi k1"><div class="kpi-label">Revenue This Month</div><div class="kpi-val" id="kpi-rev">$0</div><span class="delta up">↑ live</span></div>
     <div class="kpi k2"><div class="kpi-label">Active Bookings</div><div class="kpi-val" id="kpi-book">0</div><span class="delta up">confirmed</span></div>
@@ -954,7 +976,7 @@ select{color:var(--txt)!important;}
     <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">AI Messaging (Anthropic API)</div></div><div class="card-body"><div style="font-size:13px;color:var(--txt2);margin-bottom:10px;line-height:1.5">Add your API key from <strong>console.anthropic.com</strong> for real AI drafts. Free to start.</div><div class="fi" style="margin-bottom:10px"><label>API Key</label><input id="set-api-key" type="password" placeholder="sk-ant-…"></div><button class="btn btn-sage" onclick="saveApiKey()">Save Key</button></div></div>
     <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Appearance</div></div><div class="card-body"><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">Dark Mode</div><div style="font-size:11px;color:var(--txt3)">Switch between light and dark</div></div><div class="toggle" id="dark-setting-toggle" onclick="toggleDark()"><div class="toggle-knob"></div></div></div></div></div>
     <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Notifications</div></div><div class="card-body"><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">New bookings</div></div><div class="toggle on" onclick="toggleSetting(this)"><div class="toggle-knob"></div></div></div><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">Guest messages</div></div><div class="toggle on" onclick="toggleSetting(this)"><div class="toggle-knob"></div></div></div><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">Task reminders</div></div><div class="toggle off" onclick="toggleSetting(this)"><div class="toggle-knob"></div></div></div></div></div>
-    <div class="card"><div class="card-hd"><div class="card-title">Data</div></div><div class="card-body"><button class="btn btn-ghost" style="color:var(--terra);border-color:var(--terra-l)" onclick="if(confirm('Clear all data?')){clearAll()}">🗑 Clear All Data</button></div></div>
+    <div class="card"><div class="card-hd"><div class="card-title">Data</div></div><div class="card-body" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-ghost" onclick="cData.gsDismissed=false;saveUserData(cUid,cData);toast('Getting started guide restored!');renderDashboard();">🚀 Show Getting Started</button><button class="btn btn-ghost" style="color:var(--terra);border-color:var(--terra-l)" onclick="if(confirm('Clear all data?')){clearAll()}">🗑 Clear All Data</button></div></div>
   </div>
 </div>
 
@@ -1631,7 +1653,113 @@ function addBooking(){
   toast(`Booking for ${guest} added!`);renderAll();
 }
 // ════════════════════════════════════════════
-//  STAFF PORTAL
+//  GETTING STARTED CHECKLIST
+// ════════════════════════════════════════════
+const GS_STEPS = [
+  {
+    id:'add_property',
+    icon:'🏠',
+    title:'Add your first property',
+    desc:'Add your Airbnb listing details — name, location, door code, WiFi',
+    action:'openModal(\'add-property-modal\')',
+    actionLabel:'Add Property',
+    check: ()=> cData.properties.length > 0
+  },
+  {
+    id:'add_booking',
+    icon:'📅',
+    title:'Add your first booking',
+    desc:'Track your guests, check-in dates, and revenue',
+    action:'openModal(\'add-booking-modal\')',
+    actionLabel:'Add Booking',
+    check: ()=> cData.bookings.length > 0
+  },
+  {
+    id:'setup_portal',
+    icon:'🔑',
+    title:'Set up a guest portal',
+    desc:'Create a personalized check-in page for your guests',
+    action:'nav(\'portal\',document.querySelector(\'[onclick*=portal]\'))',
+    actionLabel:'Set Up Portal',
+    check: ()=> cData.bookings.length > 0 && cData.properties.length > 0
+  },
+  {
+    id:'add_api_key',
+    icon:'🤖',
+    title:'Enable AI messaging',
+    desc:'Add your Anthropic API key for one-click guest message drafting',
+    action:'nav(\'settings\',document.querySelector(\'[onclick*=settings]\'))',
+    actionLabel:'Go to Settings',
+    check: ()=> !!cData.apiKey
+  },
+  {
+    id:'add_message',
+    icon:'💬',
+    title:'Send your first message',
+    desc:'Reply to a guest or start a new conversation',
+    action:'nav(\'messages\',document.querySelector(\'[onclick*=messages]\'))',
+    actionLabel:'Go to Messages',
+    check: ()=> cData.messages.length > 0
+  },
+  {
+    id:'build_website',
+    icon:'🌐',
+    title:'Build your booking website',
+    desc:'Launch a direct booking site to save on Airbnb fees',
+    action:'nav(\'website\',document.querySelector(\'[onclick*=website]\'))',
+    actionLabel:'Build Website',
+    check: ()=> cData.websiteBuilt
+  }
+];
+
+function renderGettingStarted() {
+  const card = document.getElementById('getting-started-card');
+  const stepsEl = document.getElementById('gs-steps');
+  const progressBar = document.getElementById('gs-progress-bar');
+  const progressText = document.getElementById('gs-progress-text');
+  if(!card || !stepsEl) return;
+
+  // Check if dismissed
+  if(cData.gsDismissed) { card.style.display='none'; return; }
+
+  const completed = GS_STEPS.filter(s=>s.check()).length;
+  const total = GS_STEPS.length;
+
+  // Hide if all done
+  if(completed === total) {
+    card.style.display='none';
+    return;
+  }
+
+  card.style.display='block';
+  const pct = Math.round((completed/total)*100);
+  if(progressBar) progressBar.style.width = pct+'%';
+  if(progressText) progressText.textContent = `${completed} of ${total} steps complete — you're ${pct}% set up!`;
+
+  stepsEl.innerHTML = GS_STEPS.map(step=>{
+    const done = step.check();
+    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:${done?'var(--sand)':'var(--card)'};border:1px solid ${done?'var(--border2)':'var(--border)'};transition:all .2s;${done?'opacity:.6':''}">
+      <div style="width:32px;height:32px;border-radius:50%;background:${done?'var(--sage)':'var(--sand)'};color:${done?'#fff':'var(--txt2)'};display:flex;align-items:center;justify-content:center;font-size:${done?'14px':'16px'};flex-shrink:0;font-weight:700">
+        ${done?'✓':step.icon}
+      </div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:var(--txt);${done?'text-decoration:line-through;':''}margin-bottom:2px">${step.title}</div>
+        <div style="font-size:11px;color:var(--txt3);line-height:1.4">${step.desc}</div>
+      </div>
+      ${!done?`<button class="btn btn-pri" style="font-size:11px;padding:5px 11px;flex-shrink:0" onclick="${step.action}">${step.actionLabel} →</button>`:'<span style="font-size:11px;color:var(--sage);font-weight:600">Done ✓</span>'}
+    </div>`;
+  }).join('');
+}
+
+function dismissGettingStarted() {
+  cData.gsDismissed = true;
+  saveUserData(cUid, cData);
+  const card = document.getElementById('getting-started-card');
+  if(card) card.style.display='none';
+  toast('Getting started guide hidden. Find it again in Settings if needed.');
+}
+
+// ════════════════════════════════════════════
 // ════════════════════════════════════════════
 function addStaff() {
   const name = document.getElementById('sf-name').value.trim();
@@ -2361,6 +2489,7 @@ function renderReviews(){
 //  DASHBOARD
 // ════════════════════════════════════════════
 function renderDashboard(){
+  renderGettingStarted();
   const bookings=cData.bookings.filter(b=>b.status!=='cancelled');const rev=bookings.reduce((s,b)=>s+b.price,0);const unread=cData.messages.filter(m=>m.unread).length;
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   set('kpi-rev','$'+rev.toLocaleString());set('kpi-book',bookings.length);set('kpi-props',cData.properties.length);set('kpi-msgs',unread);
