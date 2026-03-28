@@ -999,7 +999,7 @@ select{color:var(--txt)!important;}
 <!-- ██ SETTINGS ████████████████████████████ -->
 <div class="page" id="page-settings">
   <div style="max-width:560px">
-    <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Account</div></div><div class="card-body"><div class="fi"><label>Full Name</label><input id="set-name"></div><div class="fi"><label>Email</label><input id="set-email" readonly style="opacity:.6"></div><div class="fi" style="margin-bottom:0"><label>Plan</label><div style="display:flex;align-items:center;gap:10px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:8px;padding:9px 12px"><span id="set-plan" style="font-size:13px;flex:1">Free Plan</span><button class="btn btn-pri" style="font-size:10px;padding:4px 9px" onclick="showScreen('landing')">Upgrade →</button></div></div><button class="btn btn-pri" style="margin-top:14px" onclick="saveSettings()">Save</button></div></div>
+    <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Account</div></div><div class="card-body"><div class="fi"><label>Full Name</label><input id="set-name"></div><div class="fi"><label>Email</label><input id="set-email" readonly style="opacity:.6"></div><div class="fi" style="margin-bottom:0"><label>Plan</label><div style="display:flex;align-items:center;gap:10px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:8px;padding:9px 12px"><span id="set-plan" style="font-size:13px;flex:1">Free Plan</span><button class="btn btn-pri" style="font-size:10px;padding:4px 9px" onclick="showUpgradeModal()">Upgrade →</button></div></div><div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-pri" onclick="saveSettings()">Save Changes</button><button class="btn btn-ghost" onclick="openBillingPortal()">💳 Manage Billing</button></div></div></div>
     <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">AI Messaging (Anthropic API)</div></div><div class="card-body"><div style="font-size:13px;color:var(--txt2);margin-bottom:10px;line-height:1.5">Add your API key from <strong>console.anthropic.com</strong> for real AI drafts. Free to start.</div><div class="fi" style="margin-bottom:10px"><label>API Key</label><input id="set-api-key" type="password" placeholder="sk-ant-…"></div><button class="btn btn-sage" onclick="saveApiKey()">Save Key</button></div></div>
     <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Appearance</div></div><div class="card-body"><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">Dark Mode</div><div style="font-size:11px;color:var(--txt3)">Switch between light and dark</div></div><div class="toggle" id="dark-setting-toggle" onclick="toggleDark()"><div class="toggle-knob"></div></div></div></div></div>
     <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Notifications</div></div><div class="card-body"><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">New bookings</div></div><div class="toggle on" onclick="toggleSetting(this)"><div class="toggle-knob"></div></div></div><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">Guest messages</div></div><div class="toggle on" onclick="toggleSetting(this)"><div class="toggle-knob"></div></div></div><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">Task reminders</div></div><div class="toggle off" onclick="toggleSetting(this)"><div class="toggle-knob"></div></div></div></div></div>
@@ -1107,6 +1107,34 @@ select{color:var(--txt)!important;}
 <!-- ══════════════════════════════════════
      MODALS
 ══════════════════════════════════════ -->
+<div class="modal-bg" id="upgrade-modal"><div class="modal" style="max-width:460px;text-align:center">
+  <div style="font-size:48px;margin-bottom:12px">🚀</div>
+  <div style="font-family:'Fraunces',serif;font-size:22px;color:var(--txt);margin-bottom:8px">Upgrade to Pro</div>
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:6px;line-height:1.5" id="upgrade-modal-reason">Unlock more features with Pro.</div>
+  <div style="background:var(--sand);border-radius:12px;padding:16px;margin:16px 0;text-align:left">
+    <div style="font-size:12px;color:var(--txt2);margin-bottom:10px;font-weight:600">PRO — $79/month includes:</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:13px;color:var(--txt)">✅ Up to 10 properties</div>
+      <div style="font-size:13px;color:var(--txt)">✅ AI guest messaging</div>
+      <div style="font-size:13px;color:var(--txt)">✅ iCal sync from Airbnb</div>
+      <div style="font-size:13px;color:var(--txt)">✅ Revenue reports & forecasting</div>
+      <div style="font-size:13px;color:var(--txt)">✅ Website builder</div>
+      <div style="font-size:13px;color:var(--txt)">✅ Priority support</div>
+    </div>
+  </div>
+  <button class="btn btn-pri btn-w" style="margin-bottom:10px" onclick="closeModal('upgrade-modal');openStripe('pro')">Upgrade to Pro — $79/mo →</button>
+  <button class="btn btn-ghost btn-w" style="margin-bottom:8px" onclick="closeModal('upgrade-modal');openStripe('business')">Get Business (Unlimited) — $199/mo</button>
+  <button class="btn btn-ghost btn-w" style="color:var(--txt3)" onclick="closeModal('upgrade-modal')">Maybe later</button>
+</div></div>
+
+<div class="modal-bg" id="error-modal"><div class="modal" style="max-width:400px;text-align:center">
+  <div style="font-size:48px;margin-bottom:12px">⚠️</div>
+  <div style="font-family:'Fraunces',serif;font-size:20px;color:var(--txt);margin-bottom:8px" id="error-modal-title">Something went wrong</div>
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:20px;line-height:1.5" id="error-modal-msg">Please try refreshing the page. If the problem persists, contact support.</div>
+  <button class="btn btn-pri btn-w" onclick="location.reload()">Refresh Page</button>
+  <button class="btn btn-ghost btn-w" style="margin-top:8px" onclick="closeModal('error-modal')">Dismiss</button>
+</div></div>
+
 <div class="modal-bg" id="add-property-modal"><div class="modal"><h2>🏠 Add Property</h2><div class="g2"><div class="fi"><label>Name</label><input id="mp-name" placeholder="Sunset Loft"></div><div class="fi"><label>Emoji</label><input id="mp-emoji" value="🏡"></div></div><div class="fi"><label>Location</label><input id="mp-loc" placeholder="Downtown, New York"></div><div class="fi"><label>Description</label><textarea id="mp-desc" placeholder="A beautiful place…"></textarea></div><div class="g2"><div class="fi"><label>Nightly Rate ($)</label><input id="mp-rate" type="number" placeholder="120"></div><div class="fi"><label>Max Guests</label><input id="mp-guests" type="number" placeholder="4"></div></div><div class="g2"><div class="fi"><label>WiFi Name</label><input id="mp-wifi"></div><div class="fi"><label>WiFi Password</label><input id="mp-wifipw"></div></div><div class="g2"><div class="fi"><label>Door Code</label><input id="mp-door" placeholder="#4821"></div><div class="fi"><label>Parking</label><input id="mp-parking" placeholder="Spot B3"></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-property-modal')">Cancel</button><button class="btn btn-pri" onclick="addProperty()">Add Property</button></div></div></div>
 
 <div class="modal-bg" id="edit-property-modal"><div class="modal" style="width:min(580px,96vw)">
@@ -1160,7 +1188,7 @@ select{color:var(--txt)!important;}
 
 <div class="modal-bg" id="add-booking-modal"><div class="modal"><h2>📅 Add Booking</h2><div class="fi"><label>Property</label><select id="mb-prop"></select></div><div class="g2"><div class="fi"><label>Guest Name</label><input id="mb-guest" placeholder="Marcus Kim"></div><div class="fi"><label>Guest Email</label><input id="mb-email" type="email"></div></div><div class="g2"><div class="fi"><label>Check-in</label><input id="mb-cin" type="date"></div><div class="fi"><label>Check-out</label><input id="mb-cout" type="date"></div></div><div class="g2"><div class="fi"><label>Guests</label><input id="mb-nguests" type="number" value="2"></div><div class="fi"><label>Total Price ($)</label><input id="mb-price" type="number"></div></div><div class="fi"><label>Status</label><select id="mb-status"><option value="confirmed">Confirmed</option><option value="pending">Pending</option><option value="completed">Completed</option></select></div><div class="fi"><label>Source</label><select id="mb-source"><option value="airbnb">Airbnb</option><option value="vrbo">VRBO</option><option value="direct">Direct</option><option value="other">Other</option></select></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-booking-modal')">Cancel</button><button class="btn btn-pri" onclick="addBooking()">Add Booking</button></div></div></div>
 
-<div class="modal-bg" id="add-message-modal"><div class="modal"><h2>💬 New Conversation</h2><div class="fi"><label>Guest Name</label><input id="mm-name" placeholder="Marcus Kim"></div><div class="fi"><label>Property</label><select id="mm-prop"><option value="">None</option></select></div><div class="fi"><label>First Message</label><textarea id="mm-msg" placeholder="Hi! Quick question about check-in…"></textarea></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-message-modal')">Cancel</button><button class="btn btn-pri" onclick="addConversation()">Start</button></div></div></div>
+<div class="modal-bg" id="add-message-modal"><div class="modal"><h2>💬 New Conversation</h2><div class="fi"><label>Guest Name</label><input id="mm-name" placeholder="Marcus Kim"></div><div class="fi"><label>Property</label><select id="mm-prop"><option value="">None</option></select></div><div class="fi"><label>Link to Booking (optional)</label><select id="mm-booking"><option value="">No booking</option></select></div><div class="fi"><label>First Message</label><textarea id="mm-msg" placeholder="Hi! Quick question about check-in…"></textarea></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-message-modal')">Cancel</button><button class="btn btn-pri" onclick="addConversation()">Start</button></div></div></div>
 
 <div class="modal-bg" id="add-task-modal"><div class="modal"><h2>🧹 Add Task</h2><div class="fi"><label>Title</label><input id="mt-title" placeholder="Deep clean — Sunset Loft"></div><div class="fi"><label>Property</label><select id="mt-prop"><option value="">None</option></select></div><div class="g2"><div class="fi"><label>Assigned To</label><input id="mt-assign" placeholder="Maria G."></div><div class="fi"><label>Due Date</label><input id="mt-due" type="date"></div></div><div class="fi"><label>Priority</label><select id="mt-pri"><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-task-modal')">Cancel</button><button class="btn btn-pri" onclick="addTask()">Add Task</button></div></div></div>
 
@@ -1405,35 +1433,19 @@ async function loginDemo() {
   const loginBtn = document.querySelector('#screen-login .btn-dark');
   if(loginBtn){loginBtn.textContent='Loading demo…';loginBtn.disabled=true;}
   try {
-    // Try to sign in with demo account first
-    let {data,error} = await sb.auth.signInWithPassword({email:'demo@hosthaven.co',password:'demo1234'});
-    if(error) {
-      // Create demo account if doesn't exist
-      const res = await sb.auth.signUp({email:'demo@hosthaven.co',password:'demo1234',options:{data:{full_name:'Sarah Jensen'}}});
-      if(res.error) throw res.error;
-      data = res.data;
-    }
-    const user = data.user;
-    cUid = user.id;
+    // Use a fixed demo UID that never conflicts with real users
+    const DEMO_UID = 'demo_hosthaven_preview';
+    cUid = DEMO_UID;
     cUser = {email:'demo@hosthaven.co', name:'Sarah Jensen'};
-    // Load or create demo data
-    const existing = getLocalData(cUid);
-    if(!existing.properties?.length) {
-      const demo = buildDemoData();
-      saveLocalData(cUid, demo);
-    }
-    getUserData(cUid);
+    // Always load fresh demo data
+    const demo = buildDemoData();
+    saveLocalData(DEMO_UID, demo);
+    getUserData(DEMO_UID);
     applyDark(false);
+    ['landing','login','signup','onboard','forgot','reset'].forEach(n=>{const el=document.getElementById('screen-'+n);if(el)el.style.display='none';});
     launchApp(cUser);
   } catch(e) {
-    // Fallback to local demo if Supabase fails
-    cUid = 'demo_local';
-    cUser = {email:'demo@hosthaven.co', name:'Sarah Jensen'};
-    const demo = buildDemoData();
-    saveLocalData(cUid, demo);
-    getUserData(cUid);
-    applyDark(false);
-    launchApp(cUser);
+    showErr('login-err', 'Demo failed. Please try signing up instead.');
   } finally {
     if(loginBtn){loginBtn.textContent='🚀 Launch Demo';loginBtn.disabled=false;}
   }
@@ -1480,6 +1492,12 @@ async function doSignup() {
         method:'POST',
         headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM'},
         body:JSON.stringify({type:'new_signup',hostEmail:ADMIN_EMAIL,data:{name,email}})
+      }).catch(()=>{});
+      // Send welcome email to new user
+      fetch('https://vdnyqwpznsysrvyvbqga.supabase.co/functions/v1/send-notification', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM'},
+        body:JSON.stringify({type:'welcome',hostEmail:email,data:{name,email}})
       }).catch(()=>{});
       if(!cData.onboarded) { startOnboard(cUser); } else { launchApp(cUser); }
     } else {
@@ -1818,7 +1836,7 @@ const GRADS=['pi1','pi2','pi3','pi4','pi5','pi6'];
 function addProperty(){
   const name=document.getElementById('mp-name').value.trim();
   if(!name){toast('Enter a property name');return;}
-  if((cData.plan||'free')==='free'&&cData.properties.length>=1){closeModal('add-property-modal');toast('Free plan: 1 property max. Upgrade to Pro!');setTimeout(()=>showScreen('landing'),1500);return;}
+  if((cData.plan||'free')==='free'&&cData.properties.length>=1){closeModal('add-property-modal');showUpgradeModal('You\'ve reached the free plan limit of 1 property.');return;}
   const p={id:'p_'+Date.now(),name,emoji:document.getElementById('mp-emoji').value||'🏡',location:document.getElementById('mp-loc').value||'',description:document.getElementById('mp-desc').value||'',rate:parseFloat(document.getElementById('mp-rate').value)||100,maxGuests:parseInt(document.getElementById('mp-guests').value)||2,wifi:document.getElementById('mp-wifi').value||'',wifiPw:document.getElementById('mp-wifipw').value||'',doorCode:document.getElementById('mp-door').value||'',parking:document.getElementById('mp-parking').value||'',occupancy:Math.floor(Math.random()*25)+65,rating:(4.7+Math.random()*.3).toFixed(2),gradient:GRADS[cData.properties.length%6],created:Date.now()};
   cData.properties.push(p);saveUserData(cUid,cData);closeModal('add-property-modal');
   ['mp-name','mp-loc','mp-desc','mp-rate','mp-guests','mp-wifi','mp-wifipw','mp-door','mp-parking'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
@@ -2294,6 +2312,57 @@ function onBookingCompleted(booking) {
     toast(`⭐ ${booking.guestName}'s stay is complete! Go to Reviews to send a review request.`);
   }, 500);
 }
+// ════════════════════════════════════════════
+//  UPGRADE MODAL
+// ════════════════════════════════════════════
+function showUpgradeModal(reason) {
+  const el = document.getElementById('upgrade-modal-reason');
+  if(el) el.textContent = reason || 'Unlock more features with Pro.';
+  openModal('upgrade-modal');
+}
+
+// ════════════════════════════════════════════
+//  ERROR HANDLING
+// ════════════════════════════════════════════
+window.addEventListener('unhandledrejection', e => {
+  if(e.reason?.message?.includes('Failed to fetch')||e.reason?.message?.includes('NetworkError')) {
+    toast('Connection issue — check your internet and try again');
+  }
+});
+
+// ════════════════════════════════════════════
+//  BILLING MANAGEMENT
+// ════════════════════════════════════════════
+function openBillingPortal() {
+  const plan = cData.plan||'free';
+  if(plan==='free'||plan==='trial'){showUpgradeModal('Upgrade to Pro to manage your subscription.');return;}
+  const existing = document.getElementById('billing-modal-dynamic');
+  if(existing) existing.remove();
+  const div = document.createElement('div');
+  div.id = 'billing-modal-dynamic';
+  div.className = 'modal-bg open';
+  div.innerHTML = `<div class="modal" style="max-width:420px">
+    <h2>💳 Manage Billing</h2>
+    <div style="background:var(--sand);border-radius:10px;padding:16px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);margin-bottom:8px">Current Plan</div>
+      <div style="font-size:16px;font-weight:600;color:var(--txt)">${plan==='pro'?'🚀 Pro — $79/month':'💼 Business — $199/month'}</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--txt2);line-height:1.6">To manage your subscription, update payment method, or cancel — contact us at:</div>
+      <a href="mailto:csopropertyservice@gmail.com" style="font-size:14px;font-weight:600;color:var(--terra)">csopropertyservice@gmail.com</a>
+      <div style="font-size:12px;color:var(--txt3)">We respond within 24 hours and process changes immediately.</div>
+    </div>
+    <div style="background:var(--sand);border-radius:8px;padding:12px;font-size:12px;color:var(--txt2);line-height:1.5;margin-bottom:16px">
+      ⚡ <strong>Quick cancel:</strong> Email us "Cancel subscription" with your account email. We'll cancel immediately, no questions asked.
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="document.getElementById('billing-modal-dynamic').remove()">Close</button>
+      <a href="mailto:csopropertyservice@gmail.com?subject=Manage my HostHaven subscription&body=Account email: ${cUser?.email||''}" class="btn btn-pri" style="text-decoration:none">📧 Contact Support</a>
+    </div>
+  </div>`;
+  document.body.appendChild(div);
+}
+
 let isAnnual = false;
 function toggleBilling() {
   isAnnual = !isAnnual;
@@ -2542,13 +2611,14 @@ function addConversation(){
   if(!name||!msg){toast('Fill in name and message');return;}
   const propId=document.getElementById('mm-prop').value;
   const prop=cData.properties.find(p=>p.id===propId);
+  const bookingId=document.getElementById('mm-booking')?.value||'';
+  const booking=cData.bookings.find(b=>b.id===bookingId);
   const cols=[['#F5E6D3','#C4693A'],['#D3E8E0','#4A7D50'],['#D3DCE8','#2E4460'],['#E8D3D3','#8B3A3A'],['#E8E3D3','#6B5A2E']];
   const c=cols[cData.messages.length%cols.length];
-  const conv={id:'c_'+Date.now(),guestName:name,propId,propName:prop?.name||'',initials:name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2),avatarBg:c[0],avatarColor:c[1],messages:[{role:'guest',text:msg,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}],unread:true,created:Date.now()};
+  const conv={id:'c_'+Date.now(),guestName:name,propId,propName:prop?.name||'',bookingId:bookingId||null,checkin:booking?.checkin||null,checkout:booking?.checkout||null,initials:name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2),avatarBg:c[0],avatarColor:c[1],messages:[{role:'guest',text:msg,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}],unread:true,created:Date.now()};
   cData.messages.push(conv);saveUserData(cUid,cData);closeModal('add-message-modal');
   document.getElementById('mm-name').value='';document.getElementById('mm-msg').value='';
   toast('Conversation started!');renderMessages();updateBadges();
-  // Send email notification
   sendNotification('new_message', {
     guestName: name,
     propName: prop?.name||'your property',
@@ -2568,7 +2638,7 @@ function openConv(id){
   panel.innerHTML=`
     <div class="msg-detail-hd">
       <div class="msg-av" style="width:38px;height:38px;background:${c.avatarBg};color:${c.avatarColor};font-size:13px">${c.initials}</div>
-      <div style="flex:1"><div style="font-size:14px;font-weight:500;font-family:'Fraunces',serif;color:var(--txt)">${c.guestName}</div><div style="font-size:11px;color:var(--txt3)">${c.propName||'No property'}</div></div>
+      <div style="flex:1"><div style="font-size:14px;font-weight:500;font-family:'Fraunces',serif;color:var(--txt)">${c.guestName}</div><div style="font-size:11px;color:var(--txt3)">${c.propName||'No property'}${c.checkin?' · '+c.checkin+' → '+c.checkout:''}</div></div>
       <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="openSMSModal('${id}')">📱 Send SMS</button>
     </div>
     <div class="chat-area" id="ca-${id}">
@@ -3066,6 +3136,12 @@ function updateBadges(){
 function openModal(id){
   const drops=[{sel:'mb-prop',ph:'<option value="">Select property…</option>'},{sel:'mm-prop',ph:'<option value="">None</option>'},{sel:'mt-prop',ph:'<option value="">None</option>'},{sel:'mr-prop',ph:'<option value="">None</option>'},{sel:'ic-prop',ph:'<option value="">None</option>'}];
   drops.forEach(({sel,ph})=>{const el=document.getElementById(sel);if(el)el.innerHTML=ph+cData.properties.map(p=>`<option value="${p.id}">${p.emoji} ${p.name}</option>`).join('');});
+  // Populate booking dropdown in message modal
+  const bookingDrop = document.getElementById('mm-booking');
+  if(bookingDrop) {
+    bookingDrop.innerHTML = '<option value="">No booking</option>' +
+      cData.bookings.filter(b=>b.status!=='cancelled').map(b=>`<option value="${b.id}">${b.guestName} · ${b.propName} · ${b.checkin||'TBD'}</option>`).join('');
+  }
   document.getElementById(id).classList.add('open');
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
