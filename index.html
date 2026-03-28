@@ -1083,9 +1083,11 @@ function launchApp(user) {
   if(cData.apiKey)document.getElementById('set-api-key').value=cData.apiKey;
   document.getElementById('wb-host').value=user.name;
   document.getElementById('wb-email').value=user.email;
+
+  // Render immediately then again after short delay to catch async data
   renderAll();
-  setTimeout(updateWb,200);
-  setTimeout(()=>renderPortal(),200);
+  setTimeout(()=>{ renderAll(); updateWb(); renderPortal(); }, 600);
+  setTimeout(()=>{ renderAll(); }, 1400);
 }
 
 // ════════════════════════════════════════════
@@ -1151,7 +1153,7 @@ function nav(id,el){
   if(id==='portal')renderPortal();
   if(id==='reports')renderReports();
   if(id==='analytics')renderAnalytics();
-  if(id==='admin')renderAdmin();
+  if(id==='admin'){renderAdmin();setTimeout(renderAdmin,800);}
 }
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sb-overlay').classList.add('show');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('show');}
