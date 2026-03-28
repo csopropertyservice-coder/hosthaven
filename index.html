@@ -1060,7 +1060,17 @@ async function bootApp() {
 //  LAUNCH APP
 // ════════════════════════════════════════════
 function launchApp(user) {
-  document.getElementById('app').classList.add('visible');
+  // Show a brief loading overlay so data has time to be ready
+  const app = document.getElementById('app');
+  app.classList.add('visible');
+
+  // Show loading indicator in content area
+  const content = document.querySelector('.content');
+  if(content) {
+    content.style.opacity = '0';
+    content.style.transition = 'opacity 0.3s';
+  }
+
   document.getElementById('sb-uname').textContent=user.name;
   document.getElementById('sb-uemail').textContent=user.email;
   const init=user.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
@@ -1084,10 +1094,15 @@ function launchApp(user) {
   document.getElementById('wb-host').value=user.name;
   document.getElementById('wb-email').value=user.email;
 
-  // Render immediately then again after short delay to catch async data
+  // Render all data then fade in
   renderAll();
-  setTimeout(()=>{ renderAll(); updateWb(); renderPortal(); }, 600);
-  setTimeout(()=>{ renderAll(); }, 1400);
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      if(content){ content.style.opacity='1'; }
+      renderAll();
+      setTimeout(()=>{ updateWb(); renderPortal(); renderAdmin(); }, 300);
+    });
+  });
 }
 
 // ════════════════════════════════════════════
@@ -1133,9 +1148,10 @@ function obNext() {
 }
 function obBack(){if(obStep>1){obStep--;renderObStep();}}
 function finishOnboard(){
-  cData.onboarded=true;saveUserData(cUid,cData);
+  cData.onboarded=true;
+  saveLocalData(cUid,cData);
   document.getElementById('screen-onboard').style.display='none';
-  const s=gs();launchApp(s.users[cUid]);
+  launchApp(cUser);
 }
 
 // ════════════════════════════════════════════
