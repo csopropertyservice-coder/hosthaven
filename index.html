@@ -514,12 +514,21 @@ select{color:var(--txt)!important;}
     </div>
     <div style="font-size:12px;color:rgba(255,255,255,.35)">© 2026 HostHaven. All rights reserved.</div>
     <div style="display:flex;gap:20px">
-      <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer">Privacy</a>
-      <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer">Terms</a>
-      <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer">Support</a>
+      <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('privacy')">Privacy</a>
+      <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('terms')">Terms</a>
+      <a href="mailto:csopropertyservice@gmail.com" style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:none">Support</a>
     </div>
   </footer>
 </div>
+
+<!-- LEGAL MODALS -->
+<div class="modal-bg" id="legal-modal"><div class="modal" style="max-width:600px;max-height:80vh;overflow-y:auto">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <h2 id="legal-title">Terms of Service</h2>
+    <button class="btn btn-ghost" onclick="closeModal('legal-modal')" style="padding:5px 10px">✕</button>
+  </div>
+  <div id="legal-content" style="font-size:13px;color:var(--txt2);line-height:1.8"></div>
+</div></div>
 
 <!-- ══════════════════════════════════════
      AUTH SCREENS
@@ -549,6 +558,10 @@ select{color:var(--txt)!important;}
     <div class="fi"><label>Full Name</label><input id="signup-name" type="text" placeholder="Sarah Jensen"></div>
     <div class="fi"><label>Email</label><input id="signup-email" type="email" placeholder="you@example.com"></div>
     <div class="fi"><label>Password</label><input id="signup-pw" type="password" placeholder="8+ characters"></div>
+    <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px">
+      <input type="checkbox" id="signup-terms" style="margin-top:3px;flex-shrink:0;accent-color:var(--terra)">
+      <label for="signup-terms" style="font-size:12px;color:var(--txt2);line-height:1.5;cursor:pointer">I agree to the <a onclick="showLegal('terms')" style="color:var(--terra);cursor:pointer">Terms of Service</a> and <a onclick="showLegal('privacy')" style="color:var(--terra);cursor:pointer">Privacy Policy</a></label>
+    </div>
     <button class="btn btn-pri btn-w" onclick="doSignup()">Create Account →</button>
     <div class="auth-switch">Have an account? <a onclick="showScreen('login')">Sign in</a> · <a onclick="showScreen('landing')">Back to home</a></div>
   </div>
@@ -1474,6 +1487,8 @@ async function doSignup() {
   const pw=document.getElementById('signup-pw').value;
   if(!name||!email||!pw){showErr('signup-err','Please fill in all fields');return;}
   if(pw.length<8){showErr('signup-err','Password must be 8+ characters');return;}
+  const termsEl = document.getElementById('signup-terms');
+  if(termsEl && !termsEl.checked){showErr('signup-err','Please agree to the Terms of Service to continue');return;}
   const btn=document.querySelector('#screen-signup .btn-pri');
   if(btn){btn.textContent='Creating account…';btn.disabled=true;btn.style.opacity='.7';}
   try {
@@ -1661,6 +1676,8 @@ function launchApp(user) {
         }
       } catch(e){}
       setTimeout(()=>{ updateWb(); renderPortal(); }, 300);
+      // Auto sync iCal feeds in background
+      setTimeout(()=>autoSyncICals(), 2000);
     });
   });
 }
@@ -2331,7 +2348,81 @@ function onBookingCompleted(booking) {
   }, 500);
 }
 // ════════════════════════════════════════════
-//  UPGRADE MODAL
+//  LEGAL — TERMS & PRIVACY
+// ════════════════════════════════════════════
+function showLegal(type) {
+  const title = document.getElementById('legal-title');
+  const content = document.getElementById('legal-content');
+  if(type === 'terms') {
+    if(title) title.textContent = 'Terms of Service';
+    if(content) content.innerHTML = `
+      <p><strong>Last updated: March 2026</strong></p>
+      <p>By using HostHaven ("Service"), you agree to these Terms of Service. Please read them carefully.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">1. Acceptance of Terms</h3>
+      <p>By accessing or using HostHaven, you agree to be bound by these Terms. If you do not agree, do not use the Service.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">2. Description of Service</h3>
+      <p>HostHaven is a property management platform for short-term rental hosts. We provide tools for booking management, guest communication, and analytics.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">3. Subscription & Billing</h3>
+      <p>Paid plans are billed monthly or annually. You may cancel at any time through the billing portal. Refunds are not provided for partial months. We reserve the right to change pricing with 30 days notice.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">4. Free Trial</h3>
+      <p>New accounts receive a 14-day free trial of Pro features. No credit card is required during the trial. At the end of the trial, your account reverts to the Free plan unless you upgrade.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">5. User Data</h3>
+      <p>You retain ownership of all data you enter into HostHaven. We store your data securely using Supabase. We do not sell your data to third parties.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">6. Acceptable Use</h3>
+      <p>You agree not to misuse the Service, attempt to gain unauthorized access, or use the Service for illegal purposes.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">7. Limitation of Liability</h3>
+      <p>HostHaven is provided "as is" without warranties. We are not liable for any indirect or consequential damages arising from your use of the Service.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">8. Contact</h3>
+      <p>Questions? Email us at <a href="mailto:csopropertyservice@gmail.com" style="color:var(--terra)">csopropertyservice@gmail.com</a></p>`;
+  } else {
+    if(title) title.textContent = 'Privacy Policy';
+    if(content) content.innerHTML = `
+      <p><strong>Last updated: March 2026</strong></p>
+      <p>HostHaven ("we", "us") is committed to protecting your privacy. This policy explains how we collect, use, and protect your information.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">1. Information We Collect</h3>
+      <p>We collect information you provide directly: name, email address, property details, booking information, and payment information (processed securely by Stripe — we never store card details).</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">2. How We Use Your Information</h3>
+      <p>We use your information to provide and improve the Service, send transactional emails (booking notifications, welcome emails), and respond to support requests. We do not use your data for advertising.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">3. Data Storage</h3>
+      <p>Your data is stored securely using Supabase (PostgreSQL database hosted on AWS). Data is encrypted at rest and in transit.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">4. Third-Party Services</h3>
+      <p>We use Stripe for payments, Resend for email delivery, and Supabase for database and authentication. Each has their own privacy policy.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">5. Data Retention</h3>
+      <p>We retain your data as long as your account is active. You may request deletion of your account and data at any time by emailing us.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">6. Your Rights</h3>
+      <p>You have the right to access, correct, or delete your personal data. Contact us at <a href="mailto:csopropertyservice@gmail.com" style="color:var(--terra)">csopropertyservice@gmail.com</a> to exercise these rights.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">7. Cookies</h3>
+      <p>We use only essential cookies for authentication. We do not use tracking or advertising cookies.</p>
+      <h3 style="color:var(--txt);margin:14px 0 6px">8. Contact</h3>
+      <p>Privacy questions? Email <a href="mailto:csopropertyservice@gmail.com" style="color:var(--terra)">csopropertyservice@gmail.com</a></p>`;
+  }
+  openModal('legal-modal');
+}
+
+// ════════════════════════════════════════════
+//  AUTO ICAL SYNC ON LOGIN
+// ════════════════════════════════════════════
+async function autoSyncICals() {
+  const icals = cData.icals||[];
+  if(!icals.length) return;
+  let newBookings = 0;
+  for(const ic of icals) {
+    try {
+      const result = await syncIcalUrl(ic.url, ic.propId, ic.propName);
+      newBookings += result.count;
+      ic.lastSync = new Date().toLocaleString();
+      ic.status = 'synced';
+    } catch(e) {
+      ic.status = 'error';
+    }
+  }
+  if(newBookings > 0) {
+    saveUserData(cUid, cData);
+    renderBookings();
+    renderDashboard();
+    toast(`📅 iCal sync: ${newBookings} new booking${newBookings!==1?'s':''} imported!`);
+  }
+}
 // ════════════════════════════════════════════
 function showUpgradeModal(reason) {
   const el = document.getElementById('upgrade-modal-reason');
