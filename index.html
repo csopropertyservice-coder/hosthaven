@@ -1591,6 +1591,15 @@ function launchApp(user) {
     requestAnimationFrame(()=>{
       if(content){ content.style.opacity='1'; }
       renderAll();
+      // Restore last page after refresh
+      try {
+        const lastPage = sessionStorage.getItem('hh_last_page');
+        if(lastPage && lastPage !== 'dashboard') {
+          const pageEl = document.getElementById('page-'+lastPage);
+          const navEl = document.querySelector(`[onclick*="nav('${lastPage}'"]`);
+          if(pageEl) nav(lastPage, navEl);
+        }
+      } catch(e){}
       setTimeout(()=>{ updateWb(); renderPortal(); }, 300);
     });
   });
@@ -1656,6 +1665,8 @@ function nav(id,el){
   if(el)el.classList.add('active');
   document.getElementById('page-title').textContent=titles[id]||id;
   closeSidebar();
+  // Save last page for refresh restore
+  try{sessionStorage.setItem('hh_last_page',id);}catch(e){}
   if(id==='website')setTimeout(updateWb,100);
   if(id==='portal')renderPortal();
   if(id==='reports')renderReports();
