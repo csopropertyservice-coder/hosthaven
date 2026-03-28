@@ -637,6 +637,7 @@ select{color:var(--txt)!important;}
         <div class="sb-item" onclick="nav('reports',this)"><span class="ico">📄</span>Reports</div>
         <div class="sb-item" onclick="nav('reviews',this)"><span class="ico">⭐</span>Reviews</div>
         <div class="sb-item" onclick="nav('settings',this)"><span class="ico">⚙️</span>Settings</div>
+        <div class="sb-item" id="team-nav-item" style="display:none" onclick="nav('team',this)"><span class="ico">👥</span>Team Access</div>
         <div class="sb-item" id="admin-nav-item" style="display:none" onclick="nav('admin',this)"><span class="ico">👑</span>Admin Panel</div>
       </nav>
       <div class="sb-foot">
@@ -1011,6 +1012,68 @@ select{color:var(--txt)!important;}
   </div><!-- /shell -->
 </div><!-- /app -->
 
+<!-- ██ TEAM ACCESS ████████████████████████ -->
+<div class="page" id="page-team">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+    <div>
+      <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:500;color:var(--txt)">👥 Team Access</div>
+      <div style="font-size:13px;color:var(--txt2);margin-top:3px">Invite team members to manage your properties</div>
+    </div>
+    <button class="btn btn-pri" onclick="openModal('invite-team-modal')">+ Invite Member</button>
+  </div>
+
+  <!-- Plan gate -->
+  <div id="team-plan-gate" style="display:none">
+    <div class="card" style="text-align:center;padding:40px;border:2px dashed var(--border)">
+      <div style="font-size:40px;margin-bottom:12px">👥</div>
+      <div style="font-family:'Fraunces',serif;font-size:20px;color:var(--txt);margin-bottom:8px">Team Access is a Business Feature</div>
+      <div style="font-size:13px;color:var(--txt2);margin-bottom:20px;max-width:360px;margin-left:auto;margin-right:auto">Upgrade to Business plan to invite unlimited team members with custom roles and permissions.</div>
+      <button class="btn btn-pri" onclick="openStripe('business')">Upgrade to Business →</button>
+    </div>
+  </div>
+
+  <!-- Team members list -->
+  <div id="team-content">
+    <!-- Owner info -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-hd"><div class="card-title">Your Team</div></div>
+      <div class="card-body">
+        <!-- Owner row -->
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+          <div style="width:38px;height:38px;border-radius:50%;background:var(--terra);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0" id="team-owner-av">?</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:var(--txt)" id="team-owner-name">You</div>
+            <div style="font-size:11px;color:var(--txt3)" id="team-owner-email"></div>
+          </div>
+          <span class="pill pill-blue">👑 Owner</span>
+        </div>
+        <!-- Members list -->
+        <div id="team-members-list">
+          <div style="font-size:13px;color:var(--txt3);padding:16px 0;text-align:center">No team members yet — invite someone to get started!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Role permissions info -->
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Role Permissions</div></div>
+      <div class="card-body">
+        <table class="report-table" style="width:100%">
+          <thead><tr><th>Permission</th><th style="text-align:center">Owner</th><th style="text-align:center">Manager</th><th style="text-align:center">Viewer</th></tr></thead>
+          <tbody>
+            <tr><td>View properties & bookings</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+            <tr><td>Add/edit bookings</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">❌</td></tr>
+            <tr><td>Manage tasks & messages</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">❌</td></tr>
+            <tr><td>Add/edit properties</td><td style="text-align:center">✅</td><td style="text-align:center">❌</td><td style="text-align:center">❌</td></tr>
+            <tr><td>Manage team members</td><td style="text-align:center">✅</td><td style="text-align:center">❌</td><td style="text-align:center">❌</td></tr>
+            <tr><td>Billing & settings</td><td style="text-align:center">✅</td><td style="text-align:center">❌</td><td style="text-align:center">❌</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ██ ADMIN PANEL ████████████████████████ -->
 <div class="page" id="page-admin">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
@@ -1102,6 +1165,26 @@ select{color:var(--txt)!important;}
 <div class="modal-bg" id="add-task-modal"><div class="modal"><h2>🧹 Add Task</h2><div class="fi"><label>Title</label><input id="mt-title" placeholder="Deep clean — Sunset Loft"></div><div class="fi"><label>Property</label><select id="mt-prop"><option value="">None</option></select></div><div class="g2"><div class="fi"><label>Assigned To</label><input id="mt-assign" placeholder="Maria G."></div><div class="fi"><label>Due Date</label><input id="mt-due" type="date"></div></div><div class="fi"><label>Priority</label><select id="mt-pri"><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-task-modal')">Cancel</button><button class="btn btn-pri" onclick="addTask()">Add Task</button></div></div></div>
 
 <div class="modal-bg" id="add-ical-modal"><div class="modal"><h2>🔄 Add iCal Calendar</h2><div class="fi"><label>Calendar Name</label><input id="ic-name" placeholder="Airbnb — Sunset Loft"></div><div class="fi"><label>Property</label><select id="ic-prop"><option value="">None</option></select></div><div class="fi"><label>iCal URL</label><input id="ic-url" placeholder="https://www.airbnb.com/calendar/ical/…"></div><div class="fi"><label>Source</label><select id="ic-source"><option value="airbnb">Airbnb</option><option value="vrbo">VRBO</option><option value="booking_com">Booking.com</option><option value="other">Other</option></select></div><div style="background:var(--sand);border-radius:8px;padding:12px;font-size:12px;color:var(--txt2);line-height:1.6;margin-bottom:4px">⚡ <strong>Note:</strong> Because this app runs locally in your browser, live iCal sync requires a server. This saves your URL and simulates the sync. For live sync, deploy to Netlify and add a serverless function.</div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-ical-modal')">Cancel</button><button class="btn btn-pri" onclick="addICal()">Save & Sync</button></div></div></div>
+
+<div class="modal-bg" id="invite-team-modal"><div class="modal">
+  <h2>👥 Invite Team Member</h2>
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:16px;line-height:1.5">They'll receive an email invitation to join your HostHaven workspace.</div>
+  <div class="fi"><label>Email Address</label><input id="invite-email" type="email" placeholder="colleague@example.com"></div>
+  <div class="fi"><label>Full Name</label><input id="invite-name" placeholder="Sarah Jensen"></div>
+  <div class="fi"><label>Role</label>
+    <select id="invite-role" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)">
+      <option value="manager">👔 Manager — can manage bookings, tasks, messages</option>
+      <option value="viewer">👁 Viewer — read-only access</option>
+    </select>
+  </div>
+  <div style="background:var(--sand);border-radius:8px;padding:12px;font-size:12px;color:var(--txt2);line-height:1.6;margin-bottom:4px">
+    📧 An invitation email will be sent with a link to join your workspace. They'll need to create a HostHaven account if they don't have one.
+  </div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" onclick="closeModal('invite-team-modal')">Cancel</button>
+    <button class="btn btn-pri" onclick="inviteTeamMember()">Send Invitation →</button>
+  </div>
+</div></div>
 
 <div class="modal-bg" id="add-staff-modal"><div class="modal"><h2>👥 Add Staff Member</h2>
   <div class="g2"><div class="fi"><label>Full Name</label><input id="sf-name" placeholder="Maria G."></div><div class="fi"><label>Role</label><select id="sf-role" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="cleaner">🧹 Cleaner</option><option value="handyman">🔧 Handyman</option><option value="manager">👔 Manager</option><option value="other">Other</option></select></div></div>
@@ -1479,6 +1562,10 @@ function launchApp(user) {
   }
   checkTrialStatus();
 
+  // Show team nav for business plan
+  const teamNav = document.getElementById('team-nav-item');
+  if(teamNav) teamNav.style.display = (plan==='business'||isAdmin) ? 'flex' : 'none';
+
   // Admin check
   const isAdmin = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
   if(isAdmin) {
@@ -1560,7 +1647,7 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 //  NAV
 // ════════════════════════════════════════════
-const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Pricing',cleaning:'Tasks',staff:'👥 Staff Portal',ical:'iCal Sync',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews & Automation',settings:'Settings',admin:'👑 Admin Panel'};
+const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Pricing',cleaning:'Tasks',staff:'👥 Staff Portal',ical:'iCal Sync',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews & Automation',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
@@ -1575,6 +1662,7 @@ function nav(id,el){
   if(id==='admin')setTimeout(()=>renderAdmin(),50);
   if(id==='staff')renderStaff();
   if(id==='reviews')setTimeout(()=>checkReviewRequests(),100);
+  if(id==='team')setTimeout(()=>renderTeam(),50);
 }
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sb-overlay').classList.add('show');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('show');}
@@ -1793,6 +1881,79 @@ function addBooking(){
   cData.bookings.push(b);saveUserData(cUid,cData);closeModal('add-booking-modal');
   toast(`Booking for ${guest} added!`);renderAll();
 }
+// ════════════════════════════════════════════
+//  TEAM ACCESS
+// ════════════════════════════════════════════
+async function renderTeam() {
+  const plan = cData.plan||'free';
+  const gate = document.getElementById('team-plan-gate');
+  const content = document.getElementById('team-content');
+  if(plan !== 'business' && plan !== 'trial') {
+    if(gate) gate.style.display='block';
+    if(content) content.style.display='none';
+    return;
+  }
+  if(gate) gate.style.display='none';
+  if(content) content.style.display='block';
+  const ownerAv=document.getElementById('team-owner-av');
+  const ownerName=document.getElementById('team-owner-name');
+  const ownerEmail=document.getElementById('team-owner-email');
+  if(cUser){
+    const init=(cUser.name||'?').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+    if(ownerAv)ownerAv.textContent=init;
+    if(ownerName)ownerName.textContent=(cUser.name||'You')+' (You)';
+    if(ownerEmail)ownerEmail.textContent=cUser.email||'';
+  }
+  const listEl=document.getElementById('team-members-list');
+  if(!listEl)return;
+  listEl.innerHTML=`<div style="text-align:center;padding:16px;color:var(--txt3)">Loading…</div>`;
+  try {
+    const {data:members,error}=await sb.from('teams').select('*').eq('owner_id',cUid).order('created_at',{ascending:true});
+    if(error)throw error;
+    if(!members||members.length===0){listEl.innerHTML=`<div style="font-size:13px;color:var(--txt3);padding:16px 0;text-align:center">No team members yet — invite someone to get started!</div>`;return;}
+    const roleColors={manager:'pill-blue',viewer:'pill-amber'};
+    const statusColors={accepted:'pill-green',pending:'pill-amber'};
+    listEl.innerHTML=members.map(m=>`
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--sand);color:var(--txt2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">${(m.member_name||m.member_email||'?').charAt(0).toUpperCase()}</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--txt)">${m.member_name||'Invited User'}</div><div style="font-size:11px;color:var(--txt3)">${m.member_email}</div></div>
+        <span class="pill ${roleColors[m.role]||'pill-amber'}" style="text-transform:capitalize">${m.role}</span>
+        <span class="pill ${statusColors[m.status]||'pill-amber'}" style="text-transform:capitalize">${m.status}</span>
+        <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra)" onclick="removeTeamMember('${m.id}','${m.member_email}')">Remove</button>
+      </div>`).join('');
+  } catch(e){listEl.innerHTML=`<div style="font-size:13px;color:var(--terra);padding:16px 0">Error: ${e.message}</div>`;}
+}
+
+async function inviteTeamMember() {
+  const email=document.getElementById('invite-email').value.trim().toLowerCase();
+  const name=document.getElementById('invite-name').value.trim();
+  const role=document.getElementById('invite-role').value;
+  if(!email){toast('Enter an email address');return;}
+  if(email===cUser?.email){toast('You cannot invite yourself!');return;}
+  const btn=document.querySelector('#invite-team-modal .btn-pri');
+  if(btn){btn.textContent='Sending…';btn.disabled=true;}
+  try {
+    const token=Math.random().toString(36).slice(2)+Date.now().toString(36);
+    const {error}=await sb.from('teams').insert({owner_id:cUid,member_id:cUid,member_email:email,member_name:name||email.split('@')[0],role,status:'pending',invite_token:token});
+    if(error&&!error.message.includes('unique'))throw error;
+    closeModal('invite-team-modal');
+    document.getElementById('invite-email').value='';
+    document.getElementById('invite-name').value='';
+    toast(`✓ ${email} added to your team!`);
+    renderTeam();
+  } catch(e){toast('Error: '+e.message);}
+  finally{if(btn){btn.textContent='Send Invitation →';btn.disabled=false;}}
+}
+
+async function removeTeamMember(id, email) {
+  if(!confirm(`Remove ${email} from your team?`))return;
+  try {
+    await sb.from('teams').delete().eq('id',id);
+    toast(`${email} removed from team`);
+    renderTeam();
+  } catch(e){toast('Error: '+e.message);}
+}
+
 // ════════════════════════════════════════════
 //  GETTING STARTED CHECKLIST
 // ════════════════════════════════════════════
