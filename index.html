@@ -1337,7 +1337,11 @@ select{color:var(--txt)!important;}
     <div class="fi"><label>Parking Info</label><input id="ep-parking"></div>
   </div>
   <div class="fi"><label>Property Notes (private)</label><textarea id="ep-notes" placeholder="e.g. Boiler needs reset sometimes, neighbor contact: John 555-1234, spare key under mat…" style="min-height:70px"></textarea></div>
-  <div class="fi"><label>Update Photo (optional)</label><input type="file" id="ep-photo" accept="image/*" onchange="previewPhoto('ep-photo','ep-photo-preview')" style="font-size:12px"><div id="ep-photo-preview" style="margin-top:8px"></div></div>
+  <div class="fi"><label>Property Photos</label>
+    <div id="ep-gallery" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"></div>
+    <input type="file" id="ep-photo" accept="image/*" multiple onchange="addPropertyPhotos()" style="font-size:12px">
+    <div style="font-size:11px;color:var(--txt3);margin-top:4px">Upload multiple photos. Click any photo to remove it.</div>
+  </div>
 
   <!-- Recent bookings -->
   <div style="margin-top:4px">
@@ -1352,7 +1356,17 @@ select{color:var(--txt)!important;}
   </div>
 </div></div>
 
-<div class="modal-bg" id="add-booking-modal"><div class="modal"><h2>📅 Add Booking</h2><div class="fi"><label>Property</label><select id="mb-prop"></select></div><div class="g2"><div class="fi"><label>Guest Name</label><input id="mb-guest" placeholder="Marcus Kim"></div><div class="fi"><label>Guest Email</label><input id="mb-email" type="email"></div></div><div class="g2"><div class="fi"><label>Check-in</label><input id="mb-cin" type="date"></div><div class="fi"><label>Check-out</label><input id="mb-cout" type="date"></div></div><div class="g2"><div class="fi"><label>Guests</label><input id="mb-nguests" type="number" value="2"></div><div class="fi"><label>Total Price ($)</label><input id="mb-price" type="number"></div></div><div class="fi"><label>Status</label><select id="mb-status"><option value="confirmed">Confirmed</option><option value="pending">Pending</option><option value="completed">Completed</option></select></div><div class="fi"><label>Source</label><select id="mb-source"><option value="airbnb">Airbnb</option><option value="vrbo">VRBO</option><option value="direct">Direct</option><option value="other">Other</option></select></div><div class="fi"><label>Host Notes (private)</label><textarea id="mb-notes" placeholder="e.g. Guest has a dog, early check-in approved, contact at 555-1234…" style="min-height:60px"></textarea></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-booking-modal')">Cancel</button><button class="btn btn-pri" onclick="addBooking()">Add Booking</button></div></div></div>
+<div class="modal-bg" id="add-booking-modal"><div class="modal"><h2>📅 Add Booking</h2><div class="fi"><label>Property</label><select id="mb-prop"></select></div><div class="g2"><div class="fi"><label>Guest Name</label><input id="mb-guest" placeholder="Marcus Kim"></div><div class="fi"><label>Guest Email</label><input id="mb-email" type="email"></div></div><div class="g2"><div class="fi"><label>Check-in</label><input id="mb-cin" type="date"></div><div class="fi"><label>Check-out</label><input id="mb-cout" type="date"></div></div><div class="g2"><div class="fi"><label>Guests</label><input id="mb-nguests" type="number" value="2"></div><div class="fi"><label>Total Price ($)</label><input id="mb-price" type="number"></div></div><div class="fi"><label>Status</label><select id="mb-status"><option value="confirmed">Confirmed</option><option value="pending">Pending</option><option value="completed">Completed</option></select></div><div class="fi"><label>Source</label><select id="mb-source"><option value="airbnb">Airbnb</option><option value="vrbo">VRBO</option><option value="direct">Direct</option><option value="other">Other</option></select></div><div class="fi"><label>Host Notes (private)</label><textarea id="mb-notes" placeholder="e.g. Guest has a dog, early check-in approved, contact at 555-1234…" style="min-height:60px"></textarea></div>
+<div class="fi"><label>📸 Booking Photos</label>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px" id="mb-photos-preview"></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+    <label class="btn btn-ghost" style="font-size:11px;padding:5px 10px;cursor:pointer">📷 Before Check-in<input type="file" accept="image/*" multiple style="display:none" onchange="addBookingPhotos(this,'before')"></label>
+    <label class="btn btn-ghost" style="font-size:11px;padding:5px 10px;cursor:pointer">🧹 After Cleaning<input type="file" accept="image/*" multiple style="display:none" onchange="addBookingPhotos(this,'after')"></label>
+    <label class="btn btn-ghost" style="font-size:11px;padding:5px 10px;cursor:pointer;color:var(--terra)">⚠️ Damage<input type="file" accept="image/*" multiple style="display:none" onchange="addBookingPhotos(this,'damage')"></label>
+  </div>
+  <div style="font-size:11px;color:var(--txt3)">Click any photo to remove it.</div>
+</div>
+<div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-booking-modal')">Cancel</button><button class="btn btn-pri" onclick="addBooking()">Add Booking</button></div></div></div>
 
 <div class="modal-bg" id="add-message-modal"><div class="modal"><h2>💬 New Conversation</h2><div class="fi"><label>Guest Name</label><input id="mm-name" placeholder="Marcus Kim"></div><div class="fi"><label>Property</label><select id="mm-prop"><option value="">None</option></select></div><div class="fi"><label>Link to Booking (optional)</label><select id="mm-booking"><option value="">No booking</option></select></div><div class="fi"><label>First Message</label><textarea id="mm-msg" placeholder="Hi! Quick question about check-in…"></textarea></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-message-modal')">Cancel</button><button class="btn btn-pri" onclick="addConversation()">Start</button></div></div></div>
 
@@ -2177,6 +2191,9 @@ function openPropertyDetail(propId) {
   document.getElementById('ep-parking').value = p.parking||'';
   const epNotes = document.getElementById('ep-notes');
   if(epNotes) epNotes.value = p.notes||'';
+  // Load existing photos into gallery
+  currentEditPropPhotos = [...(p.photos||[])];
+  renderPropertyGallery();
 
   // Populate bookings list in modal
   const bList = document.getElementById('ep-bookings');
@@ -2217,6 +2234,9 @@ function saveProperty() {
   p.doorCode = document.getElementById('ep-door').value;
   p.parking = document.getElementById('ep-parking').value;
   p.notes = document.getElementById('ep-notes')?.value||'';
+  p.photos = [...currentEditPropPhotos];
+  // Use first photo as main photo for property card
+  p.photo = currentEditPropPhotos.length ? currentEditPropPhotos[0].data : (p.photo||null);
   saveUserData(cUid,cData);
   closeModal('edit-property-modal');
   toast(`"${p.name}" updated! ✓`);
@@ -2264,7 +2284,9 @@ function addBooking(){
   const prop=cData.properties.find(p=>p.id===propId);
   const cin=document.getElementById('mb-cin').value,cout=document.getElementById('mb-cout').value;
   const nights=cin&&cout?Math.max(1,Math.round((new Date(cout)-new Date(cin))/86400000)):1;
-  const b={id:'b_'+Date.now(),propId,propName:prop?.name||'Property',propEmoji:prop?.emoji||'🏠',propGradient:prop?.gradient||'pi1',guestName:guest,guestEmail:document.getElementById('mb-email').value,numGuests:parseInt(document.getElementById('mb-nguests').value)||2,checkin:cin,checkout:cout,nights,price:parseFloat(document.getElementById('mb-price').value)||0,status:document.getElementById('mb-status').value,source:document.getElementById('mb-source').value,notes:document.getElementById('mb-notes')?.value||'',created:Date.now()};
+  const b={id:'b_'+Date.now(),propId,propName:prop?.name||'Property',propEmoji:prop?.emoji||'🏠',propGradient:prop?.gradient||'pi1',guestName:guest,guestEmail:document.getElementById('mb-email').value,numGuests:parseInt(document.getElementById('mb-nguests').value)||2,checkin:cin,checkout:cout,nights,price:parseFloat(document.getElementById('mb-price').value)||0,status:document.getElementById('mb-status').value,source:document.getElementById('mb-source').value,notes:document.getElementById('mb-notes')?.value||'',photos:[...tempBookingPhotos],created:Date.now()};
+  tempBookingPhotos=[];
+  const previewEl=document.getElementById('mb-photos-preview');if(previewEl)previewEl.innerHTML='';
   cData.bookings.push(b);saveUserData(cUid,cData);closeModal('add-booking-modal');
   toast(`Booking for ${guest} added!`);renderAll();
   // Auto-create cleaning task on checkout date
@@ -2995,8 +3017,14 @@ function renderPricing(){
 }
 
 // ════════════════════════════════════════════
-//  PHOTO UPLOAD
+//  PHOTO MANAGEMENT
 // ════════════════════════════════════════════
+
+// Temporary photo storage for current modal session
+let tempBookingPhotos = []; // [{data, type, name}]
+let tempPropertyPhotos = []; // [{data, name}]
+let currentEditPropPhotos = []; // existing photos being edited
+
 function previewPhoto(inputId, previewId) {
   const input = document.getElementById(inputId);
   const preview = document.getElementById(previewId);
@@ -3008,7 +3036,7 @@ function previewPhoto(inputId, previewId) {
   reader.readAsDataURL(input.files[0]);
 }
 
-function getPhotoData(inputId) {
+async function getPhotoData(inputId) {
   return new Promise(resolve=>{
     const input = document.getElementById(inputId);
     if(!input||!input.files[0]){resolve(null);return;}
@@ -3016,6 +3044,111 @@ function getPhotoData(inputId) {
     reader.onload = e=>resolve(e.target.result);
     reader.readAsDataURL(input.files[0]);
   });
+}
+
+function addBookingPhotos(input, type) {
+  const typeLabels = {before:'📷 Before',after:'🧹 After',damage:'⚠️ Damage'};
+  const typeColors = {before:'var(--sage)',after:'var(--gold)',damage:'var(--terra)'};
+  Array.from(input.files).forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = e=>{
+      tempBookingPhotos.push({data:e.target.result, type, name:file.name});
+      renderBookingPhotoPreview();
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value='';
+}
+
+function renderBookingPhotoPreview() {
+  const preview = document.getElementById('mb-photos-preview');
+  if(!preview) return;
+  const typeColors = {before:'#6B8F71',after:'#C8A84B',damage:'#C4693A'};
+  const typeLabels = {before:'Before',after:'After Clean',damage:'Damage'};
+  preview.innerHTML = tempBookingPhotos.map((p,i)=>`
+    <div style="position:relative;cursor:pointer" onclick="removeBookingPhoto(${i})" title="Click to remove">
+      <img src="${p.data}" style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:2px solid ${typeColors[p.type]||'var(--border)'}">
+      <div style="position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:8px;font-weight:700;color:#fff;background:${typeColors[p.type]||'var(--border)'};padding:1px 2px;border-radius:0 0 6px 6px">${typeLabels[p.type]||p.type}</div>
+      <div style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--terra);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700">×</div>
+    </div>`).join('');
+}
+
+function removeBookingPhoto(index) {
+  tempBookingPhotos.splice(index,1);
+  renderBookingPhotoPreview();
+}
+
+function addPropertyPhotos() {
+  const input = document.getElementById('ep-photo');
+  if(!input||!input.files.length) return;
+  Array.from(input.files).forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = e=>{
+      currentEditPropPhotos.push({data:e.target.result, name:file.name, added:Date.now()});
+      renderPropertyGallery();
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value='';
+}
+
+function renderPropertyGallery() {
+  const gallery = document.getElementById('ep-gallery');
+  if(!gallery) return;
+  if(!currentEditPropPhotos.length){
+    gallery.innerHTML='<div style="font-size:12px;color:var(--txt3);padding:8px 0">No photos yet — upload some above</div>';
+    return;
+  }
+  gallery.innerHTML = currentEditPropPhotos.map((p,i)=>`
+    <div style="position:relative;cursor:pointer" onclick="removePropertyPhoto(${i})" title="Click to remove">
+      <img src="${p.data}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">
+      <div style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--terra);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700">×</div>
+    </div>`).join('');
+}
+
+function removePropertyPhoto(index) {
+  currentEditPropPhotos.splice(index,1);
+  renderPropertyGallery();
+}
+
+// Show booking photos in booking list
+function renderBookingPhotoBadge(b) {
+  const photos = b.photos||[];
+  if(!photos.length) return '';
+  const dmg = photos.filter(p=>p.type==='damage').length;
+  return `<span style="font-size:10px;background:${dmg>0?'rgba(196,105,58,.1)':'var(--sand)'};color:${dmg>0?'var(--terra)':'var(--txt3)'};padding:2px 7px;border-radius:10px;border:1px solid ${dmg>0?'var(--terra-l)':'var(--border)'}">📸 ${photos.length}${dmg>0?' ⚠️':''}</span>`;
+}
+
+// View booking photos modal
+function viewBookingPhotos(bookingId) {
+  const b = cData.bookings.find(x=>x.id===bookingId);
+  if(!b||!b.photos?.length) return;
+  const existing = document.getElementById('booking-photos-modal');
+  if(existing) existing.remove();
+  const div = document.createElement('div');
+  div.id = 'booking-photos-modal';
+  div.className = 'modal-bg open';
+  const typeLabels = {before:'📷 Before Check-in',after:'🧹 After Cleaning',damage:'⚠️ Damage'};
+  const typeColors = {before:'#6B8F71',after:'#C8A84B',damage:'#C4693A'};
+  const groups = {before:[],after:[],damage:[]};
+  b.photos.forEach(p=>{ if(groups[p.type]) groups[p.type].push(p); });
+  let html = `<div class="modal" style="max-width:600px;max-height:80vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h2>📸 ${b.guestName} — Photos</h2>
+      <button class="btn btn-ghost" onclick="document.getElementById('booking-photos-modal').remove()">✕</button>
+    </div>`;
+  Object.entries(groups).forEach(([type,photos])=>{
+    if(!photos.length) return;
+    html += `<div style="margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:${typeColors[type]};margin-bottom:8px">${typeLabels[type]} (${photos.length})</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        ${photos.map(p=>`<img src="${p.data}" style="width:120px;height:120px;object-fit:cover;border-radius:8px;border:2px solid ${typeColors[type]};cursor:pointer" onclick="window.open(this.src)" title="Click to view full size">`).join('')}
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  div.innerHTML = html;
+  document.body.appendChild(div);
 }
 
 // ════════════════════════════════════════════
@@ -3310,6 +3443,7 @@ function renderBookings(){
       <div class="row-thumb ${b.propGradient||'pi1'}">${b.propEmoji||'🏠'}</div>
       <div class="row-info"><div class="row-title">${b.propName} — ${b.guestName}</div><div class="row-sub">👤 ${b.numGuests} guests · ${b.nights}n · ${b.source}</div></div>
       <span class="pill ${spc[b.status]||'pill-blue'}">${b.status}</span>
+      ${b.photos?.length?`<button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;flex-shrink:0" onclick="event.stopPropagation();viewBookingPhotos('${b.id}')">📸 ${b.photos.length}</button>`:''}
       <div style="text-align:right"><div class="row-price">$${b.price.toLocaleString()}</div><div class="row-date">${b.checkin||'TBD'} → ${b.checkout||'TBD'}</div></div>
       <div style="display:flex;gap:4px;flex-shrink:0">
         <button class="btn btn-ghost" style="font-size:10px;padding:4px 9px" onclick="event.stopPropagation();openEditBooking('${b.id}')">✏️ Edit</button>
