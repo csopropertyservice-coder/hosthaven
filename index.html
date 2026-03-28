@@ -1264,9 +1264,9 @@ async function syncToSupabase(uid, d) {
 
 async function loadFromSupabase(uid) {
   try {
-    const {data, error} = await sb.from('user_data').select('data').eq('user_id', uid).eq('data_type','main').single();
-    if(error || !data) return null;
-    return data.data;
+    const {data, error} = await sb.from('user_data').select('data').eq('user_id', uid).eq('data_type','main').maybeSingle();
+    if(error) return null;
+    return data?.data || null;
   } catch(e) { return null; }
 }
 
@@ -1562,11 +1562,7 @@ function launchApp(user) {
   }
   checkTrialStatus();
 
-  // Show team nav for business plan
-  const teamNav = document.getElementById('team-nav-item');
-  if(teamNav) teamNav.style.display = (plan==='business'||isAdmin) ? 'flex' : 'none';
-
-  // Admin check
+  // Admin check — must come before plan is used
   const isAdmin = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
   if(isAdmin) {
     cData.plan='business';
@@ -1576,10 +1572,15 @@ function launchApp(user) {
   }
 
   const plan=cData.plan||'free';
-  document.getElementById('sb-plan').textContent=isAdmin?'👑 Admin':plan==='free'?'⭐ Free':plan==='pro'?'🚀 Pro':'💼 Business';
+
+  // Show team nav for business/admin
+  const teamNav = document.getElementById('team-nav-item');
+  if(teamNav) teamNav.style.display = (plan==='business'||isAdmin) ? 'flex' : 'none';
+
+  document.getElementById('sb-plan').textContent=isAdmin?'👑 Admin':plan==='free'?'⭐ Free':plan==='pro'?'🚀 Pro':plan==='trial'?'🎯 Trial':'💼 Business';
   document.getElementById('set-name').value=user.name;
   document.getElementById('set-email').value=user.email;
-  document.getElementById('set-plan').textContent=isAdmin?'Admin — Unlimited':plan==='free'?'Free — 1 property':plan==='pro'?'Pro — 10 properties':'Business — Unlimited';
+  document.getElementById('set-plan').textContent=isAdmin?'Admin — Unlimited':plan==='free'?'Free — 1 property':plan==='pro'?'Pro — 10 properties':plan==='trial'?'Pro Trial — 10 properties':'Business — Unlimited';
   if(cData.apiKey)document.getElementById('set-api-key').value=cData.apiKey;
   document.getElementById('wb-host').value=user.name;
   document.getElementById('wb-email').value=user.email;
@@ -1590,7 +1591,7 @@ function launchApp(user) {
     requestAnimationFrame(()=>{
       if(content){ content.style.opacity='1'; }
       renderAll();
-      setTimeout(()=>{ updateWb(); renderPortal(); renderAdmin(); }, 300);
+      setTimeout(()=>{ updateWb(); renderPortal(); }, 300);
     });
   });
 }
