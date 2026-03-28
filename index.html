@@ -834,24 +834,42 @@ select{color:var(--txt)!important;}
 
 <div class="toast" id="toast-el"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ════════════════════════════════════════════
-//  STORAGE
+//  SUPABASE CONFIG
 // ════════════════════════════════════════════
-const SK = 'hosthaven_v3';
-const gs = () => { try{return JSON.parse(localStorage.getItem(SK))||{};}catch{return {};} };
-const ss = d => localStorage.setItem(SK, JSON.stringify(d));
-const getUser = () => gs().currentUser||null;
-const getUsers = () => gs().users||{};
-const getUserData = uid => { const s=gs(); if(!s.userData)s.userData={}; if(!s.userData[uid])s.userData[uid]={properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],plan:'free',apiKey:'',darkMode:false,onboarded:false}; return s.userData[uid]; };
-const saveUserData = (uid,d) => { const s=gs(); if(!s.userData)s.userData={}; s.userData[uid]=d; ss(s); };
-
-let cUid=null, cData=null, activeConvId=null, wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
+const SUPABASE_URL = 'https://vdnyqwpznsysrvyvbqga.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ════════════════════════════════════════════
-//  ADMIN CONFIG — change this to YOUR email
+//  ADMIN CONFIG
 // ════════════════════════════════════════════
-const ADMIN_EMAIL = 'csopropertyservice@gmail.com'; // ← PUT YOUR EMAIL HERE
+const ADMIN_EMAIL = 'csopropertyservice@gmail.com';
+
+// ════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════
+let cUid=null, cData=null, cUser=null, activeConvId=null;
+let wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
+
+// Local cache for fast UI — syncs to Supabase
+const LOCAL_KEY = 'hh_local_v1';
+const getLocal = () => { try{return JSON.parse(localStorage.getItem(LOCAL_KEY))||{};}catch{return {};} };
+const setLocal = d => localStorage.setItem(LOCAL_KEY, JSON.stringify(d));
+const getLocalData = uid => { const l=getLocal(); return l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],plan:'free',apiKey:'',darkMode:false,onboarded:false}; };
+const saveLocalData = (uid,d) => { const l=getLocal(); l[uid]=d; setLocal(l); };
+
+// Use local data as primary (Supabase for auth + plan sync)
+const getUserData = uid => { cData = getLocalData(uid); return cData; };
+const saveUserData = (uid,d) => { cData=d; saveLocalData(uid,d); syncPlanToSupabase(uid,d.plan); };
+
+async function syncPlanToSupabase(uid, plan) {
+  try {
+    await sb.from('profiles').upsert({id:uid, plan, updated_at: new Date().toISOString()}, {onConflict:'id'});
+  } catch(e) { /* silent fail — local data is source of truth */ }
+}
 
 // ════════════════════════════════════════════
 //  DARK MODE
@@ -885,49 +903,141 @@ function scrollToSection(id){
 }
 
 // ════════════════════════════════════════════
-//  AUTH
+//  AUTH — Supabase powered
 // ════════════════════════════════════════════
-function doLogin() {
+async function doLogin() {
   const email=document.getElementById('login-email').value.trim().toLowerCase();
   const pw=document.getElementById('login-pw').value;
-  const users=getUsers();
-  const uid=Object.keys(users).find(k=>users[k].email===email&&users[k].pw===btoa(pw));
-  if(!uid){showErr('login-err','Invalid email or password');return;}
-  const s=gs(); s.currentUser=uid; ss(s);
-  bootApp(uid);
+  if(!email||!pw){showErr('login-err','Please enter email and password');return;}
+  const loginBtn = document.querySelector('#screen-login .btn-pri');
+  if(loginBtn){loginBtn.textContent='Signing in…';loginBtn.disabled=true;}
+  try {
+    const {data,error} = await sb.auth.signInWithPassword({email,password:pw});
+    if(error) throw error;
+    const user = data.user;
+    cUid = user.id;
+    cUser = {email:user.email, name:user.user_metadata?.full_name||email.split('@')[0]};
+    getUserData(cUid);
+    applyDark(cData.darkMode||false);
+    launchApp(cUser);
+  } catch(e) {
+    showErr('login-err', e.message==='Invalid login credentials'?'Invalid email or password':e.message);
+  } finally {
+    if(loginBtn){loginBtn.textContent='Sign In →';loginBtn.disabled=false;}
+  }
 }
-function loginDemo() {
-  const s=gs(); if(!s.users)s.users={};
-  let demoUid=Object.keys(s.users).find(k=>s.users[k].email==='demo@hosthaven.co');
-  if(!demoUid){demoUid='demo_'+Date.now();s.users[demoUid]={email:'demo@hosthaven.co',name:'Sarah Jensen',pw:btoa('demo1234')};if(!s.userData)s.userData={};s.userData[demoUid]=buildDemoData();}
-  s.currentUser=demoUid; ss(s); bootApp(demoUid);
+
+async function loginDemo() {
+  const loginBtn = document.querySelector('#screen-login .btn-dark');
+  if(loginBtn){loginBtn.textContent='Loading demo…';loginBtn.disabled=true;}
+  try {
+    // Try to sign in with demo account first
+    let {data,error} = await sb.auth.signInWithPassword({email:'demo@hosthaven.co',password:'demo1234'});
+    if(error) {
+      // Create demo account if doesn't exist
+      const res = await sb.auth.signUp({email:'demo@hosthaven.co',password:'demo1234',options:{data:{full_name:'Sarah Jensen'}}});
+      if(res.error) throw res.error;
+      data = res.data;
+    }
+    const user = data.user;
+    cUid = user.id;
+    cUser = {email:'demo@hosthaven.co', name:'Sarah Jensen'};
+    // Load or create demo data
+    const existing = getLocalData(cUid);
+    if(!existing.properties?.length) {
+      const demo = buildDemoData();
+      saveLocalData(cUid, demo);
+    }
+    getUserData(cUid);
+    applyDark(false);
+    launchApp(cUser);
+  } catch(e) {
+    // Fallback to local demo if Supabase fails
+    cUid = 'demo_local';
+    cUser = {email:'demo@hosthaven.co', name:'Sarah Jensen'};
+    const demo = buildDemoData();
+    saveLocalData(cUid, demo);
+    getUserData(cUid);
+    applyDark(false);
+    launchApp(cUser);
+  } finally {
+    if(loginBtn){loginBtn.textContent='🚀 Launch Demo';loginBtn.disabled=false;}
+  }
 }
-function doSignup() {
+
+async function doSignup() {
   const name=document.getElementById('signup-name').value.trim();
   const email=document.getElementById('signup-email').value.trim().toLowerCase();
   const pw=document.getElementById('signup-pw').value;
   if(!name||!email||!pw){showErr('signup-err','Please fill in all fields');return;}
   if(pw.length<8){showErr('signup-err','Password must be 8+ characters');return;}
-  const s=gs(); if(!s.users)s.users={};
-  if(Object.keys(s.users).find(k=>s.users[k].email===email)){showErr('signup-err','Email already registered');return;}
-  const uid='u_'+Date.now(); s.users[uid]={email,name,pw:btoa(pw)}; s.currentUser=uid; ss(s);
-  bootApp(uid, true);
+  const btn=document.querySelector('#screen-signup .btn-pri');
+  if(btn){btn.textContent='Creating account…';btn.disabled=true;}
+  try {
+    const {data,error} = await sb.auth.signUp({
+      email, password:pw,
+      options:{data:{full_name:name}}
+    });
+    if(error) throw error;
+    if(data.user) {
+      cUid = data.user.id;
+      cUser = {email, name};
+      getUserData(cUid);
+      applyDark(false);
+      // Create profile in Supabase
+      await sb.from('profiles').upsert({id:cUid, email, full_name:name, plan:'free'}, {onConflict:'id'});
+      startOnboard(cUser);
+    } else {
+      showErr('signup-err','Please check your email to confirm your account, then log in.');
+    }
+  } catch(e) {
+    showErr('signup-err', e.message.includes('already registered')?'Email already registered. Try logging in.':e.message);
+  } finally {
+    if(btn){btn.textContent='Create Account →';btn.disabled=false;}
+  }
 }
-function doLogout(){const s=gs();delete s.currentUser;ss(s);location.reload();}
-function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',4000);}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  cUid=null; cData=null; cUser=null;
+  location.reload();
+}
+
+function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',5000);}
 
 // ════════════════════════════════════════════
-//  BOOT
+//  BOOT — check existing session
 // ════════════════════════════════════════════
-function bootApp(uid, isNew=false) {
-  cUid=uid; cData=getUserData(uid);
-  const s=gs(); const user=s.users[uid];
-  ['landing','login','signup','onboard'].forEach(n=>{const el=document.getElementById('screen-'+n);if(el)el.style.display='none';});
-  applyDark(cData.darkMode||false);
-  if(isNew && !cData.onboarded){startOnboard(user);return;}
-  launchApp(user);
+async function bootApp() {
+  // Show loading state
+  document.getElementById('screen-login').style.display='flex';
+  // Check if already logged in
+  const {data:{session}} = await sb.auth.getSession();
+  if(session?.user) {
+    cUid = session.user.id;
+    cUser = {email:session.user.email, name:session.user.user_metadata?.full_name||session.user.email.split('@')[0]};
+    getUserData(cUid);
+    // Fetch plan from Supabase and sync locally
+    try {
+      const {data:profile} = await sb.from('profiles').select('plan,full_name').eq('id',cUid).single();
+      if(profile) {
+        cData.plan = profile.plan || cData.plan;
+        if(profile.full_name) cUser.name = profile.full_name;
+        saveLocalData(cUid, cData);
+      }
+    } catch(e) {}
+    applyDark(cData.darkMode||false);
+    ['landing','login','signup','onboard'].forEach(n=>{const el=document.getElementById('screen-'+n);if(el)el.style.display='none';});
+    launchApp(cUser);
+    return;
+  }
+  // No session — show landing
+  showScreen('landing');
 }
 
+// ════════════════════════════════════════════
+//  LAUNCH APP
+// ════════════════════════════════════════════
 function launchApp(user) {
   document.getElementById('app').classList.add('visible');
   document.getElementById('sb-uname').textContent=user.name;
@@ -935,21 +1045,20 @@ function launchApp(user) {
   const init=user.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
   document.getElementById('sb-av').textContent=init;
 
-  // ── Admin check ──────────────────────────
+  // Admin check
   const isAdmin = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
   if(isAdmin) {
-    cData.plan='business'; // admin always gets business plan
-    saveUserData(cUid,cData);
+    cData.plan='business';
+    saveLocalData(cUid,cData);
     const adminNav=document.getElementById('admin-nav-item');
     if(adminNav) adminNav.style.display='flex';
   }
-  // ─────────────────────────────────────────
 
   const plan=cData.plan||'free';
   document.getElementById('sb-plan').textContent=isAdmin?'👑 Admin':plan==='free'?'⭐ Free':plan==='pro'?'🚀 Pro':'💼 Business';
   document.getElementById('set-name').value=user.name;
   document.getElementById('set-email').value=user.email;
-  document.getElementById('set-plan').textContent=isAdmin?'Admin — Unlimited (all features)':plan==='free'?'Free Plan — 1 property':plan==='pro'?'Pro — up to 10 properties':'Business — unlimited';
+  document.getElementById('set-plan').textContent=isAdmin?'Admin — Unlimited':plan==='free'?'Free — 1 property':plan==='pro'?'Pro — 10 properties':'Business — Unlimited';
   if(cData.apiKey)document.getElementById('set-api-key').value=cData.apiKey;
   document.getElementById('wb-host').value=user.name;
   document.getElementById('wb-email').value=user.email;
@@ -1034,93 +1143,89 @@ function renderAll(){renderDashboard();renderProperties();renderBookings();rende
 // ════════════════════════════════════════════
 //  ADMIN PANEL
 // ════════════════════════════════════════════
-function renderAdmin() {
-  const s = gs();
-  const users = s.users || {};
-  const userData = s.userData || {};
-  const search = (document.getElementById('adm-search')?.value||'').toLowerCase();
-
-  const allUsers = Object.keys(users).map(uid => ({
-    uid, ...users[uid], data: userData[uid] || {}
-  })).filter(u =>
-    !search || u.email.toLowerCase().includes(search) || (u.name||'').toLowerCase().includes(search)
-  );
-
-  // Stats
-  const paid = allUsers.filter(u => u.data.plan && u.data.plan !== 'free');
-  const pro = allUsers.filter(u => u.data.plan === 'pro');
-  const biz = allUsers.filter(u => u.data.plan === 'business');
-  const mrr = (pro.length * 79) + (biz.length * 199);
-  document.getElementById('adm-total').textContent = allUsers.length;
-  document.getElementById('adm-paid').textContent = paid.length;
-  document.getElementById('adm-pro').textContent = pro.length;
-  document.getElementById('adm-mrr').textContent = '$' + mrr.toLocaleString();
-
+async function renderAdmin() {
   const table = document.getElementById('admin-user-table');
-  if (!allUsers.length) {
-    table.innerHTML = `<div class="empty-state"><div class="es-i">👥</div><p>No users yet</p></div>`;
-    return;
-  }
+  const search = (document.getElementById('adm-search')?.value||'').toLowerCase();
+  table.innerHTML = `<div style="text-align:center;padding:20px;color:var(--txt3)">Loading users…</div>`;
 
-  const planColor = p => p==='business'?'pill-blue':p==='pro'?'pill-green':'pill-amber';
-  const planLabel = p => p==='business'?'💼 Business':p==='pro'?'🚀 Pro':'⭐ Free';
+  try {
+    // Fetch all profiles from Supabase
+    const {data:profiles, error} = await sb.from('profiles').select('*').order('created_at',{ascending:false});
+    if(error) throw error;
 
-  table.innerHTML = `
-    <table class="report-table" style="width:100%">
-      <thead><tr>
-        <th>User</th><th>Email</th><th>Plan</th>
-        <th>Properties</th><th>Bookings</th><th>Joined</th><th>Actions</th>
-      </tr></thead>
+    let allUsers = profiles || [];
+    if(search) allUsers = allUsers.filter(u => u.email?.toLowerCase().includes(search) || u.full_name?.toLowerCase().includes(search));
+
+    const pro = allUsers.filter(u=>u.plan==='pro');
+    const biz = allUsers.filter(u=>u.plan==='business');
+    const paid = allUsers.filter(u=>u.plan&&u.plan!=='free');
+    const mrr = (pro.length*79)+(biz.length*199);
+
+    document.getElementById('adm-total').textContent=allUsers.length;
+    document.getElementById('adm-paid').textContent=paid.length;
+    document.getElementById('adm-pro').textContent=pro.length;
+    document.getElementById('adm-mrr').textContent='$'+mrr.toLocaleString();
+
+    if(!allUsers.length){table.innerHTML=`<div class="empty-state"><div class="es-i">👥</div><p>No users yet — they appear here when people sign up</p></div>`;return;}
+
+    const planColor=p=>p==='business'?'pill-blue':p==='pro'?'pill-green':'pill-amber';
+    const planLabel=p=>p==='business'?'💼 Business':p==='pro'?'🚀 Pro':'⭐ Free';
+
+    table.innerHTML=`<table class="report-table" style="width:100%">
+      <thead><tr><th>Name</th><th>Email</th><th>Plan</th><th>Joined</th><th>Actions</th></tr></thead>
       <tbody>
-        ${allUsers.map(u => {
-          const props = (u.data.properties||[]).length;
-          const books = (u.data.bookings||[]).length;
-          const plan = u.data.plan||'free';
-          const isThisAdmin = u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-          const joined = u.uid.startsWith('demo') ? 'Demo' : new Date(parseInt(u.uid.split('_')[1]||Date.now())).toLocaleDateString();
+        ${allUsers.map(u=>{
+          const isMe=u.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase();
+          const plan=u.plan||'free';
+          const joined=u.created_at?new Date(u.created_at).toLocaleDateString():'—';
           return `<tr>
-            <td style="font-weight:500">${u.name||'Unknown'}${isThisAdmin?' 👑':''}</td>
-            <td style="font-size:12px;color:var(--txt2)">${u.email}</td>
+            <td style="font-weight:500">${u.full_name||'—'}${isMe?' 👑':''}</td>
+            <td style="font-size:12px;color:var(--txt2)">${u.email||'—'}</td>
             <td><span class="pill ${planColor(plan)}">${planLabel(plan)}</span></td>
-            <td style="text-align:center">${props}</td>
-            <td style="text-align:center">${books}</td>
             <td style="font-size:11px;color:var(--txt3)">${joined}</td>
-            <td>
-              ${isThisAdmin ? '<span style="font-size:11px;color:var(--txt3)">You</span>' : `
+            <td>${isMe?'<span style="font-size:11px;color:var(--txt3)">You</span>':`
               <div style="display:flex;gap:5px;flex-wrap:wrap">
-                <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="upgradePlan('${u.uid}','pro')">→ Pro</button>
-                <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="upgradePlan('${u.uid}','business')">→ Biz</button>
-                <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--txt3)" onclick="upgradePlan('${u.uid}','free')">→ Free</button>
-                <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra)" onclick="deleteUser('${u.uid}','${u.name||u.email}')">🗑</button>
+                <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="upgradePlan('${u.id}','${u.email||''}','${u.full_name||'User'}','pro')">→ Pro</button>
+                <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="upgradePlan('${u.id}','${u.email||''}','${u.full_name||'User'}','business')">→ Biz</button>
+                <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--txt3)" onclick="upgradePlan('${u.id}','${u.email||''}','${u.full_name||'User'}','free')">→ Free</button>
               </div>`}
             </td>
           </tr>`;
         }).join('')}
       </tbody>
     </table>`;
+  } catch(e) {
+    table.innerHTML=`<div class="empty-state"><div class="es-i">⚠️</div><p>Could not load users. Make sure your Supabase profiles table exists.</p><button class="btn btn-pri" onclick="setupSupabase()" style="margin-top:10px">Setup Database</button></div>`;
+  }
 }
 
-function upgradePlan(uid, plan) {
-  const s = gs();
-  if (!s.userData) s.userData = {};
-  if (!s.userData[uid]) s.userData[uid] = {};
-  s.userData[uid].plan = plan;
-  const limits = {free:1, pro:10, business:999};
-  s.userData[uid].max_listings = limits[plan];
-  ss(s);
-  renderAdmin();
-  const user = s.users[uid];
-  toast(`✓ ${user?.name||user?.email} upgraded to ${plan}!`);
+async function upgradePlan(uid, email, name, plan) {
+  try {
+    await sb.from('profiles').upsert({id:uid, email, plan, updated_at:new Date().toISOString()},{onConflict:'id'});
+    // Also update local cache for that user
+    const local = getLocal();
+    if(local[uid]) { local[uid].plan=plan; setLocal(local); }
+    toast(`✓ ${name} upgraded to ${plan}!`);
+    renderAdmin();
+  } catch(e) {
+    toast('Error updating plan: '+e.message);
+  }
 }
 
-function deleteUser(uid, name) {
-  if (!confirm(`Delete user "${name}"? This cannot be undone.`)) return;
-  const s = gs();
-  delete s.users[uid];
-  if (s.userData) delete s.userData[uid];
-  ss(s);
-  renderAdmin();
-  toast(`User "${name}" deleted`);
+async function setupSupabase() {
+  toast('Creating database tables… check console for SQL to run in Supabase');
+  console.log(`-- Run this SQL in Supabase SQL Editor:
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id uuid PRIMARY KEY,
+  email text,
+  full_name text,
+  plan text DEFAULT 'free',
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public profiles" ON public.profiles FOR ALL USING (true);`);
+  alert('SQL copied to console (F12). Go to Supabase → SQL Editor → paste and run it, then refresh.');
 }
 
 // ════════════════════════════════════════════
@@ -1330,7 +1435,7 @@ function selectPortal(bookingId,el){
   document.querySelectorAll('.gp-li').forEach(x=>x.classList.remove('active'));if(el)el.classList.add('active');
   const b=cData.bookings.find(x=>x.id===bookingId);if(!b)return;
   const prop=cData.properties.find(p=>p.id===b.propId);
-  const user=gs().users[cUid];const color='#C4693A';
+  const user=cUser;const color='#C4693A';
   document.getElementById('portal-url-bar').textContent=`guest.hosthaven.co/${b.guestName.toLowerCase().replace(/\s+/g,'-')}-${Date.now().toString(36)}`;
   const firstName=b.guestName.split(' ')[0];
   const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Georgia,serif;background:#FAF7F2;min-height:100vh}.hdr{background:${color};padding:36px 24px;text-align:center;color:#fff}.hdr-e{font-size:48px;margin-bottom:12px}.hdr h1{font-size:26px;font-weight:normal;margin-bottom:5px;letter-spacing:-.3px}.hdr p{font-size:13px;opacity:.7;font-family:sans-serif}.wlc{background:#fff;margin:18px;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}.wlc h2{font-size:16px;color:${color};margin-bottom:8px;font-weight:normal}.wlc p{font-size:13px;line-height:1.7;color:#4a3a2e;font-family:sans-serif}.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 18px 10px}.ic{background:#fff;border-radius:11px;padding:16px;box-shadow:0 2px 7px rgba(0,0,0,.05)}.ic h3{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:8px;font-family:sans-serif}.code{font-size:34px;font-family:monospace;color:${color};letter-spacing:4px;font-weight:bold}.ir{display:flex;flex-direction:column;gap:2px;margin-bottom:7px}.il{font-size:9px;color:#9b8e85;font-family:sans-serif}.iv{font-size:13px;color:#1c1410;font-weight:600;font-family:sans-serif}.tl{background:#fff;border-radius:12px;margin:0 18px 10px;padding:16px;box-shadow:0 2px 7px rgba(0,0,0,.05)}.tl h3{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:12px;font-family:sans-serif}.ti{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}.td{width:28px;height:28px;border-radius:50%;background:${color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}.tt{font-size:12px;font-weight:500;color:#1c1410;font-family:sans-serif}.ts{font-size:10px;color:#9b8e85;font-family:sans-serif;margin-top:1px}.tips{background:#fff;border-radius:12px;margin:0 18px 12px;padding:16px;box-shadow:0 2px 7px rgba(0,0,0,.05)}.tip{display:flex;gap:7px;font-family:sans-serif;font-size:12px;color:#4a3a2e;line-height:1.5;margin-bottom:8px}.cta{display:block;margin:0 18px 24px;background:${color};color:#fff;padding:13px;border-radius:10px;text-align:center;font-size:13px;text-decoration:none;font-family:sans-serif}.foot{text-align:center;padding:12px;font-size:10px;color:#9b8e85;font-family:sans-serif;border-top:1px solid #e0d8ce}</style></head><body><div class="hdr"><div class="hdr-e">${prop?.emoji||'🏡'}</div><h1>Welcome, ${firstName}!</h1><p>${prop?.name||'Your Property'} · ${prop?.location||''}</p></div><div class="wlc"><h2>We're so happy you're here!</h2><p>Everything you need for your stay is right here. Reach out anytime if you need anything at all.</p></div><div class="cards"><div class="ic"><h3>Door Code</h3><div class="code">${prop?.doorCode||'See host'}</div></div><div class="ic"><h3>WiFi</h3><div class="ir"><div class="il">Network</div><div class="iv">${prop?.wifi||'See welcome book'}</div></div><div class="ir"><div class="il">Password</div><div class="iv">${prop?.wifiPw||'See welcome book'}</div></div></div><div class="ic"><h3>Check-in</h3><div class="iv" style="font-size:12px">${b.checkin||'TBD'}</div><div style="font-size:10px;color:#9b8e85;font-family:sans-serif;margin-top:2px">After 3:00 PM</div></div><div class="ic"><h3>Check-out</h3><div class="iv" style="font-size:12px">${b.checkout||'TBD'}</div><div style="font-size:10px;color:#9b8e85;font-family:sans-serif;margin-top:2px">By 11:00 AM</div></div></div><div class="ic" style="margin:0 18px 10px;padding:14px;border-radius:11px;background:#fff;box-shadow:0 2px 7px rgba(0,0,0,.05)"><h3 style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:6px;font-family:sans-serif">Parking</h3><div class="iv" style="font-size:12px">${prop?.parking||'See listing'}</div></div><div class="tl"><h3>Your Stay</h3><div class="ti"><div class="td">✈️</div><div><div class="tt">Arrive & Check In</div><div class="ts">${b.checkin||'Your check-in date'}</div></div></div><div class="ti"><div class="td">🏠</div><div><div class="tt">Enjoy Your Stay</div><div class="ts">Make yourself at home</div></div></div><div class="ti"><div class="td">👋</div><div><div class="tt">Check Out</div><div class="ts">${b.checkout||'Your checkout date'} · Leave key on counter</div></div></div></div><div class="tips"><h3 style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:10px;font-family:sans-serif">House Tips</h3><div class="tip"><span>🔇</span>Quiet hours 10pm–8am</div><div class="tip"><span>🚭</span>No smoking indoors</div><div class="tip"><span>🌟</span>We'd love a review after your stay!</div></div><a class="cta" href="mailto:${user?.email||'host@hosthaven.co'}">💬 Message Your Host</a><div class="foot">Powered by HostHaven</div></body></html>`;
@@ -1418,7 +1523,7 @@ function renderDashboard(){
 // ════════════════════════════════════════════
 //  SETTINGS
 // ════════════════════════════════════════════
-function saveSettings(){const name=document.getElementById('set-name').value.trim();if(!name){toast('Enter your name');return;}const s=gs();s.users[cUid].name=name;ss(s);document.getElementById('sb-uname').textContent=name;const init=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);document.getElementById('sb-av').textContent=init;toast('Saved! ✓');}
+function saveSettings(){const name=document.getElementById('set-name').value.trim();if(!name){toast('Enter your name');return;}if(cUser)cUser.name=name;document.getElementById('sb-uname').textContent=name;const init=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);document.getElementById('sb-av').textContent=init;sb.auth.updateUser({data:{full_name:name}});toast('Saved! ✓');}
 function saveApiKey(){const key=document.getElementById('set-api-key').value.trim();if(!key){toast('Enter your API key');return;}cData.apiKey=key;saveUserData(cUid,cData);toast('API key saved! AI messaging is live ✓');}
 function toggleSetting(el){el.classList.toggle('on');el.classList.toggle('off');toast(el.classList.contains('on')?'Enabled':'Disabled');}
 function clearAll(){cData={properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],plan:cData.plan,apiKey:cData.apiKey,darkMode:cData.darkMode,onboarded:true};saveUserData(cUid,cData);renderAll();toast('All data cleared');}
@@ -1457,11 +1562,7 @@ function buildDemoData(){
 // ════════════════════════════════════════════
 //  INIT
 // ════════════════════════════════════════════
-window.addEventListener('load',()=>{
-  const uid=getUser();
-  if(uid){const users=getUsers();if(users[uid]){bootApp(uid);return;}}
-  showScreen('landing');
-});
+window.addEventListener('load', () => { bootApp(); });
 </script>
 </body>
 </html>
