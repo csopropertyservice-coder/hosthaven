@@ -644,8 +644,15 @@ select{color:var(--txt)!important;}
         <div class="sb-item" onclick="nav('pricing',this)"><span class="ico">💰</span>Nightly Rates</div>
         <div class="sb-item" onclick="nav('cleaning',this)"><span class="ico">🧹</span>Tasks</div>
         <div class="sb-item" onclick="nav('staff',this)"><span class="ico">👥</span>Staff Portal</div>
+        <div class="sb-item" onclick="nav('marketplace',this)"><span class="ico">🏪</span>Cleaner Marketplace</div>
+        <div class="sb-item" onclick="nav('workorders',this)"><span class="ico">🔧</span>Work Orders</div>
+        <div class="sb-item" onclick="nav('inventory',this)"><span class="ico">📦</span>Inventory</div>
+        <div class="sb-item" onclick="nav('inbox',this)"><span class="ico">📬</span>Unified Inbox</div>
         <div class="sb-item" onclick="nav('ical',this)"><span class="ico">🔄</span>iCal Sync</div>
         <div class="sb-sec" style="margin-top:8px">✨ Features</div>
+        <div class="sb-item" onclick="nav('concierge',this)"><span class="ico">🎩</span>Concierge</div>
+        <div class="sb-item" onclick="nav('upsell',this)"><span class="ico">🛎</span>Upsell Portal</div>
+        <div class="sb-item" onclick="nav('directbook',this)"><span class="ico">🔗</span>Direct Booking Kit</div>
         <div class="sb-item" onclick="nav('website',this)"><span class="ico">🌐</span>Website Builder</div>
         <div class="sb-item" onclick="nav('portal',this)"><span class="ico">🔑</span>Guest Portal</div>
         <div class="sb-sec" style="margin-top:8px">Insights</div>
@@ -653,6 +660,7 @@ select{color:var(--txt)!important;}
         <div class="sb-item" onclick="nav('reports',this)"><span class="ico">📄</span>Reports</div>
         <div class="sb-item" onclick="nav('reviews',this)"><span class="ico">⭐</span>Reviews</div>
         <div class="sb-item" onclick="nav('expenses',this)"><span class="ico">💸</span>Expenses</div>
+        <div class="sb-item" onclick="nav('damage',this)"><span class="ico">🛡</span>Damage Claims</div>
         <div class="sb-item" onclick="nav('blacklist',this)"><span class="ico">🚫</span>Guest Blacklist</div>
         <div class="sb-item" onclick="nav('settings',this)"><span class="ico">⚙️</span>Settings</div>
         <div class="sb-item" id="team-nav-item" style="display:none" onclick="nav('team',this)"><span class="ico">👥</span>Team Access</div>
@@ -1176,6 +1184,193 @@ select{color:var(--txt)!important;}
   </div>
 </div>
 
+<!-- ██ CLEANER MARKETPLACE ████████████████ -->
+<div class="page" id="page-marketplace">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Find and hire vetted cleaners for your properties</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost" onclick="openModal('add-cleaner-modal')">+ Add Cleaner</button>
+      <button class="btn btn-pri" onclick="openModal('hire-cleaner-modal')">📋 Request Job</button>
+    </div>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Available Cleaners</div><div class="kpi-val" id="mkt-cleaners">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Active Jobs</div><div class="kpi-val" id="mkt-jobs">0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Completed</div><div class="kpi-val" id="mkt-done">0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Avg Rating</div><div class="kpi-val" id="mkt-rating">—</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">🧹 Cleaner Directory</div></div>
+      <div class="card-body" id="cleaner-directory"><div class="empty-state"><div class="es-i">🧹</div><h3>No cleaners yet</h3><p>Add cleaners who have contacted you to join your marketplace</p><button class="btn btn-pri" onclick="openModal('add-cleaner-modal')" style="margin-top:10px">Add Cleaner</button></div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">📋 Job Board</div></div>
+      <div class="card-body" id="job-board"><div class="empty-state"><div class="es-i">📋</div><h3>No active jobs</h3><p>Request a cleaning job to post it here</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ WORK ORDERS ████████████████████████ -->
+<div class="page" id="page-workorders">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Track maintenance requests and repairs</div>
+    <button class="btn btn-pri" onclick="openModal('add-workorder-modal')">+ New Work Order</button>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Open</div><div class="kpi-val" id="wo-open">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">In Progress</div><div class="kpi-val" id="wo-progress">0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Completed</div><div class="kpi-val" id="wo-done">0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Total Cost</div><div class="kpi-val" id="wo-cost">$0</div></div>
+  </div>
+  <div class="card"><div class="card-hd"><div class="card-title">Work Orders</div><div style="display:flex;gap:6px" id="wo-filters">
+    <button class="btn btn-pri" style="font-size:10px;padding:3px 9px" onclick="filterWO('all',this)">All</button>
+    <button class="btn btn-ghost" style="font-size:10px;padding:3px 9px" onclick="filterWO('open',this)">Open</button>
+    <button class="btn btn-ghost" style="font-size:10px;padding:3px 9px" onclick="filterWO('in_progress',this)">In Progress</button>
+    <button class="btn btn-ghost" style="font-size:10px;padding:3px 9px" onclick="filterWO('completed',this)">Completed</button>
+  </div></div><div class="card-body" id="workorders-list"><div class="empty-state"><div class="es-i">🔧</div><h3>No work orders</h3><p>Create work orders for repairs and maintenance</p></div></div></div>
+</div>
+
+<!-- ██ INVENTORY ████████████████████████████ -->
+<div class="page" id="page-inventory">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Track supplies and get low-stock alerts</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost" onclick="generateShoppingList()">🛒 Shopping List</button>
+      <button class="btn btn-pri" onclick="openModal('add-inventory-modal')">+ Add Item</button>
+    </div>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Total Items</div><div class="kpi-val" id="inv-total">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Low Stock</div><div class="kpi-val" id="inv-low" style="color:var(--terra)">0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Out of Stock</div><div class="kpi-val" id="inv-out" style="color:var(--terra)">0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Properties</div><div class="kpi-val" id="inv-props">0</div></div>
+  </div>
+  <div class="card"><div class="card-hd"><div class="card-title">📦 Supply Inventory</div></div><div class="card-body" id="inventory-list"><div class="empty-state"><div class="es-i">📦</div><h3>No inventory tracked</h3><p>Add supplies like toiletries, towels, and cleaning products</p><button class="btn btn-pri" onclick="openModal('add-inventory-modal')" style="margin-top:10px">Add First Item</button></div></div></div>
+</div>
+
+<!-- ██ UNIFIED INBOX ████████████████████████ -->
+<div class="page" id="page-inbox">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">All guest messages in one place with smart auto-replies</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost" id="autoreply-toggle-btn" onclick="toggleAutoReply()">🤖 Auto-Reply: OFF</button>
+      <button class="btn btn-pri" onclick="openModal('add-message-modal')">+ New Message</button>
+    </div>
+  </div>
+  <!-- Auto-reply rules -->
+  <div class="card" style="margin-bottom:14px" id="autoreply-card">
+    <div class="card-hd"><div class="card-title">🤖 Smart Auto-Reply Rules</div><button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="openModal('add-autoreply-modal')">+ Add Rule</button></div>
+    <div class="card-body" id="autoreply-rules-list"><div style="font-size:13px;color:var(--txt3)">No auto-reply rules yet. Add triggers like "WiFi?" or "check-in time?" to auto-respond instantly.</div></div>
+  </div>
+  <!-- All messages -->
+  <div class="card"><div class="card-hd"><div class="card-title">📬 All Conversations</div></div><div class="card-body" id="inbox-list"><div class="empty-state"><div class="es-i">📬</div><p>No messages yet</p></div></div></div>
+</div>
+
+<!-- ██ CONCIERGE ████████████████████████████ -->
+<div class="page" id="page-concierge">
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:18px">Build a custom concierge menu for your guests</div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">🎩 Concierge Services</div><button class="btn btn-pri" style="font-size:11px;padding:4px 9px" onclick="openModal('add-service-modal')">+ Add Service</button></div>
+      <div class="card-body" id="concierge-list"><div class="empty-state"><div class="es-i">🎩</div><h3>No services yet</h3><p>Add services like airport transfers, restaurant reservations, or local tours</p></div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">📋 Service Requests</div></div>
+      <div class="card-body" id="service-requests"><div class="empty-state"><div class="es-i">📋</div><p>Guest requests will appear here</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ UPSELL PORTAL ████████████████████████ -->
+<div class="page" id="page-upsell">
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:18px">Create in-stay upsell offers to earn extra revenue from guests</div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">🛎 Upsell Offers</div><button class="btn btn-pri" style="font-size:11px;padding:4px 9px" onclick="openModal('add-upsell-modal')">+ Add Offer</button></div>
+      <div class="card-body" id="upsell-list"><div class="empty-state"><div class="es-i">🛎</div><h3>No offers yet</h3><p>Add upsells like early check-in, late checkout, welcome baskets, or bike rentals</p></div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">💰 Upsell Revenue</div></div>
+      <div class="card-body">
+        <div class="g2" style="margin-bottom:14px">
+          <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:11px;color:var(--txt3);margin-bottom:4px">This Month</div><div style="font-family:'Fraunces',serif;font-size:24px;color:var(--terra)" id="upsell-rev-month">$0</div></div>
+          <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:11px;color:var(--txt3);margin-bottom:4px">All Time</div><div style="font-family:'Fraunces',serif;font-size:24px;color:var(--sage)" id="upsell-rev-total">$0</div></div>
+        </div>
+        <div id="upsell-purchases-list"><div style="font-size:13px;color:var(--txt3)">No purchases yet</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ DIRECT BOOKING KIT ████████████████████ -->
+<div class="page" id="page-directbook">
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:18px">Everything you need to accept direct bookings and reduce Airbnb fees</div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">🔗 Direct Booking Setup</div></div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="background:var(--sand);border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:6px">✅ Step 1 — Build your website</div>
+            <div style="font-size:12px;color:var(--txt2);margin-bottom:8px">Use the Website Builder to create your direct booking site</div>
+            <button class="btn btn-ghost" style="font-size:11px" onclick="nav('website',document.querySelector('[onclick*=website]'))">Go to Website Builder →</button>
+          </div>
+          <div style="background:var(--sand);border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:6px">✅ Step 2 — Set your pricing</div>
+            <div style="font-size:12px;color:var(--txt2);margin-bottom:8px">Direct bookings save 3-5% on Airbnb service fees</div>
+            <button class="btn btn-ghost" style="font-size:11px" onclick="nav('pricing',document.querySelector('[onclick*=pricing]'))">Go to Nightly Rates →</button>
+          </div>
+          <div style="background:var(--sand);border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:6px">✅ Step 3 — Create a direct booking link</div>
+            <div style="font-size:12px;color:var(--txt2);margin-bottom:8px">Generate a shareable booking inquiry form</div>
+            <button class="btn btn-pri" style="font-size:11px" onclick="generateDirectBookingLink()">Generate Booking Link →</button>
+          </div>
+          <div style="background:var(--sand);border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:6px">✅ Step 4 — Accept payment</div>
+            <div style="font-size:12px;color:var(--txt2)">Use your Stripe payment link or add a Venmo/Zelle handle for direct payment</div>
+            <div class="fi" style="margin-top:8px;margin-bottom:0"><input id="db-payment" placeholder="Venmo/Zelle handle or Stripe link" style="background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:8px 12px;font-size:12px;width:100%;outline:none;color:var(--txt)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">📊 Direct Booking Stats</div></div>
+      <div class="card-body">
+        <div class="g2" style="margin-bottom:14px">
+          <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:11px;color:var(--txt3);margin-bottom:4px">Direct Bookings</div><div style="font-family:'Fraunces',serif;font-size:24px;color:var(--terra)" id="db-count">0</div></div>
+          <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:11px;color:var(--txt3);margin-bottom:4px">Fees Saved</div><div style="font-family:'Fraunces',serif;font-size:24px;color:var(--sage)" id="db-saved">$0</div></div>
+        </div>
+        <div id="db-link-display" style="display:none;background:var(--sand);border-radius:8px;padding:12px;font-size:12px;color:var(--txt2)">
+          <div style="font-weight:600;color:var(--txt);margin-bottom:6px">Your Direct Booking Link:</div>
+          <div id="db-link-text" style="font-family:monospace;word-break:break-all;font-size:11px"></div>
+          <button class="btn btn-ghost" style="font-size:11px;margin-top:8px" onclick="copyDirectLink()">📋 Copy Link</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Direct booking inquiries -->
+  <div class="card"><div class="card-hd"><div class="card-title">📥 Direct Booking Inquiries</div></div><div class="card-body" id="db-inquiries"><div class="empty-state"><div class="es-i">📥</div><p>No direct booking inquiries yet</p></div></div></div>
+</div>
+
+<!-- ██ DAMAGE CLAIMS ████████████████████████ -->
+<div class="page" id="page-damage">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Document and track damage claims with photo evidence</div>
+    <button class="btn btn-pri" onclick="openModal('add-claim-modal')">+ New Claim</button>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Open Claims</div><div class="kpi-val" id="claim-open">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Submitted</div><div class="kpi-val" id="claim-submitted">0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Recovered</div><div class="kpi-val" id="claim-recovered">$0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Pending</div><div class="kpi-val" id="claim-pending">$0</div></div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">🛡 Damage Claims</div></div>
+    <div class="card-body" id="claims-list"><div class="empty-state"><div class="es-i">🛡</div><h3>No damage claims</h3><p>Document damage with photos and track your Airbnb resolution cases</p></div></div>
+  </div>
+</div>
+
 <!-- ██ TEAM ACCESS ████████████████████████ -->
 <div class="page" id="page-team">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
@@ -1454,6 +1649,83 @@ select{color:var(--txt)!important;}
   </div>
 </div></div>
 
+<!-- NEW FEATURE MODALS -->
+<div class="modal-bg" id="add-cleaner-modal"><div class="modal"><h2>🧹 Add Cleaner</h2>
+  <div class="g2"><div class="fi"><label>Name</label><input id="cl-name" placeholder="Maria Garcia"></div><div class="fi"><label>Phone</label><input id="cl-phone" placeholder="+1 555 000 0000"></div></div>
+  <div class="fi"><label>Email</label><input id="cl-email" type="email" placeholder="cleaner@email.com"></div>
+  <div class="g2"><div class="fi"><label>Hourly Rate ($)</label><input id="cl-rate" type="number" placeholder="25"></div><div class="fi"><label>Service Area</label><input id="cl-area" placeholder="Downtown, Midtown"></div></div>
+  <div class="fi"><label>Specialties</label><input id="cl-skills" placeholder="Deep clean, turnover, laundry…"></div>
+  <div class="fi"><label>Notes</label><textarea id="cl-notes" placeholder="Background check done, has own supplies…" style="min-height:60px"></textarea></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-cleaner-modal')">Cancel</button><button class="btn btn-pri" onclick="addCleaner()">Add Cleaner</button></div>
+</div></div>
+
+<div class="modal-bg" id="hire-cleaner-modal"><div class="modal"><h2>📋 Post Cleaning Job</h2>
+  <div class="fi"><label>Property</label><select id="job-prop"></select></div>
+  <div class="g2"><div class="fi"><label>Date Needed</label><input id="job-date" type="date"></div><div class="fi"><label>Time</label><input id="job-time" type="time" value="11:00"></div></div>
+  <div class="fi"><label>Job Type</label><select id="job-type" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="turnover">🔄 Turnover Clean</option><option value="deep">🧹 Deep Clean</option><option value="inspect">🔍 Inspection</option><option value="laundry">👕 Laundry Only</option></select></div>
+  <div class="fi"><label>Assign To</label><select id="job-cleaner" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="">Any available cleaner</option></select></div>
+  <div class="fi"><label>Pay ($)</label><input id="job-pay" type="number" placeholder="75"></div>
+  <div class="fi"><label>Notes</label><textarea id="job-notes" placeholder="Special instructions…" style="min-height:50px"></textarea></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('hire-cleaner-modal')">Cancel</button><button class="btn btn-pri" onclick="postJob()">Post Job</button></div>
+</div></div>
+
+<div class="modal-bg" id="add-workorder-modal"><div class="modal"><h2>🔧 New Work Order</h2>
+  <div class="fi"><label>Property</label><select id="wo-prop"></select></div>
+  <div class="fi"><label>Issue Title</label><input id="wo-title" placeholder="Leaking faucet in bathroom"></div>
+  <div class="fi"><label>Category</label><select id="wo-cat" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="plumbing">🚰 Plumbing</option><option value="electrical">⚡ Electrical</option><option value="hvac">❄️ HVAC</option><option value="appliance">🍳 Appliance</option><option value="structural">🏚 Structural</option><option value="cleaning">🧹 Cleaning</option><option value="other">📦 Other</option></select></div>
+  <div class="g2"><div class="fi"><label>Priority</label><select id="wo-priority" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="urgent">🔴 Urgent</option><option value="high">🟡 High</option><option value="medium">🟢 Medium</option><option value="low">⚪ Low</option></select></div><div class="fi"><label>Est. Cost ($)</label><input id="wo-cost-est" type="number" placeholder="0"></div></div>
+  <div class="fi"><label>Description</label><textarea id="wo-desc" placeholder="Describe the issue in detail…" style="min-height:70px"></textarea></div>
+  <div class="fi"><label>Assigned To</label><input id="wo-assign" placeholder="Plumber name or company"></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-workorder-modal')">Cancel</button><button class="btn btn-pri" onclick="addWorkOrder()">Create Work Order</button></div>
+</div></div>
+
+<div class="modal-bg" id="add-inventory-modal"><div class="modal"><h2>📦 Add Inventory Item</h2>
+  <div class="fi"><label>Item Name</label><input id="inv-name" placeholder="Toilet paper, shampoo, towels…"></div>
+  <div class="fi"><label>Property</label><select id="inv-prop"></select></div>
+  <div class="fi"><label>Category</label><select id="inv-cat" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="toiletries">🧴 Toiletries</option><option value="linens">🛏 Linens & Towels</option><option value="cleaning">🧹 Cleaning Supplies</option><option value="kitchen">🍳 Kitchen</option><option value="amenities">⭐ Amenities</option><option value="other">📦 Other</option></select></div>
+  <div class="g2"><div class="fi"><label>Current Qty</label><input id="inv-qty" type="number" placeholder="10"></div><div class="fi"><label>Low Stock Alert At</label><input id="inv-threshold" type="number" placeholder="3"></div></div>
+  <div class="g2"><div class="fi"><label>Unit</label><input id="inv-unit" placeholder="rolls, bottles, sets…"></div><div class="fi"><label>Cost Per Unit ($)</label><input id="inv-cost" type="number" placeholder="0.50"></div></div>
+  <div class="fi"><label>Reorder Link (optional)</label><input id="inv-link" placeholder="Amazon product URL"></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-inventory-modal')">Cancel</button><button class="btn btn-pri" onclick="addInventoryItem()">Add Item</button></div>
+</div></div>
+
+<div class="modal-bg" id="add-autoreply-modal"><div class="modal"><h2>🤖 Add Auto-Reply Rule</h2>
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:14px;line-height:1.5">When a guest message contains your trigger words, HostHaven will auto-draft a reply.</div>
+  <div class="fi"><label>Trigger Keywords (comma separated)</label><input id="ar-trigger" placeholder="wifi, password, internet"></div>
+  <div class="fi"><label>Auto Reply Message</label><textarea id="ar-reply" placeholder="Our WiFi name is {wifi_name} and password is {wifi_password}. Enjoy!" style="min-height:80px"></textarea></div>
+  <div style="background:var(--sand);border-radius:8px;padding:10px;font-size:11px;color:var(--txt2);line-height:1.6;margin-bottom:4px">💡 <strong>Smart variables:</strong> {wifi_name} {wifi_password} {door_code} {checkin_time} {checkout_time} {host_name} {property_name}</div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-autoreply-modal')">Cancel</button><button class="btn btn-pri" onclick="addAutoReply()">Save Rule</button></div>
+</div></div>
+
+<div class="modal-bg" id="add-service-modal"><div class="modal"><h2>🎩 Add Concierge Service</h2>
+  <div class="fi"><label>Service Name</label><input id="svc-name" placeholder="Airport Transfer, Restaurant Booking, City Tour…"></div>
+  <div class="fi"><label>Category</label><select id="svc-cat" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="transport">🚗 Transport</option><option value="food">🍽 Food & Dining</option><option value="tours">🗺 Tours & Activities</option><option value="wellness">💆 Wellness & Spa</option><option value="shopping">🛍 Shopping</option><option value="other">✨ Other</option></select></div>
+  <div class="g2"><div class="fi"><label>Price ($)</label><input id="svc-price" type="number" placeholder="50"></div><div class="fi"><label>Duration</label><input id="svc-duration" placeholder="2 hours, per day…"></div></div>
+  <div class="fi"><label>Description</label><textarea id="svc-desc" placeholder="Describe the service…" style="min-height:60px"></textarea></div>
+  <div class="fi"><label>Contact / Booking Info</label><input id="svc-contact" placeholder="Phone, website, or booking instructions"></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-service-modal')">Cancel</button><button class="btn btn-pri" onclick="addConciergeService()">Add Service</button></div>
+</div></div>
+
+<div class="modal-bg" id="add-upsell-modal"><div class="modal"><h2>🛎 Add Upsell Offer</h2>
+  <div class="fi"><label>Offer Name</label><input id="ups-name" placeholder="Early Check-in, Welcome Basket, Bike Rental…"></div>
+  <div class="fi"><label>Category</label><select id="ups-cat" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="checkin">🔑 Early Check-in/Late Checkout</option><option value="basket">🧺 Welcome Basket</option><option value="rental">🚲 Equipment Rental</option><option value="food">🍽 Food & Beverages</option><option value="experience">🎭 Experience</option><option value="other">✨ Other</option></select></div>
+  <div class="g2"><div class="fi"><label>Price ($)</label><input id="ups-price" type="number" placeholder="25"></div><div class="fi"><label>Available For</label><select id="ups-prop-filter" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="">All Properties</option></select></div></div>
+  <div class="fi"><label>Description</label><textarea id="ups-desc" placeholder="What does this offer include?" style="min-height:60px"></textarea></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-upsell-modal')">Cancel</button><button class="btn btn-pri" onclick="addUpsell()">Add Offer</button></div>
+</div></div>
+
+<div class="modal-bg" id="add-claim-modal"><div class="modal"><h2>🛡 New Damage Claim</h2>
+  <div class="fi"><label>Booking / Guest</label><select id="claim-booking" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="">Select booking…</option></select></div>
+  <div class="fi"><label>Damage Description</label><input id="claim-desc" placeholder="Broken TV, stained carpet, missing items…"></div>
+  <div class="g2"><div class="fi"><label>Estimated Cost ($)</label><input id="claim-amount" type="number" placeholder="0"></div><div class="fi"><label>Platform</label><select id="claim-platform" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="airbnb">Airbnb Resolution</option><option value="vrbo">VRBO Damage Protection</option><option value="insurance">Personal Insurance</option><option value="direct">Direct from Guest</option></select></div></div>
+  <div class="fi"><label>Evidence Photos</label>
+    <div id="claim-photos-preview" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>
+    <input type="file" accept="image/*" multiple onchange="addClaimPhotos(this)" style="font-size:12px">
+  </div>
+  <div class="fi"><label>Notes</label><textarea id="claim-notes" placeholder="Case number, timeline, communications…" style="min-height:60px"></textarea></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-claim-modal')">Cancel</button><button class="btn btn-pri" onclick="addDamageClaim()">File Claim</button></div>
+</div></div>
+
 <div class="modal-bg" id="add-blacklist-modal"><div class="modal"><h2>🚫 Flag Guest</h2>
   <div style="background:rgba(196,105,58,.08);border:1px solid var(--terra-l);border-radius:8px;padding:12px;font-size:12px;color:var(--txt2);margin-bottom:14px;line-height:1.5">This list is private and only visible to you. Use it to remember guests you don't want to host again.</div>
   <div class="g2">
@@ -1518,7 +1790,7 @@ let wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
 const LOCAL_KEY = 'hh_local_v1';
 const getLocal = () => { try{return JSON.parse(localStorage.getItem(LOCAL_KEY))||{};}catch{return {};} };
 const setLocal = d => localStorage.setItem(LOCAL_KEY, JSON.stringify(d));
-const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],expenses:[],blacklist:[],seasons:[],plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; if(!d.expenses)d.expenses=[]; if(!d.blacklist)d.blacklist=[]; if(!d.seasons)d.seasons=[]; return d; };
+const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],expenses:[],blacklist:[],seasons:[],cleaners:[],jobs:[],workorders:[],inventory:[],autoReplies:[],concierge:[],upsells:[],claims:[],plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; if(!d.expenses)d.expenses=[]; if(!d.blacklist)d.blacklist=[]; if(!d.seasons)d.seasons=[]; if(!d.cleaners)d.cleaners=[]; if(!d.jobs)d.jobs=[]; if(!d.workorders)d.workorders=[]; if(!d.inventory)d.inventory=[]; if(!d.autoReplies)d.autoReplies=[]; if(!d.concierge)d.concierge=[]; if(!d.upsells)d.upsells=[]; if(!d.claims)d.claims=[]; return d; };
 const saveLocalData = (uid,d) => { const l=getLocal(); l[uid]=d; setLocal(l); };
 
 // Save to both local and Supabase
@@ -2015,7 +2287,7 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 //  NAV
 // ════════════════════════════════════════════
-const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',ical:'iCal Sync',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews & Automation',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel',expenses:'💸 Expenses',blacklist:'🚫 Guest Blacklist'};
+const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',inbox:'📬 Unified Inbox',ical:'iCal Sync',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
@@ -2036,6 +2308,14 @@ function nav(id,el){
   if(id==='expenses')setTimeout(()=>renderExpenses(),50);
   if(id==='blacklist')setTimeout(()=>renderBlacklist(),50);
   if(id==='pricing')setTimeout(()=>{renderPricing();renderSeasons();},50);
+  if(id==='marketplace')setTimeout(()=>renderMarketplace(),50);
+  if(id==='workorders')setTimeout(()=>renderWorkOrders(),50);
+  if(id==='inventory')setTimeout(()=>renderInventory(),50);
+  if(id==='inbox')setTimeout(()=>renderInbox(),50);
+  if(id==='concierge')setTimeout(()=>renderConcierge(),50);
+  if(id==='upsell')setTimeout(()=>renderUpsell(),50);
+  if(id==='directbook')setTimeout(()=>renderDirectBook(),50);
+  if(id==='damage')setTimeout(()=>renderDamageClaims(),50);
 }
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sb-overlay').classList.add('show');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('show');}
@@ -3178,6 +3458,134 @@ function renderBookingSourceChart() {
   }).join('');
 }
 // ════════════════════════════════════════════
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════
+//  CLEANER MARKETPLACE
+// ════════════════════════════════════════════
+function addCleaner(){const name=document.getElementById('cl-name').value.trim();if(!name){toast('Enter cleaner name');return;}if(!cData.cleaners)cData.cleaners=[];const prop=null;cData.cleaners.push({id:'cl_'+Date.now(),name,phone:document.getElementById('cl-phone').value,email:document.getElementById('cl-email').value,rate:parseFloat(document.getElementById('cl-rate').value)||0,area:document.getElementById('cl-area').value,skills:document.getElementById('cl-skills').value,notes:document.getElementById('cl-notes').value,rating:5,jobs:0,available:true,created:Date.now()});saveUserData(cUid,cData);closeModal('add-cleaner-modal');['cl-name','cl-phone','cl-email','cl-rate','cl-area','cl-skills','cl-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});toast(`${name} added to marketplace!`);renderMarketplace();}
+
+function postJob(){const propId=document.getElementById('job-prop').value;const date=document.getElementById('job-date').value;if(!date){toast('Select a date');return;}if(!cData.jobs)cData.jobs=[];const prop=cData.properties.find(p=>p.id===propId);const cleanerId=document.getElementById('job-cleaner').value;const cleaner=cData.cleaners?.find(c=>c.id===cleanerId);cData.jobs.push({id:'j_'+Date.now(),propId,propName:prop?.name||'Property',date,time:document.getElementById('job-time').value,type:document.getElementById('job-type').value,cleanerId,cleanerName:cleaner?.name||'Unassigned',pay:parseFloat(document.getElementById('job-pay').value)||0,notes:document.getElementById('job-notes').value,status:'open',created:Date.now()});saveUserData(cUid,cData);closeModal('hire-cleaner-modal');toast('Job posted!');renderMarketplace();}
+
+function renderMarketplace(){
+  const cleaners=cData.cleaners||[];const jobs=cData.jobs||[];
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('mkt-cleaners',cleaners.filter(c=>c.available).length);set('mkt-jobs',jobs.filter(j=>j.status==='open').length);set('mkt-done',jobs.filter(j=>j.status==='completed').length);
+  const rated=cleaners.filter(c=>c.rating);set('mkt-rating',rated.length?'⭐'+(rated.reduce((s,c)=>s+c.rating,0)/rated.length).toFixed(1):'—');
+  const dir=document.getElementById('cleaner-directory');
+  if(dir){if(!cleaners.length)dir.innerHTML='<div class="empty-state"><div class="es-i">🧹</div><h3>No cleaners yet</h3><button class="btn btn-pri" onclick="openModal(\'add-cleaner-modal\')" style="margin-top:10px">Add Cleaner</button></div>';
+  else dir.innerHTML=cleaners.map(c=>`<div class="row" style="cursor:default"><div style="width:38px;height:38px;border-radius:50%;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🧹</div><div class="row-info"><div class="row-title">${c.name} <span style="font-size:11px;color:var(--sage)">⭐${c.rating}</span></div><div class="row-sub">${c.area||'No area'} · $${c.rate}/hr · ${c.jobs} jobs</div></div><span class="pill ${c.available?'pill-green':'pill-amber'}">${c.available?'Available':'Busy'}</span><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="toggleCleanerAvail('${c.id}')">${c.available?'Mark Busy':'Mark Free'}</button><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra)" onclick="removeCleaner('${c.id}')">🗑</button></div>`).join('');}
+  const board=document.getElementById('job-board');
+  if(board){if(!jobs.length)board.innerHTML='<div class="empty-state"><div class="es-i">📋</div><h3>No active jobs</h3></div>';
+  else{const typeLabels={turnover:'🔄 Turnover',deep:'🧹 Deep',inspect:'🔍 Inspect',laundry:'👕 Laundry'};const sc={open:'pill-amber',assigned:'pill-blue',completed:'pill-green'};
+  board.innerHTML=jobs.map(j=>`<div class="row" style="cursor:default"><div class="row-info"><div class="row-title">${typeLabels[j.type]||j.type} — ${j.propName}</div><div class="row-sub">${j.date} at ${j.time} · ${j.cleanerName}</div></div><span class="pill ${sc[j.status]||'pill-amber'}">${j.status}</span><div class="row-price">$${j.pay}</div><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="completeJob('${j.id}')" ${j.status==='completed'?'disabled':''}>✓ Done</button></div>`).join('');}}
+  const sel=document.getElementById('job-cleaner');if(sel)sel.innerHTML='<option value="">Any available cleaner</option>'+(cleaners.map(c=>`<option value="${c.id}">${c.name} — $${c.rate}/hr</option>`).join(''));
+}
+function toggleCleanerAvail(id){const c=(cData.cleaners||[]).find(x=>x.id===id);if(c){c.available=!c.available;saveUserData(cUid,cData);renderMarketplace();}}
+function removeCleaner(id){if(!confirm('Remove this cleaner?'))return;cData.cleaners=(cData.cleaners||[]).filter(x=>x.id!==id);saveUserData(cUid,cData);renderMarketplace();toast('Cleaner removed');}
+function completeJob(id){const j=(cData.jobs||[]).find(x=>x.id===id);if(j){j.status='completed';saveUserData(cUid,cData);renderMarketplace();toast('Job marked complete ✓');}}
+
+// ════════════════════════════════════════════
+//  WORK ORDERS
+// ════════════════════════════════════════════
+let woFilter='all';
+function addWorkOrder(){const title=document.getElementById('wo-title').value.trim();if(!title){toast('Enter issue title');return;}if(!cData.workorders)cData.workorders=[];const propId=document.getElementById('wo-prop').value;const prop=cData.properties.find(p=>p.id===propId);cData.workorders.push({id:'wo_'+Date.now(),title,propId,propName:prop?.name||'',cat:document.getElementById('wo-cat').value,priority:document.getElementById('wo-priority').value,costEst:parseFloat(document.getElementById('wo-cost-est').value)||0,costActual:0,desc:document.getElementById('wo-desc').value,assignedTo:document.getElementById('wo-assign').value,status:'open',created:Date.now()});saveUserData(cUid,cData);closeModal('add-workorder-modal');['wo-title','wo-desc','wo-assign','wo-cost-est'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});toast('Work order created!');renderWorkOrders();}
+
+function filterWO(filter,btn){woFilter=filter;document.querySelectorAll('#wo-filters button').forEach(b=>{b.className='btn btn-ghost';b.style.fontSize='10px';b.style.padding='3px 9px';});if(btn){btn.className='btn btn-pri';btn.style.fontSize='10px';btn.style.padding='3px 9px';}renderWorkOrders();}
+
+function renderWorkOrders(){
+  const orders=cData.workorders||[];const filtered=woFilter==='all'?orders:orders.filter(o=>o.status===woFilter);
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('wo-open',orders.filter(o=>o.status==='open').length);set('wo-progress',orders.filter(o=>o.status==='in_progress').length);set('wo-done',orders.filter(o=>o.status==='completed').length);set('wo-cost','$'+orders.filter(o=>o.status==='completed').reduce((s,o)=>s+(o.costActual||o.costEst||0),0).toLocaleString());
+  const list=document.getElementById('workorders-list');if(!list)return;
+  if(!filtered.length){list.innerHTML='<div class="empty-state"><div class="es-i">🔧</div><h3>No work orders</h3></div>';return;}
+  const ce={plumbing:'🚰',electrical:'⚡',hvac:'❄️',appliance:'🍳',structural:'🏚',cleaning:'🧹',other:'📦'};
+  const pc={urgent:'pill-red',high:'pill-amber',medium:'pill-green',low:'pill-blue'};const sc={open:'pill-amber',in_progress:'pill-blue',completed:'pill-green'};
+  list.innerHTML=filtered.map(o=>`<div class="row" style="cursor:default"><div style="font-size:20px">${ce[o.cat]||'📦'}</div><div class="row-info"><div class="row-title">${o.title}</div><div class="row-sub">${o.propName||''}${o.assignedTo?' · '+o.assignedTo:''}</div></div><span class="pill ${pc[o.priority]||'pill-amber'}">${o.priority}</span><span class="pill ${sc[o.status]||'pill-amber'}">${o.status.replace('_',' ')}</span><div class="row-price">$${(o.costActual||o.costEst||0).toLocaleString()}</div><select onchange="updateWOStatus('${o.id}',this.value)" style="font-size:10px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--txt)"><option value="open" ${o.status==='open'?'selected':''}>Open</option><option value="in_progress" ${o.status==='in_progress'?'selected':''}>In Progress</option><option value="completed" ${o.status==='completed'?'selected':''}>Completed</option></select></div>`).join('');
+}
+function updateWOStatus(id,status){const o=(cData.workorders||[]).find(x=>x.id===id);if(o){o.status=status;saveUserData(cUid,cData);renderWorkOrders();toast('Work order updated ✓');}}
+
+// ════════════════════════════════════════════
+//  INVENTORY
+// ════════════════════════════════════════════
+function addInventoryItem(){const name=document.getElementById('inv-name').value.trim();if(!name){toast('Enter item name');return;}if(!cData.inventory)cData.inventory=[];const propId=document.getElementById('inv-prop').value;const prop=cData.properties.find(p=>p.id===propId);cData.inventory.push({id:'inv_'+Date.now(),name,propId,propName:prop?.name||'All',cat:document.getElementById('inv-cat').value,qty:parseInt(document.getElementById('inv-qty').value)||0,threshold:parseInt(document.getElementById('inv-threshold').value)||3,unit:document.getElementById('inv-unit').value||'units',cost:parseFloat(document.getElementById('inv-cost').value)||0,link:document.getElementById('inv-link').value,created:Date.now()});saveUserData(cUid,cData);closeModal('add-inventory-modal');['inv-name','inv-qty','inv-threshold','inv-unit','inv-cost','inv-link'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});toast(`${name} added!`);renderInventory();}
+
+function updateQty(id,delta){const item=(cData.inventory||[]).find(x=>x.id===id);if(!item)return;item.qty=Math.max(0,(item.qty||0)+delta);saveUserData(cUid,cData);renderInventory();}
+function removeInventory(id){cData.inventory=(cData.inventory||[]).filter(x=>x.id!==id);saveUserData(cUid,cData);renderInventory();toast('Item removed');}
+
+function renderInventory(){
+  const items=cData.inventory||[];const low=items.filter(i=>i.qty<=i.threshold&&i.qty>0).length;const out=items.filter(i=>i.qty===0).length;
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('inv-total',items.length);set('inv-low',low);set('inv-out',out);set('inv-props',new Set(items.map(i=>i.propId).filter(Boolean)).size);
+  const list=document.getElementById('inventory-list');if(!list)return;
+  if(!items.length){list.innerHTML='<div class="empty-state"><div class="es-i">📦</div><h3>No inventory tracked</h3><button class="btn btn-pri" onclick="openModal(\'add-inventory-modal\')" style="margin-top:10px">Add First Item</button></div>';return;}
+  const ce={toiletries:'🧴',linens:'🛏',cleaning:'🧹',kitchen:'🍳',amenities:'⭐',other:'📦'};
+  const sorted=[...items].sort((a,b)=>{if(a.qty===0&&b.qty!==0)return -1;if(b.qty===0&&a.qty!==0)return 1;if(a.qty<=a.threshold&&b.qty>b.threshold)return -1;return a.name.localeCompare(b.name);});
+  list.innerHTML=sorted.map(i=>{const isOut=i.qty===0;const isLow=i.qty<=i.threshold&&!isOut;return `<div class="row" style="cursor:default"><div style="font-size:20px">${ce[i.cat]||'📦'}</div><div class="row-info"><div class="row-title">${i.name} ${isOut?'<span style="color:var(--terra);font-size:11px">OUT</span>':isLow?'<span style="color:var(--gold);font-size:11px">LOW</span>':''}</div><div class="row-sub">${i.propName} · Alert at ${i.threshold} ${i.unit}</div></div><div style="display:flex;align-items:center;gap:6px"><button onclick="updateQty('${i.id}',-1)" style="background:var(--sand);border:1px solid var(--border);border-radius:5px;width:24px;height:24px;cursor:pointer;font-size:14px;color:var(--txt)">−</button><div style="font-family:'Fraunces',serif;font-size:18px;color:${isOut?'var(--terra)':isLow?'var(--gold)':'var(--txt)'};min-width:32px;text-align:center">${i.qty}</div><button onclick="updateQty('${i.id}',1)" style="background:var(--sand);border:1px solid var(--border);border-radius:5px;width:24px;height:24px;cursor:pointer;font-size:14px;color:var(--txt)">+</button><span style="font-size:11px;color:var(--txt3)">${i.unit}</span></div>${i.link?`<a href="${i.link}" target="_blank" class="btn btn-ghost" style="font-size:10px;padding:3px 8px;text-decoration:none">🛒</a>`:''}<button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra)" onclick="removeInventory('${i.id}')">🗑</button></div>`;}).join('');
+}
+
+function generateShoppingList(){const low=(cData.inventory||[]).filter(i=>i.qty<=i.threshold);if(!low.length){toast('All items well stocked! ✓');return;}let text='Shopping List — '+new Date().toLocaleDateString()+'\n\n';low.forEach(i=>{text+=`□ ${i.name} (${i.propName}) — Need ~${Math.max(3,i.threshold*3-i.qty)} ${i.unit}\n`;});navigator.clipboard.writeText(text).then(()=>toast(`${low.length} items copied to clipboard!`)).catch(()=>toast(`${low.length} items need restocking`));}
+
+// ════════════════════════════════════════════
+//  UNIFIED INBOX
+// ════════════════════════════════════════════
+let autoReplyEnabled=false;
+function toggleAutoReply(){autoReplyEnabled=!autoReplyEnabled;const btn=document.getElementById('autoreply-toggle-btn');if(btn){btn.textContent=`🤖 Auto-Reply: ${autoReplyEnabled?'ON':'OFF'}`;btn.className=autoReplyEnabled?'btn btn-pri':'btn btn-ghost';}toast(`Auto-reply ${autoReplyEnabled?'enabled':'disabled'}`);}
+
+function addAutoReply(){const trigger=document.getElementById('ar-trigger').value.trim();const reply=document.getElementById('ar-reply').value.trim();if(!trigger||!reply){toast('Fill in trigger and reply');return;}if(!cData.autoReplies)cData.autoReplies=[];cData.autoReplies.push({id:'ar_'+Date.now(),trigger,reply,active:true,hits:0,created:Date.now()});saveUserData(cUid,cData);closeModal('add-autoreply-modal');document.getElementById('ar-trigger').value='';document.getElementById('ar-reply').value='';toast('Auto-reply rule saved!');renderInbox();}
+
+function checkAutoReply(message){if(!autoReplyEnabled||!cData.autoReplies?.length)return null;const msg=message.toLowerCase();for(const rule of cData.autoReplies){if(!rule.active)continue;const triggers=rule.trigger.split(',').map(t=>t.trim().toLowerCase());if(triggers.some(t=>msg.includes(t))){rule.hits=(rule.hits||0)+1;const prop=cData.properties[0];return rule.reply.replace(/{wifi_name}/g,prop?.wifi||'[WiFi]').replace(/{wifi_password}/g,prop?.wifiPw||'[Password]').replace(/{door_code}/g,prop?.doorCode||'[Code]').replace(/{host_name}/g,cUser?.name||'Host').replace(/{property_name}/g,prop?.name||'the property').replace(/{checkin_time}/g,'3:00 PM').replace(/{checkout_time}/g,'11:00 AM');}}return null;}
+
+function renderInbox(){
+  const msgs=[...cData.messages].sort((a,b)=>b.created-a.created);
+  const inboxList=document.getElementById('inbox-list');
+  if(inboxList){if(!msgs.length)inboxList.innerHTML='<div class="empty-state"><div class="es-i">📬</div><p>No messages yet</p></div>';
+  else inboxList.innerHTML=msgs.map(m=>{const last=m.messages[m.messages.length-1];return `<div class="row" onclick="nav('messages',document.querySelector('[onclick*=messages]'));setTimeout(()=>openConv('${m.id}'),100)" style="cursor:pointer"><div class="msg-av" style="background:${m.avatarBg};color:${m.avatarColor}">${m.initials}</div><div class="row-info"><div class="row-title" style="font-weight:${m.unread?700:500}">${m.guestName} — ${m.propName||''}</div><div class="row-sub">${last.text.substring(0,60)}…</div></div>${m.unread?'<span class="pill pill-amber">Unread</span>':'<span class="pill pill-green">Read</span>'}</div>`;}).join('');}
+  const rulesList=document.getElementById('autoreply-rules-list');
+  if(rulesList){const rules=cData.autoReplies||[];if(!rules.length)rulesList.innerHTML='<div style="font-size:13px;color:var(--txt3)">No auto-reply rules yet.</div>';
+  else rulesList.innerHTML=rules.map(r=>`<div class="row" style="cursor:default"><div class="row-info"><div class="row-title">🎯 "${r.trigger}"</div><div class="row-sub">${r.reply.substring(0,50)}… · ${r.hits||0} hits</div></div><span class="pill ${r.active?'pill-green':'pill-amber'}">${r.active?'Active':'Off'}</span><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="toggleARRule('${r.id}')">${r.active?'Disable':'Enable'}</button><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra)" onclick="deleteAR('${r.id}')">🗑</button></div>`).join('');}
+}
+function toggleARRule(id){const r=(cData.autoReplies||[]).find(x=>x.id===id);if(r){r.active=!r.active;saveUserData(cUid,cData);renderInbox();}}
+function deleteAR(id){cData.autoReplies=(cData.autoReplies||[]).filter(x=>x.id!==id);saveUserData(cUid,cData);renderInbox();toast('Rule deleted');}
+
+// ════════════════════════════════════════════
+//  CONCIERGE
+// ════════════════════════════════════════════
+function addConciergeService(){const name=document.getElementById('svc-name').value.trim();if(!name){toast('Enter service name');return;}if(!cData.concierge)cData.concierge=[];cData.concierge.push({id:'svc_'+Date.now(),name,cat:document.getElementById('svc-cat').value,price:parseFloat(document.getElementById('svc-price').value)||0,duration:document.getElementById('svc-duration').value,desc:document.getElementById('svc-desc').value,contact:document.getElementById('svc-contact').value,active:true,requests:0,created:Date.now()});saveUserData(cUid,cData);closeModal('add-service-modal');toast(`${name} added!`);renderConcierge();}
+
+function renderConcierge(){const services=cData.concierge||[];const list=document.getElementById('concierge-list');if(!list)return;const ce={transport:'🚗',food:'🍽',tours:'🗺',wellness:'💆',shopping:'🛍',other:'✨'};if(!services.length)list.innerHTML='<div class="empty-state"><div class="es-i">🎩</div><h3>No services yet</h3></div>';else list.innerHTML=services.map(s=>`<div class="row" style="cursor:default"><div style="font-size:22px">${ce[s.cat]||'✨'}</div><div class="row-info"><div class="row-title">${s.name}</div><div class="row-sub">${s.duration||''} · ${s.requests} requests · ${s.contact||''}</div></div><div class="row-price">$${s.price}</div><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra)" onclick="removeConcierge('${s.id}')">🗑</button></div>`).join('');}
+function removeConcierge(id){cData.concierge=(cData.concierge||[]).filter(x=>x.id!==id);saveUserData(cUid,cData);renderConcierge();toast('Service removed');}
+
+// ════════════════════════════════════════════
+//  UPSELL PORTAL
+// ════════════════════════════════════════════
+function addUpsell(){const name=document.getElementById('ups-name').value.trim();if(!name){toast('Enter offer name');return;}if(!cData.upsells)cData.upsells=[];cData.upsells.push({id:'ups_'+Date.now(),name,cat:document.getElementById('ups-cat').value,price:parseFloat(document.getElementById('ups-price').value)||0,desc:document.getElementById('ups-desc').value,propFilter:document.getElementById('ups-prop-filter').value,active:true,purchases:[],created:Date.now()});saveUserData(cUid,cData);closeModal('add-upsell-modal');toast(`${name} upsell added!`);renderUpsell();}
+
+function renderUpsell(){const upsells=cData.upsells||[];const purchases=upsells.flatMap(u=>u.purchases||[]);const now=new Date();const thisMonth=now.toISOString().slice(0,7);const monthRev=purchases.filter(p=>p.date?.startsWith(thisMonth)).reduce((s,p)=>s+p.price,0);const totalRev=purchases.reduce((s,p)=>s+p.price,0);const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};set('upsell-rev-month','$'+monthRev.toLocaleString());set('upsell-rev-total','$'+totalRev.toLocaleString());const ce={checkin:'🔑',basket:'🧺',rental:'🚲',food:'🍽',experience:'🎭',other:'✨'};const list=document.getElementById('upsell-list');if(list){if(!upsells.length)list.innerHTML='<div class="empty-state"><div class="es-i">🛎</div><h3>No offers yet</h3></div>';else list.innerHTML=upsells.map(u=>`<div class="row" style="cursor:default"><div style="font-size:22px">${ce[u.cat]||'✨'}</div><div class="row-info"><div class="row-title">${u.name}</div><div class="row-sub">${(u.purchases||[]).length} purchases</div></div><div class="row-price">$${u.price}</div><button class="btn btn-pri" style="font-size:10px;padding:3px 8px" onclick="recordUpsell('${u.id}')">+ Sale</button><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra)" onclick="removeUpsell('${u.id}')">🗑</button></div>`).join('');}}
+function recordUpsell(id){const u=(cData.upsells||[]).find(x=>x.id===id);if(!u)return;if(!u.purchases)u.purchases=[];u.purchases.push({date:new Date().toISOString().slice(0,10),price:u.price});saveUserData(cUid,cData);renderUpsell();toast(`$${u.price} sale recorded! 🎉`);}
+function removeUpsell(id){cData.upsells=(cData.upsells||[]).filter(x=>x.id!==id);saveUserData(cUid,cData);renderUpsell();toast('Offer removed');}
+
+// ════════════════════════════════════════════
+//  DIRECT BOOKING KIT
+// ════════════════════════════════════════════
+function renderDirectBook(){const directBookings=(cData.bookings||[]).filter(b=>b.source==='direct');const saved=directBookings.reduce((s,b)=>s+b.price*0.03,0);const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};set('db-count',directBookings.length);set('db-saved','$'+Math.round(saved).toLocaleString());}
+function generateDirectBookingLink(){const link=`https://csopropertyservice-coder.github.io/hosthaven/?inquiry=1&host=${encodeURIComponent(cUser?.email||'')}`;const display=document.getElementById('db-link-display');const text=document.getElementById('db-link-text');if(display)display.style.display='block';if(text)text.textContent=link;toast('Direct booking link generated!');}
+function copyDirectLink(){const text=document.getElementById('db-link-text')?.textContent;if(text)navigator.clipboard.writeText(text).then(()=>toast('Link copied! ✓'));}
+
+// ════════════════════════════════════════════
+//  DAMAGE CLAIMS
+// ════════════════════════════════════════════
+let claimPhotosTemp=[];
+function addClaimPhotos(input){Array.from(input.files).forEach(file=>{const reader=new FileReader();reader.onload=e=>{claimPhotosTemp.push({data:e.target.result,name:file.name});renderClaimPhotos();};reader.readAsDataURL(file);});input.value='';}
+function renderClaimPhotos(){const preview=document.getElementById('claim-photos-preview');if(!preview)return;preview.innerHTML=claimPhotosTemp.map((p,i)=>`<div style="position:relative;cursor:pointer" onclick="claimPhotosTemp.splice(${i},1);renderClaimPhotos()" title="Click to remove"><img src="${p.data}" style="width:60px;height:60px;object-fit:cover;border-radius:6px;border:1px solid var(--border)"><div style="position:absolute;top:-4px;right:-4px;width:14px;height:14px;background:var(--terra);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff">×</div></div>`).join('');}
+
+function addDamageClaim(){const desc=document.getElementById('claim-desc').value.trim();const amount=parseFloat(document.getElementById('claim-amount').value)||0;if(!desc){toast('Describe the damage');return;}if(!cData.claims)cData.claims=[];const bookingId=document.getElementById('claim-booking').value;const booking=cData.bookings.find(b=>b.id===bookingId);cData.claims.push({id:'claim_'+Date.now(),desc,amount,bookingId,guestName:booking?.guestName||'Unknown',propName:booking?.propName||'',platform:document.getElementById('claim-platform').value,notes:document.getElementById('claim-notes').value,photos:[...claimPhotosTemp],status:'open',recovered:0,created:Date.now()});claimPhotosTemp=[];saveUserData(cUid,cData);closeModal('add-claim-modal');toast('Damage claim filed!');renderDamageClaims();}
+
+function renderDamageClaims(){const claims=cData.claims||[];const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};set('claim-open',claims.filter(c=>c.status==='open').length);set('claim-submitted',claims.filter(c=>c.status==='submitted').length);set('claim-recovered','$'+claims.reduce((s,c)=>s+(c.recovered||0),0).toLocaleString());set('claim-pending','$'+claims.filter(c=>c.status!=='closed').reduce((s,c)=>s+c.amount,0).toLocaleString());const list=document.getElementById('claims-list');if(!list)return;if(!claims.length){list.innerHTML='<div class="empty-state"><div class="es-i">🛡</div><h3>No damage claims</h3></div>';return;}const sc={open:'pill-amber',submitted:'pill-blue',resolved:'pill-green',closed:'pill-red'};const pe={airbnb:'🏠',vrbo:'🏡',insurance:'🛡',direct:'💳'};list.innerHTML=claims.map(c=>`<div class="row" style="cursor:default"><div style="font-size:22px">${pe[c.platform]||'🛡'}</div><div class="row-info"><div class="row-title">${c.desc}${c.photos?.length?` <span style="font-size:10px;color:var(--terra)">📸${c.photos.length}</span>`:''}</div><div class="row-sub">${c.guestName} · ${c.propName} · ${c.platform}</div></div><span class="pill ${sc[c.status]||'pill-amber'}">${c.status}</span><div style="text-align:right"><div class="row-price">$${c.amount.toLocaleString()}</div>${c.recovered?`<div style="font-size:11px;color:var(--sage)">Recovered: $${c.recovered}</div>`:''}</div><select onchange="updateClaimStatus('${c.id}',this.value)" style="font-size:10px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--txt)"><option value="open" ${c.status==='open'?'selected':''}>Open</option><option value="submitted" ${c.status==='submitted'?'selected':''}>Submitted</option><option value="resolved" ${c.status==='resolved'?'selected':''}>Resolved</option><option value="closed" ${c.status==='closed'?'selected':''}>Closed</option></select></div>`).join('');}
+function updateClaimStatus(id,status){const c=(cData.claims||[]).find(x=>x.id===id);if(!c)return;c.status=status;if(status==='resolved'){const amt=prompt(`Amount recovered? (Claimed: $${c.amount})`);if(amt)c.recovered=parseFloat(amt)||0;}saveUserData(cUid,cData);renderDamageClaims();toast('Claim updated ✓');}
+
 function showLegal(type) {
   const title = document.getElementById('legal-title');
   const content = document.getElementById('legal-content');
@@ -4167,17 +4575,14 @@ function updateBadges(){
   if(bb){bb.textContent=pending;bb.style.display=pending?'':'none';}if(mb){mb.textContent=unread;mb.style.display=unread?'':'none';}
 }
 function openModal(id){
-  const drops=[{sel:'mb-prop',ph:'<option value="">Select property…</option>'},{sel:'mm-prop',ph:'<option value="">None</option>'},{sel:'mt-prop',ph:'<option value="">None</option>'},{sel:'mr-prop',ph:'<option value="">None</option>'},{sel:'ic-prop',ph:'<option value="">None</option>'},{sel:'exp-prop',ph:'<option value="">All Properties</option>'},{sel:'sea-prop',ph:'<option value="">All Properties</option>'}];
+  const drops=[{sel:'mb-prop',ph:'<option value="">Select property…</option>'},{sel:'mm-prop',ph:'<option value="">None</option>'},{sel:'mt-prop',ph:'<option value="">None</option>'},{sel:'mr-prop',ph:'<option value="">None</option>'},{sel:'ic-prop',ph:'<option value="">None</option>'},{sel:'exp-prop',ph:'<option value="">All Properties</option>'},{sel:'sea-prop',ph:'<option value="">All Properties</option>'},{sel:'job-prop',ph:'<option value="">Select property…</option>'},{sel:'wo-prop',ph:'<option value="">Select property…</option>'},{sel:'inv-prop',ph:'<option value="">All Properties</option>'},{sel:'ups-prop-filter',ph:'<option value="">All Properties</option>'}];
   drops.forEach(({sel,ph})=>{const el=document.getElementById(sel);if(el)el.innerHTML=ph+cData.properties.map(p=>`<option value="${p.id}">${p.emoji} ${p.name}</option>`).join('');});
   const bookingDrop = document.getElementById('mm-booking');
-  if(bookingDrop) {
-    bookingDrop.innerHTML = '<option value="">No booking</option>' +
-      cData.bookings.filter(b=>b.status!=='cancelled').map(b=>`<option value="${b.id}">${b.guestName} · ${b.propName} · ${b.checkin||'TBD'}</option>`).join('');
-  }
-  if(id==='add-expense-modal') {
-    const dateEl = document.getElementById('exp-date');
-    if(dateEl && !dateEl.value) dateEl.value = new Date().toISOString().slice(0,10);
-  }
+  if(bookingDrop){bookingDrop.innerHTML='<option value="">No booking</option>'+cData.bookings.filter(b=>b.status!=='cancelled').map(b=>`<option value="${b.id}">${b.guestName} · ${b.propName} · ${b.checkin||'TBD'}</option>`).join('');}
+  const claimDrop = document.getElementById('claim-booking');
+  if(claimDrop){claimDrop.innerHTML='<option value="">Select booking…</option>'+cData.bookings.map(b=>`<option value="${b.id}">${b.guestName} · ${b.propName} · ${b.checkin||'TBD'}</option>`).join('');}
+  if(id==='add-expense-modal'){const dateEl=document.getElementById('exp-date');if(dateEl&&!dateEl.value)dateEl.value=new Date().toISOString().slice(0,10);}
+  if(id==='hire-cleaner-modal'){const sel=document.getElementById('job-cleaner');if(sel)sel.innerHTML='<option value="">Any available cleaner</option>'+(cData.cleaners||[]).map(c=>`<option value="${c.id}">${c.name} — $${c.rate}/hr</option>`).join('');}
   document.getElementById(id).classList.add('open');
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
