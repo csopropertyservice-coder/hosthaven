@@ -516,7 +516,7 @@ select{color:var(--txt)!important;}
     <div style="display:flex;gap:20px">
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('privacy')">Privacy</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('terms')">Terms</a>
-      <a href="mailto:csopropertyservice@gmail.com" style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:none">Support</a>
+      <a href="/cdn-cgi/l/email-protection#2043534f50524f50455254595345525649434560474d41494c0e434f4d" style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:none">Support</a>
     </div>
   </footer>
 </div>
@@ -1254,7 +1254,7 @@ select{color:var(--txt)!important;}
 
 <div class="toast" id="toast-el"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ════════════════════════════════════════════
 //  SUPABASE CONFIG
@@ -2396,7 +2396,8 @@ function showLegal(type) {
       <h3 style="color:var(--txt);margin:14px 0 6px">8. Contact</h3>
       <p>Privacy questions? Email <a href="mailto:csopropertyservice@gmail.com" style="color:var(--terra)">csopropertyservice@gmail.com</a></p>`;
   }
-  openModal('legal-modal');
+  // Use direct classList instead of openModal to avoid cData dependency
+  document.getElementById('legal-modal').classList.add('open');
 }
 
 // ════════════════════════════════════════════
@@ -3379,13 +3380,4 @@ function buildDemoData(){
 //  INIT
 // ════════════════════════════════════════════
 // Listen for auth state changes including password recovery
-sb.auth.onAuthStateChange((event, session) => {
-  if(event === 'PASSWORD_RECOVERY') {
-    showScreen('reset');
-  }
-});
-
-window.addEventListener('load', () => { bootApp(); });
-</script>
-</body>
-</html>
+sb.auth.onAuthStateChange((event, session)
