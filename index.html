@@ -2568,7 +2568,8 @@ function openConv(id){
   panel.innerHTML=`
     <div class="msg-detail-hd">
       <div class="msg-av" style="width:38px;height:38px;background:${c.avatarBg};color:${c.avatarColor};font-size:13px">${c.initials}</div>
-      <div><div style="font-size:14px;font-weight:500;font-family:'Fraunces',serif;color:var(--txt)">${c.guestName}</div><div style="font-size:11px;color:var(--txt3)">${c.propName||'No property'}</div></div>
+      <div style="flex:1"><div style="font-size:14px;font-weight:500;font-family:'Fraunces',serif;color:var(--txt)">${c.guestName}</div><div style="font-size:11px;color:var(--txt3)">${c.propName||'No property'}</div></div>
+      <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="openSMSModal('${id}')">📱 Send SMS</button>
     </div>
     <div class="chat-area" id="ca-${id}">
       ${c.messages.map(m=>`<div style="display:flex;flex-direction:column;align-items:${m.role==='host'?'flex-end':'flex-start'}"><div class="bubble ${m.role}">${m.text}</div><div class="bubble-time" style="text-align:${m.role==='host'?'right':'left'};padding:0 3px">${m.role==='host'?'You':'Guest'} · ${m.time||''}</div></div>`).join('')}
@@ -2587,6 +2588,83 @@ function openConv(id){
       </div>
     </div>`;
   const area=document.getElementById('ca-'+id);if(area)area.scrollTop=area.scrollHeight;
+}
+
+function openSMSModal(convId) {
+  const c = cData.messages.find(m=>m.id===convId);
+  if(!c) return;
+  const ta = document.getElementById('ta-'+convId);
+  const draft = ta?.value?.trim() || '';
+  // Create SMS modal dynamically
+  const existing = document.getElementById('sms-modal-dynamic');
+  if(existing) existing.remove();
+  const div = document.createElement('div');
+  div.id = 'sms-modal-dynamic';
+  div.className = 'modal-bg open';
+  div.innerHTML = `<div class="modal">
+    <h2>📱 Send SMS to ${c.guestName}</h2>
+    <div style="font-size:13px;color:var(--txt2);margin-bottom:14px;line-height:1.5">Send a text message directly to your guest's phone.</div>
+    <div class="fi"><label>Guest Phone Number</label><input id="sms-phone" type="tel" placeholder="+1 555 000 0000" value="${c.guestPhone||''}"></div>
+    <div class="fi"><label>Message</label><textarea id="sms-body" style="min-height:80px">${draft||'Hi '+c.guestName+'! '}</textarea></div>
+    <div style="font-size:11px;color:var(--txt3);margin-bottom:8px" id="sms-char-count">0 / 160 characters</div>
+    <div class="auth-err" id="sms-err"></div>
+    <div class="auth-err" id="sms-success" style="display:none;background:rgba(107,143,113,.15);border-color:var(--sage);color:var(--sage)"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="document.getElementById('sms-modal-dynamic').remove()">Cancel</button>
+      <button class="btn btn-pri" onclick="sendSMS('${convId}')">📱 Send SMS</button>
+    </div>
+  </div>`;
+  document.body.appendChild(div);
+  // Character counter
+  const bodyEl = document.getElementById('sms-body');
+  const countEl = document.getElementById('sms-char-count');
+  bodyEl.addEventListener('input', ()=>{
+    const len = bodyEl.value.length;
+    countEl.textContent = `${len} / 160 characters`;
+    countEl.style.color = len > 160 ? 'var(--terra)' : 'var(--txt3)';
+  });
+  bodyEl.dispatchEvent(new Event('input'));
+}
+
+async function sendSMS(convId) {
+  const c = cData.messages.find(m=>m.id===convId);
+  const phone = document.getElementById('sms-phone').value.trim();
+  const message = document.getElementById('sms-body').value.trim();
+  const errEl = document.getElementById('sms-err');
+  const sucEl = document.getElementById('sms-success');
+  const btn = document.querySelector('#sms-modal-dynamic .btn-pri');
+
+  if(!phone){if(errEl){errEl.textContent='Enter a phone number';errEl.style.display='block';}return;}
+  if(!message){if(errEl){errEl.textContent='Enter a message';errEl.style.display='block';}return;}
+
+  if(btn){btn.textContent='Sending…';btn.disabled=true;}
+  if(errEl) errEl.style.display='none';
+
+  try {
+    const res = await fetch('https://vdnyqwpznsysrvyvbqga.supabase.co/functions/v1/send-sms', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM`,
+      },
+      body: JSON.stringify({ to: phone, message }),
+    });
+    const result = await res.json();
+    if(result.ok) {
+      // Save phone to conversation
+      if(c) { c.guestPhone = phone; saveUserData(cUid, cData); }
+      if(sucEl){sucEl.textContent=`✓ SMS sent to ${phone}!`;sucEl.style.display='block';}
+      if(btn){btn.textContent='Sent! ✓';btn.style.background='var(--sage)';}
+      setTimeout(()=>document.getElementById('sms-modal-dynamic')?.remove(), 2000);
+    } else {
+      const errMsg = result.data?.message || 'Failed to send SMS. Check the phone number.';
+      if(errEl){errEl.textContent=errMsg;errEl.style.display='block';}
+      if(btn){btn.textContent='📱 Send SMS';btn.disabled=false;}
+    }
+  } catch(e) {
+    if(errEl){errEl.textContent='Error: '+e.message;errEl.style.display='block';}
+    if(btn){btn.textContent='📱 Send SMS';btn.disabled=false;}
+  }
 }
 async function aiDraft(convId,type){
   const c=cData.messages.find(m=>m.id===convId);if(!c)return;
