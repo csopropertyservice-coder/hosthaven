@@ -1436,6 +1436,7 @@ async function doLogin() {
       if(profile){cData.plan=profile.plan||cData.plan;if(profile.full_name)cUser.name=profile.full_name;saveLocalData(cUid,cData);}
     } catch(e){}
     applyDark(cData.darkMode||false);
+    try{sessionStorage.removeItem('hh_last_page');}catch(e){}
     ['landing','login','signup','onboard'].forEach(n=>{const el=document.getElementById('screen-'+n);if(el)el.style.display='none';});
     launchApp(cUser);
   } catch(e) {
@@ -1529,6 +1530,7 @@ async function doSignup() {
 async function doLogout() {
   await sb.auth.signOut();
   cUid=null; cData=null; cUser=null;
+  try{sessionStorage.removeItem('hh_last_page');}catch(e){}
   location.reload();
 }
 
