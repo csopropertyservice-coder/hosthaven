@@ -213,11 +213,11 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 
 /* CONTENT */
 .main-area { flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden; }
-.content { padding:24px;flex:1; }
+.content { padding:20px 24px;flex:1; }
 @media(max-width:600px){ .content { padding:16px; } .g4{grid-template-columns:repeat(2,1fr)!important;} #dash-main-grid{grid-template-columns:1fr!important;} #dash-quick-actions button{font-size:11px!important;padding:6px 10px!important;} .kpi-val{font-size:22px!important;} }
 .page { display:none;animation:fadeUp .3s ease both; }
-.page.active { display:block; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)} }
+.page.active { display:block; min-height:200px; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
 @keyframes spin { to{transform:rotate(360deg)} }
 
 /* CARDS / SHARED */
@@ -687,10 +687,8 @@ select{color:var(--txt)!important;}
       </header>
 
       <div class="content">
-
 <!-- ██ DASHBOARD ████████████████████████████ -->
 <div class="page active" id="page-dashboard">
-
   <!-- Getting Started Checklist -->
   <div id="getting-started-card" class="card" style="margin-bottom:18px;border-left:3px solid var(--terra);display:none">
     <div class="card-hd">
