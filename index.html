@@ -567,6 +567,18 @@ select{color:var(--txt)!important;}
   </div>
 </div>
 
+<div id="screen-reset" class="auth-wrap" style="display:none">
+  <div class="auth-card">
+    <div class="auth-logo"><div class="auth-logo-icon">🏡</div><div class="auth-logo-txt">HostHaven</div></div>
+    <div class="auth-title">Set New Password</div>
+    <div class="auth-sub">Choose a strong password for your account</div>
+    <div class="auth-err" id="reset-err"></div>
+    <div class="fi"><label>New Password</label><input id="reset-pw" type="password" placeholder="8+ characters"></div>
+    <div class="fi"><label>Confirm Password</label><input id="reset-pw2" type="password" placeholder="Repeat password"></div>
+    <button class="btn btn-pri btn-w" onclick="doResetPassword()">Update Password →</button>
+  </div>
+</div>
+
 <!-- ══════════════════════════════════════
      ONBOARDING
 ══════════════════════════════════════ -->
@@ -1200,7 +1212,7 @@ function toggleDark() {
 //  SCREENS
 // ════════════════════════════════════════════
 function showScreen(name) {
-  ['landing','login','signup','onboard','forgot'].forEach(s=>{
+  ['landing','login','signup','onboard','forgot','reset'].forEach(s=>{
     const el=document.getElementById('screen-'+s);
     if(el) el.style.display = s===name ? (s==='landing'?'block':'flex') : 'none';
   });
@@ -1234,6 +1246,32 @@ async function doForgotPassword() {
     showErr('forgot-err', e.message||'Something went wrong. Try again.');
   } finally {
     if(btn){btn.textContent='Send Reset Link →';btn.disabled=false;btn.style.opacity='1';}
+  }
+}
+
+async function doResetPassword() {
+  const pw = document.getElementById('reset-pw').value;
+  const pw2 = document.getElementById('reset-pw2').value;
+  if(!pw || pw.length < 8){showErr('reset-err','Password must be 8+ characters');return;}
+  if(pw !== pw2){showErr('reset-err','Passwords do not match');return;}
+  const btn = document.querySelector('#screen-reset .btn-pri');
+  if(btn){btn.textContent='Updating…';btn.disabled=true;btn.style.opacity='.7';}
+  try {
+    const {error} = await sb.auth.updateUser({password: pw});
+    if(error) throw error;
+    // Sign out and back to login with success message
+    await sb.auth.signOut();
+    showScreen('login');
+    setTimeout(()=>{
+      showErr('login-err','✓ Password updated! Please sign in with your new password.');
+      document.getElementById('login-err').style.background='rgba(107,143,113,.15)';
+      document.getElementById('login-err').style.borderColor='var(--sage)';
+      document.getElementById('login-err').style.color='var(--sage)';
+    }, 100);
+  } catch(e) {
+    showErr('reset-err', e.message||'Something went wrong. Try again.');
+  } finally {
+    if(btn){btn.textContent='Update Password →';btn.disabled=false;btn.style.opacity='1';}
   }
 }
 function scrollToSection(id){
@@ -1377,22 +1415,26 @@ function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg
 //  BOOT — check existing session
 // ════════════════════════════════════════════
 async function bootApp() {
+  // Check for password reset token in URL hash
+  const hash = window.location.hash;
+  if(hash.includes('type=recovery')) {
+    const {data:{session}} = await sb.auth.getSession();
+    if(session) { showScreen('reset'); return; }
+  }
+
   document.getElementById('screen-login').style.display='flex';
   const {data:{session}} = await sb.auth.getSession();
   if(session?.user) {
     cUid = session.user.id;
     cUser = {email:session.user.email, name:session.user.user_metadata?.full_name||session.user.email.split('@')[0]};
-    // Load from Supabase first, fall back to local
     const cloudData = await loadFromSupabase(cUid);
     if(cloudData) {
-      // Merge cloud data into local (cloud wins for data, preserve local apiKey if set)
       const localData = getLocalData(cUid);
       const merged = {...cloudData};
       if(localData.apiKey && !cloudData.apiKey) merged.apiKey = localData.apiKey;
       saveLocalData(cUid, merged);
     }
     getUserData(cUid);
-    // Fetch plan from profiles
     try {
       const {data:profile} = await sb.from('profiles').select('plan,full_name').eq('id',cUid).single();
       if(profile) {
@@ -1402,7 +1444,7 @@ async function bootApp() {
       }
     } catch(e){}
     applyDark(cData.darkMode||false);
-    ['landing','login','signup','onboard'].forEach(n=>{const el=document.getElementById('screen-'+n);if(el)el.style.display='none';});
+    ['landing','login','signup','onboard','forgot','reset'].forEach(n=>{const el=document.getElementById('screen-'+n);if(el)el.style.display='none';});
     launchApp(cUser);
     return;
   }
@@ -2651,6 +2693,13 @@ function buildDemoData(){
 // ════════════════════════════════════════════
 //  INIT
 // ════════════════════════════════════════════
+// Listen for auth state changes including password recovery
+sb.auth.onAuthStateChange((event, session) => {
+  if(event === 'PASSWORD_RECOVERY') {
+    showScreen('reset');
+  }
+});
+
 window.addEventListener('load', () => { bootApp(); });
 </script>
 </body>
