@@ -739,6 +739,21 @@ select{color:var(--txt)!important;}
   </div>
 
   <div class="card"><div class="card-hd"><div class="card-title">Your Properties</div><button class="btn btn-pri" style="font-size:11px;padding:4px 10px" onclick="openModal('add-property-modal')">+ Add</button></div><div class="card-body" id="dash-props"><div class="empty-state"><div class="es-i">🏠</div><h3>No properties yet</h3><button class="btn btn-pri" onclick="openModal('add-property-modal')" style="margin-top:10px">Add Property</button></div></div></div>
+
+  <!-- Quick Notes -->
+  <div class="card" style="margin-top:14px">
+    <div class="card-hd">
+      <div class="card-title">📝 Quick Notes</div>
+      <div style="font-size:11px;color:var(--txt3)">Auto-saved</div>
+    </div>
+    <div class="card-body">
+      <div id="notes-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
+      <div style="display:flex;gap:8px">
+        <input id="note-input" placeholder="Add a note… (e.g. Call plumber Monday)" style="flex:1;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)" onkeydown="if(event.key==='Enter')addNote()">
+        <button class="btn btn-pri" style="font-size:12px;padding:8px 14px" onclick="addNote()">+ Add</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ██ PROPERTIES ████████████████████████████ -->
@@ -1248,6 +1263,7 @@ select{color:var(--txt)!important;}
     <div class="fi"><label>Door Code</label><input id="ep-door"></div>
     <div class="fi"><label>Parking Info</label><input id="ep-parking"></div>
   </div>
+  <div class="fi"><label>Property Notes (private)</label><textarea id="ep-notes" placeholder="e.g. Boiler needs reset sometimes, neighbor contact: John 555-1234, spare key under mat…" style="min-height:70px"></textarea></div>
 
   <!-- Recent bookings -->
   <div style="margin-top:4px">
@@ -1262,7 +1278,7 @@ select{color:var(--txt)!important;}
   </div>
 </div></div>
 
-<div class="modal-bg" id="add-booking-modal"><div class="modal"><h2>📅 Add Booking</h2><div class="fi"><label>Property</label><select id="mb-prop"></select></div><div class="g2"><div class="fi"><label>Guest Name</label><input id="mb-guest" placeholder="Marcus Kim"></div><div class="fi"><label>Guest Email</label><input id="mb-email" type="email"></div></div><div class="g2"><div class="fi"><label>Check-in</label><input id="mb-cin" type="date"></div><div class="fi"><label>Check-out</label><input id="mb-cout" type="date"></div></div><div class="g2"><div class="fi"><label>Guests</label><input id="mb-nguests" type="number" value="2"></div><div class="fi"><label>Total Price ($)</label><input id="mb-price" type="number"></div></div><div class="fi"><label>Status</label><select id="mb-status"><option value="confirmed">Confirmed</option><option value="pending">Pending</option><option value="completed">Completed</option></select></div><div class="fi"><label>Source</label><select id="mb-source"><option value="airbnb">Airbnb</option><option value="vrbo">VRBO</option><option value="direct">Direct</option><option value="other">Other</option></select></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-booking-modal')">Cancel</button><button class="btn btn-pri" onclick="addBooking()">Add Booking</button></div></div></div>
+<div class="modal-bg" id="add-booking-modal"><div class="modal"><h2>📅 Add Booking</h2><div class="fi"><label>Property</label><select id="mb-prop"></select></div><div class="g2"><div class="fi"><label>Guest Name</label><input id="mb-guest" placeholder="Marcus Kim"></div><div class="fi"><label>Guest Email</label><input id="mb-email" type="email"></div></div><div class="g2"><div class="fi"><label>Check-in</label><input id="mb-cin" type="date"></div><div class="fi"><label>Check-out</label><input id="mb-cout" type="date"></div></div><div class="g2"><div class="fi"><label>Guests</label><input id="mb-nguests" type="number" value="2"></div><div class="fi"><label>Total Price ($)</label><input id="mb-price" type="number"></div></div><div class="fi"><label>Status</label><select id="mb-status"><option value="confirmed">Confirmed</option><option value="pending">Pending</option><option value="completed">Completed</option></select></div><div class="fi"><label>Source</label><select id="mb-source"><option value="airbnb">Airbnb</option><option value="vrbo">VRBO</option><option value="direct">Direct</option><option value="other">Other</option></select></div><div class="fi"><label>Host Notes (private)</label><textarea id="mb-notes" placeholder="e.g. Guest has a dog, early check-in approved, contact at 555-1234…" style="min-height:60px"></textarea></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-booking-modal')">Cancel</button><button class="btn btn-pri" onclick="addBooking()">Add Booking</button></div></div></div>
 
 <div class="modal-bg" id="add-message-modal"><div class="modal"><h2>💬 New Conversation</h2><div class="fi"><label>Guest Name</label><input id="mm-name" placeholder="Marcus Kim"></div><div class="fi"><label>Property</label><select id="mm-prop"><option value="">None</option></select></div><div class="fi"><label>Link to Booking (optional)</label><select id="mm-booking"><option value="">No booking</option></select></div><div class="fi"><label>First Message</label><textarea id="mm-msg" placeholder="Hi! Quick question about check-in…"></textarea></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-message-modal')">Cancel</button><button class="btn btn-pri" onclick="addConversation()">Start</button></div></div></div>
 
@@ -1336,7 +1352,7 @@ let wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
 const LOCAL_KEY = 'hh_local_v1';
 const getLocal = () => { try{return JSON.parse(localStorage.getItem(LOCAL_KEY))||{};}catch{return {};} };
 const setLocal = d => localStorage.setItem(LOCAL_KEY, JSON.stringify(d));
-const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; return d; };
+const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; return d; };
 const saveLocalData = (uid,d) => { const l=getLocal(); l[uid]=d; setLocal(l); };
 
 // Save to both local and Supabase
@@ -1961,6 +1977,8 @@ function openPropertyDetail(propId) {
   document.getElementById('ep-wifipw').value = p.wifiPw||'';
   document.getElementById('ep-door').value = p.doorCode||'';
   document.getElementById('ep-parking').value = p.parking||'';
+  const epNotes = document.getElementById('ep-notes');
+  if(epNotes) epNotes.value = p.notes||'';
 
   // Populate bookings list in modal
   const bList = document.getElementById('ep-bookings');
@@ -2000,6 +2018,7 @@ function saveProperty() {
   p.wifiPw = document.getElementById('ep-wifipw').value;
   p.doorCode = document.getElementById('ep-door').value;
   p.parking = document.getElementById('ep-parking').value;
+  p.notes = document.getElementById('ep-notes')?.value||'';
   saveUserData(cUid,cData);
   closeModal('edit-property-modal');
   toast(`"${p.name}" updated! ✓`);
@@ -2047,7 +2066,7 @@ function addBooking(){
   const prop=cData.properties.find(p=>p.id===propId);
   const cin=document.getElementById('mb-cin').value,cout=document.getElementById('mb-cout').value;
   const nights=cin&&cout?Math.max(1,Math.round((new Date(cout)-new Date(cin))/86400000)):1;
-  const b={id:'b_'+Date.now(),propId,propName:prop?.name||'Property',propEmoji:prop?.emoji||'🏠',propGradient:prop?.gradient||'pi1',guestName:guest,guestEmail:document.getElementById('mb-email').value,numGuests:parseInt(document.getElementById('mb-nguests').value)||2,checkin:cin,checkout:cout,nights,price:parseFloat(document.getElementById('mb-price').value)||0,status:document.getElementById('mb-status').value,source:document.getElementById('mb-source').value,created:Date.now()};
+  const b={id:'b_'+Date.now(),propId,propName:prop?.name||'Property',propEmoji:prop?.emoji||'🏠',propGradient:prop?.gradient||'pi1',guestName:guest,guestEmail:document.getElementById('mb-email').value,numGuests:parseInt(document.getElementById('mb-nguests').value)||2,checkin:cin,checkout:cout,nights,price:parseFloat(document.getElementById('mb-price').value)||0,status:document.getElementById('mb-status').value,source:document.getElementById('mb-source').value,notes:document.getElementById('mb-notes')?.value||'',created:Date.now()};
   cData.bookings.push(b);saveUserData(cUid,cData);closeModal('add-booking-modal');
   toast(`Booking for ${guest} added!`);renderAll();
   // Send email notification
@@ -2832,6 +2851,8 @@ function openEditBooking(id) {
   document.getElementById('mb-price').value = b.price||0;
   document.getElementById('mb-status').value = b.status||'confirmed';
   document.getElementById('mb-source').value = b.source||'airbnb';
+  const mbNotes = document.getElementById('mb-notes');
+  if(mbNotes) mbNotes.value = b.notes||'';
   // Change modal title and button to edit mode
   const modal = document.querySelector('#add-booking-modal h2');
   if(modal) modal.textContent = '✏️ Edit Booking';
@@ -2860,6 +2881,7 @@ function saveEditBooking(id) {
   b.price = parseFloat(document.getElementById('mb-price').value)||b.price;
   b.status = document.getElementById('mb-status').value;
   b.source = document.getElementById('mb-source').value;
+  b.notes = document.getElementById('mb-notes')?.value||'';
   saveUserData(cUid,cData);
   closeModal('add-booking-modal');
   // Reset modal back to add mode
@@ -3510,6 +3532,9 @@ function renderDashboard(){
   const dpEl = document.getElementById('dash-props');
   if(!cData.properties.length) dpEl.innerHTML=`<div class="empty-state"><div class="es-i">🏠</div><h3>No properties yet</h3><button class="btn btn-pri" onclick="openModal('add-property-modal')" style="margin-top:10px">Add First</button></div>`;
   else dpEl.innerHTML=`<div class="g3">`+cData.properties.map(p=>`<div class="prop-card"><div class="prop-img ${p.gradient}">${p.emoji}</div><div class="prop-body"><div class="prop-name">${p.name}</div><div class="prop-loc">📍 ${p.location||'No location'}</div><div class="prop-stats"><div class="prop-stat">⭐ <strong>${p.rating||'—'}</strong></div><div class="prop-stat">💰 <strong>$${p.rate}/n</strong></div></div></div></div>`).join('')+`</div>`;
+
+  // Notes
+  renderNotes();
 }
 
 // ════════════════════════════════════════════
@@ -3619,6 +3644,42 @@ document.addEventListener('keydown', e=>{
   if((e.metaKey||e.ctrlKey) && e.key==='k') { e.preventDefault(); openSearch(); }
   if(e.key==='Escape') { closeModal('search-modal'); }
 });
+
+// ════════════════════════════════════════════
+//  NOTES
+// ════════════════════════════════════════════
+function addNote() {
+  const input = document.getElementById('note-input');
+  const text = input?.value?.trim();
+  if(!text) return;
+  if(!cData.notes) cData.notes = [];
+  cData.notes.unshift({ id: 'n_'+Date.now(), text, created: Date.now() });
+  saveUserData(cUid, cData);
+  input.value = '';
+  renderNotes();
+}
+
+function deleteNote(id) {
+  cData.notes = (cData.notes||[]).filter(n=>n.id!==id);
+  saveUserData(cUid, cData);
+  renderNotes();
+}
+
+function renderNotes() {
+  const list = document.getElementById('notes-list');
+  if(!list) return;
+  const notes = cData.notes||[];
+  if(!notes.length) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--txt3);padding:4px 0">No notes yet — add reminders, to-dos, or anything you need to remember.</div>';
+    return;
+  }
+  list.innerHTML = notes.map(n=>`
+    <div style="display:flex;align-items:flex-start;gap:10px;background:var(--sand);border-radius:8px;padding:10px 12px">
+      <div style="font-size:13px;color:var(--txt);flex:1;line-height:1.5">${n.text}</div>
+      <div style="font-size:10px;color:var(--txt3);flex-shrink:0;margin-top:2px">${new Date(n.created).toLocaleDateString()}</div>
+      <button onclick="deleteNote('${n.id}')" style="background:none;border:none;cursor:pointer;color:var(--txt3);font-size:14px;padding:0;flex-shrink:0;line-height:1" title="Delete">×</button>
+    </div>`).join('');
+}
 
 function openStripe(plan){
   const links={
