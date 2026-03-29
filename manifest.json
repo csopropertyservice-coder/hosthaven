@@ -1,0 +1,27 @@
+{
+  "name": "HostHaven",
+  "short_name": "HostHaven",
+  "description": "Smarter Airbnb Management for hosts and co-hosts",
+  "start_url": "/hosthaven/",
+  "display": "standalone",
+  "background_color": "#2C1F14",
+  "theme_color": "#C4693A",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23C4693A'/><text y='.9em' font-size='70' x='12'>🏡</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/hosthaven/",
+      "description": "Go to your dashboard"
+    }
+  ]
+}
