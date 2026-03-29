@@ -432,9 +432,14 @@ select{color:var(--txt)!important;}
 
   <section class="land-hero">
     <div class="land-hero-content">
-      <div class="land-eyebrow">🏡 For Airbnb Hosts & Property Managers</div>
+      <div class="land-eyebrow">🏡 For Airbnb Hosts &amp; Co-Hosts</div>
       <h1 class="land-h1">Manage smarter.<br><em>Earn more.</em></h1>
-      <p class="land-sub">HostHaven brings your properties, bookings, guests, and revenue into one beautiful dashboard — with AI built in.</p>
+      <p class="land-sub">HostHaven gives individual hosts and professional co-hosts one dashboard for properties, bookings, guests, payouts, and revenue — with AI built in.</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:8px">
+        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 14px;font-size:12px;color:rgba(255,255,255,.8)">✓ Solo hosts</div>
+        <div style="background:rgba(200,168,75,.2);border:1px solid rgba(200,168,75,.4);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--gold-l)">🏆 Co-hosts &amp; property managers</div>
+        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 14px;font-size:12px;color:rgba(255,255,255,.8)">✓ Multi-property operators</div>
+      </div>
       <div class="land-cta-row">
         <button class="btn btn-pri" style="padding:14px 32px;font-size:15px" onclick="showScreen('signup')">Start for Free →</button>
         <button class="btn btn-ghost" style="padding:14px 32px;font-size:15px;color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2)" onclick="loginDemo()">🚀 See Demo</button>
@@ -491,7 +496,7 @@ select{color:var(--txt)!important;}
         <div class="plan-price" id="pro-price">$79<span>/mo</span></div>
         <div class="plan-desc" id="pro-desc">For serious hosts · 14-day free trial</div>
         <ul class="plan-feats">
-          <li>10 properties</li><li>AI messaging</li><li>Website builder</li><li>iCal sync</li><li>Revenue reports</li><li>Priority support</li>
+          <li>10 properties</li><li>AI guest messaging</li><li>iCal sync (Airbnb/VRBO)</li><li>Tasks & cleaner management</li><li>Inventory tracking</li><li>QR house manuals</li><li>Revenue reports & CSV export</li><li>Pricing optimizer</li><li>Guest loyalty program</li><li>Priority support</li>
         </ul>
         <button class="btn btn-w" style="background:#fff;color:var(--terra);font-weight:700" onclick="openStripe('pro')">Start Free Trial →</button>
       </div>
@@ -3282,7 +3287,7 @@ const GS_STEPS = [
     id:'add_property',
     icon:'🏠',
     title:'Add your first property',
-    desc:'Add your listing details — name, location, door code, WiFi, and optional photo',
+    desc:'Add your listing details — name, location, door code, WiFi, and photo',
     action:'openModal(\'add-property-modal\')',
     actionLabel:'Add Property',
     check: ()=> cData.properties.length > 0
@@ -3290,35 +3295,35 @@ const GS_STEPS = [
   {
     id:'add_booking',
     icon:'📅',
-    title:'Add or sync your bookings',
-    desc:'Add manually or go to iCal Sync to import from Airbnb/VRBO automatically',
+    title:'Sync your bookings from Airbnb',
+    desc:'Go to iCal Sync → paste your Airbnb calendar link → bookings import automatically',
     action:'nav(\'ical\',document.querySelector(\'[onclick*=ical]\'))',
     actionLabel:'iCal Sync',
     check: ()=> cData.bookings.length > 0
   },
   {
-    id:'try_ai',
-    icon:'🤖',
-    title:'Try AI messaging',
-    desc:'Go to Messages → start a conversation → click AI Reply for an instant draft',
-    action:'nav(\'messages\',document.querySelector(\'[onclick*=messages]\'))',
-    actionLabel:'Go to Messages',
-    check: ()=> cData.messages.length > 0
+    id:'setup_qr',
+    icon:'📱',
+    title:'Create your QR House Manual',
+    desc:'Generate a scannable QR code for each property — WiFi, door code, rules, all in one',
+    action:'nav(\'qrmanual\',document.querySelector(\'[onclick*=qrmanual]\'))',
+    actionLabel:'QR Manual',
+    check: ()=> cData.properties.length > 0
   },
   {
-    id:'setup_portal',
-    icon:'🔑',
-    title:'Generate a guest portal',
-    desc:'Go to Guest Portal → select a guest → download their personalized check-in page',
-    action:'nav(\'portal\',document.querySelector(\'[onclick*=portal]\'))',
-    actionLabel:'Guest Portal',
-    check: ()=> cData.bookings.length > 0 && cData.properties.length > 0
+    id:'try_ai',
+    icon:'🤖',
+    title:'Turn on AI Office Hours',
+    desc:'Set your quiet hours — AI handles guest messages automatically while you sleep',
+    action:'nav(\'aihours\',document.querySelector(\'[onclick*=aihours]\'))',
+    actionLabel:'AI Office Hours',
+    check: ()=> !!(cData.aiHours&&cData.aiHours.enabled)
   },
   {
     id:'add_expense',
     icon:'💸',
-    title:'Track your first expense',
-    desc:'Go to Expenses → add a cleaning fee or repair to see your true profit',
+    title:'Track your revenue & expenses',
+    desc:'Add income and expenses to see your true profit margin per property',
     action:'nav(\'expenses\',document.querySelector(\'[onclick*=expenses]\'))',
     actionLabel:'Add Expense',
     check: ()=> (cData.expenses||[]).length > 0
@@ -3326,20 +3331,20 @@ const GS_STEPS = [
   {
     id:'add_staff',
     icon:'🧹',
-    title:'Set up your cleaning staff',
-    desc:'Go to Staff Portal → add a cleaner → use the interactive turnover checklist',
-    action:'nav(\'staff\',document.querySelector(\'[onclick*=staff]\'))',
-    actionLabel:'Staff Portal',
-    check: ()=> (cData.staff||[]).length > 0
+    title:'Add a cleaner & log a payout',
+    desc:'Add your cleaning contractor, log their payout — your margin is calculated automatically',
+    action:'nav(\'payouts\',document.querySelector(\'[onclick*=payouts]\'))',
+    actionLabel:'Payout Ledger',
+    check: ()=> (cData.payouts||[]).length > 0
   },
   {
-    id:'build_website',
-    icon:'🌐',
-    title:'Build your booking website',
-    desc:'Go to Website Builder → customize → download your direct booking site',
-    action:'nav(\'website\',document.querySelector(\'[onclick*=website]\'))',
-    actionLabel:'Build Website',
-    check: ()=> cData.websiteBuilt
+    id:'send_owner_report',
+    icon:'📋',
+    title:'Send your first owner report',
+    desc:'Go to Reports → Owner Report tab → select a property → email a branded PDF to your client',
+    action:'nav(\'reports\',document.querySelector(\'[onclick*=reports]\'))',
+    actionLabel:'Owner Reports',
+    check: ()=> (cData.sentReports||[]).length > 0
   }
 ];
 
@@ -6840,7 +6845,21 @@ function buildDemoData(){
   bookings:[{id:'b1',propId:'p1',propName:'Sunset Loft',propEmoji:'🏡',propGradient:'pi1',guestName:'Marcus Kim',guestEmail:'marcus@email.com',numGuests:2,checkin:'2026-03-25',checkout:'2026-03-28',nights:3,price:342,status:'confirmed',source:'airbnb',created:now-86400000*5},{id:'b2',propId:'p2',propName:'Garden Suite',propEmoji:'🌿',propGradient:'pi2',guestName:'Amara Lopez',guestEmail:'amara@email.com',numGuests:1,checkin:'2026-03-27',checkout:'2026-04-01',nights:5,price:567,status:'confirmed',source:'vrbo',created:now-86400000*3},{id:'b3',propId:'p3',propName:'Beach House',propEmoji:'🌊',propGradient:'pi3',guestName:'Tom Pearce',guestEmail:'tom@email.com',numGuests:4,checkin:'2026-04-03',checkout:'2026-04-10',nights:7,price:1240,status:'pending',source:'airbnb',created:now-86400000*2},{id:'b4',propId:'p1',propName:'Sunset Loft',propEmoji:'🏡',propGradient:'pi1',guestName:'Diana Chen',guestEmail:'diana@email.com',numGuests:2,checkin:'2026-02-10',checkout:'2026-02-14',nights:4,price:456,status:'completed',source:'direct',created:now-86400000*45}],
   messages:[{id:'m1',guestName:'Marcus Kim',propId:'p1',propName:'Sunset Loft',initials:'MK',avatarBg:'#F5E6D3',avatarColor:'#C4693A',unread:true,created:now-120000,messages:[{role:'guest',text:"Hi! Is early check-in around 1pm possible? We arrive early and would love to freshen up.",time:'10:02 AM'}]},{id:'m2',guestName:'Amara Lopez',propId:'p2',propName:'Garden Suite',initials:'AL',avatarBg:'#D3E8E0',avatarColor:'#4A7D50',unread:false,created:now-3600000,messages:[{role:'guest',text:"The place is absolutely stunning! The garden view is magical. Could you recommend local restaurants?",time:'9:15 AM'},{role:'host',text:"So glad you're loving it, Amara! Try The Local Bistro on 5th for brunch and Marta's for Italian. Enjoy! 🍽️",time:'9:30 AM'}]},{id:'m3',guestName:'Tom Pearce',propId:'p3',propName:'Beach House',initials:'TP',avatarBg:'#D3DCE8',avatarColor:'#2E4460',unread:true,created:now-10800000,messages:[{role:'guest',text:"Is parking for two cars included? We have a group of 4.",time:'7:45 AM'}]}],
   tasks:[{id:'t1',title:'Deep clean — Sunset Loft',propId:'p1',propName:'Sunset Loft',assignee:'Maria G.',due:'2026-03-25',priority:'high',done:true,created:now-86400000},{id:'t2',title:'Turnover — Garden Suite',propId:'p2',propName:'Garden Suite',assignee:'Jake T.',due:'2026-03-27',priority:'high',done:false,created:now-86400000},{id:'t3',title:'Restock toiletries — Beach House',propId:'p3',propName:'Beach House',assignee:'',due:'2026-03-27',priority:'medium',done:false,created:now-86400000}],
-  reviews:[{id:'r1',guestName:'Marcus Kim',propId:'p1',propName:'Sunset Loft',rating:5,content:"Incredible place! Sarah was responsive and the apartment was spotless. Will definitely be back.",initials:'MK',created:now-86400000*7},{id:'r2',guestName:'Diana Chen',propId:'p1',propName:'Sunset Loft',rating:5,content:"Absolute gem. The views are better than the photos. Loved every second.",initials:'DC',created:now-86400000*40}]};
+  reviews:[{id:'r1',guestName:'Marcus Kim',propId:'p1',propName:'Sunset Loft',rating:5,content:"Incredible place! Sarah was responsive and the apartment was spotless. Will definitely be back.",initials:'MK',created:now-86400000*7},{id:'r2',guestName:'Diana Chen',propId:'p1',propName:'Sunset Loft',rating:5,content:"Absolute gem. The views are better than the photos. Loved every second.",initials:'DC',created:now-86400000*40}],
+  expenses:[{id:'e1',desc:'Turnover clean — Sunset Loft',amount:95,cat:'cleaning',propId:'p1',propName:'Sunset Loft',date:new Date(now-86400000*3).toISOString().slice(0,10),created:now-300000},{id:'e2',desc:'Turnover clean — Garden Suite',amount:80,cat:'cleaning',propId:'p2',propName:'Garden Suite',date:new Date(now-86400000*2).toISOString().slice(0,10),created:now-200000},{id:'e3',desc:'Light bulb replacement',amount:24,cat:'maintenance',propId:'p3',propName:'Beach House',date:new Date(now-86400000*5).toISOString().slice(0,10),created:now-400000}],
+  owners:[{id:'own_1',name:'James & Rita Holloway',email:'jrholloway@gmail.com',phone:'+1 555 0301',commission:20,propIds:['p1'],payment:'Zelle @jrholloway',notes:'Send report by 5th of month',created:now-8000000},{id:'own_2',name:'Sandra Chen',email:'schen.props@gmail.com',phone:'+1 555 0402',commission:22,propIds:['p2'],payment:'ACH — Chase checking',notes:'Prefers detailed expense breakdown',created:now-6000000}],
+  guestCRM:[{id:'cg_1',name:'Marcus Kim',email:'marcus.kim@email.com',phone:'+1 555 0191',city:'Austin, TX',stays:4,spent:1850,notes:'Loves coffee, very tidy',tags:'vip, repeat',created:now-5000000},{id:'cg_2',name:'Amara Lopez',email:'amara.l@gmail.com',phone:'+1 555 0234',city:'Miami, FL',stays:2,spent:920,notes:'Travels with partner',tags:'repeat',created:now-3000000},{id:'cg_3',name:'Tom Pearce',email:'tom.p@outlook.com',phone:'',city:'Chicago, IL',stays:1,spent:450,notes:'',tags:'',created:now-1000000}],
+  payouts:[{id:'pay_1',cleaner:'',cleanerName:'Maria C.',charged:150,owed:95,net:55,margin:37,status:'paid',date:new Date(now-86400000*3).toISOString().slice(0,10),notes:'Turnover clean — Sunset Loft',created:now-300000},{id:'pay_2',cleaner:'',cleanerName:'Maria C.',charged:150,owed:95,net:55,margin:37,status:'pending',date:new Date(now).toISOString().slice(0,10),notes:'Turnover clean — Garden Suite',created:now-100000},{id:'pay_3',cleaner:'',cleanerName:'Jake M.',charged:200,owed:130,net:70,margin:35,status:'paid',date:new Date(now-86400000*7).toISOString().slice(0,10),notes:'Deep clean — Beach House',created:now-700000}],
+  vaultPhotos:[{id:'vp_1',propId:'p1',propName:'Sunset Loft',propEmoji:'🏡',type:'after_clean',cleaner:'Maria C.',notes:'All rooms spotless, linens replaced, bathrooms stocked',dataUrl:null,date:new Date(now).toISOString().slice(0,10),created:now-50000},{id:'vp_2',propId:'p2',propName:'Garden Suite',propEmoji:'🌿',type:'after_clean',cleaner:'Jake M.',notes:'Kitchen clean, fresh towels, welcome basket set',dataUrl:null,date:new Date(now-86400000*2).toISOString().slice(0,10),created:now-200000}],
+  sentReports:[{id:'sr_1',propId:'p1',propName:'Sunset Loft',period:new Date(now).toISOString().slice(0,7),method:'emailed',email:'jrholloway@gmail.com',sentAt:new Date(now-86400000*5).toISOString()},{id:'sr_2',propId:'p2',propName:'Garden Suite',period:new Date(now).toISOString().slice(0,7),method:'downloaded',email:'',sentAt:new Date(now-86400000*3).toISOString()}],
+  aiHours:{enabled:false,start:'22:00',end:'08:00',message:'Hi! I received your message and will respond during office hours (8am-10pm). 🏡',escalate:'emergency,flood,fire,locked out,broken,urgent',autoCount:12,escalateCount:1},
+  invChecklist:['Coffee pods (6+)','Toilet paper (4+ rolls)','Paper towels (2+ rolls)','Hand soap','Dish soap','Shampoo & conditioner','Body wash','Bath towels (2 per guest)','Kitchen sponge','Trash bags'],
+  loyaltyMembers:[{id:'lm_1',name:'Marcus Kim',email:'marcus.kim@email.com',stays:4,spent:1850,notes:'VIP guest',tier:'Gold',created:now-5000000},{id:'lm_2',name:'Diana Chen',email:'diana@email.com',stays:2,spent:912,notes:'',tier:'Silver',created:now-3000000}],
+  cleaners:[{id:'cl_1',name:'Maria C.',rate:25,phone:'+1 555 0101',email:'maria@clean.com',rating:5,jobs:0,created:now-1000000},{id:'cl_2',name:'Jake M.',rate:28,phone:'+1 555 0202',email:'jake@clean.com',rating:4,jobs:0,created:now-900000}],
+  inventory:[{id:'inv_1',name:'Coffee pods',cat:'amenities',qty:4,threshold:6,unit:'pods',propId:'p1',propName:'Sunset Loft',created:now},{id:'inv_2',name:'Toilet paper',cat:'toiletries',qty:8,threshold:4,unit:'rolls',propId:'p2',propName:'Garden Suite',created:now},{id:'inv_3',name:'Shampoo',cat:'toiletries',qty:2,threshold:3,unit:'bottles',propId:'p3',propName:'Beach House',created:now}],
+  optimizerSettings:{weekend:25,peak:40,low:15,lastMin:10,longStay:15},
+  reviewAuto:{enabled:true},sentReports:[]
+  };
 }
 
 // ════════════════════════════════════════════
