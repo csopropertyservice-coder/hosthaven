@@ -1057,28 +1057,84 @@ select{color:var(--txt)!important;}
 
 <!-- ██ REPORTS ████████████████████████████ -->
 <div class="page" id="page-reports">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-    <div style="font-size:13px;color:var(--txt2)">Exportable revenue and booking reports</div>
-    <div style="display:flex;gap:8px">
+  <!-- Tab bar -->
+  <div style="display:flex;gap:6px;margin-bottom:18px;border-bottom:2px solid var(--border);padding-bottom:0">
+    <button id="rep-tab-summary" class="btn btn-pri" style="font-size:12px;padding:6px 14px;border-radius:8px 8px 0 0;border-bottom:none" onclick="switchReportTab('summary')">📊 Summary</button>
+    <button id="rep-tab-owner" class="btn btn-ghost" style="font-size:12px;padding:6px 14px;border-radius:8px 8px 0 0;border-bottom:none" onclick="switchReportTab('owner')">📋 Owner Report</button>
+  </div>
+
+  <!-- SUMMARY TAB -->
+  <div id="rep-panel-summary">
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:14px">
       <button class="btn btn-ghost" onclick="printReport()">🖨️ Print</button>
       <button class="btn btn-pri" onclick="exportCSV()">↓ Export CSV</button>
     </div>
-  </div>
-  <div class="report-card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-      <div style="font-family:Fraunces,serif;font-size:17px;font-weight:500;color:var(--txt)">Revenue Summary</div>
-      <div style="font-size:12px;color:var(--txt3)">All time</div>
+    <div class="report-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-family:Fraunces,serif;font-size:17px;font-weight:500;color:var(--txt)">Revenue Summary</div>
+        <div style="font-size:12px;color:var(--txt3)">All time</div>
+      </div>
+      <div class="g4" style="margin:14px 0">
+        <div style="background:var(--sand);border-radius:10px;padding:14px"><div style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);margin-bottom:5px">Total Revenue</div><div style="font-family:Fraunces,serif;font-size:26px;color:var(--txt)" id="rep-rev">$0</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px"><div style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);margin-bottom:5px">Total Bookings</div><div style="font-family:Fraunces,serif;font-size:26px;color:var(--txt)" id="rep-book">0</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px"><div style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);margin-bottom:5px">Avg Per Booking</div><div style="font-family:Fraunces,serif;font-size:26px;color:var(--txt)" id="rep-avg">$0</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px"><div style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);margin-bottom:5px">Properties</div><div style="font-family:Fraunces,serif;font-size:26px;color:var(--txt)" id="rep-props">0</div></div>
+      </div>
     </div>
-    <div class="g4" style="margin:14px 0">
-      <div style="background:var(--sand);border-radius:10px;padding:14px"><div style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);margin-bottom:5px">Total Revenue</div><div style="font-family:Fraunces,serif;font-size:26px;color:var(--txt)" id="rep-rev">$0</div></div>
-      <div style="background:var(--sand);border-radius:10px;padding:14px"><div style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);margin-bottom:5px">Total Bookings</div><div style="font-family:Fraunces,serif;font-size:26px;color:var(--txt)" id="rep-book">0</div></div>
-      <div style="background:var(--sand);border-radius:10px;padding:14px"><div style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);margin-bottom:5px">Avg Per Booking</div><div style="font-family:Fraunces,serif;font-size:26px;color:var(--txt)" id="rep-avg">$0</div></div>
-      <div style="background:var(--sand);border-radius:10px;padding:14px"><div style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);margin-bottom:5px">Properties</div><div style="font-family:Fraunces,serif;font-size:26px;color:var(--txt)" id="rep-props">0</div></div>
+    <div class="report-card">
+      <div style="font-family:Fraunces,serif;font-size:17px;font-weight:500;color:var(--txt);margin-bottom:12px">Booking Detail</div>
+      <div id="report-table-wrap"><div class="empty-state" style="padding:28px"><div class="es-i">📄</div><p>Add bookings to generate reports</p></div></div>
     </div>
   </div>
-  <div class="report-card">
-    <div style="font-family:Fraunces,serif;font-size:17px;font-weight:500;color:var(--txt);margin-bottom:12px">Booking Detail</div>
-    <div id="report-table-wrap"><div class="empty-state" style="padding:28px"><div class="es-i">📄</div><p>Add bookings to generate reports</p></div></div>
+
+  <!-- OWNER REPORT TAB -->
+  <div id="rep-panel-owner" style="display:none">
+    <div class="g2">
+      <!-- Left: builder -->
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card">
+          <div class="card-hd"><div class="card-title">⚙️ Report Settings</div></div>
+          <div class="card-body">
+            <div class="fi"><label>Property</label>
+              <select id="or-prop" onchange="buildOwnerReport()" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+                <option value="">Select property…</option>
+              </select>
+            </div>
+            <div class="g2">
+              <div class="fi"><label>Period Start</label><input id="or-start" type="date" onchange="buildOwnerReport()"></div>
+              <div class="fi"><label>Period End</label><input id="or-end" type="date" onchange="buildOwnerReport()"></div>
+            </div>
+            <div class="fi"><label>Owner Name</label><input id="or-owner" placeholder="John & Sarah Smith" oninput="buildOwnerReport()"></div>
+            <div class="fi"><label>Owner Email</label><input id="or-email" type="email" placeholder="owner@email.com"></div>
+            <div class="fi"><label>Your Business Name</label><input id="or-biz" placeholder="Darri'el's Property Co." oninput="buildOwnerReport()"></div>
+            <div class="fi"><label>Your Commission (%)</label><input id="or-commission" type="number" value="20" min="0" max="100" oninput="buildOwnerReport()"></div>
+            <div class="fi"><label>Notes to Owner (optional)</label><textarea id="or-notes" placeholder="It was a great month! The new photos really helped occupancy…" style="min-height:60px" oninput="buildOwnerReport()"></textarea></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+              <button class="btn btn-pri" style="flex:1" onclick="downloadOwnerReport()">⬇️ Download PDF</button>
+              <button class="btn btn-ghost" style="flex:1" onclick="sendOwnerReport()">📧 Email to Owner</button>
+            </div>
+            <div id="or-send-status" style="margin-top:8px;font-size:12px;color:var(--sage);display:none"></div>
+          </div>
+        </div>
+        <!-- Past reports log -->
+        <div class="card">
+          <div class="card-hd"><div class="card-title">📬 Sent Reports</div></div>
+          <div class="card-body" id="or-sent-log">
+            <div style="font-size:13px;color:var(--txt3)">No reports sent yet</div>
+          </div>
+        </div>
+      </div>
+      <!-- Right: live preview -->
+      <div class="card" style="overflow:hidden">
+        <div class="card-hd"><div class="card-title">👁 Live Preview</div><div style="font-size:11px;color:var(--txt3)">Updates as you type</div></div>
+        <div id="or-preview" style="padding:0;overflow-y:auto;max-height:700px;background:#fff">
+          <div style="padding:40px;text-align:center;color:#9B8E85;font-family:sans-serif">
+            <div style="font-size:36px;margin-bottom:12px">📋</div>
+            <div>Select a property to preview the owner report</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2226,7 +2282,7 @@ let wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
 const LOCAL_KEY = 'hh_local_v1';
 const getLocal = () => { try{return JSON.parse(localStorage.getItem(LOCAL_KEY))||{};}catch{return {};} };
 const setLocal = d => localStorage.setItem(LOCAL_KEY, JSON.stringify(d));
-const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],expenses:[],blacklist:[],seasons:[],cleaners:[],jobs:[],workorders:[],inventory:[],autoReplies:[],concierge:[],upsells:[],claims:[],ciPolicies:[],ciRequests:[],rentalItems:[],rentalBookings:[],templates:[],loyaltyMembers:[],optimizerSettings:{},plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; if(!d.expenses)d.expenses=[]; if(!d.blacklist)d.blacklist=[]; if(!d.seasons)d.seasons=[]; if(!d.cleaners)d.cleaners=[]; if(!d.jobs)d.jobs=[]; if(!d.workorders)d.workorders=[]; if(!d.inventory)d.inventory=[]; if(!d.autoReplies)d.autoReplies=[]; if(!d.concierge)d.concierge=[]; if(!d.upsells)d.upsells=[]; if(!d.claims)d.claims=[]; if(!d.ciPolicies)d.ciPolicies=[]; if(!d.ciRequests)d.ciRequests=[]; if(!d.rentalItems)d.rentalItems=[]; if(!d.rentalBookings)d.rentalBookings=[]; if(!d.templates)d.templates=[]; if(!d.loyaltyMembers)d.loyaltyMembers=[]; if(!d.optimizerSettings)d.optimizerSettings={}; if(!d.guestCRM)d.guestCRM=[]; if(!d.payouts)d.payouts=[]; if(!d.vaultPhotos)d.vaultPhotos=[]; if(!d.aiHours)d.aiHours={enabled:false,start:'22:00',end:'08:00',message:'Hi! I received your message and will respond during office hours (8am-10pm). 🏡',escalate:'emergency,flood,fire,locked out,broken,urgent',autoCount:0,escalateCount:0}; if(!d.invChecklist)d.invChecklist=['Coffee pods (6+)','Toilet paper (4+ rolls)','Paper towels (2+ rolls)','Hand soap','Dish soap','Shampoo & conditioner','Body wash','Bath towels (2 per guest)','Kitchen sponge','Trash bags']; return d; };
+const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],expenses:[],blacklist:[],seasons:[],cleaners:[],jobs:[],workorders:[],inventory:[],autoReplies:[],concierge:[],upsells:[],claims:[],ciPolicies:[],ciRequests:[],rentalItems:[],rentalBookings:[],templates:[],loyaltyMembers:[],optimizerSettings:{},plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; if(!d.expenses)d.expenses=[]; if(!d.blacklist)d.blacklist=[]; if(!d.seasons)d.seasons=[]; if(!d.cleaners)d.cleaners=[]; if(!d.jobs)d.jobs=[]; if(!d.workorders)d.workorders=[]; if(!d.inventory)d.inventory=[]; if(!d.autoReplies)d.autoReplies=[]; if(!d.concierge)d.concierge=[]; if(!d.upsells)d.upsells=[]; if(!d.claims)d.claims=[]; if(!d.ciPolicies)d.ciPolicies=[]; if(!d.ciRequests)d.ciRequests=[]; if(!d.rentalItems)d.rentalItems=[]; if(!d.rentalBookings)d.rentalBookings=[]; if(!d.templates)d.templates=[]; if(!d.loyaltyMembers)d.loyaltyMembers=[]; if(!d.optimizerSettings)d.optimizerSettings={}; if(!d.guestCRM)d.guestCRM=[]; if(!d.payouts)d.payouts=[]; if(!d.vaultPhotos)d.vaultPhotos=[]; if(!d.aiHours)d.aiHours={enabled:false,start:'22:00',end:'08:00',message:'Hi! I received your message and will respond during office hours (8am-10pm). 🏡',escalate:'emergency,flood,fire,locked out,broken,urgent',autoCount:0,escalateCount:0}; if(!d.sentReports)d.sentReports=[]; if(!d.invChecklist)d.invChecklist=['Coffee pods (6+)','Toilet paper (4+ rolls)','Paper towels (2+ rolls)','Hand soap','Dish soap','Shampoo & conditioner','Body wash','Bath towels (2 per guest)','Kitchen sponge','Trash bags']; return d; };
 const saveLocalData = (uid,d) => { const l=getLocal(); l[uid]=d; setLocal(l); };
 
 // Save to both local and Supabase
@@ -5274,6 +5330,8 @@ function renderAnalytics(){
 //  REPORTS
 // ════════════════════════════════════════════
 function renderReports(){
+  initOwnerReport();
+  renderSentReports();
   const b=cData.bookings.filter(x=>x.status!=='cancelled');const rev=b.reduce((s,x)=>s+x.price,0);const abv=b.length?Math.round(rev/b.length):0;
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   set('rep-rev','$'+rev.toLocaleString());set('rep-book',b.length);set('rep-avg','$'+abv.toLocaleString());set('rep-props',cData.properties.length);
@@ -5912,6 +5970,377 @@ function checkAIOfficeHours(messageText) {
   cData.aiHours.autoCount++;
   saveUserData(cUid,cData);
   return (ah.message||'Hi! I received your message and will respond during office hours.').replace('{host_name}', cUser?.name||'Your host');
+}
+
+
+// ════════════════════════════════════════════
+//  OWNER REPORT SYSTEM
+// ════════════════════════════════════════════
+function switchReportTab(tab) {
+  document.getElementById('rep-panel-summary').style.display = tab==='summary' ? 'block' : 'none';
+  document.getElementById('rep-panel-owner').style.display   = tab==='owner'   ? 'block' : 'none';
+  document.getElementById('rep-tab-summary').className = tab==='summary' ? 'btn btn-pri' : 'btn btn-ghost';
+  document.getElementById('rep-tab-owner').className   = tab==='owner'   ? 'btn btn-pri' : 'btn btn-ghost';
+  document.getElementById('rep-tab-summary').style.cssText = 'font-size:12px;padding:6px 14px;border-radius:8px 8px 0 0;border-bottom:none';
+  document.getElementById('rep-tab-owner').style.cssText   = 'font-size:12px;padding:6px 14px;border-radius:8px 8px 0 0;border-bottom:none';
+  if(tab==='owner') initOwnerReport();
+}
+
+function initOwnerReport() {
+  // Populate property dropdown
+  const sel = document.getElementById('or-prop');
+  if(sel && cData.properties.length) {
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">Select property…</option>' +
+      cData.properties.map(p => '<option value="'+p.id+'">'+p.emoji+' '+p.name+'</option>').join('');
+    if(cur) sel.value = cur;
+  }
+  // Default date range: this month
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10);
+  const end = new Date(now.getFullYear(), now.getMonth()+1, 0).toISOString().slice(0,10);
+  const startEl = document.getElementById('or-start');
+  const endEl = document.getElementById('or-end');
+  if(startEl && !startEl.value) startEl.value = start;
+  if(endEl && !endEl.value) endEl.value = end;
+  // Default biz name
+  const bizEl = document.getElementById('or-biz');
+  if(bizEl && !bizEl.value && cUser) bizEl.value = cUser.name + ' Property Management';
+  renderSentReports();
+}
+
+function buildOwnerReport() {
+  const propId = document.getElementById('or-prop')?.value;
+  const prop = cData.properties.find(p => p.id === propId);
+  const preview = document.getElementById('or-preview');
+  if(!preview) return;
+  if(!prop) {
+    preview.innerHTML = '<div style="padding:40px;text-align:center;color:#9B8E85;font-family:sans-serif"><div style="font-size:36px;margin-bottom:12px">📋</div><div>Select a property to preview</div></div>';
+    return;
+  }
+  preview.innerHTML = generateOwnerReportHTML(false);
+}
+
+function generateOwnerReportHTML(forEmail) {
+  const propId = document.getElementById('or-prop')?.value;
+  const prop = cData.properties.find(p => p.id === propId);
+  if(!prop) return '';
+
+  const start = document.getElementById('or-start')?.value || '';
+  const end   = document.getElementById('or-end')?.value   || '';
+  const ownerName = document.getElementById('or-owner')?.value || 'Property Owner';
+  const bizName   = document.getElementById('or-biz')?.value   || 'Property Management';
+  const commission = parseFloat(document.getElementById('or-commission')?.value) || 20;
+  const notes = document.getElementById('or-notes')?.value || '';
+  const generatedDate = new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+
+  // ── Data calculations ──────────────────────────────────────────────────────
+  const allBookings = (cData.bookings||[]).filter(b =>
+    b.propId === propId && b.status !== 'cancelled' &&
+    (!start || b.checkin >= start) && (!end || b.checkin <= end)
+  );
+  const totalRevenue = allBookings.reduce((s,b) => s+(b.price||0), 0);
+  const totalNights  = allBookings.reduce((s,b) => s+(b.nights||0), 0);
+  const avgPerNight  = totalNights ? Math.round(totalRevenue/totalNights) : 0;
+  const commissionAmt = Math.round(totalRevenue * commission / 100);
+  const ownerPayout   = totalRevenue - commissionAmt;
+
+  // Period days & occupancy
+  const periodDays = start && end
+    ? Math.round((new Date(end) - new Date(start)) / 86400000) + 1
+    : 30;
+  const occupancy = periodDays ? Math.round(totalNights / periodDays * 100) : 0;
+
+  // Expenses for this property in period
+  const expenses = (cData.expenses||[]).filter(e =>
+    e.propId === propId &&
+    (!start || (e.date||'') >= start) &&
+    (!end   || (e.date||'') <= end)
+  );
+  const totalExpenses = expenses.reduce((s,e) => s+(e.amount||0), 0);
+  const netToOwner = ownerPayout - totalExpenses;
+
+  // Reviews
+  const reviews = (cData.reviews||[]).filter(r => r.propId === propId);
+  const avgRating = reviews.length
+    ? (reviews.reduce((s,r) => s+(r.rating||0), 0) / reviews.length).toFixed(1)
+    : (prop.rating || '—');
+
+  // Tasks completed in period
+  const tasks = (cData.tasks||[]).filter(t =>
+    t.propId === propId && t.done &&
+    (!start || (t.completedDate||t.due||'') >= start)
+  );
+
+  // Vault photos for this property
+  const photos = (cData.vaultPhotos||[]).filter(p =>
+    p.propId === propId && p.type === 'after_clean' &&
+    (!start || (p.date||'') >= start)
+  );
+
+  // Month label for header
+  const periodLabel = start && end
+    ? new Date(start).toLocaleDateString('en-US',{month:'long',year:'numeric'})
+    : 'Monthly';
+
+  // ── Color theme ─────────────────────────────────────────────────────────────
+  const color = '#C4693A';
+  const colorLight = '#F0A882';
+
+  // ── Build booking rows ───────────────────────────────────────────────────────
+  const bookingRows = allBookings.length
+    ? allBookings.map(b =>
+        '<tr style="border-bottom:1px solid #EDE8DE">' +
+        '<td style="padding:9px 8px;font-size:12px;color:#1C1410">'+b.guestName+'</td>' +
+        '<td style="padding:9px 8px;font-size:12px;color:#6B5D52">'+(b.checkin||'—')+'</td>' +
+        '<td style="padding:9px 8px;font-size:12px;color:#6B5D52">'+(b.checkout||'—')+'</td>' +
+        '<td style="padding:9px 8px;font-size:12px;text-align:center;color:#1C1410">'+(b.nights||0)+'</td>' +
+        '<td style="padding:9px 8px;font-size:12px;text-align:right;color:#1C1410;font-weight:600">$'+(b.price||0).toLocaleString()+'</td>' +
+        '</tr>'
+      ).join('')
+    : '<tr><td colspan="5" style="padding:20px;text-align:center;color:#9B8E85;font-size:12px">No bookings in this period</td></tr>';
+
+  // ── Expense rows ─────────────────────────────────────────────────────────────
+  const expenseRows = expenses.length
+    ? expenses.map(e =>
+        '<tr style="border-bottom:1px solid #EDE8DE">' +
+        '<td style="padding:8px;font-size:12px;color:#1C1410">'+e.desc+'</td>' +
+        '<td style="padding:8px;font-size:12px;color:#6B5D52">'+(e.date||'—')+'</td>' +
+        '<td style="padding:8px;font-size:12px;text-align:right;color:#C4693A;font-weight:600">$'+(e.amount||0).toLocaleString()+'</td>' +
+        '</tr>'
+      ).join('')
+    : '';
+
+  // ── Photo gallery (first 6 after-clean shots) ────────────────────────────────
+  const photoGallery = photos.length
+    ? '<div style="margin-top:24px"><div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9B8E85;margin-bottom:12px">Proof of Service — After Cleaning Photos</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">'+
+      photos.slice(0,6).map(p =>
+        p.dataUrl
+          ? '<div style="border-radius:8px;overflow:hidden;aspect-ratio:4/3"><img src="'+p.dataUrl+'" style="width:100%;height:100%;object-fit:cover"></div>'
+          : '<div style="background:#EDE8DE;border-radius:8px;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:24px">📸</div>'
+      ).join('') + '</div></div>'
+    : '';
+
+  // ── Full HTML ─────────────────────────────────────────────────────────────────
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<title>Owner Report — '+prop.name+' — '+periodLabel+'</title>' +
+    '<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Georgia,serif;background:#FAF7F2;color:#1C1410}@media print{body{background:#fff}.no-print{display:none}}</style>' +
+    '</head><body>' +
+
+    // Header
+    '<div style="background:'+color+';padding:36px 40px;color:#fff">' +
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px">' +
+        '<div>' +
+          '<div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;opacity:.7;margin-bottom:8px">Property Management Report</div>' +
+          '<div style="font-size:28px;font-weight:700;margin-bottom:4px">'+prop.emoji+' '+prop.name+'</div>' +
+          '<div style="font-size:14px;opacity:.8">'+(prop.location||'')+'</div>' +
+        '</div>' +
+        '<div style="text-align:right">' +
+          '<div style="font-size:13px;opacity:.7;margin-bottom:4px">Prepared by</div>' +
+          '<div style="font-size:16px;font-weight:600">'+bizName+'</div>' +
+          '<div style="font-size:12px;opacity:.7;margin-top:2px">'+generatedDate+'</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,.25)">' +
+        '<div style="font-size:13px;opacity:.7">Report Period</div>' +
+        '<div style="font-size:18px;font-weight:600;margin-top:2px">'+periodLabel+(start&&end?' ('+start+' → '+end+')':'')+'</div>' +
+      '</div>' +
+    '</div>' +
+
+    // Dear owner
+    '<div style="background:#fff;padding:32px 40px;border-bottom:1px solid #EDE8DE">' +
+      '<div style="font-size:14px;color:#1C1410;line-height:1.8">Dear <strong>'+ownerName+'</strong>,<br><br>' +
+      'Please find your monthly performance summary for <strong>'+prop.name+'</strong> below. ' +
+      'Your property performed '+
+        (occupancy>=70?'exceptionally well':occupancy>=50?'solidly':occupancy>=30?'steadily':'with room to grow')+
+      ' this period with a '+occupancy+'% occupancy rate.' +
+      (notes ? '<br><br><em style="color:#6B5D52">'+notes+'</em>' : '') +
+      '</div>' +
+    '</div>' +
+
+    // KPI cards
+    '<div style="background:#FAF7F2;padding:28px 40px">' +
+      '<div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9B8E85;margin-bottom:16px">Performance Summary</div>' +
+      '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px">' +
+        kpiCard('Gross Revenue', '$'+totalRevenue.toLocaleString(), color) +
+        kpiCard('Occupancy Rate', occupancy+'%', occupancy>=70?'#6B8F71':occupancy>=40?'#C8A84B':'#C4693A') +
+        kpiCard('Avg/Night', '$'+avgPerNight, '#1E2D40') +
+        kpiCard('Total Bookings', allBookings.length.toString(), '#6B8F71') +
+      '</div>' +
+
+      // Payout summary
+      '<div style="background:#fff;border-radius:12px;padding:20px;border:1px solid #E2DBD0;margin-bottom:20px">' +
+        '<div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9B8E85;margin-bottom:14px">Financial Summary</div>' +
+        '<div style="display:flex;flex-direction:column;gap:10px">' +
+          payoutRow('Gross Revenue', '$'+totalRevenue.toLocaleString(), false) +
+          payoutRow('Management Fee ('+commission+'%)', '-$'+commissionAmt.toLocaleString(), false) +
+          (totalExpenses ? payoutRow('Expenses & Maintenance', '-$'+totalExpenses.toLocaleString(), false) : '') +
+          '<div style="border-top:2px solid #1C1410;margin:4px 0"></div>' +
+          payoutRow('Net to Owner', '$'+netToOwner.toLocaleString(), true) +
+        '</div>' +
+      '</div>' +
+
+      // Bookings table
+      '<div style="background:#fff;border-radius:12px;padding:20px;border:1px solid #E2DBD0;margin-bottom:20px">' +
+        '<div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9B8E85;margin-bottom:14px">Bookings This Period</div>' +
+        '<table style="width:100%;border-collapse:collapse">' +
+          '<thead><tr style="border-bottom:2px solid #EDE8DE">' +
+            '<th style="padding:8px;font-size:11px;text-align:left;color:#9B8E85;font-weight:700;letter-spacing:.5px;text-transform:uppercase">Guest</th>' +
+            '<th style="padding:8px;font-size:11px;text-align:left;color:#9B8E85;font-weight:700;letter-spacing:.5px;text-transform:uppercase">Check-in</th>' +
+            '<th style="padding:8px;font-size:11px;text-align:left;color:#9B8E85;font-weight:700;letter-spacing:.5px;text-transform:uppercase">Check-out</th>' +
+            '<th style="padding:8px;font-size:11px;text-align:center;color:#9B8E85;font-weight:700;letter-spacing:.5px;text-transform:uppercase">Nights</th>' +
+            '<th style="padding:8px;font-size:11px;text-align:right;color:#9B8E85;font-weight:700;letter-spacing:.5px;text-transform:uppercase">Revenue</th>' +
+          '</tr></thead>' +
+          '<tbody>'+bookingRows+'</tbody>' +
+        '</table>' +
+      '</div>' +
+
+      // Expenses table (if any)
+      (expenses.length ?
+        '<div style="background:#fff;border-radius:12px;padding:20px;border:1px solid #E2DBD0;margin-bottom:20px">' +
+          '<div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9B8E85;margin-bottom:14px">Expenses & Maintenance</div>' +
+          '<table style="width:100%;border-collapse:collapse">' +
+            '<thead><tr style="border-bottom:2px solid #EDE8DE">' +
+              '<th style="padding:8px;font-size:11px;text-align:left;color:#9B8E85;font-weight:700;letter-spacing:.5px;text-transform:uppercase">Description</th>' +
+              '<th style="padding:8px;font-size:11px;text-align:left;color:#9B8E85;font-weight:700;letter-spacing:.5px;text-transform:uppercase">Date</th>' +
+              '<th style="padding:8px;font-size:11px;text-align:right;color:#9B8E85;font-weight:700;letter-spacing:.5px;text-transform:uppercase">Amount</th>' +
+            '</tr></thead>' +
+            '<tbody>'+expenseRows+'</tbody>' +
+          '</table>' +
+        '</div>' : '') +
+
+      // Rating & tasks
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">' +
+        '<div style="background:#fff;border-radius:12px;padding:20px;border:1px solid #E2DBD0;text-align:center">' +
+          '<div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9B8E85;margin-bottom:10px">Guest Rating</div>' +
+          '<div style="font-size:42px;font-family:Georgia,serif;color:'+color+'">⭐ '+avgRating+'</div>' +
+          '<div style="font-size:12px;color:#9B8E85;margin-top:4px">Based on '+reviews.length+' review'+(reviews.length!==1?'s':'')+'</div>' +
+        '</div>' +
+        '<div style="background:#fff;border-radius:12px;padding:20px;border:1px solid #E2DBD0;text-align:center">' +
+          '<div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9B8E85;margin-bottom:10px">Tasks Completed</div>' +
+          '<div style="font-size:42px;font-family:Georgia,serif;color:#6B8F71">'+tasks.length+'</div>' +
+          '<div style="font-size:12px;color:#9B8E85;margin-top:4px">Cleaning & maintenance jobs</div>' +
+        '</div>' +
+      '</div>' +
+
+      // Photo gallery
+      photoGallery +
+
+      // Footer
+      '<div style="margin-top:32px;padding-top:20px;border-top:1px solid #E2DBD0;text-align:center">' +
+        '<div style="font-size:12px;color:#9B8E85">This report was prepared by <strong>'+bizName+'</strong> using HostHaven Property Management.</div>' +
+        '<div style="font-size:11px;color:#C4C4B4;margin-top:4px">Questions? Reply to this email or contact your property manager directly.</div>' +
+      '</div>' +
+
+    '</div>' +
+    '</body></html>';
+}
+
+// Helper functions for report HTML generation
+function kpiCard(label, value, color) {
+  return '<div style="background:#fff;border-radius:10px;padding:16px;border:1px solid #E2DBD0;text-align:center">' +
+    '<div style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#9B8E85;margin-bottom:8px">'+label+'</div>' +
+    '<div style="font-size:26px;font-family:Georgia,serif;color:'+color+'">'+value+'</div>' +
+    '</div>';
+}
+
+function payoutRow(label, value, isTotal) {
+  return '<div style="display:flex;justify-content:space-between;align-items:center;padding:'+(isTotal?'8px 0':'4px 0')+'">' +
+    '<div style="font-size:'+(isTotal?'14px':'13px')+';color:#1C1410;font-weight:'+(isTotal?'700':'400')+'">'+label+'</div>' +
+    '<div style="font-size:'+(isTotal?'18px':'13px')+';font-family:Georgia,serif;color:'+(isTotal?'#6B8F71':'#1C1410')+';font-weight:'+(isTotal?'700':'600')+'">'+value+'</div>' +
+    '</div>';
+}
+
+function downloadOwnerReport() {
+  const propId = document.getElementById('or-prop')?.value;
+  const prop = cData.properties.find(p => p.id === propId);
+  if(!prop) { toast('Select a property first'); return; }
+  const html = generateOwnerReportHTML(false);
+  if(!html) { toast('No data to generate report'); return; }
+  const period = document.getElementById('or-start')?.value?.slice(0,7) || new Date().toISOString().slice(0,7);
+  const filename = prop.name.toLowerCase().replace(/\s+/g,'-') + '-owner-report-' + period + '.html';
+  const a = document.createElement('a');
+  a.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(html);
+  a.download = filename;
+  a.click();
+  toast('Owner report downloaded! ✓');
+  logSentReport('downloaded');
+}
+
+async function sendOwnerReport() {
+  const propId = document.getElementById('or-prop')?.value;
+  const prop = cData.properties.find(p => p.id === propId);
+  const ownerEmail = document.getElementById('or-email')?.value?.trim();
+  const ownerName = document.getElementById('or-owner')?.value?.trim() || 'Property Owner';
+  const bizName = document.getElementById('or-biz')?.value?.trim() || 'Property Management';
+
+  if(!prop) { toast('Select a property first'); return; }
+  if(!ownerEmail) { toast('Enter the owner email address'); return; }
+  if(!cData.apiKey && !cData.resendKey) { toast('Add your Resend API key in Settings to send emails'); return; }
+
+  const statusEl = document.getElementById('or-send-status');
+  if(statusEl) { statusEl.style.display='block'; statusEl.textContent='Sending report…'; statusEl.style.color='var(--txt3)'; }
+
+  const html = generateOwnerReportHTML(true);
+  const period = document.getElementById('or-start')?.value?.slice(0,7) || new Date().toISOString().slice(0,7);
+  const subject = prop.name + ' — Monthly Owner Report (' + new Date(period+'-01').toLocaleDateString('en-US',{month:'long',year:'numeric'}) + ')';
+
+  try {
+    const res = await fetch('https://vdnyqwpznsysrvyvbqga.supabase.co/functions/v1/send-notification', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM'
+      },
+      body: JSON.stringify({
+        to: ownerEmail,
+        subject: subject,
+        html: html,
+        from: bizName + ' <reports@hosthaven.co>'
+      })
+    });
+    const result = await res.json();
+    if(result.ok || result.id) {
+      if(statusEl) { statusEl.textContent='✓ Report sent to '+ownerEmail; statusEl.style.color='var(--sage)'; }
+      toast('Owner report sent to '+ownerEmail+' ✓');
+      logSentReport('emailed', ownerEmail);
+    } else {
+      throw new Error(result.message || 'Send failed');
+    }
+  } catch(e) {
+    if(statusEl) { statusEl.textContent='Send failed: '+e.message+'. Download and email manually.'; statusEl.style.color='var(--terra)'; }
+    toast('Email failed — download and send manually');
+  }
+}
+
+function logSentReport(method, email) {
+  const propId = document.getElementById('or-prop')?.value;
+  const prop = cData.properties.find(p => p.id === propId);
+  const period = document.getElementById('or-start')?.value?.slice(0,7) || new Date().toISOString().slice(0,7);
+  if(!cData.sentReports) cData.sentReports = [];
+  cData.sentReports.push({
+    id: 'sr_'+Date.now(),
+    propId, propName: prop?.name||'',
+    period, method,
+    email: email||'',
+    sentAt: new Date().toISOString()
+  });
+  saveUserData(cUid, cData);
+  renderSentReports();
+}
+
+function renderSentReports() {
+  const el = document.getElementById('or-sent-log');
+  if(!el) return;
+  const reports = (cData.sentReports||[]).slice().reverse().slice(0,10);
+  if(!reports.length) { el.innerHTML='<div style="font-size:13px;color:var(--txt3)">No reports sent yet</div>'; return; }
+  el.innerHTML = reports.map(r =>
+    '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">' +
+    '<div style="font-size:18px">'+(r.method==='emailed'?'📧':'⬇️')+'</div>' +
+    '<div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--txt)">'+r.propName+' — '+r.period+'</div>' +
+    '<div style="font-size:11px;color:var(--txt3)">'+(r.method==='emailed'?'Emailed to '+r.email:'Downloaded')+' · '+new Date(r.sentAt).toLocaleDateString()+'</div></div>' +
+    '</div>'
+  ).join('');
 }
 
 function saveSettings(){const name=document.getElementById('set-name').value.trim();if(!name){toast('Enter your name');return;}if(cUser)cUser.name=name;document.getElementById('sb-uname').textContent=name;const init=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);document.getElementById('sb-av').textContent=init;sb.auth.updateUser({data:{full_name:name}});toast('Saved! ✓');}
