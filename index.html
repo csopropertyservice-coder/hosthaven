@@ -55,8 +55,8 @@
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:auto; }
-body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; transition:background .3s,color .3s; }
+html { scroll-behavior:auto; overflow:hidden; height:100vh; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt); height:100vh; overflow:hidden; transition:background .3s,color .3s; }
 
 /* ═══════════════════════════════════════
    LANDING PAGE
@@ -3180,6 +3180,9 @@ function nav(id,el){
   try{sessionStorage.setItem('hh_last_page',id);}catch(e){}
   // Reset scroll to top on every page change
   const mainArea=document.querySelector('.main-area');if(mainArea)mainArea.scrollTo({top:0,behavior:'instant'});
+  try{window.scrollTo(0,0);}catch(e){}
+  try{document.documentElement.scrollTop=0;}catch(e){}
+  try{document.body.scrollTop=0;}catch(e){}
   if(id==='website')setTimeout(updateWb,100);
   if(id==='portal')renderPortal();
   if(id==='reports')renderReports();
@@ -7610,7 +7613,7 @@ window.addEventListener('load', () => {
   bootApp();
   // Register PWA service worker
   if('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').then(function(reg) {
+    navigator.serviceWorker.register('sw.js?v=3').then(function(reg) {
       // SW registered
     }).catch(function(err) {
       // SW registration failed silently
