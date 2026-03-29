@@ -104,7 +104,7 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 .land-stat-num { font-family:Fraunces,serif;font-size:32px;color:#fff;letter-spacing:-1px; }
 .land-stat-label { font-size:12px;color:rgba(255,255,255,.45);font-weight:500;letter-spacing:.5px;text-transform:uppercase;margin-top:2px; }
 .land-features { padding:80px 48px;background:var(--bg); }
-.land-feat-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto; }
+.land-feat-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1200px;margin:0 auto; }
 .land-feat-card { background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .2s; }
 .land-feat-card:hover { box-shadow:var(--shm);transform:translateY(-3px); }
 .land-feat-icon { font-size:32px;margin-bottom:14px; }
@@ -376,7 +376,7 @@ select{color:var(--txt)!important;}
   .gp-layout{grid-template-columns:1fr!important;}
   .gp-frame{height:300px!important;}
   #dash-main-grid{grid-template-columns:1fr!important;}
-  .land-feat-grid{grid-template-columns:1fr!important;}
+  .land-feat-grid{grid-template-columns:1fr 1fr!important;}
   .land-plans{grid-template-columns:1fr!important;}
   .land-h1{font-size:36px!important;letter-spacing:-1px!important;}
   .land-nav-links{display:none!important;}
@@ -451,7 +451,7 @@ select{color:var(--txt)!important;}
     </div>
     <div class="land-nav-links">
       <a onclick="scrollToSection('land-features')">Features</a>
-      <a onclick="scrollToSection('land-products')">Resources</a>
+      <a onclick="scrollToSection('land-products')">Products</a>
       <a onclick="scrollToSection('land-pricing')">Pricing</a>
       <a onclick="showScreen('login')">Sign In</a>
     </div>
@@ -465,7 +465,7 @@ select{color:var(--txt)!important;}
     <div class="land-hero-content">
       <div class="land-eyebrow">🏡 For Airbnb Hosts &amp; Co-Hosts</div>
       <h1 class="land-h1">Manage smarter.<br><em>Earn more.</em></h1>
-      <p class="land-sub">HostHaven gives individual hosts and professional co-hosts one dashboard for properties, bookings, guests, payouts, and revenue — with AI built in.</p>
+      <p class="land-sub">One dashboard for your properties, bookings, guests, cleaners, payouts, and revenue. Built for Airbnb hosts and co-hosts. Free to start — no credit card needed.</p>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:8px">
         <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 14px;font-size:12px;color:rgba(255,255,255,.8)">✓ Solo hosts</div>
         <div style="background:rgba(200,168,75,.2);border:1px solid rgba(200,168,75,.4);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--gold-l)">🏆 Co-hosts &amp; property managers</div>
@@ -476,9 +476,9 @@ select{color:var(--txt)!important;}
         <button class="btn btn-ghost" style="padding:14px 32px;font-size:15px;color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2)" onclick="loginDemo()">🚀 See Demo</button>
       </div>
       <div class="land-stats">
-        <div class="land-stat"><div class="land-stat-num">10k+</div><div class="land-stat-label">Hosts</div></div>
-        <div class="land-stat"><div class="land-stat-num">$2M+</div><div class="land-stat-label">Revenue Tracked</div></div>
-        <div class="land-stat"><div class="land-stat-num">4.9★</div><div class="land-stat-label">Average Rating</div></div>
+        <div class="land-stat"><div class="land-stat-num">Free</div><div class="land-stat-label">To start — always</div></div>
+        <div class="land-stat"><div class="land-stat-num">30+</div><div class="land-stat-label">Features built in</div></div>
+        <div class="land-stat"><div class="land-stat-num">100%</div><div class="land-stat-label">Your data, your control</div></div>
       </div>
     </div>
   </section>
@@ -486,15 +486,21 @@ select{color:var(--txt)!important;}
   <section class="land-features" id="land-features">
     <div style="text-align:center;margin-bottom:48px">
       <div class="land-section-title">Everything you need to host better</div>
-      <p class="land-section-sub">From day-one hosts to professional property managers</p>
+      <p class="land-section-sub">From day-one hosts to professional co-host businesses</p>
     </div>
     <div class="land-feat-grid">
-      <div class="land-feat-card"><div class="land-feat-icon">📊</div><div class="land-feat-title">Live Dashboard</div><div class="land-feat-desc">See your revenue, occupancy, bookings, and messages in real time — all in one place.</div></div>
-      <div class="land-feat-card"><div class="land-feat-icon">🤖</div><div class="land-feat-title">AI Guest Messaging</div><div class="land-feat-desc">Draft replies in seconds with Claude AI. Check-in info, local tips, house rules — one click.</div></div>
-      <div class="land-feat-card"><div class="land-feat-icon">🔑</div><div class="land-feat-title">Guest Portal</div><div class="land-feat-desc">Every guest gets a personalized check-in page with door codes, WiFi, and local tips.</div></div>
-      <div class="land-feat-card"><div class="land-feat-icon">🌐</div><div class="land-feat-title">Direct Booking Website</div><div class="land-feat-desc">Build and publish your own booking website in minutes. No Airbnb fees on direct bookings.</div></div>
-      <div class="land-feat-card"><div class="land-feat-icon">📅</div><div class="land-feat-title">iCal Sync</div><div class="land-feat-desc">Import bookings directly from Airbnb, VRBO, and Booking.com via iCal links.</div></div>
-      <div class="land-feat-card"><div class="land-feat-icon">📈</div><div class="land-feat-title">Revenue Reports</div><div class="land-feat-desc">Exportable reports for tax season, income tracking, and property performance analysis.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">📊</div><div class="land-feat-title">Live Dashboard</div><div class="land-feat-desc">Revenue, occupancy, bookings, upcoming check-ins, and task alerts — all visible the moment you log in.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">🤖</div><div class="land-feat-title">AI Office Hours</div><div class="land-feat-desc">Set your quiet hours and let AI handle guest messages overnight. Guests get instant replies. You sleep.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">📱</div><div class="land-feat-title">QR House Manual</div><div class="land-feat-desc">Generate a scannable QR code for each property. WiFi, door code, house rules, and local tips — one scan.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">🔑</div><div class="land-feat-title">Guest Portal</div><div class="land-feat-desc">Every guest gets a personalized digital check-in page with their door code, WiFi, parking, and a local guide.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">🧹</div><div class="land-feat-title">Cleaner Marketplace</div><div class="land-feat-desc">Add your cleaners, post turnover jobs, track completions, and log photo proof — all in one place.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">💳</div><div class="land-feat-title">Payout Ledger</div><div class="land-feat-desc">Track every dollar paid to contractors. See your platform fee, their take, and your net on every job automatically.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">📋</div><div class="land-feat-title">Owner Reports</div><div class="land-feat-desc">Generate branded monthly PDF reports for property owners — revenue, expenses, photos, and net payout in one click.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">📸</div><div class="land-feat-title">Photo Vault</div><div class="land-feat-desc">Upload after-clean photos as proof of service. Owners see their property was cared for. Disputes resolved instantly.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">💰</div><div class="land-feat-title">Pricing Optimizer</div><div class="land-feat-desc">Set weekend, peak, last-minute, and long-stay rate rules. Apply them across all properties at once.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">📅</div><div class="land-feat-title">iCal Sync</div><div class="land-feat-desc">Import bookings directly from Airbnb, VRBO, and Booking.com. Calendar stays in sync automatically.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">📈</div><div class="land-feat-title">Revenue Reports</div><div class="land-feat-desc">Exportable revenue reports, expense tracking, and property scorecards. Ready for tax season in one click.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">🌐</div><div class="land-feat-title">Direct Booking Website</div><div class="land-feat-desc">Build and publish your own booking website in minutes. Save guests the Airbnb service fee. Keep more revenue.</div></div>
     </div>
   </section>
 
@@ -503,7 +509,7 @@ select{color:var(--txt)!important;}
       <div class="land-eyebrow" style="display:inline-flex">📦 One-Time Resources</div>
     </div>
     <div class="land-section-title">Everything you need to launch</div>
-    <p class="land-section-sub" style="text-align:center;max-width:520px;margin:0 auto 48px">Not ready for a subscription? Start with a one-time resource. No monthly fees, instant download.</p>
+    <p class="land-section-sub" style="text-align:center;max-width:520px;margin:0 auto 48px">Not ready for a subscription? Start here. One-time purchase, no monthly fees, download and use immediately.</p>
 
     <div class="land-prod-grid">
 
@@ -556,10 +562,10 @@ select{color:var(--txt)!important;}
 
     <!-- Social proof strip -->
     <div style="text-align:center;margin-top:48px;padding-top:40px;border-top:1px solid var(--border)">
-      <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">Trusted by hosts across the US</div>
+      <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">One-time purchase · No subscription · Instant download</div>
       <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap">
-        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--terra)">500+</div><div style="font-size:12px;color:var(--txt3)">Templates downloaded</div></div>
-        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--gold)">4.9★</div><div style="font-size:12px;color:var(--txt3)">Average rating</div></div>
+        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--terra)">11</div><div style="font-size:12px;color:var(--txt3)">Files in the Pack</div></div>
+        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--gold)">10</div><div style="font-size:12px;color:var(--txt3)">Files in the Kit</div></div>
         <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--sage)">$0</div><div style="font-size:12px;color:var(--txt3)">Monthly commitment</div></div>
       </div>
     </div>
@@ -582,7 +588,7 @@ select{color:var(--txt)!important;}
       <div class="land-plan">
         <div class="plan-name">Free</div>
         <div class="plan-price">$0<span>/mo</span></div>
-        <div class="plan-desc">Perfect for getting started</div>
+        <div class="plan-desc">1 property, no credit card needed</div>
         <ul class="plan-feats">
           <li>1 property</li><li>Booking management</li><li>Guest portal</li><li>Basic analytics</li>
         </ul>
@@ -592,7 +598,7 @@ select{color:var(--txt)!important;}
         <div class="plan-badge">Most Popular</div>
         <div class="plan-name">Pro</div>
         <div class="plan-price" id="pro-price">$79<span>/mo</span></div>
-        <div class="plan-desc" id="pro-desc">For serious hosts · 14-day free trial</div>
+        <div class="plan-desc" id="pro-desc">For serious hosts growing their operation</div>
         <ul class="plan-feats">
           <li>10 properties</li><li>AI guest messaging</li><li>iCal sync (Airbnb/VRBO)</li><li>Tasks & cleaner management</li><li>Inventory tracking</li><li>QR house manuals</li><li>Revenue reports & CSV export</li><li>Pricing optimizer</li><li>Guest loyalty program</li><li>Priority support</li>
         </ul>
@@ -601,7 +607,7 @@ select{color:var(--txt)!important;}
       <div class="land-plan">
         <div class="plan-name">Business</div>
         <div class="plan-price" id="biz-price">$199<span>/mo</span></div>
-        <div class="plan-desc" id="biz-desc">For property managers · 14-day free trial</div>
+        <div class="plan-desc" id="biz-desc">For multi-property operators and teams</div>
         <ul class="plan-feats">
           <li>Unlimited properties</li><li>Everything in Pro</li><li>Team access</li><li>White-label portals</li><li>API access</li>
         </ul>
@@ -628,6 +634,8 @@ select{color:var(--txt)!important;}
     </div>
     <div style="font-size:12px;color:rgba(255,255,255,.35)">© 2026 HostHaven. All rights reserved.</div>
     <div style="display:flex;gap:20px">
+      <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" href="https://www.instagram.com" target="_blank">Instagram</a>
+      <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" href="https://www.facebook.com" target="_blank">Facebook</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('privacy')">Privacy</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('terms')">Terms</a>
       <a href="/cdn-cgi/l/email-protection#2043534f50524f50455254595345525649434560474d41494c0e434f4d" style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:none">Support</a>
