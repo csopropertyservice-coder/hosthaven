@@ -246,7 +246,7 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 .content { padding:20px 24px;background:var(--bg);overflow:hidden; }
 @media(max-width:600px){ .content { padding:16px; } .g4{grid-template-columns:repeat(2,1fr)!important;} #dash-main-grid{grid-template-columns:1fr!important;} #dash-quick-actions button{font-size:11px!important;padding:6px 10px!important;} .kpi-val{font-size:22px!important;} }
 .page { display:none!important;height:0;overflow:hidden; }
-.page.active { display:block!important;height:auto;overflow:visible;animation:fadeIn .18s ease; }
+.page.active { display:block!important;height:auto;overflow:visible;animation:fadeIn .18s ease;min-height:calc(100vh - 80px); }
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes fadeUp { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
 @keyframes spin { to{transform:rotate(360deg)} }
@@ -936,6 +936,12 @@ select{color:var(--txt)!important;}
     <div style="font-size:13px;color:var(--txt2)" id="props-count">0 properties</div>
     <button class="btn btn-pri" onclick="openModal('add-property-modal')">+ Add Property</button>
   </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Total Properties</div><div class="kpi-val" id="prop-kpi-total">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Avg Occupancy</div><div class="kpi-val" id="prop-kpi-occ">—</div></div>
+    <div class="kpi k3"><div class="kpi-label">Avg Rating</div><div class="kpi-val" id="prop-kpi-rating">—</div></div>
+    <div class="kpi k4"><div class="kpi-label">Total Revenue</div><div class="kpi-val" id="prop-kpi-rev">$0</div></div>
+  </div>
   <div class="g3" id="props-grid"><div class="empty-state" style="grid-column:1/-1"><div class="es-i">🏠</div><h3>No properties yet</h3><button class="btn btn-pri" onclick="openModal('add-property-modal')" style="margin-top:10px">Add First Property</button></div></div>
 </div>
 
@@ -1039,6 +1045,12 @@ select{color:var(--txt)!important;}
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
     <div style="font-size:13px;color:var(--txt2)" id="tasks-count">0 tasks</div>
     <button class="btn btn-pri" onclick="openModal('add-task-modal')">+ Add Task</button>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Pending</div><div class="kpi-val" id="task-kpi-pending">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">In Progress</div><div class="kpi-val" id="task-kpi-progress">0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Completed</div><div class="kpi-val" id="task-kpi-done">0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Overdue</div><div class="kpi-val" id="task-kpi-overdue" style="color:var(--terra)">0</div></div>
   </div>
   <div id="tasks-list"><div class="empty-state"><div class="es-i">🧹</div><h3>No tasks yet</h3><button class="btn btn-pri" onclick="openModal('add-task-modal')" style="margin-top:10px">Add Task</button></div></div>
 </div>
@@ -1394,6 +1406,16 @@ select{color:var(--txt)!important;}
     <div style="font-size:13px;color:var(--txt2)">Flag guests you never want to host again</div>
     <button class="btn btn-pri" onclick="openModal('add-blacklist-modal')">+ Flag Guest</button>
   </div>
+  <div class="card" style="margin-bottom:14px;border-left:3px solid var(--gold)">
+    <div class="card-hd"><div class="card-title">💡 How the Guest Blacklist Works</div></div>
+    <div class="card-body">
+      <div class="g3">
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;margin-bottom:6px">🚫</div><div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:3px">Flag a Guest</div><div style="font-size:11px;color:var(--txt3)">Add their name, email, or Airbnb profile to the list</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;margin-bottom:6px">📋</div><div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:3px">Add a Reason</div><div style="font-size:11px;color:var(--txt3)">Note why they were flagged — property damage, noise, no-show</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;margin-bottom:6px">⚠️</div><div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:3px">Stay Protected</div><div style="font-size:11px;color:var(--txt3)">Reference your list before accepting new bookings</div></div>
+      </div>
+    </div>
+  </div>
   <div class="card">
     <div class="card-hd"><div class="card-title">🚫 Flagged Guests</div></div>
     <div class="card-body" id="blacklist-list">
@@ -1710,6 +1732,17 @@ select{color:var(--txt)!important;}
     <div class="kpi k3"><div class="kpi-label">Avg Commission</div><div class="kpi-val" id="own-avg-comm">0%</div></div>
     <div class="kpi k4"><div class="kpi-label">Reports Sent</div><div class="kpi-val" id="own-reports">0</div></div>
   </div>
+  <div class="card" style="margin-bottom:14px;border-left:3px solid var(--gold)" id="owners-tip-card">
+    <div class="card-hd"><div class="card-title">💡 Owner Management — How It Works</div></div>
+    <div class="card-body">
+      <div class="g4">
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;margin-bottom:5px">🤝</div><div style="font-size:11px;font-weight:600;color:var(--txt);margin-bottom:2px">Add Owner</div><div style="font-size:11px;color:var(--txt3)">Name, email, commission %, properties</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;margin-bottom:5px">📊</div><div style="font-size:11px;font-weight:600;color:var(--txt);margin-bottom:2px">Track Earnings</div><div style="font-size:11px;color:var(--txt3)">See gross revenue, your cut, owner payout</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;margin-bottom:5px">📋</div><div style="font-size:11px;font-weight:600;color:var(--txt);margin-bottom:2px">Send Reports</div><div style="font-size:11px;color:var(--txt3)">One-click branded PDF emailed to owner</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;margin-bottom:5px">📧</div><div style="font-size:11px;font-weight:600;color:var(--txt);margin-bottom:2px">Bulk Send</div><div style="font-size:11px;color:var(--txt3)">Send all owner reports at once monthly</div></div>
+      </div>
+    </div>
+  </div>
   <div id="owners-list">
     <div class="empty-state"><div class="es-i">🤝</div><h3>No owners added yet</h3><p>Add property owners to track splits and send branded monthly reports</p><button class="btn btn-pri" onclick="openModal('add-owner-modal')" style="margin-top:10px">Add First Owner</button></div>
   </div>
@@ -1749,6 +1782,16 @@ select{color:var(--txt)!important;}
 <!-- ██ CONCIERGE ████████████████████████████ -->
 <div class="page" id="page-concierge">
   <div style="font-size:13px;color:var(--txt2);margin-bottom:18px">Build a custom concierge menu for your guests</div>
+  <div class="card" style="margin-bottom:14px;border-left:3px solid var(--sage)">
+    <div class="card-hd"><div class="card-title">💡 What is the Concierge?</div></div>
+    <div class="card-body">
+      <div class="g3">
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;margin-bottom:6px">🎩</div><div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:3px">Add Services</div><div style="font-size:11px;color:var(--txt3)">Create upsell offers — airport pickup, grocery stocking, city tours</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;margin-bottom:6px">💌</div><div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:3px">Guests Request</div><div style="font-size:11px;color:var(--txt3)">Guests browse and request services through their portal</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;margin-bottom:6px">💰</div><div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:3px">Earn More</div><div style="font-size:11px;color:var(--txt3)">Add revenue per stay without increasing your nightly rate</div></div>
+      </div>
+    </div>
+  </div>
   <div class="g2">
     <div class="card">
       <div class="card-hd"><div class="card-title">🎩 Concierge Services</div><button class="btn btn-pri" style="font-size:11px;padding:4px 9px" onclick="openModal('add-service-modal')">+ Add Service</button></div>
@@ -1994,6 +2037,12 @@ select{color:var(--txt)!important;}
 <!-- ██ SCORECARDS ████████████████████████████ -->
 <div class="page" id="page-scorecards">
   <div style="font-size:13px;color:var(--txt2);margin-bottom:18px">Track performance metrics for each property</div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Avg Occupancy</div><div class="kpi-val" id="sc-occ">—</div></div>
+    <div class="kpi k2"><div class="kpi-label">Avg Rating</div><div class="kpi-val" id="sc-rating">—</div></div>
+    <div class="kpi k3"><div class="kpi-label">Top Property</div><div class="kpi-val" id="sc-top" style="font-size:13px">—</div></div>
+    <div class="kpi k4"><div class="kpi-label">Total Revenue</div><div class="kpi-val" id="sc-rev">$0</div></div>
+  </div>
   <div id="scorecards-grid" style="display:flex;flex-direction:column;gap:16px"><div class="empty-state"><div class="es-i">🏆</div><h3>No properties yet</h3><p>Add properties to see their performance scorecards</p></div></div>
 </div>
 
@@ -3334,6 +3383,20 @@ async function addProperty(){
   toast(`"${name}" added! 🏠`);renderAll();
 }
 function renderProperties(){
+  {
+    const _pp=cData.properties||[];
+    const _bb=cData.bookings||[];
+    const _set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+    _set('prop-kpi-total',_pp.length);
+    const _avgOcc=_pp.length?Math.round(_pp.reduce((s,p)=>s+(p.occupancy||0),0)/_pp.length)+'%':'—';
+    _set('prop-kpi-occ',_avgOcc);
+    const _rated=_pp.filter(p=>p.rating);
+    const _avgRat=_rated.length?(_rated.reduce((s,p)=>s+parseFloat(p.rating||0),0)/_rated.length).toFixed(2)+'★':'—';
+    _set('prop-kpi-rating',_avgRat);
+    const _rev=_bb.filter(b=>b.status!=='cancelled').reduce((s,b)=>s+(b.price||0),0);
+    _set('prop-kpi-rev','$'+_rev.toLocaleString());
+  }
+
   const grid=document.getElementById('props-grid');const count=document.getElementById('props-count');
   const props=cData.properties;count.textContent=props.length+' propert'+(props.length===1?'y':'ies');
   if(!props.length){grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="es-i">🏠</div><h3>No properties yet</h3><button class="btn btn-pri" onclick="openModal('add-property-modal')" style="margin-top:10px">Add First</button></div>`;return;}
@@ -4887,6 +4950,20 @@ function renderPricingImpact(){
 
 
 function renderScorecards(){
+  {
+    const _sp=cData.properties||[];
+    const _sb=(cData.bookings||[]).filter(b=>b.status!=='cancelled');
+    const _ss=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+    const _socc=_sp.length?Math.round(_sp.reduce((s,p)=>s+(p.occupancy||0),0)/_sp.length)+'%':'—';
+    const _srated=_sp.filter(p=>p.rating);
+    const _srat=_srated.length?(_srated.reduce((s,p)=>s+parseFloat(p.rating||0),0)/_srated.length).toFixed(2)+'★':'—';
+    const _srev=_sb.reduce((s,b)=>s+(b.price||0),0);
+    const _stop=_sp.length?_sp.reduce((a,b)=>(a.occupancy||0)>(b.occupancy||0)?a:b,_sp[0]):null;
+    _ss('sc-occ',_socc);_ss('sc-rating',_srat);
+    _ss('sc-rev','$'+_srev.toLocaleString());
+    _ss('sc-top',_stop?_stop.emoji+' '+_stop.name:'—');
+  }
+
   const grid=document.getElementById('scorecards-grid');
   if(!grid)return;
   if(!cData.properties.length){grid.innerHTML='<div class="empty-state"><div class="es-i">🏆</div><h3>No properties yet</h3></div>';return;}
@@ -5532,6 +5609,16 @@ function addTask(){
 }
 function toggleTask(id){const t=cData.tasks.find(x=>x.id===id);if(!t)return;t.done=!t.done;saveUserData(cUid,cData);renderTasks();if(t.done)toast('Done! ✓');}
 function renderTasks(){
+  {
+    const _tt=cData.tasks||[];
+    const _now=new Date().toISOString().slice(0,10);
+    const _s=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+    _s('task-kpi-pending',_tt.filter(t=>!t.done&&t.status!=='in_progress').length);
+    _s('task-kpi-progress',_tt.filter(t=>t.status==='in_progress').length);
+    _s('task-kpi-done',_tt.filter(t=>t.done).length);
+    _s('task-kpi-overdue',_tt.filter(t=>!t.done&&t.due&&t.due<_now).length);
+  }
+
   const list=document.getElementById('tasks-list');const count=document.getElementById('tasks-count');
   const tasks=[...cData.tasks].sort((a,b)=>(a.done===b.done)?({high:0,medium:1,low:2}[a.priority]-{high:0,medium:1,low:2}[b.priority]):(a.done?1:-1));
   count.textContent=`${tasks.length} tasks · ${tasks.filter(t=>!t.done).length} pending`;
