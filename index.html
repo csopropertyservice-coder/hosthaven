@@ -246,10 +246,10 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 
 /* CONTENT */
 .main-area { flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden;overflow-y:auto;background:var(--bg);scroll-behavior:auto; }
-.content { padding:20px 24px;background:var(--bg);overflow:hidden; }
+.content { padding:0;background:var(--bg); }
 @media(max-width:600px){ .content { padding:16px; } .g4{grid-template-columns:repeat(2,1fr)!important;} #dash-main-grid{grid-template-columns:1fr!important;} #dash-quick-actions button{font-size:11px!important;padding:6px 10px!important;} .kpi-val{font-size:22px!important;} }
-.page { display:none!important;height:0;overflow:hidden; }
-.page.active { display:block!important;height:auto;overflow:visible;animation:fadeIn .18s ease;min-height:calc(100vh - 80px); }
+.page { display:none!important;height:0;overflow:hidden;margin:0!important;padding:0!important; }
+.page.active { display:block!important;height:auto;overflow:visible;animation:fadeIn .18s ease;padding:20px 24px; }
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes fadeUp { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
 @keyframes spin { to{transform:rotate(360deg)} }
