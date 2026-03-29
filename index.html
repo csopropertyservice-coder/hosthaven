@@ -7615,19 +7615,12 @@ sb.auth.onAuthStateChange((event, session) => {
 window.addEventListener('load', () => {
   bootApp();
   // Register PWA service worker
+  // Service worker disabled — unregister any existing ones
   if('serviceWorker' in navigator) {
-    // Unregister all old service workers first to clear cache
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-      for(let registration of registrations) {
-        registration.unregister();
-      }
+    navigator.serviceWorker.getRegistrations().then(function(regs) {
+      regs.forEach(function(r) { r.unregister(); });
     });
-    // Re-register fresh
-    setTimeout(function() {
-      navigator.serviceWorker.register('sw.js?v=4').catch(function(){});
-    }, 1000);
   }
-  // Clear all caches
   if('caches' in window) {
     caches.keys().then(function(names) {
       names.forEach(function(name) { caches.delete(name); });
