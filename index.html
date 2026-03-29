@@ -690,6 +690,10 @@ select{color:var(--txt)!important;}
         <div class="sb-sec" style="margin-top:10px">Automation</div>
         <div class="sb-item" onclick="nav('aihours',this)"><span class="ico">🤖</span>AI Office Hours</div>
 
+        <div class="sb-sec" style="margin-top:10px">Co-Host</div>
+        <div class="sb-item" onclick="nav('cohost_cmd',this)"><span class="ico">🏢</span>Command Center</div>
+        <div class="sb-item" onclick="nav('owners',this)"><span class="ico">🤝</span>Owner Management</div>
+
         <div class="sb-sec" style="margin-top:10px">Account</div>
         <div class="sb-item" onclick="nav('settings',this)"><span class="ico">⚙️</span>Settings</div>
         <div class="sb-item" id="team-nav-item" style="display:none" onclick="nav('team',this)"><span class="ico">👥</span>Team Access</div>
@@ -1523,6 +1527,80 @@ select{color:var(--txt)!important;}
   </div>
 </div>
 
+
+<!-- ██ COHOST COMMAND CENTER ████████████████ -->
+<div class="page" id="page-cohost_cmd">
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:18px">Your business at a glance — what you made, what you owe, what needs attention</div>
+
+  <!-- P&L strip -->
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Your Take-Home (Month)</div><div class="kpi-val" id="cmd-takehome">$0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Gross Managed Revenue</div><div class="kpi-val" id="cmd-gross">$0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Outstanding Payouts</div><div class="kpi-val" id="cmd-outstanding">$0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Properties Managed</div><div class="kpi-val" id="cmd-props">0</div></div>
+  </div>
+
+  <!-- Portfolio overview -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-hd">
+      <div class="card-title">🏘 Portfolio — Owner View</div>
+      <button class="btn btn-pri" style="font-size:11px;padding:4px 9px" onclick="sendAllOwnerReports()">📧 Send All Reports</button>
+    </div>
+    <div class="card-body" id="cmd-portfolio">
+      <div class="empty-state"><div class="es-i">🏘</div><h3>No properties yet</h3><p>Add properties and link them to owners to see your portfolio</p></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <!-- Contractor summary -->
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-title">💳 Contractor Balances</div>
+        <button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="nav('payouts',document.querySelector('[onclick*=payouts]'))">View All →</button>
+      </div>
+      <div class="card-body" id="cmd-contractors">
+        <div style="font-size:13px;color:var(--txt3)">No payout records yet</div>
+      </div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="card">
+      <div class="card-hd"><div class="card-title">⚡ Quick Actions</div></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn btn-pri" onclick="nav('payouts',document.querySelector('[onclick*=payouts]'));setTimeout(()=>openModal('add-payout-modal'),100)">💳 Log Contractor Payout</button>
+        <button class="btn btn-ghost" onclick="nav('photovault',document.querySelector('[onclick*=photovault]'));setTimeout(()=>openModal('add-vault-photo-modal'),100)">📸 Upload Proof Photos</button>
+        <button class="btn btn-ghost" onclick="nav('reports',document.querySelector('[onclick*=reports]'));setTimeout(()=>switchReportTab('owner'),100)">📋 Generate Owner Report</button>
+        <button class="btn btn-ghost" onclick="nav('qrmanual',document.querySelector('[onclick*=qrmanual]'))">📱 Update QR House Manual</button>
+        <button class="btn btn-ghost" onclick="nav('owners',document.querySelector('[onclick*=owners]'));setTimeout(()=>openModal('add-owner-modal'),100)">🤝 Add Property Owner</button>
+        <div style="margin-top:4px;padding-top:12px;border-top:1px solid var(--border)">
+          <div style="font-size:11px;color:var(--txt3);margin-bottom:8px;font-weight:600;letter-spacing:.5px;text-transform:uppercase">AI Office Hours</div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="font-size:13px;color:var(--txt2)" id="cmd-aistatus">Checking…</div>
+            <button class="btn btn-ghost" style="font-size:11px;padding:3px 9px" onclick="nav('aihours',document.querySelector('[onclick*=aihours]'))">Configure</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ OWNER MANAGEMENT ████████████████████ -->
+<div class="page" id="page-owners">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Property owners you manage — contacts, splits, and reports in one place</div>
+    <button class="btn btn-pri" onclick="openModal('add-owner-modal')">+ Add Owner</button>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Total Owners</div><div class="kpi-val" id="own-total">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Properties Managed</div><div class="kpi-val" id="own-props">0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Avg Commission</div><div class="kpi-val" id="own-avg-comm">0%</div></div>
+    <div class="kpi k4"><div class="kpi-label">Reports Sent</div><div class="kpi-val" id="own-reports">0</div></div>
+  </div>
+  <div id="owners-list">
+    <div class="empty-state"><div class="es-i">🤝</div><h3>No owners added yet</h3><p>Add property owners to track splits and send branded monthly reports</p><button class="btn btn-pri" onclick="openModal('add-owner-modal')" style="margin-top:10px">Add First Owner</button></div>
+  </div>
+</div>
+
 <!-- ██ CONCIERGE ████████████████████████████ -->
 <div class="page" id="page-concierge">
   <div style="font-size:13px;color:var(--txt2);margin-bottom:18px">Build a custom concierge menu for your guests</div>
@@ -2054,6 +2132,17 @@ select{color:var(--txt)!important;}
 </div></div>
 
 <!-- NEW FEATURE MODALS -->
+
+<!-- OWNER MODAL -->
+<div class="modal-bg" id="add-owner-modal"><div class="modal"><h2>🤝 Add Property Owner</h2>
+  <div class="g2"><div class="fi"><label>Owner Name</label><input id="own-name" placeholder="John & Sarah Smith"></div><div class="fi"><label>Email</label><input id="own-email" type="email" placeholder="owner@email.com"></div></div>
+  <div class="g2"><div class="fi"><label>Phone</label><input id="own-phone" placeholder="+1 555 0100"></div><div class="fi"><label>Commission You Earn (%)</label><input id="own-commission" type="number" value="20" placeholder="20"></div></div>
+  <div class="fi"><label>Their Properties</label><select id="own-props-sel" multiple style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none;min-height:80px"><option value="">Loading…</option></select><div style="font-size:11px;color:var(--txt3);margin-top:4px">Hold Ctrl/Cmd to select multiple</div></div>
+  <div class="fi"><label>Payment Method</label><input id="own-payment" placeholder="Venmo @johnsmith, Zelle 555-0100, ACH…"></div>
+  <div class="fi"><label>Notes</label><textarea id="own-notes" placeholder="Prefers reports by 5th of month. Call don't text." style="min-height:60px"></textarea></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-owner-modal')">Cancel</button><button class="btn btn-pri" onclick="addOwner()">Add Owner</button></div>
+</div></div>
+
 <!-- GUEST CRM MODAL -->
 <div class="modal-bg" id="add-crm-modal"><div class="modal"><h2>👤 Add Guest</h2>
   <div class="g2"><div class="fi"><label>Guest Name</label><input id="crm-name" placeholder="Marcus Kim"></div><div class="fi"><label>Email</label><input id="crm-email" type="email" placeholder="guest@email.com"></div></div>
@@ -2282,7 +2371,7 @@ let wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
 const LOCAL_KEY = 'hh_local_v1';
 const getLocal = () => { try{return JSON.parse(localStorage.getItem(LOCAL_KEY))||{};}catch{return {};} };
 const setLocal = d => localStorage.setItem(LOCAL_KEY, JSON.stringify(d));
-const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],expenses:[],blacklist:[],seasons:[],cleaners:[],jobs:[],workorders:[],inventory:[],autoReplies:[],concierge:[],upsells:[],claims:[],ciPolicies:[],ciRequests:[],rentalItems:[],rentalBookings:[],templates:[],loyaltyMembers:[],optimizerSettings:{},plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; if(!d.expenses)d.expenses=[]; if(!d.blacklist)d.blacklist=[]; if(!d.seasons)d.seasons=[]; if(!d.cleaners)d.cleaners=[]; if(!d.jobs)d.jobs=[]; if(!d.workorders)d.workorders=[]; if(!d.inventory)d.inventory=[]; if(!d.autoReplies)d.autoReplies=[]; if(!d.concierge)d.concierge=[]; if(!d.upsells)d.upsells=[]; if(!d.claims)d.claims=[]; if(!d.ciPolicies)d.ciPolicies=[]; if(!d.ciRequests)d.ciRequests=[]; if(!d.rentalItems)d.rentalItems=[]; if(!d.rentalBookings)d.rentalBookings=[]; if(!d.templates)d.templates=[]; if(!d.loyaltyMembers)d.loyaltyMembers=[]; if(!d.optimizerSettings)d.optimizerSettings={}; if(!d.guestCRM)d.guestCRM=[]; if(!d.payouts)d.payouts=[]; if(!d.vaultPhotos)d.vaultPhotos=[]; if(!d.aiHours)d.aiHours={enabled:false,start:'22:00',end:'08:00',message:'Hi! I received your message and will respond during office hours (8am-10pm). 🏡',escalate:'emergency,flood,fire,locked out,broken,urgent',autoCount:0,escalateCount:0}; if(!d.sentReports)d.sentReports=[]; if(!d.invChecklist)d.invChecklist=['Coffee pods (6+)','Toilet paper (4+ rolls)','Paper towels (2+ rolls)','Hand soap','Dish soap','Shampoo & conditioner','Body wash','Bath towels (2 per guest)','Kitchen sponge','Trash bags']; return d; };
+const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],expenses:[],blacklist:[],seasons:[],cleaners:[],jobs:[],workorders:[],inventory:[],autoReplies:[],concierge:[],upsells:[],claims:[],ciPolicies:[],ciRequests:[],rentalItems:[],rentalBookings:[],templates:[],loyaltyMembers:[],optimizerSettings:{},plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; if(!d.expenses)d.expenses=[]; if(!d.blacklist)d.blacklist=[]; if(!d.seasons)d.seasons=[]; if(!d.cleaners)d.cleaners=[]; if(!d.jobs)d.jobs=[]; if(!d.workorders)d.workorders=[]; if(!d.inventory)d.inventory=[]; if(!d.autoReplies)d.autoReplies=[]; if(!d.concierge)d.concierge=[]; if(!d.upsells)d.upsells=[]; if(!d.claims)d.claims=[]; if(!d.ciPolicies)d.ciPolicies=[]; if(!d.ciRequests)d.ciRequests=[]; if(!d.rentalItems)d.rentalItems=[]; if(!d.rentalBookings)d.rentalBookings=[]; if(!d.templates)d.templates=[]; if(!d.loyaltyMembers)d.loyaltyMembers=[]; if(!d.optimizerSettings)d.optimizerSettings={}; if(!d.guestCRM)d.guestCRM=[]; if(!d.payouts)d.payouts=[]; if(!d.vaultPhotos)d.vaultPhotos=[]; if(!d.aiHours)d.aiHours={enabled:false,start:'22:00',end:'08:00',message:'Hi! I received your message and will respond during office hours (8am-10pm). 🏡',escalate:'emergency,flood,fire,locked out,broken,urgent',autoCount:0,escalateCount:0}; if(!d.sentReports)d.sentReports=[]; if(!d.owners)d.owners=[]; if(!d.invChecklist)d.invChecklist=['Coffee pods (6+)','Toilet paper (4+ rolls)','Paper towels (2+ rolls)','Hand soap','Dish soap','Shampoo & conditioner','Body wash','Bath towels (2 per guest)','Kitchen sponge','Trash bags']; return d; };
 const saveLocalData = (uid,d) => { const l=getLocal(); l[uid]=d; setLocal(l); };
 
 // Save to both local and Supabase
@@ -2779,7 +2868,7 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 //  NAV
 // ════════════════════════════════════════════
-const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',crm:'👤 Guest CRM',payouts:'💳 Payout Ledger',photovault:'📸 Photo Vault',qrmanual:'📱 QR House Manual',aihours:'🤖 AI Office Hours',checkininsurance:'🛡 Check-in Insurance',rentals:'🚲 Equipment Rentals',ical:'iCal Sync',templates:'📝 Message Templates',loyalty:'🎁 Guest Loyalty',pricing_opt:'💡 Pricing Optimizer',scorecards:'🏆 Property Scorecards',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
+const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',cohost_cmd:'🏢 Co-Host Command Center',owners:'🤝 Owner Management',crm:'👤 Guest CRM',payouts:'💳 Payout Ledger',photovault:'📸 Photo Vault',qrmanual:'📱 QR House Manual',aihours:'🤖 AI Office Hours',checkininsurance:'🛡 Check-in Insurance',rentals:'🚲 Equipment Rentals',ical:'iCal Sync',templates:'📝 Message Templates',loyalty:'🎁 Guest Loyalty',pricing_opt:'💡 Pricing Optimizer',scorecards:'🏆 Property Scorecards',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
@@ -2803,6 +2892,8 @@ function nav(id,el){
   if(id==='marketplace')setTimeout(()=>renderMarketplace(),50);
   if(id==='workorders')setTimeout(()=>renderWorkOrders(),50);
   if(id==='inventory')setTimeout(()=>renderInventory(),50);
+  if(id==='cohost_cmd')setTimeout(()=>renderCohostCmd(),50);
+  if(id==='owners')setTimeout(()=>renderOwners(),50);
   if(id==='crm')setTimeout(()=>renderCRM(),50);
   if(id==='payouts')setTimeout(()=>renderPayouts(),50);
   if(id==='photovault')setTimeout(()=>renderPhotoVault(),50);
@@ -6341,6 +6432,245 @@ function renderSentReports() {
     '<div style="font-size:11px;color:var(--txt3)">'+(r.method==='emailed'?'Emailed to '+r.email:'Downloaded')+' · '+new Date(r.sentAt).toLocaleDateString()+'</div></div>' +
     '</div>'
   ).join('');
+}
+
+
+// ════════════════════════════════════════════
+//  OWNER MANAGEMENT
+// ════════════════════════════════════════════
+function addOwner() {
+  const name = document.getElementById('own-name').value.trim();
+  if(!name){toast('Enter owner name');return;}
+  if(!cData.owners) cData.owners=[];
+  const sel = document.getElementById('own-props-sel');
+  const propIds = sel ? Array.from(sel.selectedOptions).map(o=>o.value).filter(Boolean) : [];
+  cData.owners.push({
+    id:'own_'+Date.now(), name,
+    email:document.getElementById('own-email').value.trim(),
+    phone:document.getElementById('own-phone').value.trim(),
+    commission:parseFloat(document.getElementById('own-commission').value)||20,
+    propIds, payment:document.getElementById('own-payment').value.trim(),
+    notes:document.getElementById('own-notes').value.trim(),
+    created:Date.now()
+  });
+  saveUserData(cUid,cData);
+  closeModal('add-owner-modal');
+  toast(name+' added!');
+  renderOwners();
+}
+
+function renderOwners() {
+  const owners = cData.owners||[];
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+
+  // Populate property select in modal
+  const sel = document.getElementById('own-props-sel');
+  if(sel) sel.innerHTML = cData.properties.map(p=>'<option value="'+p.id+'">'+p.emoji+' '+p.name+'</option>').join('');
+
+  set('own-total', owners.length);
+  const totalProps = owners.reduce((s,o)=>s+(o.propIds||[]).length,0);
+  set('own-props', totalProps);
+  const avgComm = owners.length ? Math.round(owners.reduce((s,o)=>s+(o.commission||0),0)/owners.length) : 0;
+  set('own-avg-comm', avgComm+'%');
+  const sentCount = (cData.sentReports||[]).length;
+  set('own-reports', sentCount);
+
+  const list = document.getElementById('owners-list');
+  if(!list) return;
+  if(!owners.length){
+    list.innerHTML='<div class="empty-state"><div class="es-i">🤝</div><h3>No owners yet</h3><button class="btn btn-pri" onclick="openModal(\"add-owner-modal\")" style="margin-top:10px">Add First Owner</button></div>';
+    return;
+  }
+
+  const thisMonth = new Date().toISOString().slice(0,7);
+  list.innerHTML = owners.map(function(o) {
+    var props = (o.propIds||[]).map(function(pid){ var p=cData.properties.find(x=>x.id===pid); return p?p.emoji+' '+p.name:''; }).filter(Boolean);
+    var monthBookings = (cData.bookings||[]).filter(function(b){ return (o.propIds||[]).includes(b.propId)&&b.checkin&&b.checkin.startsWith(thisMonth)&&b.status!=='cancelled'; });
+    var grossRev = monthBookings.reduce(function(s,b){return s+(b.price||0);},0);
+    var myComm = Math.round(grossRev*(o.commission||20)/100);
+    var sentReports = (cData.sentReports||[]).filter(function(r){ return (o.propIds||[]).includes(r.propId); }).length;
+    return '<div class="card" style="margin-bottom:12px">'
+      +'<div class="card-hd">'
+        +'<div style="display:flex;align-items:center;gap:12px">'
+          +'<div style="width:42px;height:42px;border-radius:50%;background:var(--gold);color:#2C1F14;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0">'+o.name[0].toUpperCase()+'</div>'
+          +'<div>'
+            +'<div style="font-size:15px;font-weight:600;color:var(--txt)">'+o.name+'</div>'
+            +'<div style="font-size:12px;color:var(--txt3)">'+(o.email||'No email')+' · '+(o.phone||'No phone')+'</div>'
+          +'</div>'
+        +'</div>'
+        +'<div style="display:flex;gap:6px">'
+          +'<button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="quickSendReport(this.dataset.id)" data-id="'+o.id+'">📧 Send Report</button>'
+          +'<button class="btn btn-ghost" style="font-size:11px;padding:4px 9px;color:var(--terra)" onclick="removeOwner(this.dataset.id)" data-id="'+o.id+'">🗑</button>'
+        +'</div>'
+      +'</div>'
+      +'<div class="card-body">'
+        +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">'
+          +'<div style="background:var(--sand);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Commission</div><div style="font-family:Fraunces,serif;font-size:18px;color:var(--terra)">'+(o.commission||20)+'%</div></div>'
+          +'<div style="background:var(--sand);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">This Month Gross</div><div style="font-family:Fraunces,serif;font-size:18px;color:var(--txt)">$'+grossRev.toLocaleString()+'</div></div>'
+          +'<div style="background:var(--sand);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Your Earn</div><div style="font-family:Fraunces,serif;font-size:18px;color:var(--sage)">$'+myComm.toLocaleString()+'</div></div>'
+          +'<div style="background:var(--sand);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Reports Sent</div><div style="font-family:Fraunces,serif;font-size:18px;color:var(--txt)">'+sentReports+'</div></div>'
+        +'</div>'
+        +(props.length?'<div style="font-size:12px;color:var(--txt2);margin-bottom:6px"><strong>Properties:</strong> '+props.join(', ')+'</div>':'')
+        +(o.payment?'<div style="font-size:12px;color:var(--txt2);margin-bottom:6px"><strong>Pays via:</strong> '+o.payment+'</div>':'')
+        +(o.notes?'<div style="font-size:12px;color:var(--txt3);font-style:italic">'+o.notes+'</div>':'')
+      +'</div>'
+    +'</div>';
+  }).join('');
+}
+
+function removeOwner(id){
+  if(!confirm('Remove this owner?')) return;
+  cData.owners=(cData.owners||[]).filter(x=>x.id!==id);
+  saveUserData(cUid,cData); renderOwners(); toast('Owner removed');
+}
+
+function quickSendReport(ownerId) {
+  const o = (cData.owners||[]).find(x=>x.id===ownerId);
+  if(!o){toast('Owner not found');return;}
+  if(!o.email){toast('No email on file for this owner');return;}
+  if(!(o.propIds||[]).length){toast('No properties linked to this owner');return;}
+  // Pre-fill owner report and switch to it
+  nav('reports', document.querySelector('[onclick*=reports]'));
+  setTimeout(function(){
+    switchReportTab('owner');
+    setTimeout(function(){
+      const propSel = document.getElementById('or-prop');
+      if(propSel && o.propIds[0]) { propSel.value=o.propIds[0]; buildOwnerReport(); }
+      const emailEl = document.getElementById('or-email'); if(emailEl) emailEl.value=o.email;
+      const ownerEl = document.getElementById('or-owner'); if(ownerEl) ownerEl.value=o.name;
+      const commEl  = document.getElementById('or-commission'); if(commEl) commEl.value=o.commission||20;
+      buildOwnerReport();
+      toast('Report pre-filled for '+o.name+' — review and click Email to Owner');
+    }, 150);
+  }, 100);
+}
+
+async function sendAllOwnerReports() {
+  const owners = (cData.owners||[]).filter(o=>o.email&&(o.propIds||[]).length);
+  if(!owners.length){toast('No owners with email + properties linked');return;}
+  toast('Sending '+owners.length+' owner report'+( owners.length!==1?'s':'')+'…');
+  for(var i=0;i<owners.length;i++){
+    await quickSendReportSilent(owners[i]);
+    await new Promise(r=>setTimeout(r,500));
+  }
+  toast('All '+owners.length+' owner reports sent! ✓');
+}
+
+async function quickSendReportSilent(o) {
+  if(!o.email||(!(o.propIds||[]).length)) return;
+  const propSel = document.getElementById('or-prop');
+  const emailEl = document.getElementById('or-email');
+  const ownerEl = document.getElementById('or-owner');
+  const commEl  = document.getElementById('or-commission');
+  if(propSel) propSel.value=o.propIds[0];
+  if(emailEl) emailEl.value=o.email;
+  if(ownerEl) ownerEl.value=o.name;
+  if(commEl)  commEl.value=o.commission||20;
+  await sendOwnerReport();
+}
+
+// ════════════════════════════════════════════
+//  COHOST COMMAND CENTER
+// ════════════════════════════════════════════
+function renderCohostCmd() {
+  const now = new Date();
+  const thisMonth = now.toISOString().slice(0,7);
+  const bookings = (cData.bookings||[]).filter(b=>b.status!=='cancelled'&&b.checkin&&b.checkin.startsWith(thisMonth));
+  const grossRev = bookings.reduce((s,b)=>s+(b.price||0),0);
+
+  // Figure out default commission from first owner or 20%
+  const defaultComm = (cData.owners||[]).length ? (cData.owners[0].commission||20) : 20;
+  const myEarnings = Math.round(grossRev * defaultComm / 100);
+
+  // Outstanding payouts
+  const outstanding = (cData.payouts||[]).filter(p=>p.status==='pending').reduce((s,p)=>s+(p.owed||0),0);
+
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('cmd-takehome','$'+myEarnings.toLocaleString());
+  set('cmd-gross','$'+grossRev.toLocaleString());
+  set('cmd-outstanding','$'+outstanding.toLocaleString());
+  set('cmd-props',cData.properties.length);
+
+  // AI Office Hours status
+  const aiEl = document.getElementById('cmd-aistatus');
+  if(aiEl){
+    const ah = cData.aiHours||{};
+    if(ah.enabled){
+      aiEl.textContent='🟢 Active ('+ah.start+' – '+ah.end+')';
+      aiEl.style.color='var(--sage)';
+    } else {
+      aiEl.textContent='⚫ Off — guests get manual replies only';
+      aiEl.style.color='var(--txt3)';
+    }
+  }
+
+  // Portfolio
+  renderCmdPortfolio(thisMonth);
+
+  // Contractors
+  renderCmdContractors();
+}
+
+function renderCmdPortfolio(thisMonth) {
+  const el = document.getElementById('cmd-portfolio');
+  if(!el) return;
+  if(!cData.properties.length){
+    el.innerHTML='<div class="empty-state"><div class="es-i">🏘</div><h3>No properties yet</h3></div>';
+    return;
+  }
+
+  el.innerHTML = cData.properties.map(function(p) {
+    var owner = (cData.owners||[]).find(function(o){ return (o.propIds||[]).includes(p.id); });
+    var propBookings = (cData.bookings||[]).filter(function(b){ return b.propId===p.id&&b.status!=='cancelled'&&b.checkin&&b.checkin.startsWith(thisMonth); });
+    var gross = propBookings.reduce(function(s,b){return s+(b.price||0);},0);
+    var comm = owner ? (owner.commission||20) : 20;
+    var myNet = Math.round(gross*comm/100);
+    var ownerPayout = gross - myNet;
+    var lastPhoto = (cData.vaultPhotos||[]).filter(function(ph){ return ph.propId===p.id&&ph.type==='after_clean'; }).slice(-1)[0];
+    var lastReport = (cData.sentReports||[]).filter(function(r){ return r.propId===p.id; }).slice(-1)[0];
+
+    return '<div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)">'
+      +'<div style="font-size:28px;flex-shrink:0">'+p.emoji+'</div>'
+      +'<div style="flex:1;min-width:0">'
+        +'<div style="font-size:14px;font-weight:600;color:var(--txt)">'+p.name+'</div>'
+        +'<div style="font-size:12px;color:var(--txt3)">'+(owner?'Owner: '+owner.name:'⚠ No owner linked')+'</div>'
+        +'<div style="font-size:11px;color:var(--txt3);margin-top:2px">'
+          +'Last photo: '+(lastPhoto?lastPhoto.date:'none')+' · '
+          +'Last report: '+(lastReport?lastReport.period:'never sent')
+        +'</div>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex-shrink:0">'
+        +'<div style="text-align:center;background:var(--sand);border-radius:8px;padding:8px 10px"><div style="font-size:10px;color:var(--txt3)">Gross</div><div style="font-family:Fraunces,serif;font-size:15px;color:var(--txt)">$'+gross.toLocaleString()+'</div></div>'
+        +'<div style="text-align:center;background:rgba(107,143,113,.1);border-radius:8px;padding:8px 10px"><div style="font-size:10px;color:var(--txt3)">My '+comm+'%</div><div style="font-family:Fraunces,serif;font-size:15px;color:var(--sage)">$'+myNet.toLocaleString()+'</div></div>'
+        +'<div style="text-align:center;background:var(--sand);border-radius:8px;padding:8px 10px"><div style="font-size:10px;color:var(--txt3)">Owner</div><div style="font-family:Fraunces,serif;font-size:15px;color:var(--txt)">$'+ownerPayout.toLocaleString()+'</div></div>'
+      +'</div>'
+      +(owner?'<button class="btn btn-ghost" style="font-size:10px;padding:4px 9px;flex-shrink:0" onclick="quickSendReport(this.dataset.id)" data-id="'+owner.id+'">📧 Report</button>':'<button class="btn btn-ghost" style="font-size:10px;padding:4px 9px;flex-shrink:0" onclick="openModal(\"add-owner-modal\")">Link Owner</button>')
+    +'</div>';
+  }).join('');
+}
+
+function renderCmdContractors() {
+  const el = document.getElementById('cmd-contractors');
+  if(!el) return;
+  const payouts = cData.payouts||[];
+  if(!payouts.length){el.innerHTML='<div style="font-size:13px;color:var(--txt3)">No payout records yet</div>';return;}
+
+  // Group by cleaner
+  const byContractor = {};
+  payouts.forEach(function(p){
+    if(!byContractor[p.cleanerName]) byContractor[p.cleanerName]={name:p.cleanerName,pending:0,paid:0,total:0};
+    byContractor[p.cleanerName].total+=(p.owed||0);
+    if(p.status==='pending') byContractor[p.cleanerName].pending+=(p.owed||0);
+    else byContractor[p.cleanerName].paid+=(p.owed||0);
+  });
+
+  el.innerHTML = Object.values(byContractor).map(function(c){
+    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">'
+      +'<div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--txt)">'+c.name+'</div>'
+      +'<div style="font-size:11px;color:var(--txt3)">Total paid: $'+c.paid.toLocaleString()+'</div></div>'
+      +(c.pending?'<span class="pill pill-amber">Owes $'+c.pending.toLocaleString()+'</span>':'<span class="pill pill-green">All paid ✓</span>')
+    +'</div>';
+  }).join('');
 }
 
 function saveSettings(){const name=document.getElementById('set-name').value.trim();if(!name){toast('Enter your name');return;}if(cUser)cUser.name=name;document.getElementById('sb-uname').textContent=name;const init=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);document.getElementById('sb-av').textContent=init;sb.auth.updateUser({data:{full_name:name}});toast('Saved! ✓');}
