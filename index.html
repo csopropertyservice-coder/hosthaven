@@ -198,8 +198,8 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
    APP SHELL
 ═══════════════════════════════════════ */
 .app { display:none; }
-.app.visible { display:flex;flex-direction:column;height:100vh;overflow:hidden;background:var(--bg); }
-.shell { height:100vh;overflow:hidden; display:flex;flex:1;background:var(--bg); }
+.app.visible { display:flex;flex-direction:column;height:100vh;background:var(--bg); }
+.shell { height:calc(100vh - 0px);overflow:hidden;display:flex;flex:1;background:var(--bg); }
 
 /* SIDEBAR */
 .sidebar { width:230px;min-width:230px;background:var(--sb-bg);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;transition:background .3s; }
@@ -242,11 +242,12 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 @media(max-width:768px){ .hamburger { display:flex; } }
 
 /* CONTENT */
-.main-area { flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden;overflow-y:auto;background:var(--bg);height:100vh; }
-.content { padding:20px 24px;flex:none;background:var(--bg);min-height:0; }
+.main-area { flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden;overflow-y:auto;background:var(--bg); }
+.content { padding:20px 24px;background:var(--bg); }
 @media(max-width:600px){ .content { padding:16px; } .g4{grid-template-columns:repeat(2,1fr)!important;} #dash-main-grid{grid-template-columns:1fr!important;} #dash-quick-actions button{font-size:11px!important;padding:6px 10px!important;} .kpi-val{font-size:22px!important;} }
-.page { display:none;animation:fadeUp .3s ease both; }
-.page.active { display:block; }
+.page { display:none; }
+.page.active { display:block;animation:fadeIn .18s ease; }
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes fadeUp { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
 @keyframes spin { to{transform:rotate(360deg)} }
 
@@ -2964,6 +2965,7 @@ function launchApp(user) {
   if(content) {
     content.style.opacity = '0';
     content.style.transition = 'opacity 0.3s';
+    const ma=document.querySelector('.main-area');if(ma)ma.scrollTop=0;
   }
 
   document.getElementById('sb-uname').textContent=user.name;
@@ -3127,6 +3129,8 @@ function nav(id,el){
   closeSidebar();
   // Save last page for refresh restore
   try{sessionStorage.setItem('hh_last_page',id);}catch(e){}
+  // Reset scroll to top on every page change
+  const mainArea=document.querySelector('.main-area');if(mainArea)mainArea.scrollTop=0;
   if(id==='website')setTimeout(updateWb,100);
   if(id==='portal')renderPortal();
   if(id==='reports')renderReports();
