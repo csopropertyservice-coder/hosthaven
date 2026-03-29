@@ -55,7 +55,7 @@
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
+html { scroll-behavior:auto; }
 body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; transition:background .3s,color .3s; }
 
 /* ═══════════════════════════════════════
@@ -242,11 +242,11 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 @media(max-width:768px){ .hamburger { display:flex; } }
 
 /* CONTENT */
-.main-area { flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden;overflow-y:auto;background:var(--bg); }
-.content { padding:20px 24px;background:var(--bg); }
+.main-area { flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden;overflow-y:auto;background:var(--bg);scroll-behavior:auto; }
+.content { padding:20px 24px;background:var(--bg);overflow:hidden; }
 @media(max-width:600px){ .content { padding:16px; } .g4{grid-template-columns:repeat(2,1fr)!important;} #dash-main-grid{grid-template-columns:1fr!important;} #dash-quick-actions button{font-size:11px!important;padding:6px 10px!important;} .kpi-val{font-size:22px!important;} }
-.page { display:none; }
-.page.active { display:block;animation:fadeIn .18s ease; }
+.page { display:none!important;height:0;overflow:hidden; }
+.page.active { display:block!important;height:auto;overflow:visible;animation:fadeIn .18s ease; }
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes fadeUp { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
 @keyframes spin { to{transform:rotate(360deg)} }
@@ -2965,7 +2965,7 @@ function launchApp(user) {
   if(content) {
     content.style.opacity = '0';
     content.style.transition = 'opacity 0.3s';
-    const ma=document.querySelector('.main-area');if(ma)ma.scrollTop=0;
+    const ma=document.querySelector('.main-area');if(ma)ma.scrollTo({top:0,behavior:'instant'});
   }
 
   document.getElementById('sb-uname').textContent=user.name;
@@ -3130,7 +3130,7 @@ function nav(id,el){
   // Save last page for refresh restore
   try{sessionStorage.setItem('hh_last_page',id);}catch(e){}
   // Reset scroll to top on every page change
-  const mainArea=document.querySelector('.main-area');if(mainArea)mainArea.scrollTop=0;
+  const mainArea=document.querySelector('.main-area');if(mainArea)mainArea.scrollTo({top:0,behavior:'instant'});
   if(id==='website')setTimeout(updateWb,100);
   if(id==='portal')renderPortal();
   if(id==='reports')renderReports();
@@ -3179,7 +3179,9 @@ function renderPricingOpt(){
   if(s.lastMin!=null){const el=document.getElementById('opt-lastmin');if(el)el.value=s.lastMin;}
   if(s.longStay!=null){const el=document.getElementById('opt-longstay');if(el)el.value=s.longStay;}
 }
-function renderAll(){renderDashboard();renderProperties();renderBookings();renderMessages();renderTasks();renderPricing();renderPortal();renderAnalytics();renderReports();renderReviews();renderICals();renderStaff();updateBadges();renderSmartNotifications();}
+function renderAll(){
+  const _ma=document.querySelector('.main-area');if(_ma)_ma.scrollTo({top:0,behavior:'instant'});
+  renderDashboard();renderProperties();renderBookings();renderMessages();renderTasks();renderPricing();renderPortal();renderAnalytics();renderReports();renderReviews();renderICals();renderStaff();updateBadges();renderSmartNotifications();}
 
 // ════════════════════════════════════════════
 //  ADMIN PANEL
