@@ -3016,6 +3016,10 @@ function launchApp(user) {
   const content = document.querySelector('.content');
   if(content) {
     content.style.opacity = '0';
+    // Ensure all pages hidden except dashboard
+    document.querySelectorAll('.page').forEach(function(p){
+      if(!p.classList.contains('active')) p.style.display='none';
+    });
     content.style.transition = 'opacity 0.3s';
     const ma=document.querySelector('.main-area');
     if(ma){ma.scrollTo({top:0,behavior:'instant'});ma.scrollTop=0;}
@@ -3179,9 +3183,14 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',cohost_cmd:'🏢 Co-Host Command Center',owners:'🤝 Owner Management',crm:'👤 Guest CRM',payouts:'💳 Payout Ledger',photovault:'📸 Photo Vault',qrmanual:'📱 QR House Manual',aihours:'🤖 AI Office Hours',affiliates:'🤝 Affiliate Program',checkininsurance:'🛡 Check-in Insurance',rentals:'🚲 Equipment Rentals',ical:'iCal Sync',templates:'📝 Message Templates',loyalty:'🎁 Guest Loyalty',pricing_opt:'💡 Pricing Optimizer',scorecards:'🏆 Property Scorecards',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
 function nav(id,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p){
+    p.classList.remove('active');
+    p.style.display='none';
+  });
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
+  const activePg=document.getElementById('page-'+id);
+  activePg.classList.add('active');
+  activePg.style.display='';
   if(el)el.classList.add('active');
   document.getElementById('page-title').textContent=titles[id]||id;
   closeSidebar();
@@ -7626,6 +7635,17 @@ sb.auth.onAuthStateChange((event, session) => {
 });
 
 window.addEventListener('load', () => {
+  // CRITICAL: Hide all inactive pages via JS (CSS may not apply correctly)
+  function hideInactivePages() {
+    document.querySelectorAll('.page').forEach(function(p) {
+      if(!p.classList.contains('active')) {
+        p.style.display = 'none';
+      } else {
+        p.style.display = '';
+      }
+    });
+  }
+  hideInactivePages();
   // Watch for page changes and auto-scroll to top
   const observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(m) {
