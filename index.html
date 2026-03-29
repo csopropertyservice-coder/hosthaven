@@ -635,43 +635,52 @@ select{color:var(--txt)!important;}
         <div class="sb-plan" id="sb-plan">⭐ Free</div>
       </div>
       <nav class="sb-nav">
-        <div class="sb-sec">Overview</div>
+        <div class="sb-sec">Core</div>
         <div class="sb-item active" onclick="nav('dashboard',this)"><span class="ico">📊</span>Dashboard</div>
         <div class="sb-item" onclick="nav('properties',this)"><span class="ico">🏠</span>Properties</div>
         <div class="sb-item" onclick="nav('bookings',this)"><span class="ico">📅</span>Bookings<span class="sb-badge" id="sb-b-badge" style="display:none">0</span></div>
-        <div class="sb-sec" style="margin-top:8px">Management</div>
         <div class="sb-item" onclick="nav('messages',this)"><span class="ico">💬</span>Messages<span class="sb-badge" id="sb-m-badge" style="display:none">0</span></div>
-        <div class="sb-item" onclick="nav('pricing',this)"><span class="ico">💰</span>Nightly Rates</div>
+
+        <div class="sb-sec" style="margin-top:10px">Operations</div>
         <div class="sb-item" onclick="nav('cleaning',this)"><span class="ico">🧹</span>Tasks</div>
         <div class="sb-item" onclick="nav('staff',this)"><span class="ico">👥</span>Staff Portal</div>
         <div class="sb-item" onclick="nav('marketplace',this)"><span class="ico">🏪</span>Cleaner Marketplace</div>
         <div class="sb-item" onclick="nav('workorders',this)"><span class="ico">🔧</span>Work Orders</div>
         <div class="sb-item" onclick="nav('inventory',this)"><span class="ico">📦</span>Inventory</div>
-        <div class="sb-item" onclick="nav('crm',this)"><span class="ico">👤</span>Guest CRM</div>
         <div class="sb-item" onclick="nav('payouts',this)"><span class="ico">💳</span>Payout Ledger</div>
         <div class="sb-item" onclick="nav('photovault',this)"><span class="ico">📸</span>Photo Vault</div>
+        <div class="sb-item" onclick="nav('ical',this)"><span class="ico">🔄</span>iCal Sync</div>
+
+        <div class="sb-sec" style="margin-top:10px">Guest Experience</div>
+        <div class="sb-item" onclick="nav('crm',this)"><span class="ico">👤</span>Guest CRM</div>
+        <div class="sb-item" onclick="nav('loyalty',this)"><span class="ico">🎁</span>Guest Loyalty</div>
+        <div class="sb-item" onclick="nav('portal',this)"><span class="ico">🔑</span>Guest Portal</div>
         <div class="sb-item" onclick="nav('qrmanual',this)"><span class="ico">📱</span>QR House Manual</div>
-        <div class="sb-item" onclick="nav('aihours',this)"><span class="ico">🤖</span>AI Office Hours</div>
+        <div class="sb-item" onclick="nav('concierge',this)"><span class="ico">🎩</span>Concierge</div>
+        <div class="sb-item" onclick="nav('templates',this)"><span class="ico">📝</span>Templates</div>
+
+        <div class="sb-sec" style="margin-top:10px">Revenue</div>
+        <div class="sb-item" onclick="nav('pricing',this)"><span class="ico">💰</span>Nightly Rates</div>
+        <div class="sb-item" onclick="nav('pricing_opt',this)"><span class="ico">💡</span>Pricing Optimizer</div>
         <div class="sb-item" onclick="nav('checkininsurance',this)"><span class="ico">🛡</span>Check-in Insurance</div>
         <div class="sb-item" onclick="nav('rentals',this)"><span class="ico">🚲</span>Equipment Rentals</div>
-        <div class="sb-item" onclick="nav('ical',this)"><span class="ico">🔄</span>iCal Sync</div>
-        <div class="sb-sec" style="margin-top:8px">✨ Features</div>
-        <div class="sb-item" onclick="nav('templates',this)"><span class="ico">📝</span>Message Templates</div>
-        <div class="sb-item" onclick="nav('loyalty',this)"><span class="ico">🎁</span>Guest Loyalty</div>
-        <div class="sb-item" onclick="nav('pricing_opt',this)"><span class="ico">💡</span>Pricing Optimizer</div>
-        <div class="sb-item" onclick="nav('scorecards',this)"><span class="ico">🏆</span>Scorecards</div>
-        <div class="sb-item" onclick="nav('concierge',this)"><span class="ico">🎩</span>Concierge</div>
         <div class="sb-item" onclick="nav('upsell',this)"><span class="ico">🛎</span>Upsell Portal</div>
-        <div class="sb-item" onclick="nav('directbook',this)"><span class="ico">🔗</span>Direct Booking Kit</div>
+        <div class="sb-item" onclick="nav('directbook',this)"><span class="ico">🔗</span>Direct Booking</div>
         <div class="sb-item" onclick="nav('website',this)"><span class="ico">🌐</span>Website Builder</div>
-        <div class="sb-item" onclick="nav('portal',this)"><span class="ico">🔑</span>Guest Portal</div>
-        <div class="sb-sec" style="margin-top:8px">Insights</div>
+
+        <div class="sb-sec" style="margin-top:10px">Insights</div>
         <div class="sb-item" onclick="nav('analytics',this)"><span class="ico">📈</span>Analytics</div>
         <div class="sb-item" onclick="nav('reports',this)"><span class="ico">📄</span>Reports</div>
         <div class="sb-item" onclick="nav('reviews',this)"><span class="ico">⭐</span>Reviews</div>
         <div class="sb-item" onclick="nav('expenses',this)"><span class="ico">💸</span>Expenses</div>
+        <div class="sb-item" onclick="nav('scorecards',this)"><span class="ico">🏆</span>Scorecards</div>
         <div class="sb-item" onclick="nav('damage',this)"><span class="ico">🛡</span>Damage Claims</div>
         <div class="sb-item" onclick="nav('blacklist',this)"><span class="ico">🚫</span>Guest Blacklist</div>
+
+        <div class="sb-sec" style="margin-top:10px">Automation</div>
+        <div class="sb-item" onclick="nav('aihours',this)"><span class="ico">🤖</span>AI Office Hours</div>
+
+        <div class="sb-sec" style="margin-top:10px">Account</div>
         <div class="sb-item" onclick="nav('settings',this)"><span class="ico">⚙️</span>Settings</div>
         <div class="sb-item" id="team-nav-item" style="display:none" onclick="nav('team',this)"><span class="ico">👥</span>Team Access</div>
         <div class="sb-item" id="admin-nav-item" style="display:none" onclick="nav('admin',this)"><span class="ico">👑</span>Admin Panel</div>
