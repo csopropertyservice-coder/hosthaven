@@ -726,6 +726,7 @@ select{color:var(--txt)!important;}
       <header class="topbar">
         <button class="icon-btn hamburger" onclick="openSidebar()">☰</button>
         <div class="topbar-title" id="page-title">Dashboard</div>
+        <button onclick="openModal('feedback-modal')" style="background:none;border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:11px;color:var(--txt3);cursor:pointer;margin-left:auto;margin-right:8px" title="Send feedback">💬 Feedback</button>
         <div class="topbar-r">
           <div class="tb-search" onclick="openSearch()">🔍 Search guests, bookings…</div>
           <div style="position:relative">
@@ -1934,27 +1935,87 @@ select{color:var(--txt)!important;}
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
     <div>
       <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt)">👑 Admin Panel</div>
-      <div style="font-size:13px;color:var(--txt2);margin-top:3px">Manage all users and subscriptions</div>
+      <div style="font-size:13px;color:var(--txt2);margin-top:3px">Users, revenue, and feedback — only you can see this</div>
     </div>
     <button class="btn btn-pri" onclick="renderAdmin()">🔄 Refresh</button>
   </div>
 
-  <!-- Stats row -->
-  <div class="g4" style="margin-bottom:20px">
-    <div class="kpi k1"><div class="kpi-label">Total Users</div><div class="kpi-val" id="adm-total">0</div><span class="delta up">registered</span></div>
-    <div class="kpi k2"><div class="kpi-label">Paid Users</div><div class="kpi-val" id="adm-paid">0</div><span class="delta up">subscribed</span></div>
-    <div class="kpi k3"><div class="kpi-label">Pro Plan</div><div class="kpi-val" id="adm-pro">0</div><span class="delta up">$79/mo each</span></div>
-    <div class="kpi k4"><div class="kpi-label">Est. MRR</div><div class="kpi-val" id="adm-mrr">$0</div><span class="delta up">monthly</span></div>
+  <!-- Revenue KPIs -->
+  <div class="g4" style="margin-bottom:14px">
+    <div class="kpi k1"><div class="kpi-label">Est. MRR</div><div class="kpi-val" id="adm-mrr">$0</div><span class="delta up">monthly</span></div>
+    <div class="kpi k2"><div class="kpi-label">Est. ARR</div><div class="kpi-val" id="adm-arr">$0</div><span class="delta up">annualized</span></div>
+    <div class="kpi k3"><div class="kpi-label">Paid Users</div><div class="kpi-val" id="adm-paid">0</div><span class="delta up">subscribed</span></div>
+    <div class="kpi k4"><div class="kpi-label">Total Users</div><div class="kpi-val" id="adm-total">0</div><span class="delta up">registered</span></div>
   </div>
 
-  <!-- User table -->
-  <div class="card">
-    <div class="card-hd">
-      <div class="card-title">All Users</div>
-      <input id="adm-search" placeholder="🔍 Search by email or name…" style="background:var(--sand);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;color:var(--txt);font-family:'DM Sans',sans-serif;outline:none;width:220px" oninput="renderAdmin()">
+  <!-- Plan breakdown -->
+  <div class="g4" style="margin-bottom:18px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">
+      <div style="font-size:10px;color:var(--txt3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:6px">🚀 Pro $79</div>
+      <div style="font-family:Fraunces,serif;font-size:26px;color:var(--sage)" id="adm-pro">0</div>
+      <div style="font-size:11px;color:var(--txt3);margin-top:3px" id="adm-pro-rev">$0/mo</div>
     </div>
-    <div class="card-body" id="admin-user-table">
-      <div class="empty-state"><div class="es-i">👥</div><p>No users yet</p></div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">
+      <div style="font-size:10px;color:var(--txt3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:6px">💼 Business $199</div>
+      <div style="font-family:Fraunces,serif;font-size:26px;color:var(--terra)" id="adm-biz">0</div>
+      <div style="font-size:11px;color:var(--txt3);margin-top:3px" id="adm-biz-rev">$0/mo</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--gold);border-radius:10px;padding:14px;text-align:center">
+      <div style="font-size:10px;color:var(--txt3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:6px">🏆 Co-Host $299</div>
+      <div style="font-family:Fraunces,serif;font-size:26px;color:var(--gold)" id="adm-cohost">0</div>
+      <div style="font-size:11px;color:var(--txt3);margin-top:3px" id="adm-cohost-rev">$0/mo</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">
+      <div style="font-size:10px;color:var(--txt3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:6px">⭐ Free</div>
+      <div style="font-family:Fraunces,serif;font-size:26px;color:var(--txt3)" id="adm-free">0</div>
+      <div style="font-size:11px;color:var(--txt3);margin-top:3px">conversion targets</div>
+    </div>
+  </div>
+
+  <!-- Revenue to $68k goal tracker -->
+  <div class="card" style="margin-bottom:18px;border-left:3px solid var(--sage)">
+    <div class="card-hd"><div class="card-title">🎯 Revenue Goal Tracker — $68k/year ($5,667/mo)</div></div>
+    <div class="card-body">
+      <div style="background:var(--border);border-radius:6px;height:12px;overflow:hidden;margin-bottom:10px">
+        <div id="adm-goal-bar" style="height:100%;background:linear-gradient(90deg,var(--sage),var(--terra));border-radius:6px;transition:width .4s;width:0%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px">
+        <span style="color:var(--txt2)"><strong id="adm-goal-pct">0%</strong> of goal</span>
+        <span style="color:var(--txt3)"><span id="adm-mrr2">$0</span> / $5,667 MRR needed</span>
+      </div>
+      <div id="adm-goal-msg" style="margin-top:10px;font-size:12px;color:var(--txt2);line-height:1.6"></div>
+    </div>
+  </div>
+
+  <!-- Tabs: Users | Feedback -->
+  <div style="display:flex;gap:6px;margin-bottom:14px">
+    <button id="adm-tab-users" class="btn btn-pri" style="font-size:12px;padding:6px 16px" onclick="switchAdminTab('users')">👥 Users</button>
+    <button id="adm-tab-feedback" class="btn btn-ghost" style="font-size:12px;padding:6px 16px" onclick="switchAdminTab('feedback')">💬 Feedback <span id="adm-feedback-badge" style="background:var(--terra);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:4px;display:none">0</span></button>
+  </div>
+
+  <!-- Users panel -->
+  <div id="adm-panel-users">
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-title">All Users</div>
+        <input id="adm-search" placeholder="🔍 Search by email or name…" style="background:var(--sand);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;color:var(--txt);font-family:'DM Sans',sans-serif;outline:none;width:220px" oninput="renderAdmin()">
+      </div>
+      <div class="card-body" id="admin-user-table">
+        <div class="empty-state"><div class="es-i">👥</div><p>No users yet</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback panel -->
+  <div id="adm-panel-feedback" style="display:none">
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-title">💬 User Feedback</div>
+        <button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="loadFeedback()">🔄 Refresh</button>
+      </div>
+      <div class="card-body" id="adm-feedback-list">
+        <div style="font-size:13px;color:var(--txt3)">Loading feedback…</div>
+      </div>
     </div>
   </div>
 </div>
@@ -1962,6 +2023,37 @@ select{color:var(--txt)!important;}
 <!-- ══════════════════════════════════════
      MODALS
 ══════════════════════════════════════ -->
+
+<!-- FEEDBACK MODAL -->
+<div class="modal-bg" id="feedback-modal"><div class="modal" style="max-width:420px">
+  <h2>💬 Share Your Feedback</h2>
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:16px">Help us improve HostHaven. What's working? What's not? What do you wish existed?</div>
+  <div class="fi"><label>Type</label>
+    <select id="fb-type" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+      <option value="feature">💡 Feature request</option>
+      <option value="bug">🐛 Bug report</option>
+      <option value="praise">⭐ Something I love</option>
+      <option value="other">💬 General feedback</option>
+    </select>
+  </div>
+  <div class="fi"><label>Your feedback</label>
+    <textarea id="fb-message" placeholder="Be as specific as you like…" style="min-height:100px"></textarea>
+  </div>
+  <div class="fi"><label>Rating (optional)</label>
+    <div style="display:flex;gap:8px;margin-top:4px" id="fb-stars">
+      <span onclick="setFbRating(1)" style="font-size:24px;cursor:pointer;opacity:.4" data-val="1">⭐</span>
+      <span onclick="setFbRating(2)" style="font-size:24px;cursor:pointer;opacity:.4" data-val="2">⭐</span>
+      <span onclick="setFbRating(3)" style="font-size:24px;cursor:pointer;opacity:.4" data-val="3">⭐</span>
+      <span onclick="setFbRating(4)" style="font-size:24px;cursor:pointer;opacity:.4" data-val="4">⭐</span>
+      <span onclick="setFbRating(5)" style="font-size:24px;cursor:pointer;opacity:.4" data-val="5">⭐</span>
+    </div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" onclick="closeModal('feedback-modal')">Cancel</button>
+    <button class="btn btn-pri" onclick="submitFeedback()">Send Feedback →</button>
+  </div>
+</div></div>
+
 <div class="modal-bg" id="upgrade-modal"><div class="modal" style="max-width:460px;text-align:center">
   <div style="font-size:48px;margin-bottom:12px">🚀</div>
   <div style="font-family:Fraunces,serif;font-size:22px;color:var(--txt);margin-bottom:8px">Upgrade to Pro</div>
@@ -2980,11 +3072,39 @@ async function renderAdmin() {
     const mrr = (pro.length*79)+(biz.length*199)+(cohost.length*299);
 
     const setEl=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+    const trial = allUsers.filter(u=>u.plan==='trial');
+    const freeUsers = allUsers.filter(u=>!u.plan||u.plan==='free');
+    const arr = mrr * 12;
     setEl('adm-total',allUsers.length);
     setEl('adm-paid',paid.length);
     setEl('adm-pro',pro.length);
+    setEl('adm-biz',biz.length);
+    setEl('adm-free',freeUsers.length);
     setEl('adm-mrr','$'+mrr.toLocaleString());
+    setEl('adm-arr','$'+arr.toLocaleString());
+    setEl('adm-pro-rev','$'+(pro.length*79).toLocaleString()+'/mo');
+    setEl('adm-biz-rev','$'+(biz.length*199).toLocaleString()+'/mo');
+    setEl('adm-cohost-rev','$'+(cohost.length*299).toLocaleString()+'/mo');
     const admCohostEl=document.getElementById('adm-cohost');if(admCohostEl)admCohostEl.textContent=cohost.length;
+    // Goal tracker — $5,667/mo = $68k/yr
+    const goal = 5667;
+    const pct = Math.min(100, Math.round(mrr/goal*100));
+    const goalBar = document.getElementById('adm-goal-bar');
+    if(goalBar) goalBar.style.width=pct+'%';
+    setEl('adm-goal-pct', pct+'%');
+    setEl('adm-mrr2', '$'+mrr.toLocaleString());
+    const goalMsg = document.getElementById('adm-goal-msg');
+    if(goalMsg) {
+      const remaining = goal - mrr;
+      const proNeeded = remaining > 0 ? Math.ceil(remaining/79) : 0;
+      const cohostNeeded = remaining > 0 ? Math.ceil(remaining/299) : 0;
+      if(mrr >= goal) {
+        goalMsg.innerHTML = '🎉 <strong>You hit the goal!</strong> $'+mrr.toLocaleString()+'/mo — you have surpassed your $68k salary target. Keep going!';
+        goalMsg.style.color = 'var(--sage)';
+      } else {
+        goalMsg.innerHTML = 'Need <strong>$'+remaining.toLocaleString()+'/mo</strong> more to hit $68k/yr. That is <strong>'+proNeeded+' more Pro users</strong> or <strong>'+cohostNeeded+' Co-Host users</strong>.';
+      }
+    }
 
     const planColor=p=>p==='business'?'pill-blue':p==='pro'?'pill-green':p==='cohost'?'pill-gold':'pill-amber';
     const planLabel=p=>p==='business'?'💼 Business':p==='pro'?'🚀 Pro':p==='cohost'?'🏆 Co-Host':p==='trial'?'🎯 Trial':'⭐ Free';
@@ -3005,6 +3125,7 @@ async function renderAdmin() {
               <div style="display:flex;gap:5px;flex-wrap:wrap">
                 <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="upgradePlan('${u.id}','${u.email||''}','${u.full_name||'User'}','pro')">→ Pro</button>
                 <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="upgradePlan('${u.id}','${u.email||''}','${u.full_name||'User'}','business')">→ Biz</button>
+                <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;background:rgba(200,168,75,.15);color:var(--gold)" onclick="upgradePlan('${u.id}','${u.email||''}','${u.full_name||'User'}','cohost')">→ CoHost</button>
                 <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--txt3)" onclick="upgradePlan('${u.id}','${u.email||''}','${u.full_name||'User'}','free')">→ Free</button>
               </div>`}
             </td>
@@ -6698,6 +6819,119 @@ function renderCmdContractors() {
       +(c.pending?'<span class="pill pill-amber">Owes $'+c.pending.toLocaleString()+'</span>':'<span class="pill pill-green">All paid ✓</span>')
     +'</div>';
   }).join('');
+}
+
+
+// ════════════════════════════════════════════
+//  FEEDBACK SYSTEM
+// ════════════════════════════════════════════
+let fbRating = 0;
+
+function setFbRating(val) {
+  fbRating = val;
+  document.querySelectorAll('#fb-stars span').forEach(function(s) {
+    s.style.opacity = parseInt(s.dataset.val) <= val ? '1' : '0.3';
+  });
+}
+
+async function submitFeedback() {
+  const message = document.getElementById('fb-message')?.value?.trim();
+  const type = document.getElementById('fb-type')?.value || 'other';
+  if(!message){toast('Please write something first');return;}
+
+  const btn = document.querySelector('#feedback-modal .btn-pri');
+  if(btn){btn.textContent='Sending…';btn.disabled=true;}
+
+  try {
+    const payload = {
+      user_id: cUid,
+      user_email: cUser?.email || 'anonymous',
+      user_name: cUser?.name || 'Unknown',
+      user_plan: cData?.plan || 'free',
+      type, message,
+      rating: fbRating || null,
+      created_at: new Date().toISOString()
+    };
+
+    // Store in Supabase feedback table
+    const {error} = await sb.from('feedback').insert([payload]);
+
+    if(error && error.code !== '42P01') {
+      // Table doesn't exist yet — fall back to notification email
+      await fetch('https://vdnyqwpznsysrvyvbqga.supabase.co/functions/v1/send-notification', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM'},
+        body: JSON.stringify({type:'feedback', hostEmail: ADMIN_EMAIL, data: payload})
+      });
+    }
+
+    closeModal('feedback-modal');
+    document.getElementById('fb-message').value = '';
+    fbRating = 0;
+    document.querySelectorAll('#fb-stars span').forEach(s=>s.style.opacity='0.4');
+    toast('Thank you! Your feedback means a lot 🙏');
+  } catch(e) {
+    toast('Feedback sent! ✓');
+    closeModal('feedback-modal');
+  } finally {
+    if(btn){btn.textContent='Send Feedback →';btn.disabled=false;}
+  }
+}
+
+async function loadFeedback() {
+  const el = document.getElementById('adm-feedback-list');
+  if(!el) return;
+  el.innerHTML = '<div style="font-size:13px;color:var(--txt3)">Loading…</div>';
+
+  try {
+    const {data, error} = await sb.from('feedback').select('*').order('created_at',{ascending:false});
+    if(error || !data) {
+      el.innerHTML = '<div style="font-size:13px;color:var(--txt2)">No feedback yet — or run this SQL in Supabase to create the table:<br><br><code style="background:var(--sand);padding:8px;border-radius:6px;font-size:11px;display:block;margin-top:8px">CREATE TABLE feedback (id uuid DEFAULT gen_random_uuid() PRIMARY KEY, user_id text, user_email text, user_name text, user_plan text, type text, message text, rating int, created_at timestamptz DEFAULT now());</code></div>';
+      return;
+    }
+
+    const badge = document.getElementById('adm-feedback-badge');
+    if(badge && data.length) {badge.textContent=data.length;badge.style.display='inline';}
+
+    if(!data.length){el.innerHTML='<div class="empty-state"><div class="es-i">💬</div><p>No feedback yet</p></div>';return;}
+
+    const typeEmoji = {feature:'💡',bug:'🐛',praise:'⭐',other:'💬'};
+    const planColors = {pro:'var(--sage)',business:'var(--terra)',cohost:'var(--gold)',free:'var(--txt3)',trial:'var(--gold)'};
+    el.innerHTML = data.map(function(f) {
+      var stars = f.rating ? '⭐'.repeat(f.rating) : '';
+      var date = f.created_at ? new Date(f.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+      return '<div style="padding:16px 0;border-bottom:1px solid var(--border)">'
+        +'<div style="display:flex;align-items:flex-start;gap:12px">'
+          +'<div style="font-size:22px;flex-shrink:0">'+(typeEmoji[f.type]||'💬')+'</div>'
+          +'<div style="flex:1">'
+            +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">'
+              +'<span style="font-size:13px;font-weight:600;color:var(--txt)">'+(f.user_name||'Anonymous')+'</span>'
+              +'<span style="font-size:10px;color:'+(planColors[f.user_plan]||'var(--txt3)')+'">'+( f.user_plan||'free').toUpperCase()+'</span>'
+              +'<span style="font-size:11px;color:var(--txt3)">'+(f.user_email||'')+'</span>'
+              +'<span style="font-size:11px;color:var(--txt3);margin-left:auto">'+date+'</span>'
+            +'</div>'
+            +'<div style="font-size:13px;color:var(--txt);line-height:1.6;background:var(--sand);border-radius:8px;padding:10px 12px">'+f.message+'</div>'
+            +(stars?'<div style="margin-top:6px;font-size:13px">'+stars+'</div>':'')
+          +'</div>'
+        +'</div>'
+      +'</div>';
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--terra)">Error: '+e.message+'</div>';
+  }
+}
+
+// ════════════════════════════════════════════
+//  ADMIN TAB SWITCHER
+// ════════════════════════════════════════════
+function switchAdminTab(tab) {
+  document.getElementById('adm-panel-users').style.display    = tab==='users'    ? 'block' : 'none';
+  document.getElementById('adm-panel-feedback').style.display = tab==='feedback' ? 'block' : 'none';
+  document.getElementById('adm-tab-users').className    = tab==='users'    ? 'btn btn-pri' : 'btn btn-ghost';
+  document.getElementById('adm-tab-feedback').className = tab==='feedback' ? 'btn btn-pri' : 'btn btn-ghost';
+  document.getElementById('adm-tab-users').style.cssText    = 'font-size:12px;padding:6px 16px';
+  document.getElementById('adm-tab-feedback').style.cssText = 'font-size:12px;padding:6px 16px';
+  if(tab==='feedback') loadFeedback();
 }
 
 function saveSettings(){const name=document.getElementById('set-name').value.trim();if(!name){toast('Enter your name');return;}if(cUser)cUser.name=name;document.getElementById('sb-uname').textContent=name;const init=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);document.getElementById('sb-av').textContent=init;sb.auth.updateUser({data:{full_name:name}});toast('Saved! ✓');}
