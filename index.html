@@ -648,8 +648,14 @@ select{color:var(--txt)!important;}
         <div class="sb-item" onclick="nav('workorders',this)"><span class="ico">🔧</span>Work Orders</div>
         <div class="sb-item" onclick="nav('inventory',this)"><span class="ico">📦</span>Inventory</div>
         <div class="sb-item" onclick="nav('inbox',this)"><span class="ico">📬</span>Unified Inbox</div>
+        <div class="sb-item" onclick="nav('checkininsurance',this)"><span class="ico">🛡</span>Check-in Insurance</div>
+        <div class="sb-item" onclick="nav('rentals',this)"><span class="ico">🚲</span>Equipment Rentals</div>
         <div class="sb-item" onclick="nav('ical',this)"><span class="ico">🔄</span>iCal Sync</div>
         <div class="sb-sec" style="margin-top:8px">✨ Features</div>
+        <div class="sb-item" onclick="nav('templates',this)"><span class="ico">📝</span>Message Templates</div>
+        <div class="sb-item" onclick="nav('loyalty',this)"><span class="ico">🎁</span>Guest Loyalty</div>
+        <div class="sb-item" onclick="nav('pricing_opt',this)"><span class="ico">💡</span>Pricing Optimizer</div>
+        <div class="sb-item" onclick="nav('scorecards',this)"><span class="ico">🏆</span>Scorecards</div>
         <div class="sb-item" onclick="nav('concierge',this)"><span class="ico">🎩</span>Concierge</div>
         <div class="sb-item" onclick="nav('upsell',this)"><span class="ico">🛎</span>Upsell Portal</div>
         <div class="sb-item" onclick="nav('directbook',this)"><span class="ico">🔗</span>Direct Booking Kit</div>
@@ -680,7 +686,13 @@ select{color:var(--txt)!important;}
         <div class="topbar-title" id="page-title">Dashboard</div>
         <div class="topbar-r">
           <div class="tb-search" onclick="openSearch()">🔍 Search guests, bookings…</div>
-          <div class="icon-btn" onclick="toast('No new notifications')">🔔</div>
+          <div style="position:relative">
+            <div class="icon-btn" onclick="openNotifPanel()" style="position:relative">🔔<span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--terra);border-radius:50%;font-size:9px;font-weight:700;color:#fff;align-items:center;justify-content:center">0</span></div>
+            <div id="notif-dropdown" style="display:none;position:absolute;right:0;top:calc(100% + 8px);width:320px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:1000;max-height:400px;overflow-y:auto">
+              <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between"><div style="font-size:13px;font-weight:600;color:var(--txt)">🔔 Notifications</div><button onclick="closeNotifPanel()" style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--txt3)">×</button></div>
+              <div id="notif-panel"></div>
+            </div>
+          </div>
           <button class="btn btn-pri" style="font-size:12px;padding:7px 13px" onclick="openModal('add-property-modal')">+ Property</button>
           <button class="btn btn-ghost" style="font-size:11px;padding:6px 11px" onclick="doLogout()">Out</button>
         </div>
@@ -721,6 +733,17 @@ select{color:var(--txt)!important;}
 
   <!-- Today's alerts -->
   <div id="dash-alerts" style="margin-bottom:14px"></div>
+
+  <!-- Smart Notifications Widget -->
+  <div id="smart-notif-widget" style="margin-bottom:18px;display:none">
+    <div class="card" style="border-left:3px solid var(--terra)">
+      <div class="card-hd">
+        <div class="card-title">🔔 Smart Alerts</div>
+        <button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="document.getElementById('smart-notif-widget').style.display='none'">Dismiss</button>
+      </div>
+      <div class="card-body" id="smart-notif-list" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+  </div>
 
   <div class="g4" style="margin-bottom:18px">
     <div class="kpi k1" style="cursor:pointer" onclick="nav('bookings',document.querySelector('[onclick*=bookings]'))"><div class="kpi-label">Revenue This Month</div><div class="kpi-val" id="kpi-rev">$0</div><span class="delta up" id="kpi-rev-delta">↑ live</span></div>
@@ -1369,6 +1392,153 @@ select{color:var(--txt)!important;}
   </div>
 </div>
 
+<!-- ██ CHECK-IN INSURANCE ████████████████████ -->
+<div class="page" id="page-checkininsurance">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Protect revenue from early check-in and late checkout conflicts</div>
+    <button class="btn btn-pri" onclick="openModal('add-ci-policy-modal')">+ Add Policy</button>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Active Policies</div><div class="kpi-val" id="ci-policies">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Revenue Protected</div><div class="kpi-val" id="ci-protected">$0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Claims Filed</div><div class="kpi-val" id="ci-claims">0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Avg Fee Charged</div><div class="kpi-val" id="ci-avg">$0</div></div>
+  </div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">🛡 Flex Time Policies</div></div>
+      <div class="card-body">
+        <div style="font-size:13px;color:var(--txt2);margin-bottom:14px;line-height:1.5">Set fees for guests requesting early check-in or late checkout. Automatically protects your cleaning schedule.</div>
+        <div id="ci-policies-list"><div class="empty-state"><div class="es-i">🛡</div><h3>No policies set</h3><p>Add pricing rules for flex time requests</p></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">📋 Flex Time Requests</div><button class="btn btn-pri" style="font-size:11px;padding:4px 9px" onclick="openModal('add-ci-request-modal')">+ Log Request</button></div>
+      <div class="card-body" id="ci-requests-list"><div class="empty-state"><div class="es-i">📋</div><p>No requests logged yet</p></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">💡 How It Works</div></div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">📅</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">Set Your Policy</div><div style="font-size:12px;color:var(--txt2)">Define fees for early check-in (e.g. $25 before 1pm) and late checkout (e.g. $50 after 1pm)</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">💬</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">Guest Requests Flex</div><div style="font-size:12px;color:var(--txt2)">Guest asks via message — you log it here and charge the fee through your payment method</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">💰</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">Revenue Protected</div><div style="font-size:12px;color:var(--txt2)">Track all flex revenue and ensure cleaning teams are notified of schedule changes</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ EQUIPMENT RENTALS ████████████████████ -->
+<div class="page" id="page-rentals">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Rent equipment to guests and earn extra revenue per stay</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost" onclick="openModal('add-rental-item-modal')">+ Add Item</button>
+      <button class="btn btn-pri" onclick="openModal('add-rental-booking-modal')">📋 Log Rental</button>
+    </div>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Items Available</div><div class="kpi-val" id="rent-items">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Active Rentals</div><div class="kpi-val" id="rent-active">0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Total Revenue</div><div class="kpi-val" id="rent-rev">$0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Most Popular</div><div class="kpi-val" style="font-size:16px" id="rent-popular">—</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">🚲 Rental Catalog</div></div>
+      <div class="card-body" id="rental-catalog"><div class="empty-state"><div class="es-i">🚲</div><h3>No items yet</h3><p>Add bikes, beach chairs, kayaks, cameras, and more</p><button class="btn btn-pri" onclick="openModal('add-rental-item-modal')" style="margin-top:10px">Add First Item</button></div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">📋 Rental History</div></div>
+      <div class="card-body" id="rental-history"><div class="empty-state"><div class="es-i">📋</div><p>No rentals logged yet</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ MESSAGE TEMPLATES ████████████████████ -->
+<div class="page" id="page-templates">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Save and reuse your best guest messages</div>
+    <button class="btn btn-pri" onclick="openModal('add-template-modal')">+ New Template</button>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">📝 My Templates</div></div>
+      <div class="card-body" id="templates-list"><div class="empty-state"><div class="es-i">📝</div><h3>No templates yet</h3><p>Save frequently used messages to send faster</p></div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">⚡ Quick Templates</div></div>
+      <div class="card-body">
+        <div style="font-size:12px;color:var(--txt2);margin-bottom:12px">Pre-built templates to get you started:</div>
+        <div style="display:flex;flex-direction:column;gap:8px" id="starter-templates"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ GUEST LOYALTY ████████████████████████ -->
+<div class="page" id="page-loyalty">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Reward returning guests and build long-term relationships</div>
+    <button class="btn btn-pri" onclick="openModal('add-loyalty-modal')">+ Add Member</button>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Loyalty Members</div><div class="kpi-val" id="loy-members">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Return Guests</div><div class="kpi-val" id="loy-returns">0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Discounts Given</div><div class="kpi-val" id="loy-discounts">$0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Repeat Revenue</div><div class="kpi-val" id="loy-revenue">$0</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">🎁 Loyalty Members</div></div>
+      <div class="card-body" id="loyalty-list"><div class="empty-state"><div class="es-i">🎁</div><h3>No members yet</h3><p>Add returning guests to give them special rates and perks</p></div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">🏅 Loyalty Tiers</div></div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="background:linear-gradient(135deg,#C8A84B22,#C8A84B11);border:1px solid var(--gold);border-radius:10px;padding:14px"><div style="font-size:14px;font-weight:600;color:var(--gold);margin-bottom:4px">🥉 Silver — 2+ stays</div><div style="font-size:12px;color:var(--txt2)">5% discount · Priority booking · Welcome note</div></div>
+          <div style="background:linear-gradient(135deg,#9B8E8522,#9B8E8511);border:1px solid var(--txt3);border-radius:10px;padding:14px"><div style="font-size:14px;font-weight:600;color:var(--txt);margin-bottom:4px">🥈 Gold — 5+ stays</div><div style="font-size:12px;color:var(--txt2)">10% discount · Free early check-in · Welcome basket</div></div>
+          <div style="background:linear-gradient(135deg,#C4693A22,#C4693A11);border:1px solid var(--terra);border-radius:10px;padding:14px"><div style="font-size:14px;font-weight:600;color:var(--terra);margin-bottom:4px">🥇 Platinum — 10+ stays</div><div style="font-size:12px;color:var(--txt2)">15% discount · Free flex time · VIP concierge · Birthday perks</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ PRICING OPTIMIZER ████████████████████ -->
+<div class="page" id="page-pricing_opt">
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:18px">Automatically suggest optimal rates based on day, season, and demand</div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">💡 Rate Suggestions</div><button class="btn btn-pri" style="font-size:11px;padding:4px 9px" onclick="runPricingOptimizer()">🔄 Optimize</button></div>
+      <div class="card-body" id="pricing-suggestions"><div style="font-size:13px;color:var(--txt3);text-align:center;padding:20px">Click Optimize to get rate suggestions based on your booking patterns</div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">⚙️ Optimizer Settings</div></div>
+      <div class="card-body">
+        <div class="fi"><label>Weekend Premium (%)</label><input id="opt-weekend" type="number" value="25" placeholder="25"></div>
+        <div class="fi"><label>Peak Season Premium (%)</label><input id="opt-peak" type="number" value="40" placeholder="40"></div>
+        <div class="fi"><label>Low Season Discount (%)</label><input id="opt-low" type="number" value="15" placeholder="15"></div>
+        <div class="fi"><label>Last Minute Discount (% within 3 days)</label><input id="opt-lastmin" type="number" value="10" placeholder="10"></div>
+        <div class="fi"><label>Long Stay Discount (7+ nights %)</label><input id="opt-longstay" type="number" value="15" placeholder="15"></div>
+        <button class="btn btn-pri" style="margin-top:4px" onclick="saveOptimizerSettings();toast('Settings saved ✓')">Save Settings</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">📊 Revenue Impact</div></div>
+    <div class="card-body" id="pricing-impact"><div style="font-size:13px;color:var(--txt3)">Add bookings and properties to see revenue impact analysis</div></div>
+  </div>
+</div>
+
+<!-- ██ SCORECARDS ████████████████████████████ -->
+<div class="page" id="page-scorecards">
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:18px">Track performance metrics for each property</div>
+  <div id="scorecards-grid" style="display:flex;flex-direction:column;gap:16px"><div class="empty-state"><div class="es-i">🏆</div><h3>No properties yet</h3><p>Add properties to see their performance scorecards</p></div></div>
+</div>
+
 <!-- ██ TEAM ACCESS ████████████████████████ -->
 <div class="page" id="page-team">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
@@ -1648,6 +1818,59 @@ select{color:var(--txt)!important;}
 </div></div>
 
 <!-- NEW FEATURE MODALS -->
+<!-- CHECK-IN INSURANCE MODALS -->
+<div class="modal-bg" id="add-ci-policy-modal"><div class="modal"><h2>🛡 Add Flex Time Policy</h2>
+  <div class="fi"><label>Policy Type</label><select id="ci-type" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="early_checkin">🔑 Early Check-in</option><option value="late_checkout">🚪 Late Checkout</option><option value="both">🔄 Both</option></select></div>
+  <div class="fi"><label>Property</label><select id="ci-prop"></select></div>
+  <div class="g2"><div class="fi"><label>Standard Time</label><input id="ci-standard" placeholder="3:00 PM checkin / 11:00 AM checkout"></div><div class="fi"><label>Fee ($)</label><input id="ci-fee" type="number" placeholder="25"></div></div>
+  <div class="fi"><label>Fee Structure</label><select id="ci-structure" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="flat">Flat fee</option><option value="per_hour">Per hour</option><option value="half_day">Half day rate</option></select></div>
+  <div class="fi"><label>Notes</label><textarea id="ci-notes" placeholder="Subject to availability. Must be confirmed 24hrs in advance." style="min-height:60px"></textarea></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-ci-policy-modal')">Cancel</button><button class="btn btn-pri" onclick="addCIPolicy()">Save Policy</button></div>
+</div></div>
+
+<div class="modal-bg" id="add-ci-request-modal"><div class="modal"><h2>📋 Log Flex Time Request</h2>
+  <div class="fi"><label>Booking</label><select id="ci-req-booking" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="">Select booking…</option></select></div>
+  <div class="fi"><label>Request Type</label><select id="ci-req-type" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="early_checkin">Early Check-in</option><option value="late_checkout">Late Checkout</option></select></div>
+  <div class="g2"><div class="fi"><label>Requested Time</label><input id="ci-req-time" placeholder="1:00 PM"></div><div class="fi"><label>Fee Charged ($)</label><input id="ci-req-fee" type="number" placeholder="25"></div></div>
+  <div class="fi"><label>Status</label><select id="ci-req-status" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="approved">Approved</option><option value="denied">Denied</option><option value="pending">Pending</option></select></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-ci-request-modal')">Cancel</button><button class="btn btn-pri" onclick="addCIRequest()">Log Request</button></div>
+</div></div>
+
+<!-- EQUIPMENT RENTAL MODALS -->
+<div class="modal-bg" id="add-rental-item-modal"><div class="modal"><h2>🚲 Add Rental Item</h2>
+  <div class="g2"><div class="fi"><label>Item Name</label><input id="ri-name" placeholder="Beach Cruiser Bike, Kayak, Camera…"></div><div class="fi"><label>Emoji</label><input id="ri-emoji" value="🚲" maxlength="2"></div></div>
+  <div class="fi"><label>Category</label><select id="ri-cat" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="bikes">🚲 Bikes & Scooters</option><option value="water">🏄 Water Sports</option><option value="beach">🏖 Beach Gear</option><option value="camera">📷 Camera & Tech</option><option value="outdoor">🏕 Outdoor</option><option value="other">📦 Other</option></select></div>
+  <div class="g2"><div class="fi"><label>Daily Rate ($)</label><input id="ri-rate" type="number" placeholder="15"></div><div class="fi"><label>Qty Available</label><input id="ri-qty" type="number" placeholder="2"></div></div>
+  <div class="fi"><label>Property</label><select id="ri-prop"></select></div>
+  <div class="fi"><label>Description</label><textarea id="ri-desc" placeholder="Size, condition, included accessories…" style="min-height:60px"></textarea></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-rental-item-modal')">Cancel</button><button class="btn btn-pri" onclick="addRentalItem()">Add Item</button></div>
+</div></div>
+
+<div class="modal-bg" id="add-rental-booking-modal"><div class="modal"><h2>📋 Log Rental</h2>
+  <div class="fi"><label>Item</label><select id="rb-item" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="">Select item…</option></select></div>
+  <div class="fi"><label>Guest / Booking</label><select id="rb-booking" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="">Select booking…</option></select></div>
+  <div class="g2"><div class="fi"><label>Start Date</label><input id="rb-start" type="date"></div><div class="fi"><label>Days</label><input id="rb-days" type="number" placeholder="2" oninput="calcRentalTotal()"></div></div>
+  <div class="fi"><label>Total Charged ($)</label><input id="rb-total" type="number" placeholder="30" readonly style="background:var(--sand)"></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-rental-booking-modal')">Cancel</button><button class="btn btn-pri" onclick="addRentalBooking()">Log Rental</button></div>
+</div></div>
+
+<!-- MESSAGE TEMPLATE MODAL -->
+<div class="modal-bg" id="add-template-modal"><div class="modal"><h2>📝 New Message Template</h2>
+  <div class="fi"><label>Template Name</label><input id="tpl-name" placeholder="Check-in Instructions, WiFi Info, House Rules…"></div>
+  <div class="fi"><label>Category</label><select id="tpl-cat" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="checkin">🔑 Check-in</option><option value="checkout">🚪 Checkout</option><option value="rules">📋 House Rules</option><option value="welcome">👋 Welcome</option><option value="review">⭐ Review Request</option><option value="other">💬 Other</option></select></div>
+  <div class="fi"><label>Message</label><textarea id="tpl-body" placeholder="Use {guest_name}, {property_name}, {checkin_date}, {checkout_date}, {wifi_name}, {wifi_password}, {door_code}" style="min-height:120px"></textarea></div>
+  <div style="background:var(--sand);border-radius:8px;padding:10px;font-size:11px;color:var(--txt2);margin-bottom:4px">💡 Smart variables: {guest_name} {property_name} {checkin_date} {checkout_date} {wifi_name} {wifi_password} {door_code} {host_name}</div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-template-modal')">Cancel</button><button class="btn btn-pri" onclick="addTemplate()">Save Template</button></div>
+</div></div>
+
+<!-- LOYALTY MODAL -->
+<div class="modal-bg" id="add-loyalty-modal"><div class="modal"><h2>🎁 Add Loyalty Member</h2>
+  <div class="g2"><div class="fi"><label>Guest Name</label><input id="loy-name" placeholder="Marcus Kim"></div><div class="fi"><label>Email</label><input id="loy-email" type="email" placeholder="guest@email.com"></div></div>
+  <div class="g2"><div class="fi"><label>Total Stays</label><input id="loy-stays" type="number" placeholder="3"></div><div class="fi"><label>Total Spent ($)</label><input id="loy-spent" type="number" placeholder="900"></div></div>
+  <div class="fi"><label>Notes / Preferences</label><textarea id="loy-notes" placeholder="Prefers quiet rooms, has a dog, celebrates anniversary in July…" style="min-height:60px"></textarea></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-loyalty-modal')">Cancel</button><button class="btn btn-pri" onclick="addLoyaltyMember()">Add Member</button></div>
+</div></div>
+
 <div class="modal-bg" id="add-cleaner-modal"><div class="modal"><h2>🧹 Add Cleaner</h2>
   <div class="g2"><div class="fi"><label>Name</label><input id="cl-name" placeholder="Maria Garcia"></div><div class="fi"><label>Phone</label><input id="cl-phone" placeholder="+1 555 000 0000"></div></div>
   <div class="fi"><label>Email</label><input id="cl-email" type="email" placeholder="cleaner@email.com"></div>
@@ -1788,7 +2011,7 @@ let wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
 const LOCAL_KEY = 'hh_local_v1';
 const getLocal = () => { try{return JSON.parse(localStorage.getItem(LOCAL_KEY))||{};}catch{return {};} };
 const setLocal = d => localStorage.setItem(LOCAL_KEY, JSON.stringify(d));
-const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],expenses:[],blacklist:[],seasons:[],cleaners:[],jobs:[],workorders:[],inventory:[],autoReplies:[],concierge:[],upsells:[],claims:[],plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; if(!d.expenses)d.expenses=[]; if(!d.blacklist)d.blacklist=[]; if(!d.seasons)d.seasons=[]; if(!d.cleaners)d.cleaners=[]; if(!d.jobs)d.jobs=[]; if(!d.workorders)d.workorders=[]; if(!d.inventory)d.inventory=[]; if(!d.autoReplies)d.autoReplies=[]; if(!d.concierge)d.concierge=[]; if(!d.upsells)d.upsells=[]; if(!d.claims)d.claims=[]; return d; };
+const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],expenses:[],blacklist:[],seasons:[],cleaners:[],jobs:[],workorders:[],inventory:[],autoReplies:[],concierge:[],upsells:[],claims:[],ciPolicies:[],ciRequests:[],rentalItems:[],rentalBookings:[],templates:[],loyaltyMembers:[],optimizerSettings:{},plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; if(!d.expenses)d.expenses=[]; if(!d.blacklist)d.blacklist=[]; if(!d.seasons)d.seasons=[]; if(!d.cleaners)d.cleaners=[]; if(!d.jobs)d.jobs=[]; if(!d.workorders)d.workorders=[]; if(!d.inventory)d.inventory=[]; if(!d.autoReplies)d.autoReplies=[]; if(!d.concierge)d.concierge=[]; if(!d.upsells)d.upsells=[]; if(!d.claims)d.claims=[]; if(!d.ciPolicies)d.ciPolicies=[]; if(!d.ciRequests)d.ciRequests=[]; if(!d.rentalItems)d.rentalItems=[]; if(!d.rentalBookings)d.rentalBookings=[]; if(!d.templates)d.templates=[]; if(!d.loyaltyMembers)d.loyaltyMembers=[]; if(!d.optimizerSettings)d.optimizerSettings={}; return d; };
 const saveLocalData = (uid,d) => { const l=getLocal(); l[uid]=d; setLocal(l); };
 
 // Save to both local and Supabase
@@ -2285,7 +2508,7 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 //  NAV
 // ════════════════════════════════════════════
-const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',inbox:'📬 Unified Inbox',ical:'iCal Sync',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
+const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',inbox:'📬 Unified Inbox',checkininsurance:'🛡 Check-in Insurance',rentals:'🚲 Equipment Rentals',ical:'iCal Sync',templates:'📝 Message Templates',loyalty:'🎁 Guest Loyalty',pricing_opt:'💡 Pricing Optimizer',scorecards:'🏆 Property Scorecards',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
@@ -2314,6 +2537,12 @@ function nav(id,el){
   if(id==='upsell')setTimeout(()=>renderUpsell(),50);
   if(id==='directbook')setTimeout(()=>renderDirectBook(),50);
   if(id==='damage')setTimeout(()=>renderDamageClaims(),50);
+  if(id==='checkininsurance')setTimeout(()=>renderCIInsurance(),50);
+  if(id==='rentals')setTimeout(()=>renderRentals(),50);
+  if(id==='templates')setTimeout(()=>renderTemplates(),50);
+  if(id==='loyalty')setTimeout(()=>renderLoyalty(),50);
+  if(id==='pricing_opt')setTimeout(()=>{saveOptimizerSettings();runPricingOptimizer();},50);
+  if(id==='scorecards')setTimeout(()=>renderScorecards(),50);
 }
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sb-overlay').classList.add('show');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('show');}
@@ -2321,7 +2550,16 @@ function closeSidebar(){document.getElementById('sidebar').classList.remove('ope
 // ════════════════════════════════════════════
 //  RENDER ALL
 // ════════════════════════════════════════════
-function renderAll(){renderDashboard();renderProperties();renderBookings();renderMessages();renderTasks();renderPricing();renderPortal();renderAnalytics();renderReports();renderReviews();renderICals();renderStaff();updateBadges();}
+function renderPricingOpt(){
+  // Load saved settings into inputs
+  const s=cData.optimizerSettings||{};
+  if(s.weekend!=null){const el=document.getElementById('opt-weekend');if(el)el.value=s.weekend;}
+  if(s.peak!=null){const el=document.getElementById('opt-peak');if(el)el.value=s.peak;}
+  if(s.low!=null){const el=document.getElementById('opt-low');if(el)el.value=s.low;}
+  if(s.lastMin!=null){const el=document.getElementById('opt-lastmin');if(el)el.value=s.lastMin;}
+  if(s.longStay!=null){const el=document.getElementById('opt-longstay');if(el)el.value=s.longStay;}
+}
+function renderAll(){renderDashboard();renderProperties();renderBookings();renderMessages();renderTasks();renderPricing();renderPortal();renderAnalytics();renderReports();renderReviews();renderICals();renderStaff();updateBadges();renderSmartNotifications();}
 
 // ════════════════════════════════════════════
 //  ADMIN PANEL
@@ -3580,7 +3818,438 @@ function addDamageClaim(){const desc=document.getElementById('claim-desc').value
 function renderDamageClaims(){const claims=cData.claims||[];const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};set('claim-open',claims.filter(c=>c.status==='open').length);set('claim-submitted',claims.filter(c=>c.status==='submitted').length);set('claim-recovered','$'+claims.reduce((s,c)=>s+(c.recovered||0),0).toLocaleString());set('claim-pending','$'+claims.filter(c=>c.status!=='closed').reduce((s,c)=>s+c.amount,0).toLocaleString());const list=document.getElementById('claims-list');if(!list)return;if(!claims.length){list.innerHTML='<div class="empty-state"><div class="es-i">🛡</div><h3>No damage claims</h3></div>';return;}const sc={open:'pill-amber',submitted:'pill-blue',resolved:'pill-green',closed:'pill-red'};const pe={airbnb:'🏠',vrbo:'🏡',insurance:'🛡',direct:'💳'};list.innerHTML=claims.map(c=>`<div class="row" style="cursor:default"><div style="font-size:22px">${pe[c.platform]||'🛡'}</div><div class="row-info"><div class="row-title">${c.desc}${c.photos?.length?` <span style="font-size:10px;color:var(--terra)">📸${c.photos.length}</span>`:''}</div><div class="row-sub">${c.guestName} · ${c.propName} · ${c.platform}</div></div><span class="pill ${sc[c.status]||'pill-amber'}">${c.status}</span><div style="text-align:right"><div class="row-price">$${c.amount.toLocaleString()}</div>${c.recovered?`<div style="font-size:11px;color:var(--sage)">Recovered: $${c.recovered}</div>`:''}</div><select onchange="updateClaimStatus('${c.id}',this.value)" style="font-size:10px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--txt)"><option value="open" ${c.status==='open'?'selected':''}>Open</option><option value="submitted" ${c.status==='submitted'?'selected':''}>Submitted</option><option value="resolved" ${c.status==='resolved'?'selected':''}>Resolved</option><option value="closed" ${c.status==='closed'?'selected':''}>Closed</option></select></div>`).join('');}
 function updateClaimStatus(id,status){const c=(cData.claims||[]).find(x=>x.id===id);if(!c)return;c.status=status;if(status==='resolved'){const amt=prompt(`Amount recovered? (Claimed: $${c.amount})`);if(amt)c.recovered=parseFloat(amt)||0;}saveUserData(cUid,cData);renderDamageClaims();toast('Claim updated ✓');}
 
-function showLegal(type) {
+// ════════════════════════════════════════════
+//  CHECK-IN INSURANCE
+// ════════════════════════════════════════════
+function addCIPolicy(){
+  const fee=parseFloat(document.getElementById('ci-fee').value)||0;
+  if(!fee){toast('Enter a fee amount');return;}
+  if(!cData.ciPolicies)cData.ciPolicies=[];
+  const propId=document.getElementById('ci-prop').value;
+  const prop=cData.properties.find(p=>p.id===propId);
+  cData.ciPolicies.push({id:'cip_'+Date.now(),type:document.getElementById('ci-type').value,propId,propName:prop?.name||'All properties',standard:document.getElementById('ci-standard').value,fee,structure:document.getElementById('ci-structure').value,notes:document.getElementById('ci-notes').value,active:true,created:Date.now()});
+  saveUserData(cUid,cData);closeModal('add-ci-policy-modal');
+  toast('Policy saved!');renderCIInsurance();
+}
+
+function addCIRequest(){
+  const fee=parseFloat(document.getElementById('ci-req-fee').value)||0;
+  if(!cData.ciRequests)cData.ciRequests=[];
+  const bookingId=document.getElementById('ci-req-booking').value;
+  const booking=cData.bookings.find(b=>b.id===bookingId);
+  cData.ciRequests.push({id:'cir_'+Date.now(),bookingId,guestName:booking?.guestName||'Guest',propName:booking?.propName||'',type:document.getElementById('ci-req-type').value,requestedTime:document.getElementById('ci-req-time').value,fee,status:document.getElementById('ci-req-status').value,created:Date.now()});
+  saveUserData(cUid,cData);closeModal('add-ci-request-modal');
+  toast('Request logged!');renderCIInsurance();
+}
+
+function renderCIInsurance(){
+  const policies=cData.ciPolicies||[];
+  const requests=cData.ciRequests||[];
+  const approvedRevenue=requests.filter(r=>r.status==='approved').reduce((s,r)=>s+r.fee,0);
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('ci-policies',policies.length);
+  set('ci-protected','$'+approvedRevenue.toLocaleString());
+  set('ci-claims',requests.length);
+  const fees=requests.filter(r=>r.fee>0);
+  set('ci-avg',fees.length?'$'+Math.round(fees.reduce((s,r)=>s+r.fee,0)/fees.length):'$0');
+  const pList=document.getElementById('ci-policies-list');
+  if(pList){
+    if(!policies.length)pList.innerHTML='<div class="empty-state"><div class="es-i">🛡</div><h3>No policies set</h3><p>Add pricing rules for flex time requests</p></div>';
+    else{const typeLabels={early_checkin:'🔑 Early Check-in',late_checkout:'🚪 Late Checkout',both:'🔄 Both'};const structLabels={flat:'flat fee',per_hour:'per hour',half_day:'half day'};
+    pList.innerHTML=policies.map(p=>`<div class="row" style="cursor:default">
+      <div style="font-size:22px">${p.type==='early_checkin'?'🔑':p.type==='late_checkout'?'🚪':'🔄'}</div>
+      <div class="row-info"><div class="row-title">${typeLabels[p.type]||p.type}</div><div class="row-sub">${p.propName} · ${p.standard||'Standard times'} · ${structLabels[p.structure]||''}</div></div>
+      <div class="row-price">$${p.fee}</div>
+      <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra)" onclick="deleteCIPolicy('${p.id}')">🗑</button>
+    </div>`).join('');}
+  }
+  const rList=document.getElementById('ci-requests-list');
+  if(rList){
+    if(!requests.length)rList.innerHTML='<div class="empty-state"><div class="es-i">📋</div><p>No requests logged yet</p></div>';
+    else{const sc={approved:'pill-green',denied:'pill-red',pending:'pill-amber'};
+    rList.innerHTML=requests.map(r=>`<div class="row" style="cursor:default">
+      <div class="row-info"><div class="row-title">${r.guestName} — ${r.type==='early_checkin'?'Early Check-in':'Late Checkout'}</div><div class="row-sub">${r.propName} · ${r.requestedTime||'Time not specified'}</div></div>
+      <span class="pill ${sc[r.status]||'pill-amber'}">${r.status}</span>
+      <div class="row-price">$${r.fee}</div>
+    </div>`).join('');}
+  }
+}
+function deleteCIPolicy(id){cData.ciPolicies=(cData.ciPolicies||[]).filter(x=>x.id!==id);saveUserData(cUid,cData);renderCIInsurance();toast('Policy removed');}
+
+// ════════════════════════════════════════════
+//  EQUIPMENT RENTALS
+// ════════════════════════════════════════════
+function addRentalItem(){
+  const name=document.getElementById('ri-name').value.trim();
+  if(!name){toast('Enter item name');return;}
+  if(!cData.rentalItems)cData.rentalItems=[];
+  const propId=document.getElementById('ri-prop').value;
+  const prop=cData.properties.find(p=>p.id===propId);
+  cData.rentalItems.push({id:'ri_'+Date.now(),name,emoji:document.getElementById('ri-emoji').value||'📦',cat:document.getElementById('ri-cat').value,rate:parseFloat(document.getElementById('ri-rate').value)||0,qty:parseInt(document.getElementById('ri-qty').value)||1,propId,propName:prop?.name||'All',desc:document.getElementById('ri-desc').value,rentals:0,created:Date.now()});
+  saveUserData(cUid,cData);closeModal('add-rental-item-modal');
+  ['ri-name','ri-desc','ri-rate','ri-qty'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('ri-emoji').value='🚲';
+  toast(`${name} added to catalog!`);renderRentals();
+}
+
+function calcRentalTotal(){
+  const sel=document.getElementById('rb-item');
+  const item=sel?(cData.rentalItems||[]).find(i=>i.id===sel.value):null;
+  const days=parseInt(document.getElementById('rb-days')?.value)||0;
+  const total=document.getElementById('rb-total');
+  if(total&&item)total.value=(item.rate*days).toFixed(2);
+}
+
+function addRentalBooking(){
+  const itemId=document.getElementById('rb-item').value;
+  const item=(cData.rentalItems||[]).find(i=>i.id===itemId);
+  if(!item){toast('Select an item');return;}
+  const days=parseInt(document.getElementById('rb-days').value)||1;
+  const total=parseFloat(document.getElementById('rb-total').value)||item.rate*days;
+  const bookingId=document.getElementById('rb-booking').value;
+  const booking=cData.bookings.find(b=>b.id===bookingId);
+  if(!cData.rentalBookings)cData.rentalBookings=[];
+  cData.rentalBookings.push({id:'rb_'+Date.now(),itemId,itemName:item.name,itemEmoji:item.emoji,bookingId,guestName:booking?.guestName||'Walk-in',start:document.getElementById('rb-start').value,days,total,status:'active',created:Date.now()});
+  item.rentals=(item.rentals||0)+1;
+  saveUserData(cUid,cData);closeModal('add-rental-booking-modal');
+  toast(`${item.name} rental logged! $${total}`);renderRentals();
+}
+
+function renderRentals(){
+  const items=cData.rentalItems||[];
+  const bookings=cData.rentalBookings||[];
+  const totalRev=bookings.reduce((s,b)=>s+b.total,0);
+  const popular=items.length?[...items].sort((a,b)=>(b.rentals||0)-(a.rentals||0))[0]:null;
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('rent-items',items.length);
+  set('rent-active',bookings.filter(b=>b.status==='active').length);
+  set('rent-rev','$'+totalRev.toLocaleString());
+  set('rent-popular',popular?`${popular.emoji} ${popular.name}`:'—');
+  const catalog=document.getElementById('rental-catalog');
+  if(catalog){
+    if(!items.length)catalog.innerHTML='<div class="empty-state"><div class="es-i">🚲</div><h3>No items yet</h3><button class="btn btn-pri" onclick="openModal(\'add-rental-item-modal\')" style="margin-top:10px">Add First Item</button></div>';
+    else catalog.innerHTML=items.map(i=>`<div class="row" style="cursor:default">
+      <div style="font-size:26px">${i.emoji}</div>
+      <div class="row-info"><div class="row-title">${i.name}</div><div class="row-sub">${i.propName} · ${i.qty} available · ${i.rentals||0} rentals</div></div>
+      <div class="row-price">$${i.rate}<span style="font-size:10px;color:var(--txt3)">/day</span></div>
+      <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra)" onclick="removeRentalItem('${i.id}')">🗑</button>
+    </div>`).join('');
+  }
+  const history=document.getElementById('rental-history');
+  if(history){
+    if(!bookings.length)history.innerHTML='<div class="empty-state"><div class="es-i">📋</div><p>No rentals logged yet</p></div>';
+    else history.innerHTML=[...bookings].reverse().map(b=>`<div class="row" style="cursor:default">
+      <div style="font-size:22px">${b.itemEmoji||'📦'}</div>
+      <div class="row-info"><div class="row-title">${b.itemName} — ${b.guestName}</div><div class="row-sub">${b.start||'No date'} · ${b.days} day${b.days!==1?'s':''}</div></div>
+      <div class="row-price">$${b.total}</div>
+    </div>`).join('');
+  }
+  // Populate item dropdown in rental booking modal
+  const sel=document.getElementById('rb-item');
+  if(sel)sel.innerHTML='<option value="">Select item…</option>'+items.map(i=>`<option value="${i.id}">${i.emoji} ${i.name} — $${i.rate}/day</option>`).join('');
+}
+function removeRentalItem(id){cData.rentalItems=(cData.rentalItems||[]).filter(x=>x.id!==id);saveUserData(cUid,cData);renderRentals();toast('Item removed');}
+
+// ════════════════════════════════════════════
+//  MESSAGE TEMPLATES
+// ════════════════════════════════════════════
+const STARTER_TEMPLATES = [
+  {name:'Check-in Instructions',cat:'checkin',body:`Hi {guest_name}! Welcome to {property_name} 🏡\n\nYour check-in time is 3:00 PM. Door code: {door_code}\nWiFi: {wifi_name} | Password: {wifi_password}\n\nLet me know if you need anything!\n{host_name}`},
+  {name:'Checkout Reminder',cat:'checkout',body:`Hi {guest_name}! Just a reminder that checkout is at 11:00 AM tomorrow.\n\nPlease leave keys on the kitchen counter and let me know if you need anything.\n\nThank you for staying at {property_name}! 🙏`},
+  {name:'Welcome Message',cat:'welcome',body:`Hi {guest_name}! So excited to host you at {property_name} 🎉\n\nYou arrive on {checkin_date} — can't wait! Let me know if you have any questions before then.\n\n{host_name}`},
+  {name:'Review Request',cat:'review',body:`Hi {guest_name}! Thank you for staying at {property_name} — it was a pleasure hosting you!\n\nIf you enjoyed your stay, I'd really appreciate a review on Airbnb. It only takes a minute and means the world to small hosts like me 🙏\n\n{host_name}`},
+  {name:'House Rules',cat:'rules',body:`Hi {guest_name}! Quick reminder of our house rules:\n\n🚭 No smoking inside\n🐾 No pets unless pre-approved\n🔇 Quiet hours after 10pm\n👥 Max {max_guests} guests\n\nThank you! {host_name}`}
+];
+
+function addTemplate(){
+  const name=document.getElementById('tpl-name').value.trim();
+  const body=document.getElementById('tpl-body').value.trim();
+  if(!name||!body){toast('Enter name and message');return;}
+  if(!cData.templates)cData.templates=[];
+  cData.templates.push({id:'tpl_'+Date.now(),name,cat:document.getElementById('tpl-cat').value,body,uses:0,created:Date.now()});
+  saveUserData(cUid,cData);closeModal('add-template-modal');
+  document.getElementById('tpl-name').value='';document.getElementById('tpl-body').value='';
+  toast(`"${name}" template saved!`);renderTemplates();
+}
+
+function useTemplate(body){
+  // Navigate to messages and pre-fill
+  nav('messages',document.querySelector('[onclick*=messages]'));
+  setTimeout(()=>{
+    const activeTA=document.querySelector('.msg-ta');
+    if(activeTA){activeTA.value=body;activeTA.focus();}
+    else toast('Open a conversation first, then use the template');
+  },200);
+}
+
+function renderTemplates(){
+  const templates=cData.templates||[];
+  const list=document.getElementById('templates-list');
+  const catEmoji={checkin:'🔑',checkout:'🚪',rules:'📋',welcome:'👋',review:'⭐',other:'💬'};
+  if(list){
+    if(!templates.length)list.innerHTML='<div class="empty-state"><div class="es-i">📝</div><h3>No templates yet</h3><p>Save frequently used messages to send faster</p></div>';
+    else list.innerHTML=templates.map(t=>`<div class="row" style="cursor:default">
+      <div style="font-size:22px">${catEmoji[t.cat]||'💬'}</div>
+      <div class="row-info"><div class="row-title">${t.name}</div><div class="row-sub">${t.body.substring(0,60).replace(/\n/g,' ')}… · used ${t.uses||0}×</div></div>
+      <button class="btn btn-pri" style="font-size:10px;padding:3px 9px;flex-shrink:0" onclick="useTemplate(\`${t.body.replace(/`/g,"'")}\`)">Use</button>
+      <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra);flex-shrink:0" onclick="deleteTemplate('${t.id}')">🗑</button>
+    </div>`).join('');
+  }
+  const starter=document.getElementById('starter-templates');
+  if(starter)starter.innerHTML=STARTER_TEMPLATES.map(t=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--sand);border-radius:8px">
+    <div><div style="font-size:12px;font-weight:600;color:var(--txt)">${catEmoji[t.cat]||'💬'} ${t.name}</div></div>
+    <button class="btn btn-ghost" style="font-size:10px;padding:3px 9px" onclick="saveStarterTemplate('${t.name}','${t.cat}')">Save</button>
+  </div>`).join('');
+}
+function saveStarterTemplate(name,cat){
+  const tpl=STARTER_TEMPLATES.find(t=>t.name===name&&t.cat===cat);
+  if(!tpl)return;
+  if(!cData.templates)cData.templates=[];
+  if(cData.templates.find(t=>t.name===name)){toast('Already saved!');return;}
+  cData.templates.push({id:'tpl_'+Date.now(),name:tpl.name,cat:tpl.cat,body:tpl.body,uses:0,created:Date.now()});
+  saveUserData(cUid,cData);renderTemplates();toast(`"${name}" saved to your templates!`);
+}
+function deleteTemplate(id){cData.templates=(cData.templates||[]).filter(x=>x.id!==id);saveUserData(cUid,cData);renderTemplates();toast('Template deleted');}
+
+// ════════════════════════════════════════════
+//  GUEST LOYALTY
+// ════════════════════════════════════════════
+function getLoyaltyTier(stays){
+  if(stays>=10)return{tier:'Platinum',emoji:'🥇',discount:15,color:'var(--terra)'};
+  if(stays>=5)return{tier:'Gold',emoji:'🥈',discount:10,color:'var(--txt)'};
+  if(stays>=2)return{tier:'Silver',emoji:'🥉',discount:5,color:'var(--gold)'};
+  return{tier:'New',emoji:'⭐',discount:0,color:'var(--txt3)'};
+}
+
+function addLoyaltyMember(){
+  const name=document.getElementById('loy-name').value.trim();
+  if(!name){toast('Enter guest name');return;}
+  if(!cData.loyaltyMembers)cData.loyaltyMembers=[];
+  const stays=parseInt(document.getElementById('loy-stays').value)||0;
+  const spent=parseFloat(document.getElementById('loy-spent').value)||0;
+  const tier=getLoyaltyTier(stays);
+  cData.loyaltyMembers.push({id:'loy_'+Date.now(),name,email:document.getElementById('loy-email').value,stays,spent,notes:document.getElementById('loy-notes').value,tier:tier.tier,created:Date.now()});
+  saveUserData(cUid,cData);closeModal('add-loyalty-modal');
+  ['loy-name','loy-email','loy-stays','loy-spent','loy-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  toast(`${name} added — ${tier.emoji} ${tier.tier}!`);renderLoyalty();
+}
+
+function renderLoyalty(){
+  const members=cData.loyaltyMembers||[];
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('loy-members',members.length);
+  set('loy-returns',members.filter(m=>m.stays>1).length);
+  const totalDiscount=members.reduce((s,m)=>{const t=getLoyaltyTier(m.stays);return s+(m.spent*(t.discount/100));},0);
+  set('loy-discounts','$'+Math.round(totalDiscount).toLocaleString());
+  set('loy-revenue','$'+members.reduce((s,m)=>s+m.spent,0).toLocaleString());
+  const list=document.getElementById('loyalty-list');
+  if(list){
+    if(!members.length)list.innerHTML='<div class="empty-state"><div class="es-i">🎁</div><h3>No members yet</h3></div>';
+    else list.innerHTML=[...members].sort((a,b)=>b.stays-a.stays).map(m=>{
+      const t=getLoyaltyTier(m.stays);
+      return `<div class="row" style="cursor:default">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">${t.emoji}</div>
+        <div class="row-info"><div class="row-title">${m.name} <span style="font-size:11px;color:${t.color}">${t.tier}</span></div><div class="row-sub">${m.stays} stay${m.stays!==1?'s':''} · $${m.spent.toLocaleString()} spent${m.email?' · '+m.email:''}</div></div>
+        <div style="text-align:right;flex-shrink:0"><div style="font-size:12px;font-weight:600;color:var(--sage)">${t.discount}% off</div><div style="font-size:10px;color:var(--txt3)">discount</div></div>
+        <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra)" onclick="removeLoyaltyMember('${m.id}')">🗑</button>
+      </div>`;
+    }).join('');
+  }
+}
+function removeLoyaltyMember(id){cData.loyaltyMembers=(cData.loyaltyMembers||[]).filter(x=>x.id!==id);saveUserData(cUid,cData);renderLoyalty();toast('Member removed');}
+function recordLoyaltyStay(id){const m=(cData.loyaltyMembers||[]).find(x=>x.id===id);if(!m)return;m.stays=(m.stays||0)+1;const t=getLoyaltyTier(m.stays);m.tier=t.tier;saveUserData(cUid,cData);renderLoyalty();toast(`${m.name} now has ${m.stays} stay${m.stays!==1?'s':''} — ${t.emoji} ${t.tier}!`);}
+
+// ════════════════════════════════════════════
+//  PRICING OPTIMIZER
+// ════════════════════════════════════════════
+function saveOptimizerSettings(){
+  cData.optimizerSettings={
+    weekend:parseInt(document.getElementById('opt-weekend')?.value)||25,
+    peak:parseInt(document.getElementById('opt-peak')?.value)||40,
+    low:parseInt(document.getElementById('opt-low')?.value)||15,
+    lastMin:parseInt(document.getElementById('opt-lastmin')?.value)||10,
+    longStay:parseInt(document.getElementById('opt-longstay')?.value)||15
+  };
+  saveUserData(cUid,cData);
+}
+
+function runPricingOptimizer(){
+  const settings=cData.optimizerSettings||{weekend:25,peak:40,low:15,lastMin:10,longStay:15};
+  const el=document.getElementById('pricing-suggestions');
+  if(!el)return;
+  if(!cData.properties.length){el.innerHTML='<div style="font-size:13px;color:var(--txt3);text-align:center;padding:20px">Add properties first</div>';return;}
+  const now=new Date();
+  const suggestions=cData.properties.map(p=>{
+    const base=p.rate||100;
+    const bookings=cData.bookings.filter(b=>b.propId===p.id&&b.status!=='cancelled');
+    const occRate=bookings.length?Math.min(95,bookings.length*10):30;
+    const demandBonus=occRate>70?15:occRate>50?5:0;
+    const today=now.getDay();
+    const isWeekend=today===5||today===6;
+    const month=now.getMonth();
+    const isPeak=month>=5&&month<=8;
+    const isLow=month===1||month===2;
+    let suggested=base;
+    if(isWeekend)suggested=Math.round(suggested*(1+settings.weekend/100));
+    if(isPeak)suggested=Math.round(suggested*(1+settings.peak/100));
+    if(isLow)suggested=Math.round(suggested*(1-settings.low/100));
+    suggested=Math.round(suggested*(1+demandBonus/100));
+    const change=Math.round((suggested-base)/base*100);
+    return{p,base,suggested,change,isWeekend,isPeak,isLow,occRate};
+  });
+  el.innerHTML=suggestions.map(s=>`<div class="row" style="cursor:default">
+    <div style="font-size:22px">${s.p.emoji}</div>
+    <div class="row-info">
+      <div class="row-title">${s.p.name}</div>
+      <div class="row-sub">${s.occRate}% occ · ${s.isWeekend?'Weekend · ':''}${s.isPeak?'Peak season · ':''}${s.isLow?'Low season · ':''}</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-size:11px;color:var(--txt3);text-decoration:line-through">$${s.base}/n</div>
+      <div style="font-family:'Fraunces',serif;font-size:20px;color:${s.change>0?'var(--sage)':'var(--terra)'}">$${s.suggested}/n</div>
+    </div>
+    <span class="pill ${s.change>0?'pill-green':'pill-red'}">${s.change>0?'+':''}${s.change}%</span>
+    <button class="btn btn-pri" style="font-size:10px;padding:3px 9px;flex-shrink:0" onclick="applyOptimizedRate('${s.p.id}',${s.suggested})">Apply</button>
+  </div>`).join('');
+  // Revenue impact
+  const impact=document.getElementById('pricing-impact');
+  if(impact){
+    const totalCurrentRev=cData.properties.reduce((s,p)=>{const bs=cData.bookings.filter(b=>b.propId===p.id);return s+(bs.length*p.rate*3);},0);
+    const totalOptRev=suggestions.reduce((s,sg)=>{const bs=cData.bookings.filter(b=>b.propId===sg.p.id);return s+(bs.length*sg.suggested*3);},0);
+    const uplift=totalOptRev-totalCurrentRev;
+    impact.innerHTML=`<div class="g2"><div style="background:var(--sand);border-radius:10px;padding:16px;text-align:center"><div style="font-size:11px;color:var(--txt3);margin-bottom:4px">Current Est. Revenue</div><div style="font-family:'Fraunces',serif;font-size:24px;color:var(--txt)">$${totalCurrentRev.toLocaleString()}</div></div><div style="background:rgba(107,143,113,.12);border:1px solid var(--sage);border-radius:10px;padding:16px;text-align:center"><div style="font-size:11px;color:var(--txt3);margin-bottom:4px">Optimized Est. Revenue</div><div style="font-family:'Fraunces',serif;font-size:24px;color:var(--sage)">$${totalOptRev.toLocaleString()}</div><div style="font-size:11px;color:var(--sage);margin-top:4px">+$${uplift.toLocaleString()} uplift</div></div></div>`;
+  }
+}
+function applyOptimizedRate(propId,rate){
+  const p=cData.properties.find(x=>x.id===propId);
+  if(p){p.rate=rate;saveUserData(cUid,cData);toast(`${p.name} rate updated to $${rate}/night ✓`);runPricingOptimizer();}
+}
+function renderPricingImpact(){
+  const el=document.getElementById('pricing-impact');if(!el)return;
+  const bookings=cData.bookings.filter(b=>b.status!=='cancelled');
+  if(!bookings.length){el.innerHTML='<div style="font-size:13px;color:var(--txt3)">Add bookings to see revenue impact</div>';return;}
+  const totalRev=bookings.reduce((s,b)=>s+b.price,0);
+  const avgNightly=bookings.reduce((s,b)=>s+(b.price/(b.nights||1)),0)/bookings.length;
+  const settings=cData.optimizerSettings||{weekend:25,peak:40,low:15};
+  const potentialWeekend=Math.round(avgNightly*(1+settings.weekend/100));
+  const potentialGain=Math.round((potentialWeekend-avgNightly)*bookings.length*0.3);
+  el.innerHTML=`<div class="g2">
+    <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:11px;color:var(--txt3);margin-bottom:4px">Avg Nightly Rate</div><div style="font-family:'Fraunces',serif;font-size:24px;color:var(--txt)">$${Math.round(avgNightly)}</div></div>
+    <div style="background:rgba(107,143,113,.12);border:1px solid var(--sage);border-radius:10px;padding:14px;text-align:center"><div style="font-size:11px;color:var(--txt3);margin-bottom:4px">Est. Revenue Uplift</div><div style="font-family:'Fraunces',serif;font-size:24px;color:var(--sage)">+$${potentialGain.toLocaleString()}</div></div>
+  </div>
+  <div style="margin-top:12px;font-size:12px;color:var(--txt2);line-height:1.6">Based on your <strong>${bookings.length} bookings</strong>, applying weekend and seasonal pricing could increase revenue by ~<strong>$${potentialGain.toLocaleString()}/year</strong>.</div>`;
+}
+
+
+function renderScorecards(){
+  const grid=document.getElementById('scorecards-grid');
+  if(!grid)return;
+  if(!cData.properties.length){grid.innerHTML='<div class="empty-state"><div class="es-i">🏆</div><h3>No properties yet</h3></div>';return;}
+  grid.innerHTML=cData.properties.map(p=>{
+    const bookings=cData.bookings.filter(b=>b.propId===p.id&&b.status!=='cancelled');
+    const revenue=bookings.reduce((s,b)=>s+b.price,0);
+    const avgStay=bookings.length?Math.round(bookings.reduce((s,b)=>s+(b.nights||1),0)/bookings.length):0;
+    const occupancy=p.occupancy||0;
+    const rating=parseFloat(p.rating||0);
+    const expenses=(cData.expenses||[]).filter(e=>e.propId===p.id).reduce((s,e)=>s+e.amount,0);
+    const profit=revenue-expenses;
+    const margin=revenue?Math.round(profit/revenue*100):0;
+    // Score out of 100
+    const revScore=Math.min(30,Math.round(revenue/100));
+    const occScore=Math.round(occupancy/100*25);
+    const ratingScore=Math.round((rating/5)*25);
+    const bookingScore=Math.min(20,bookings.length*2);
+    const totalScore=Math.min(100,revScore+occScore+ratingScore+bookingScore);
+    const grade=totalScore>=80?{g:'A',c:'var(--sage)'}:totalScore>=60?{g:'B',c:'var(--gold)'}:totalScore>=40?{g:'C',c:'var(--terra)'}:{g:'D',c:'#999'};
+    return `<div class="card">
+      <div class="card-hd">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:28px">${p.emoji}</div>
+          <div><div class="card-title">${p.name}</div><div style="font-size:12px;color:var(--txt2)">${p.location||'No location'}</div></div>
+        </div>
+        <div style="text-align:center"><div style="font-family:'Fraunces',serif;font-size:42px;font-weight:700;color:${grade.c};line-height:1">${grade.g}</div><div style="font-size:11px;color:var(--txt3)">${totalScore}/100</div></div>
+      </div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+          <div style="text-align:center;background:var(--sand);border-radius:8px;padding:10px"><div style="font-family:'Fraunces',serif;font-size:20px;color:var(--txt)">$${revenue.toLocaleString()}</div><div style="font-size:10px;color:var(--txt3)">Revenue</div></div>
+          <div style="text-align:center;background:var(--sand);border-radius:8px;padding:10px"><div style="font-family:'Fraunces',serif;font-size:20px;color:var(--txt)">${occupancy}%</div><div style="font-size:10px;color:var(--txt3)">Occupancy</div></div>
+          <div style="text-align:center;background:var(--sand);border-radius:8px;padding:10px"><div style="font-family:'Fraunces',serif;font-size:20px;color:var(--txt)">⭐${rating}</div><div style="font-size:10px;color:var(--txt3)">Rating</div></div>
+          <div style="text-align:center;background:var(--sand);border-radius:8px;padding:10px"><div style="font-family:'Fraunces',serif;font-size:20px;color:${margin>=0?'var(--sage)':'var(--terra)'}"> ${margin}%</div><div style="font-size:10px;color:var(--txt3)">Margin</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${[{label:'Revenue Score',score:revScore,max:30},{label:'Occupancy Score',score:occScore,max:25},{label:'Rating Score',score:ratingScore,max:25},{label:'Booking Volume',score:bookingScore,max:20}].map(m=>`<div style="display:flex;align-items:center;gap:10px">
+            <div style="font-size:11px;color:var(--txt2);width:130px;flex-shrink:0">${m.label}</div>
+            <div style="flex:1;background:var(--border);border-radius:4px;height:6px;overflow:hidden"><div style="width:${Math.round(m.score/m.max*100)}%;height:100%;background:${grade.c};border-radius:4px"></div></div>
+            <div style="font-size:11px;color:var(--txt3);width:40px;text-align:right">${m.score}/${m.max}</div>
+          </div>`).join('')}
+        </div>
+        ${bookings.length===0?`<div style="margin-top:12px;font-size:12px;color:var(--terra)">💡 Add bookings for this property to improve your score</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════
+//  SMART NOTIFICATIONS
+// ════════════════════════════════════════════
+function getSmartNotifications(){
+  const notes=[];
+  const now=new Date();
+  const today=now.toISOString().slice(0,10);
+  const in2days=new Date(now.getTime()+2*86400000).toISOString().slice(0,10);
+  const in7days=new Date(now.getTime()+7*86400000).toISOString().slice(0,10);
+  // Upcoming checkins
+  cData.bookings.filter(b=>b.checkin>=today&&b.checkin<=in2days&&b.status==='confirmed').forEach(b=>{
+    notes.push({type:'checkin',icon:'🔑',title:`Check-in: ${b.guestName}`,desc:`${b.propName} · ${b.checkin}`,urgency:b.checkin===today?'high':'medium',link:'bookings'});
+  });
+  // Upcoming checkouts
+  cData.bookings.filter(b=>b.checkout>=today&&b.checkout<=in2days&&b.status==='confirmed').forEach(b=>{
+    notes.push({type:'checkout',icon:'🚪',title:`Checkout: ${b.guestName}`,desc:`${b.propName} · ${b.checkout}`,urgency:b.checkout===today?'high':'medium',link:'bookings'});
+  });
+  // Overdue tasks
+  cData.tasks?.filter(t=>!t.done&&t.due&&t.due<today).forEach(t=>{
+    notes.push({type:'task',icon:'⚠️',title:`Overdue: ${t.title}`,desc:`Due ${t.due}`,urgency:'high',link:'cleaning'});
+  });
+  // Low inventory
+  cData.inventory?.filter(i=>i.qty<=i.threshold).forEach(i=>{
+    notes.push({type:'inventory',icon:'📦',title:`${i.qty===0?'Out of stock':'Low stock'}: ${i.name}`,desc:`${i.qty} ${i.unit} left at ${i.propName}`,urgency:i.qty===0?'high':'medium',link:'inventory'});
+  });
+  // Open work orders
+  const urgentWO=(cData.workorders||[]).filter(w=>w.status==='open'&&w.priority==='urgent');
+  urgentWO.forEach(w=>{
+    notes.push({type:'workorder',icon:'🔧',title:`Urgent: ${w.title}`,desc:w.propName,urgency:'high',link:'workorders'});
+  });
+  // Upcoming bookings needing cleaning tasks
+  cData.bookings.filter(b=>b.checkin>=today&&b.checkin<=in7days&&b.status==='confirmed').forEach(b=>{
+    const hasTask=cData.tasks?.some(t=>t.propId===b.propId&&t.due===b.checkin&&!t.done);
+    if(!hasTask)notes.push({type:'cleaning',icon:'🧹',title:`No cleaner assigned: ${b.propName}`,desc:`Guest checks in ${b.checkin}`,urgency:'medium',link:'cleaning'});
+  });
+  return notes.sort((a,b)=>a.urgency==='high'&&b.urgency!=='high'?-1:1);
+}
+
+function renderNotifDropdown(){
+  const notes=getSmartNotifications();
+  const badge=document.getElementById('notif-badge');
+  if(badge){
+    badge.textContent=notes.length;
+    badge.style.display=notes.length?'flex':'none';
+  }
+  const panel=document.getElementById('notif-panel');
+  if(!panel)return;
+  if(!notes.length){panel.innerHTML='<div style="padding:20px;text-align:center;font-size:13px;color:var(--txt3)">✅ All clear — no urgent notifications</div>';return;}
+  const urgColors={high:'var(--terra)',medium:'var(--gold)'};
+  panel.innerHTML=notes.map(n=>`<div onclick="nav('${n.link}',document.querySelector('[onclick*=${n.link}]'));closeNotifPanel()" style="display:flex;gap:10px;align-items:flex-start;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s" onmouseover="this.style.background='var(--sand)'" onmouseout="this.style.background=''">
+    <div style="font-size:20px;flex-shrink:0">${n.icon}</div>
+    <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--txt)">${n.title}</div><div style="font-size:11px;color:var(--txt2)">${n.desc}</div></div>
+    <div style="width:8px;height:8px;border-radius:50%;background:${urgColors[n.urgency]||'var(--txt3)'};flex-shrink:0;margin-top:5px"></div>
+  </div>`).join('');
+}
+
+function openNotifPanel(){
+  renderNotifDropdown();
+  const panel=document.getElementById('notif-dropdown');
+  if(panel)panel.style.display=panel.style.display==='block'?'none':'block';
+}
+function closeNotifPanel(){const p=document.getElementById('notif-dropdown');if(p)p.style.display='none';}
   const title = document.getElementById('legal-title');
   const content = document.getElementById('legal-content');
   if(type === 'terms') {
@@ -4231,13 +4900,6 @@ function removeICal(id){cData.icals=(cData.icals||[]).filter(x=>x.id!==id);saveU
 // ════════════════════════════════════════════
 //  PRICING
 // ════════════════════════════════════════════
-function renderPricing(){
-  const list=document.getElementById('pricing-list');if(!list)return;
-  const props=cData.properties;
-  if(!props.length){list.innerHTML=`<div class="empty-state"><div class="es-i">💰</div><p>Add properties first</p></div>`;return;}
-  list.innerHTML=props.map(p=>`<div class="row" style="cursor:default"><div style="font-size:18px">${p.emoji}</div><div class="row-info"><div class="row-title">${p.name}</div><div class="row-sub">${p.location}</div></div><div style="text-align:right"><div style="font-family:'Fraunces',serif;font-size:20px;color:var(--txt)">$${p.rate}</div><div style="font-size:10px;color:var(--txt3)">per night</div></div><button class="btn btn-ghost" style="font-size:10px;padding:4px 9px" onclick="toast('Editing ${p.name}…')">Edit</button></div>`).join('');
-}
-
 // ════════════════════════════════════════════
 //  WEBSITE BUILDER
 // ════════════════════════════════════════════
@@ -4550,11 +5212,65 @@ function renderDashboard(){
 
   // Notes
   renderNotes();
+  renderSmartNotifications();
 }
 
 // ════════════════════════════════════════════
-//  SETTINGS
+//  SMART NOTIFICATIONS
 // ════════════════════════════════════════════
+function renderSmartNotifications() {
+  const widget = document.getElementById('smart-notif-widget');
+  const list   = document.getElementById('smart-notif-list');
+  if (!widget || !list) return;
+
+  const now    = new Date();
+  const today  = now.toISOString().slice(0,10);
+  const in2d   = new Date(now.getTime()+172800000).toISOString().slice(0,10);
+  const in7d   = new Date(now.getTime()+604800000).toISOString().slice(0,10);
+  const alerts = [];
+
+  // ── Upcoming check-ins in next 48 hours
+  const upcomingCI = (cData.bookings||[]).filter(b=>b.status==='confirmed'&&b.checkin>today&&b.checkin<=in2d);
+  upcomingCI.forEach(b=>alerts.push({icon:'🏠',color:'var(--sage)',bg:'rgba(107,143,113,.1)',border:'var(--sage)',text:`<strong>${b.guestName}</strong> checks in <strong>${b.checkin===in2d?'in 2 days':'tomorrow'}</strong> at ${b.propName||'your property'}`,action:`nav('bookings',document.querySelector('[onclick*=bookings]'))`,label:'View booking'}));
+
+  // ── Overdue tasks
+  const overdue = (cData.tasks||[]).filter(t=>!t.done&&t.due&&t.due<today);
+  if(overdue.length) alerts.push({icon:'⚠️',color:'var(--terra)',bg:'rgba(196,105,58,.08)',border:'var(--terra-l)',text:`<strong>${overdue.length} overdue task${overdue.length>1?'s':''}</strong> — ${overdue.map(t=>t.title).slice(0,2).join(', ')}${overdue.length>2?` +${overdue.length-2} more`:''}`,action:`nav('cleaning',document.querySelector('[onclick*=cleaning]'))`,label:'View tasks'});
+
+  // ── Low inventory items
+  const lowStock = (cData.inventory||[]).filter(i=>i.qty<=i.minQty);
+  if(lowStock.length) alerts.push({icon:'📦',color:'var(--gold)',bg:'rgba(200,168,75,.1)',border:'var(--gold)',text:`<strong>${lowStock.length} inventory item${lowStock.length>1?'s':''}</strong> running low — ${lowStock.map(i=>i.name).slice(0,2).join(', ')}`,action:`nav('inventory',document.querySelector('[onclick*=inventory]'))`,label:'View inventory'});
+
+  // ── Pending bookings
+  const pending = (cData.bookings||[]).filter(b=>b.status==='pending');
+  if(pending.length) alerts.push({icon:'⏳',color:'var(--terra)',bg:'rgba(196,105,58,.08)',border:'var(--terra-l)',text:`<strong>${pending.length} booking request${pending.length>1?'s':''}</strong> waiting for your confirmation`,action:`nav('bookings',document.querySelector('[onclick*=bookings]'))`,label:'Confirm now'});
+
+  // ── Upcoming checkouts with no cleaning task
+  const soonCO = (cData.bookings||[]).filter(b=>b.checkout>=today&&b.checkout<=in2d&&b.status==='confirmed');
+  soonCO.forEach(b=>{
+    const hasCleaning = (cData.tasks||[]).some(t=>t.propId===b.propId&&t.type==='cleaning'&&t.date===b.checkout&&!t.done);
+    if(!hasCleaning) alerts.push({icon:'🧹',color:'var(--txt3)',bg:'var(--sand)',border:'var(--border)',text:`No cleaning task for <strong>${b.propName||'property'}</strong> checkout on <strong>${b.checkout}</strong>`,action:`openModal('add-task-modal')`,label:'Add task'});
+  });
+
+  // ── Rentals due back today
+  const rentalsOverdue = (cData.rentalBookings||[]).filter(r=>r.endDate&&r.endDate<=today&&r.status!=='returned');
+  if(rentalsOverdue.length) alerts.push({icon:'🚲',color:'var(--gold)',bg:'rgba(200,168,75,.1)',border:'var(--gold)',text:`<strong>${rentalsOverdue.length} rental${rentalsOverdue.length>1?'s':''}</strong> due back today or overdue`,action:`nav('rentals',document.querySelector('[onclick*=rentals]'))`,label:'View rentals'});
+
+  // ── Check-in insurance requests unresolved
+  const openCI = (cData.ciRequests||[]).filter(r=>r.status==='pending');
+  if(openCI.length) alerts.push({icon:'🛡',color:'var(--sage)',bg:'rgba(107,143,113,.1)',border:'var(--sage)',text:`<strong>${openCI.length} flex-time request${openCI.length>1?'s':''}</strong> pending approval`,action:`nav('checkininsurance',document.querySelector('[onclick*=checkininsurance]'))`,label:'Review'});
+
+  if(!alerts.length) { widget.style.display='none'; return; }
+  widget.style.display='block';
+  list.innerHTML = alerts.map(a=>`
+    <div style="display:flex;align-items:center;gap:12px;background:${a.bg};border:1px solid ${a.border};border-radius:8px;padding:10px 14px">
+      <div style="font-size:18px;flex-shrink:0">${a.icon}</div>
+      <div style="flex:1;font-size:13px;color:var(--txt)">${a.text}</div>
+      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px;white-space:nowrap;color:${a.color};border-color:${a.border}" onclick="${a.action}">${a.label} →</button>
+    </div>`).join('');
+}
+
+
 function saveSettings(){const name=document.getElementById('set-name').value.trim();if(!name){toast('Enter your name');return;}if(cUser)cUser.name=name;document.getElementById('sb-uname').textContent=name;const init=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);document.getElementById('sb-av').textContent=init;sb.auth.updateUser({data:{full_name:name}});toast('Saved! ✓');}
 function saveApiKey(){const key=document.getElementById('set-api-key').value.trim();if(!key){toast('Enter your API key');return;}cData.apiKey=key;saveUserData(cUid,cData);toast('API key saved! AI messaging is live ✓');}
 function toggleSetting(el){el.classList.toggle('on');el.classList.toggle('off');toast(el.classList.contains('on')?'Enabled':'Disabled');}
@@ -4569,12 +5285,18 @@ function updateBadges(){
   if(bb){bb.textContent=pending;bb.style.display=pending?'':'none';}if(mb){mb.textContent=unread;mb.style.display=unread?'':'none';}
 }
 function openModal(id){
-  const drops=[{sel:'mb-prop',ph:'<option value="">Select property…</option>'},{sel:'mm-prop',ph:'<option value="">None</option>'},{sel:'mt-prop',ph:'<option value="">None</option>'},{sel:'mr-prop',ph:'<option value="">None</option>'},{sel:'ic-prop',ph:'<option value="">None</option>'},{sel:'exp-prop',ph:'<option value="">All Properties</option>'},{sel:'sea-prop',ph:'<option value="">All Properties</option>'},{sel:'job-prop',ph:'<option value="">Select property…</option>'},{sel:'wo-prop',ph:'<option value="">Select property…</option>'},{sel:'inv-prop',ph:'<option value="">All Properties</option>'},{sel:'ups-prop-filter',ph:'<option value="">All Properties</option>'}];
+  const drops=[{sel:'mb-prop',ph:'<option value="">Select property…</option>'},{sel:'mm-prop',ph:'<option value="">None</option>'},{sel:'mt-prop',ph:'<option value="">None</option>'},{sel:'mr-prop',ph:'<option value="">None</option>'},{sel:'ic-prop',ph:'<option value="">None</option>'},{sel:'exp-prop',ph:'<option value="">All Properties</option>'},{sel:'sea-prop',ph:'<option value="">All Properties</option>'},{sel:'job-prop',ph:'<option value="">Select property…</option>'},{sel:'wo-prop',ph:'<option value="">Select property…</option>'},{sel:'inv-prop',ph:'<option value="">All Properties</option>'},{sel:'ups-prop-filter',ph:'<option value="">All Properties</option>'},{sel:'ci-prop',ph:'<option value="">All Properties</option>'},{sel:'ri-prop',ph:'<option value="">All Properties</option>'}];
   drops.forEach(({sel,ph})=>{const el=document.getElementById(sel);if(el)el.innerHTML=ph+cData.properties.map(p=>`<option value="${p.id}">${p.emoji} ${p.name}</option>`).join('');});
-  const bookingDrop = document.getElementById('mm-booking');
+  const bookingDrop=document.getElementById('mm-booking');
   if(bookingDrop){bookingDrop.innerHTML='<option value="">No booking</option>'+cData.bookings.filter(b=>b.status!=='cancelled').map(b=>`<option value="${b.id}">${b.guestName} · ${b.propName} · ${b.checkin||'TBD'}</option>`).join('');}
-  const claimDrop = document.getElementById('claim-booking');
+  const claimDrop=document.getElementById('claim-booking');
   if(claimDrop){claimDrop.innerHTML='<option value="">Select booking…</option>'+cData.bookings.map(b=>`<option value="${b.id}">${b.guestName} · ${b.propName} · ${b.checkin||'TBD'}</option>`).join('');}
+  const ciReqDrop=document.getElementById('ci-req-booking');
+  if(ciReqDrop){ciReqDrop.innerHTML='<option value="">Select booking…</option>'+cData.bookings.map(b=>`<option value="${b.id}">${b.guestName} · ${b.propName}</option>`).join('');}
+  const rbBooking=document.getElementById('rb-booking');
+  if(rbBooking){rbBooking.innerHTML='<option value="">Select booking…</option>'+cData.bookings.map(b=>`<option value="${b.id}">${b.guestName} · ${b.propName}</option>`).join('');}
+  const rbItem=document.getElementById('rb-item');
+  if(rbItem){rbItem.innerHTML='<option value="">Select item…</option>'+(cData.rentalItems||[]).map(i=>`<option value="${i.id}">${i.emoji} ${i.name} — $${i.rate}/day</option>`).join('');}
   if(id==='add-expense-modal'){const dateEl=document.getElementById('exp-date');if(dateEl&&!dateEl.value)dateEl.value=new Date().toISOString().slice(0,10);}
   if(id==='hire-cleaner-modal'){const sel=document.getElementById('job-cleaner');if(sel)sel.innerHTML='<option value="">Any available cleaner</option>'+(cData.cleaners||[]).map(c=>`<option value="${c.id}">${c.name} — $${c.rate}/hr</option>`).join('');}
   document.getElementById(id).classList.add('open');
