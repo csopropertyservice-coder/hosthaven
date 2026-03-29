@@ -504,6 +504,16 @@ select{color:var(--txt)!important;}
         </ul>
         <button class="btn btn-ghost btn-w" onclick="openStripe('business')">Start Free Trial</button>
       </div>
+      <div class="land-plan" style="border:2px solid var(--gold);position:relative">
+        <div class="plan-badge" style="background:var(--gold);color:#2C1F14">Co-Host</div>
+        <div class="plan-name">Co-Host</div>
+        <div class="plan-price">$299<span>/mo</span></div>
+        <div class="plan-desc">For STR co-hosts managing client properties</div>
+        <ul class="plan-feats">
+          <li>25 properties</li><li>Payout ledger + margin tracking</li><li>Photo vault (proof of service)</li><li>White-label guest portal</li><li>Client owner reports (PDF)</li><li>AI Office Hours</li><li>Everything in Business</li>
+        </ul>
+        <button class="btn btn-w" style="background:var(--gold);color:#2C1F14;font-weight:700" onclick="openStripe('cohost')">Start Free Trial →</button>
+      </div>
     </div>
     <div style="text-align:center;margin-top:20px;font-size:13px;color:rgba(255,255,255,.4)">✓ No credit card required for free trial &nbsp;·&nbsp; Cancel anytime</div>
   </section>
@@ -1166,7 +1176,7 @@ select{color:var(--txt)!important;}
 <!-- ██ SETTINGS ████████████████████████████ -->
 <div class="page" id="page-settings">
   <div style="max-width:560px">
-    <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Account</div></div><div class="card-body"><div class="fi"><label>Full Name</label><input id="set-name"></div><div class="fi"><label>Email</label><input id="set-email" readonly style="opacity:.6"></div><div class="fi" style="margin-bottom:0"><label>Plan</label><div style="display:flex;align-items:center;gap:10px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:8px;padding:9px 12px"><span id="set-plan" style="font-size:13px;flex:1">Free Plan</span><button class="btn btn-pri" style="font-size:10px;padding:4px 9px" onclick="showUpgradeModal()">Upgrade →</button></div></div><div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-pri" onclick="saveSettings()">Save Changes</button><button class="btn btn-ghost" onclick="openBillingPortal()">💳 Manage Billing</button></div></div></div>
+    <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Account</div></div><div class="card-body"><div class="fi"><label>Full Name</label><input id="set-name"></div><div class="fi"><label>Email</label><input id="set-email" readonly style="opacity:.6"></div><div class="fi" style="margin-bottom:0"><label>Plan</label><div style="display:flex;align-items:center;gap:10px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:8px;padding:9px 12px"><span id="set-plan" style="font-size:13px;flex:1">Free Plan</span><button class="btn btn-pri" style="font-size:10px;padding:4px 9px" onclick="showUpgradeModal()">Upgrade →</button></div></div><div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-pri" onclick="saveSettings()">Save Changes</button><button class="btn btn-ghost" onclick="openBillingPortal()">💳 Manage Billing</button><button class="btn btn-w" style="background:var(--gold);color:#2C1F14;font-weight:600;border:none;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer" onclick="openStripe('cohost')">🏆 Co-Host $299</button></div></div></div>
     <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">AI Messaging (Anthropic API)</div></div><div class="card-body"><div style="font-size:13px;color:var(--txt2);margin-bottom:10px;line-height:1.5">Add your API key from <strong>console.anthropic.com</strong> for real AI drafts. Free to start.</div><div class="fi" style="margin-bottom:10px"><label>API Key</label><input id="set-api-key" type="password" placeholder="sk-ant-…"></div><button class="btn btn-sage" onclick="saveApiKey()">Save Key</button></div></div>
     <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Appearance</div></div><div class="card-body"><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">Dark Mode</div><div style="font-size:11px;color:var(--txt3)">Switch between light and dark</div></div><div class="toggle" id="dark-setting-toggle" onclick="toggleDark()"><div class="toggle-knob"></div></div></div></div></div>
     <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Notifications</div></div><div class="card-body"><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">New bookings</div></div><div class="toggle on" onclick="toggleSetting(this)"><div class="toggle-knob"></div></div></div><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">Guest messages</div></div><div class="toggle on" onclick="toggleSetting(this)"><div class="toggle-knob"></div></div></div><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">Task reminders</div></div><div class="toggle off" onclick="toggleSetting(this)"><div class="toggle-knob"></div></div></div></div></div>
@@ -1818,8 +1828,9 @@ select{color:var(--txt)!important;}
       <div style="font-size:13px;color:var(--txt)">✅ Priority support</div>
     </div>
   </div>
-  <button class="btn btn-pri btn-w" style="margin-bottom:10px" onclick="closeModal('upgrade-modal');openStripe('pro')">Upgrade to Pro — $79/mo →</button>
-  <button class="btn btn-ghost btn-w" style="margin-bottom:8px" onclick="closeModal('upgrade-modal');openStripe('business')">Get Business (Unlimited) — $199/mo</button>
+  <button class="btn btn-pri btn-w" style="margin-bottom:8px" onclick="closeModal('upgrade-modal');openStripe('pro')">🚀 Pro — $79/mo (10 properties) →</button>
+  <button class="btn btn-ghost btn-w" style="margin-bottom:8px" onclick="closeModal('upgrade-modal');openStripe('business')">💼 Business — $199/mo (Unlimited)</button>
+  <button class="btn btn-w" style="margin-bottom:8px;background:var(--gold);color:#2C1F14;font-weight:600;border:none;border-radius:8px;padding:12px;cursor:pointer" onclick="closeModal('upgrade-modal');openStripe('cohost')">🏆 Co-Host — $299/mo (25 props + white-label)</button>
   <button class="btn btn-ghost btn-w" style="color:var(--txt3)" onclick="closeModal('upgrade-modal')">Maybe later</button>
 </div></div>
 
@@ -2208,7 +2219,7 @@ const ADMIN_EMAIL = 'csopropertyservice@gmail.com';
 // ════════════════════════════════════════════
 //  STATE
 // ════════════════════════════════════════════
-let cUid=null, cData=null, cUser=null, activeConvId=null;
+let cUid=null, cData=null, cUser=null, activeConvId=null, isAdmin=false;
 let wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
 
 // Local cache for fast UI — syncs to Supabase
@@ -2575,7 +2586,7 @@ function launchApp(user) {
   checkTrialStatus();
 
   // Admin check — must come before plan is used
-  const isAdmin = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+  isAdmin = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
   if(isAdmin) {
     cData.plan='business';
     saveLocalData(cUid,cData);
@@ -2587,12 +2598,12 @@ function launchApp(user) {
 
   // Show team nav for business/admin
   const teamNav = document.getElementById('team-nav-item');
-  if(teamNav) teamNav.style.display = (plan==='business'||isAdmin) ? 'flex' : 'none';
+  if(teamNav) teamNav.style.display = (plan==='business'||plan==='cohost'||isAdmin) ? 'flex' : 'none';
 
-  document.getElementById('sb-plan').textContent=isAdmin?'👑 Admin':plan==='free'?'⭐ Free':plan==='pro'?'🚀 Pro':plan==='trial'?'🎯 Trial':'💼 Business';
+  document.getElementById('sb-plan').textContent=isAdmin?'👑 Admin':plan==='free'?'⭐ Free':plan==='pro'?'🚀 Pro':plan==='trial'?'🎯 Trial':plan==='cohost'?'🏆 Co-Host':'💼 Business';
   document.getElementById('set-name').value=user.name;
   document.getElementById('set-email').value=user.email;
-  document.getElementById('set-plan').textContent=isAdmin?'Admin — Unlimited':plan==='free'?'Free — 1 property':plan==='pro'?'Pro — 10 properties':plan==='trial'?'Pro Trial — 10 properties':'Business — Unlimited';
+  document.getElementById('set-plan').textContent=isAdmin?'Admin — Unlimited':plan==='free'?'Free — 1 property':plan==='pro'?'Pro — 10 properties':plan==='trial'?'Pro Trial — 10 properties':plan==='cohost'?'Co-Host — 25 properties':'Business — Unlimited';
   if(cData.apiKey)document.getElementById('set-api-key').value=cData.apiKey;
   document.getElementById('wb-host').value=user.name;
   document.getElementById('wb-email').value=user.email;
@@ -2802,6 +2813,7 @@ async function renderAdmin() {
 
     const pro = allUsers.filter(u=>u.plan==='pro');
     const biz = allUsers.filter(u=>u.plan==='business');
+    const cohost = allUsers.filter(u=>u.plan==='cohost');
     const paid = allUsers.filter(u=>u.plan&&u.plan!=='free');
     const mrr = (pro.length*79)+(biz.length*199);
 
@@ -2811,7 +2823,7 @@ async function renderAdmin() {
     setEl('adm-pro',pro.length);
     setEl('adm-mrr','$'+mrr.toLocaleString());
 
-    const planColor=p=>p==='business'?'pill-blue':p==='pro'?'pill-green':'pill-amber';
+    const planColor=p=>p==='business'?'pill-blue':p==='pro'?'pill-green':p==='cohost'?'pill-gold':'pill-amber';
     const planLabel=p=>p==='business'?'💼 Business':p==='pro'?'🚀 Pro':'⭐ Free';
 
     table.innerHTML=`<table class="report-table" style="width:100%">
@@ -2879,7 +2891,7 @@ const GRADS=['pi1','pi2','pi3','pi4','pi5','pi6'];
 async function addProperty(){
   const name=document.getElementById('mp-name').value.trim();
   if(!name){toast('Enter a property name');return;}
-  if((cData.plan||'free')==='free'&&cData.properties.length>=1){closeModal('add-property-modal');showUpgradeModal('You\'ve reached the free plan limit of 1 property.');return;}
+  const _plan=cData.plan||'free';const _limit=_plan==='free'?1:_plan==='pro'||_plan==='trial'?10:_plan==='cohost'?25:9999;if(cData.properties.length>=_limit&&!isAdmin){closeModal('add-property-modal');showUpgradeModal('You\'ve reached your '+_limit+'-property limit. Upgrade to unlock more.');return;}
   const photo = await getPhotoData('mp-photo');
   const p={id:'p_'+Date.now(),name,emoji:document.getElementById('mp-emoji').value||'🏡',location:document.getElementById('mp-loc').value||'',description:document.getElementById('mp-desc').value||'',rate:parseFloat(document.getElementById('mp-rate').value)||100,maxGuests:parseInt(document.getElementById('mp-guests').value)||2,wifi:document.getElementById('mp-wifi').value||'',wifiPw:document.getElementById('mp-wifipw').value||'',doorCode:document.getElementById('mp-door').value||'',parking:document.getElementById('mp-parking').value||'',photo:photo||null,occupancy:Math.floor(Math.random()*25)+65,rating:(4.7+Math.random()*.3).toFixed(2),gradient:GRADS[cData.properties.length%6],created:Date.now()};
   cData.properties.push(p);saveUserData(cUid,cData);closeModal('add-property-modal');
@@ -6052,9 +6064,12 @@ function renderNotes() {
 function openStripe(plan){
   const links={
     pro:'https://buy.stripe.com/cNi8wO2EtdfT8wdbo44sE00',
-    business:'https://buy.stripe.com/aFafZg2EtdfTcMt9fW4sE01'
+    business:'https://buy.stripe.com/aFafZg2EtdfTcMt9fW4sE01',
+    cohost:'https://buy.stripe.com/aFafZg2EtdfTcMt9fW4sE01'
   };
-  window.open(links[plan],'_blank');
+  // cohost uses business link until dedicated link is created in Stripe
+  if(links[plan]) window.open(links[plan],'_blank');
+  else toast('Contact us to set up your Co-Host plan: csopropertyservice@gmail.com');
 }
 
 // ════════════════════════════════════════════
