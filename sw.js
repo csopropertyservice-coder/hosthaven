@@ -1,13 +1,4 @@
-// HostHaven Service Worker — self-destruct
-// This file intentionally clears all caches and unregisters itself
-self.addEventListener('install', function() { self.skipWaiting(); });
-self.addEventListener('activate', function(event) {
-  event.waitUntil(
-    caches.keys().then(function(keys) {
-      return Promise.all(keys.map(function(k) { return caches.delete(k); }));
-    }).then(function() {
-      return self.registration.unregister();
-    })
-  );
-  self.clients.claim();
+self.addEventListener('install',()=>self.skipWaiting());
+self.addEventListener('activate',e=>{
+  e.waitUntil(caches.keys().then(k=>Promise.all(k.map(n=>caches.delete(n)))).then(()=>self.registration.unregister()));
 });
