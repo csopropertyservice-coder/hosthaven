@@ -14,6 +14,13 @@
 <meta name="twitter:title" content="HostHaven — Smarter Airbnb Management">
 <meta name="twitter:description" content="The all-in-one dashboard for Airbnb hosts and co-hosts. Start free.">
 <link rel="canonical" href="https://csopropertyservice-coder.github.io/hosthaven/">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#C4693A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="HostHaven">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23C4693A'/><text y='.9em' font-size='70' x='12'>🏡</text></svg>">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23C4693A'/><text y='.9em' font-size='70' x='12'>🏡</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
@@ -704,6 +711,7 @@ select{color:var(--txt)!important;}
 
         <div class="sb-sec" style="margin-top:10px">Automation</div>
         <div class="sb-item" onclick="nav('aihours',this)"><span class="ico">🤖</span>AI Office Hours</div>
+        <div class="sb-item" onclick="nav('affiliates',this)"><span class="ico">🤝</span>Affiliates</div>
 
         <div class="sb-sec" style="margin-top:10px">Co-Host</div>
         <div class="sb-item" onclick="nav('cohost_cmd',this)"><span class="ico">🏢</span>Command Center</div>
@@ -1317,7 +1325,7 @@ select{color:var(--txt)!important;}
     <div class="kpi k1"><div class="kpi-label">Available Cleaners</div><div class="kpi-val" id="mkt-cleaners">0</div></div>
     <div class="kpi k2"><div class="kpi-label">Active Jobs</div><div class="kpi-val" id="mkt-jobs">0</div></div>
     <div class="kpi k3"><div class="kpi-label">Completed</div><div class="kpi-val" id="mkt-done">0</div></div>
-    <div class="kpi k4"><div class="kpi-label">Avg Rating</div><div class="kpi-val" id="mkt-rating">—</div></div>
+    <div class="kpi k4" style="border-left:3px solid var(--gold)"><div class="kpi-label">Your Platform Fees</div><div class="kpi-val" id="mkt-fees" style="color:var(--gold)">$0</div></div>
   </div>
   <div class="g2">
     <div class="card">
@@ -1614,6 +1622,37 @@ select{color:var(--txt)!important;}
   </div>
   <div id="owners-list">
     <div class="empty-state"><div class="es-i">🤝</div><h3>No owners added yet</h3><p>Add property owners to track splits and send branded monthly reports</p><button class="btn btn-pri" onclick="openModal('add-owner-modal')" style="margin-top:10px">Add First Owner</button></div>
+  </div>
+</div>
+
+
+<!-- ██ AFFILIATES ████████████████████████████ -->
+<div class="page" id="page-affiliates">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Give affiliates a unique link. They bring users. You pay 20% recurring commission automatically.</div>
+    <button class="btn btn-pri" onclick="openModal('add-affiliate-modal')">+ Add Affiliate</button>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Total Affiliates</div><div class="kpi-val" id="aff-total">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Referred Users</div><div class="kpi-val" id="aff-referred">0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Commissions Owed</div><div class="kpi-val" id="aff-owed">$0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Your Net Revenue</div><div class="kpi-val" id="aff-net" style="color:var(--sage)">$0</div></div>
+  </div>
+
+  <!-- How it works -->
+  <div class="card" style="margin-bottom:14px;border-left:3px solid var(--gold)">
+    <div class="card-hd"><div class="card-title">💡 How the Affiliate Program Works</div></div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">🔗</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">1. Generate Link</div><div style="font-size:12px;color:var(--txt2)">Each affiliate gets a unique tracking URL like hosthaven/?ref=THEIRCODE</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">📣</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">2. They Promote</div><div style="font-size:12px;color:var(--txt2)">YouTube, TikTok, Facebook Groups — they bring the audience, you keep 80%</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">💰</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">3. You Pay 20%</div><div style="font-size:12px;color:var(--txt2)">Monthly recurring commission for every user they referred. Track it all here.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="affiliates-list">
+    <div class="empty-state"><div class="es-i">🤝</div><h3>No affiliates yet</h3><p>Add a Dallas Airbnb influencer or STR guru and give them their unique link</p><button class="btn btn-pri" onclick="openModal('add-affiliate-modal')" style="margin-top:10px">Add First Affiliate</button></div>
   </div>
 </div>
 
@@ -2024,6 +2063,16 @@ select{color:var(--txt)!important;}
      MODALS
 ══════════════════════════════════════ -->
 
+
+<!-- AFFILIATE MODAL -->
+<div class="modal-bg" id="add-affiliate-modal"><div class="modal"><h2>🤝 Add Affiliate</h2>
+  <div class="g2"><div class="fi"><label>Name</label><input id="aff-name" placeholder="John the Airbnb Guy"></div><div class="fi"><label>Code (unique)</label><input id="aff-code" placeholder="JOHN20" style="text-transform:uppercase"></div></div>
+  <div class="g2"><div class="fi"><label>Email</label><input id="aff-email" type="email" placeholder="john@email.com"></div><div class="fi"><label>Commission (%)</label><input id="aff-commission" type="number" value="20" min="5" max="40"></div></div>
+  <div class="fi"><label>Platform / Notes</label><input id="aff-platform" placeholder="YouTube 45k subs, Dallas STR niche"></div>
+  <div id="aff-link-preview" style="display:none;background:var(--sand);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--txt2);margin-top:4px"></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-affiliate-modal')">Cancel</button><button class="btn btn-pri" onclick="addAffiliate()">Add Affiliate</button></div>
+</div></div>
+
 <!-- FEEDBACK MODAL -->
 <div class="modal-bg" id="feedback-modal"><div class="modal" style="max-width:420px">
   <h2>💬 Share Your Feedback</h2>
@@ -2352,7 +2401,11 @@ select{color:var(--txt)!important;}
   <div class="g2"><div class="fi"><label>Date Needed</label><input id="job-date" type="date"></div><div class="fi"><label>Time</label><input id="job-time" type="time" value="11:00"></div></div>
   <div class="fi"><label>Job Type</label><select id="job-type" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="turnover">🔄 Turnover Clean</option><option value="deep">🧹 Deep Clean</option><option value="inspect">🔍 Inspection</option><option value="laundry">👕 Laundry Only</option></select></div>
   <div class="fi"><label>Assign To</label><select id="job-cleaner" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="">Any available cleaner</option></select></div>
-  <div class="fi"><label>Pay ($)</label><input id="job-pay" type="number" placeholder="75"></div>
+  <div class="g2">
+    <div class="fi"><label>Job Total ($)</label><input id="job-pay" type="number" placeholder="150" oninput="calcJobFee()"></div>
+    <div class="fi"><label>Platform Fee (%)</label><input id="job-fee-pct" type="number" value="5" min="0" max="20" oninput="calcJobFee()" style="background:rgba(200,168,75,.1);border-color:var(--gold)"></div>
+  </div>
+  <div id="job-fee-preview" style="display:none;background:rgba(107,143,113,.1);border:1px solid var(--sage);border-radius:8px;padding:10px 12px;margin-bottom:4px;font-size:12px;color:var(--txt2)"></div>
   <div class="fi"><label>Notes</label><textarea id="job-notes" placeholder="Special instructions…" style="min-height:50px"></textarea></div>
   <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('hire-cleaner-modal')">Cancel</button><button class="btn btn-pri" onclick="postJob()">Post Job</button></div>
 </div></div>
@@ -2478,7 +2531,7 @@ let wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
 const LOCAL_KEY = 'hh_local_v1';
 const getLocal = () => { try{return JSON.parse(localStorage.getItem(LOCAL_KEY))||{};}catch{return {};} };
 const setLocal = d => localStorage.setItem(LOCAL_KEY, JSON.stringify(d));
-const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],expenses:[],blacklist:[],seasons:[],cleaners:[],jobs:[],workorders:[],inventory:[],autoReplies:[],concierge:[],upsells:[],claims:[],ciPolicies:[],ciRequests:[],rentalItems:[],rentalBookings:[],templates:[],loyaltyMembers:[],optimizerSettings:{},plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; if(!d.expenses)d.expenses=[]; if(!d.blacklist)d.blacklist=[]; if(!d.seasons)d.seasons=[]; if(!d.cleaners)d.cleaners=[]; if(!d.jobs)d.jobs=[]; if(!d.workorders)d.workorders=[]; if(!d.inventory)d.inventory=[]; if(!d.autoReplies)d.autoReplies=[]; if(!d.concierge)d.concierge=[]; if(!d.upsells)d.upsells=[]; if(!d.claims)d.claims=[]; if(!d.ciPolicies)d.ciPolicies=[]; if(!d.ciRequests)d.ciRequests=[]; if(!d.rentalItems)d.rentalItems=[]; if(!d.rentalBookings)d.rentalBookings=[]; if(!d.templates)d.templates=[]; if(!d.loyaltyMembers)d.loyaltyMembers=[]; if(!d.optimizerSettings)d.optimizerSettings={}; if(!d.guestCRM)d.guestCRM=[]; if(!d.payouts)d.payouts=[]; if(!d.vaultPhotos)d.vaultPhotos=[]; if(!d.aiHours)d.aiHours={enabled:false,start:'22:00',end:'08:00',message:'Hi! I received your message and will respond during office hours (8am-10pm). 🏡',escalate:'emergency,flood,fire,locked out,broken,urgent',autoCount:0,escalateCount:0}; if(!d.sentReports)d.sentReports=[]; if(!d.owners)d.owners=[]; if(!d.invChecklist)d.invChecklist=['Coffee pods (6+)','Toilet paper (4+ rolls)','Paper towels (2+ rolls)','Hand soap','Dish soap','Shampoo & conditioner','Body wash','Bath towels (2 per guest)','Kitchen sponge','Trash bags']; return d; };
+const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],expenses:[],blacklist:[],seasons:[],cleaners:[],jobs:[],workorders:[],inventory:[],autoReplies:[],concierge:[],upsells:[],claims:[],ciPolicies:[],ciRequests:[],rentalItems:[],rentalBookings:[],templates:[],loyaltyMembers:[],optimizerSettings:{},plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; if(!d.expenses)d.expenses=[]; if(!d.blacklist)d.blacklist=[]; if(!d.seasons)d.seasons=[]; if(!d.cleaners)d.cleaners=[]; if(!d.jobs)d.jobs=[]; if(!d.workorders)d.workorders=[]; if(!d.inventory)d.inventory=[]; if(!d.autoReplies)d.autoReplies=[]; if(!d.concierge)d.concierge=[]; if(!d.upsells)d.upsells=[]; if(!d.claims)d.claims=[]; if(!d.ciPolicies)d.ciPolicies=[]; if(!d.ciRequests)d.ciRequests=[]; if(!d.rentalItems)d.rentalItems=[]; if(!d.rentalBookings)d.rentalBookings=[]; if(!d.templates)d.templates=[]; if(!d.loyaltyMembers)d.loyaltyMembers=[]; if(!d.optimizerSettings)d.optimizerSettings={}; if(!d.guestCRM)d.guestCRM=[]; if(!d.payouts)d.payouts=[]; if(!d.vaultPhotos)d.vaultPhotos=[]; if(!d.aiHours)d.aiHours={enabled:false,start:'22:00',end:'08:00',message:'Hi! I received your message and will respond during office hours (8am-10pm). 🏡',escalate:'emergency,flood,fire,locked out,broken,urgent',autoCount:0,escalateCount:0}; if(!d.sentReports)d.sentReports=[]; if(!d.owners)d.owners=[]; if(!d.affiliates)d.affiliates=[]; if(!d.affiliateClicks)d.affiliateClicks={}; if(!d.invChecklist)d.invChecklist=['Coffee pods (6+)','Toilet paper (4+ rolls)','Paper towels (2+ rolls)','Hand soap','Dish soap','Shampoo & conditioner','Body wash','Bath towels (2 per guest)','Kitchen sponge','Trash bags']; return d; };
 const saveLocalData = (uid,d) => { const l=getLocal(); l[uid]=d; setLocal(l); };
 
 // Save to both local and Supabase
@@ -2975,7 +3028,7 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 //  NAV
 // ════════════════════════════════════════════
-const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',cohost_cmd:'🏢 Co-Host Command Center',owners:'🤝 Owner Management',crm:'👤 Guest CRM',payouts:'💳 Payout Ledger',photovault:'📸 Photo Vault',qrmanual:'📱 QR House Manual',aihours:'🤖 AI Office Hours',checkininsurance:'🛡 Check-in Insurance',rentals:'🚲 Equipment Rentals',ical:'iCal Sync',templates:'📝 Message Templates',loyalty:'🎁 Guest Loyalty',pricing_opt:'💡 Pricing Optimizer',scorecards:'🏆 Property Scorecards',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
+const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',cohost_cmd:'🏢 Co-Host Command Center',owners:'🤝 Owner Management',crm:'👤 Guest CRM',payouts:'💳 Payout Ledger',photovault:'📸 Photo Vault',qrmanual:'📱 QR House Manual',aihours:'🤖 AI Office Hours',affiliates:'🤝 Affiliate Program',checkininsurance:'🛡 Check-in Insurance',rentals:'🚲 Equipment Rentals',ical:'iCal Sync',templates:'📝 Message Templates',loyalty:'🎁 Guest Loyalty',pricing_opt:'💡 Pricing Optimizer',scorecards:'🏆 Property Scorecards',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
@@ -3006,6 +3059,7 @@ function nav(id,el){
   if(id==='photovault')setTimeout(()=>renderPhotoVault(),50);
   if(id==='qrmanual')setTimeout(()=>renderQRManual(),50);
   if(id==='aihours')setTimeout(()=>renderAIHours(),50);
+  if(id==='affiliates')setTimeout(()=>renderAffiliates(),50);
   if(id==='concierge')setTimeout(()=>renderConcierge(),50);
   if(id==='upsell')setTimeout(()=>renderUpsell(),50);
   if(id==='directbook')setTimeout(()=>renderDirectBook(),50);
@@ -4202,10 +4256,44 @@ function renderBookingSourceChart() {
 // ════════════════════════════════════════════
 function addCleaner(){const name=document.getElementById('cl-name').value.trim();if(!name){toast('Enter cleaner name');return;}if(!cData.cleaners)cData.cleaners=[];const prop=null;cData.cleaners.push({id:'cl_'+Date.now(),name,phone:document.getElementById('cl-phone').value,email:document.getElementById('cl-email').value,rate:parseFloat(document.getElementById('cl-rate').value)||0,area:document.getElementById('cl-area').value,skills:document.getElementById('cl-skills').value,notes:document.getElementById('cl-notes').value,rating:5,jobs:0,available:true,created:Date.now()});saveUserData(cUid,cData);closeModal('add-cleaner-modal');['cl-name','cl-phone','cl-email','cl-rate','cl-area','cl-skills','cl-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});toast(`${name} added to marketplace!`);renderMarketplace();}
 
-function postJob(){const propId=document.getElementById('job-prop').value;const date=document.getElementById('job-date').value;if(!date){toast('Select a date');return;}if(!cData.jobs)cData.jobs=[];const prop=cData.properties.find(p=>p.id===propId);const cleanerId=document.getElementById('job-cleaner').value;const cleaner=cData.cleaners?.find(c=>c.id===cleanerId);cData.jobs.push({id:'j_'+Date.now(),propId,propName:prop?.name||'Property',date,time:document.getElementById('job-time').value,type:document.getElementById('job-type').value,cleanerId,cleanerName:cleaner?.name||'Unassigned',pay:parseFloat(document.getElementById('job-pay').value)||0,notes:document.getElementById('job-notes').value,status:'open',created:Date.now()});saveUserData(cUid,cData);closeModal('hire-cleaner-modal');toast('Job posted!');renderMarketplace();}
+function calcJobFee(){
+  const pay=parseFloat(document.getElementById('job-pay')?.value)||0;
+  const feePct=parseFloat(document.getElementById('job-fee-pct')?.value)||5;
+  const preview=document.getElementById('job-fee-preview');
+  if(!preview)return;
+  if(!pay){preview.style.display='none';return;}
+  const fee=Math.round(pay*feePct/100*100)/100;
+  const cleanerGets=Math.round((pay-fee)*100)/100;
+  preview.style.display='block';
+  preview.innerHTML='<strong>Cleaner receives:</strong> $'+cleanerGets+' &nbsp;·&nbsp; <strong style="color:var(--gold)">Your platform fee ('+feePct+'%): $'+fee+'</strong> &nbsp;·&nbsp; Total charged to host: $'+pay;
+}
+function postJob(){
+  const propId=document.getElementById('job-prop').value;
+  const date=document.getElementById('job-date').value;
+  if(!date){toast('Select a date');return;}
+  if(!cData.jobs)cData.jobs=[];
+  const prop=cData.properties.find(p=>p.id===propId);
+  const cleanerId=document.getElementById('job-cleaner').value;
+  const cleaner=cData.cleaners?.find(c=>c.id===cleanerId);
+  const pay=parseFloat(document.getElementById('job-pay').value)||0;
+  const feePct=parseFloat(document.getElementById('job-fee-pct')?.value)||5;
+  const platformFee=Math.round(pay*feePct/100*100)/100;
+  cData.jobs.push({id:'j_'+Date.now(),propId,propName:prop?.name||'Property',date,time:document.getElementById('job-time').value,type:document.getElementById('job-type').value,cleanerId,cleanerName:cleaner?.name||'Unassigned',pay,feePct,platformFee,cleanerPay:Math.round((pay-platformFee)*100)/100,notes:document.getElementById('job-notes').value,status:'open',created:Date.now()});
+  saveUserData(cUid,cData);
+  closeModal('hire-cleaner-modal');
+  toast('Job posted! Platform fee: $'+platformFee);
+  renderMarketplace();
+}
 
 function renderMarketplace(){
-  const cleaners=cData.cleaners||[];const jobs=cData.jobs||[];
+  const jobs=cData.jobs||[];
+  const completedJobs=jobs.filter(j=>j.status==='completed');
+  const totalPlatformFees=completedJobs.reduce((s,j)=>s+(j.platformFee||0),0);
+  const feeEl=document.getElementById('mkt-fees');
+  if(feeEl)feeEl.textContent='$'+totalPlatformFees.toFixed(2);
+  // original function continues:
+
+  const cleaners=cData.cleaners||[];
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   set('mkt-cleaners',cleaners.filter(c=>c.available).length);set('mkt-jobs',jobs.filter(j=>j.status==='open').length);set('mkt-done',jobs.filter(j=>j.status==='completed').length);
   const rated=cleaners.filter(c=>c.rating);set('mkt-rating',rated.length?'⭐'+(rated.reduce((s,c)=>s+c.rating,0)/rated.length).toFixed(1):'—');
@@ -4220,7 +4308,36 @@ function renderMarketplace(){
 }
 function toggleCleanerAvail(id){const c=(cData.cleaners||[]).find(x=>x.id===id);if(c){c.available=!c.available;saveUserData(cUid,cData);renderMarketplace();}}
 function removeCleaner(id){if(!confirm('Remove this cleaner?'))return;cData.cleaners=(cData.cleaners||[]).filter(x=>x.id!==id);saveUserData(cUid,cData);renderMarketplace();toast('Cleaner removed');}
-function completeJob(id){const j=(cData.jobs||[]).find(x=>x.id===id);if(j){j.status='completed';saveUserData(cUid,cData);renderMarketplace();toast('Job marked complete ✓');}}
+function completeJob(id){
+  const j=(cData.jobs||[]).find(x=>x.id===id);
+  if(!j)return;
+  j.status='completed';
+  j.completedAt=new Date().toISOString().slice(0,10);
+  // Auto-create payout record
+  if(!cData.payouts)cData.payouts=[];
+  const alreadyLogged=cData.payouts.find(p=>p.jobId===j.id);
+  if(!alreadyLogged&&j.pay>0){
+    cData.payouts.push({
+      id:'pay_'+Date.now(),
+      jobId:j.id,
+      cleaner:j.cleanerId||'',
+      cleanerName:j.cleanerName||'Cleaner',
+      charged:j.pay||0,
+      owed:j.cleanerPay||Math.round((j.pay-(j.platformFee||0))*100)/100,
+      net:j.platformFee||0,
+      margin:j.feePct||5,
+      platformFee:j.platformFee||0,
+      status:'pending',
+      date:j.completedAt,
+      notes:'Auto-logged from job: '+j.propName,
+      created:Date.now()
+    });
+  }
+  saveUserData(cUid,cData);
+  renderMarketplace();
+  const msg=j.platformFee?'Job complete! $'+j.platformFee+' platform fee earned, payout logged ✓':'Job marked complete ✓';
+  toast(msg);
+}
 
 // ════════════════════════════════════════════
 //  WORK ORDERS
@@ -6934,6 +7051,149 @@ function switchAdminTab(tab) {
   if(tab==='feedback') loadFeedback();
 }
 
+
+// ════════════════════════════════════════════
+//  AFFILIATE PROGRAM
+// ════════════════════════════════════════════
+function addAffiliate() {
+  const name = document.getElementById('aff-name').value.trim();
+  const code = document.getElementById('aff-code').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(!name){toast('Enter affiliate name');return;}
+  if(!code){toast('Enter a unique code (letters/numbers only)');return;}
+  if(!cData.affiliates) cData.affiliates=[];
+  if(cData.affiliates.find(a=>a.code===code)){toast('That code is already taken');return;}
+  cData.affiliates.push({
+    id:'aff_'+Date.now(),
+    name, code,
+    email:document.getElementById('aff-email').value.trim(),
+    commission:parseFloat(document.getElementById('aff-commission').value)||20,
+    platform:document.getElementById('aff-platform').value.trim(),
+    referredUsers:[],
+    totalEarned:0,
+    totalPaid:0,
+    active:true,
+    created:Date.now()
+  });
+  saveUserData(cUid,cData);
+  closeModal('add-affiliate-modal');
+  toast(name+' added! Share their link: ?ref='+code);
+  renderAffiliates();
+}
+
+function renderAffiliates() {
+  const affiliates = cData.affiliates||[];
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+
+  const totalReferred = affiliates.reduce((s,a)=>s+(a.referredUsers||[]).length,0);
+  const totalOwed = affiliates.reduce((s,a)=>s+(a.totalEarned||0)-(a.totalPaid||0),0);
+  // Net = what you keep (80% of referred revenue)
+  const totalGross = affiliates.reduce((s,a)=>{
+    const userRevenue = (a.referredUsers||[]).reduce((rs,u)=>rs+(u.monthlyValue||79),0);
+    return s+userRevenue;
+  },0);
+  const yourNet = totalGross - affiliates.reduce((s,a)=>s+(a.totalEarned||0),0);
+
+  set('aff-total', affiliates.length);
+  set('aff-referred', totalReferred);
+  set('aff-owed', '$'+Math.round(totalOwed).toLocaleString());
+  set('aff-net', '$'+Math.round(yourNet).toLocaleString());
+
+  const list = document.getElementById('affiliates-list');
+  if(!list) return;
+  if(!affiliates.length){
+    list.innerHTML='<div class="empty-state"><div class="es-i">🤝</div><h3>No affiliates yet</h3><button class="btn btn-pri" onclick="openModal(\"add-affiliate-modal\")" style="margin-top:10px">Add First Affiliate</button></div>';
+    return;
+  }
+
+  const baseUrl = 'https://csopropertyservice-coder.github.io/hosthaven/?ref=';
+  list.innerHTML = affiliates.map(function(a) {
+    const referred = (a.referredUsers||[]).length;
+    const owed = (a.totalEarned||0)-(a.totalPaid||0);
+    const link = baseUrl+a.code;
+    const monthlyComm = referred * 79 * (a.commission/100);
+    return '<div class="card" style="margin-bottom:12px">'
+      +'<div class="card-hd">'
+        +'<div style="display:flex;align-items:center;gap:12px">'
+          +'<div style="width:42px;height:42px;border-radius:50%;background:var(--terra);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0">'+a.name[0].toUpperCase()+'</div>'
+          +'<div>'
+            +'<div style="font-size:15px;font-weight:600;color:var(--txt)">'+a.name+'</div>'
+            +'<div style="font-size:12px;color:var(--txt3)">'+(a.platform||'No platform noted')+' · '+(a.commission||20)+'% commission</div>'
+          +'</div>'
+        +'</div>'
+        +'<div style="display:flex;gap:6px">'
+          +'<button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="copyAffLink(this.dataset.link)" data-link="'+link+'">📋 Copy Link</button>'
+          +'<button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="logAffReferral(this.dataset.id)" data-id="'+a.id+'">+ Log Referral</button>'
+          +(owed>0?'<button class="btn btn-ghost" style="font-size:11px;padding:4px 9px;color:var(--sage)" onclick="payAffiliate(this.dataset.id)" data-id="'+a.id+'">Pay $'+Math.round(owed)+'</button>':'')
+          +'<button class="btn btn-ghost" style="font-size:11px;padding:4px 9px;color:var(--terra)" onclick="removeAffiliate(this.dataset.id)" data-id="'+a.id+'">🗑</button>'
+        +'</div>'
+      +'</div>'
+      +'<div class="card-body">'
+        +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">'
+          +'<div style="background:var(--sand);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Referred Users</div><div style="font-family:Fraunces,serif;font-size:20px;color:var(--txt)">'+referred+'</div></div>'
+          +'<div style="background:var(--sand);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Monthly Comm.</div><div style="font-family:Fraunces,serif;font-size:20px;color:var(--gold)">$'+Math.round(monthlyComm)+'</div></div>'
+          +'<div style="background:'+(owed>0?'rgba(107,143,113,.1)':'var(--sand)')+';border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Amount Owed</div><div style="font-family:Fraunces,serif;font-size:20px;color:'+(owed>0?'var(--sage)':'var(--txt3)')+'">$'+Math.round(owed)+'</div></div>'
+          +'<div style="background:rgba(196,105,58,.08);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Total Paid</div><div style="font-family:Fraunces,serif;font-size:20px;color:var(--terra)">$'+Math.round(a.totalPaid||0)+'</div></div>'
+        +'</div>'
+        +'<div style="background:var(--sand);border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px">'
+          +'<div style="font-size:11px;color:var(--txt3);flex-shrink:0">Their link:</div>'
+          +'<div style="font-size:12px;color:var(--terra);font-family:monospace;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+link+'</div>'
+          +'<button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;flex-shrink:0" onclick="copyAffLink(this.dataset.link)" data-link="'+link+'">Copy</button>'
+        +'</div>'
+        +((a.referredUsers||[]).length ? '<div style="margin-top:10px"><div style="font-size:11px;color:var(--txt3);margin-bottom:6px;font-weight:600;letter-spacing:.5px;text-transform:uppercase">Referred Users</div>'+(a.referredUsers||[]).map(function(u){return '<div style="font-size:12px;color:var(--txt2);padding:4px 0;border-bottom:1px solid var(--border2)">'+u.email+' · $'+u.monthlyValue+'/mo · joined '+u.joinedDate+'</div>';}).join('')+'</div>' : '')
+      +'</div>'
+    +'</div>';
+  }).join('');
+}
+
+function copyAffLink(link) {
+  navigator.clipboard.writeText(link).then(()=>toast('Affiliate link copied! ✓'));
+}
+
+function logAffReferral(affId) {
+  const a = (cData.affiliates||[]).find(x=>x.id===affId);
+  if(!a){return;}
+  const email = prompt('Referred user email address:');
+  if(!email||!email.includes('@')) return;
+  const plan = prompt('Their plan (free/pro/business/cohost):', 'pro') || 'pro';
+  const monthlyValue = plan==='cohost'?299:plan==='business'?199:79;
+  if(!a.referredUsers) a.referredUsers=[];
+  a.referredUsers.push({email,plan,monthlyValue,joinedDate:new Date().toISOString().slice(0,10)});
+  const monthly = monthlyValue * (a.commission/100);
+  a.totalEarned = (a.totalEarned||0) + monthly;
+  saveUserData(cUid,cData);
+  renderAffiliates();
+  toast('Referral logged! '+a.name+' earns $'+monthly.toFixed(2)+'/mo for this user');
+}
+
+function payAffiliate(affId) {
+  const a = (cData.affiliates||[]).find(x=>x.id===affId);
+  if(!a) return;
+  const owed = (a.totalEarned||0)-(a.totalPaid||0);
+  if(owed<=0){toast('Nothing owed');return;}
+  if(!confirm('Mark $'+Math.round(owed)+' as paid to '+a.name+'?')) return;
+  a.totalPaid = (a.totalPaid||0) + owed;
+  saveUserData(cUid,cData);
+  renderAffiliates();
+  toast('$'+Math.round(owed)+' marked as paid to '+a.name+' ✓');
+}
+
+function removeAffiliate(affId) {
+  if(!confirm('Remove this affiliate?')) return;
+  cData.affiliates=(cData.affiliates||[]).filter(x=>x.id!==affId);
+  saveUserData(cUid,cData);
+  renderAffiliates();
+  toast('Affiliate removed');
+}
+
+// Check referral code on app load (called in bootApp)
+function checkReferralCode() {
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get('ref');
+  if(ref) {
+    localStorage.setItem('hh_ref', ref.toUpperCase());
+  }
+}
+
 function saveSettings(){const name=document.getElementById('set-name').value.trim();if(!name){toast('Enter your name');return;}if(cUser)cUser.name=name;document.getElementById('sb-uname').textContent=name;const init=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);document.getElementById('sb-av').textContent=init;sb.auth.updateUser({data:{full_name:name}});toast('Saved! ✓');}
 function saveApiKey(){const key=document.getElementById('set-api-key').value.trim();if(!key){toast('Enter your API key');return;}cData.apiKey=key;saveUserData(cUid,cData);toast('API key saved! AI messaging is live ✓');}
 function toggleSetting(el){el.classList.toggle('on');el.classList.toggle('off');toast(el.classList.contains('on')?'Enabled':'Disabled');}
@@ -7128,7 +7388,17 @@ sb.auth.onAuthStateChange((event, session) => {
   }
 });
 
-window.addEventListener('load', () => { bootApp(); });
+window.addEventListener('load', () => {
+  bootApp();
+  // Register PWA service worker
+  if('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(function(reg) {
+      // SW registered
+    }).catch(function(err) {
+      // SW registration failed silently
+    });
+  }
+});
 </script>
 </body>
 </html>
