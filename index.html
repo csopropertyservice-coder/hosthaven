@@ -647,7 +647,11 @@ select{color:var(--txt)!important;}
         <div class="sb-item" onclick="nav('marketplace',this)"><span class="ico">🏪</span>Cleaner Marketplace</div>
         <div class="sb-item" onclick="nav('workorders',this)"><span class="ico">🔧</span>Work Orders</div>
         <div class="sb-item" onclick="nav('inventory',this)"><span class="ico">📦</span>Inventory</div>
-        <div class="sb-item" onclick="nav('inbox',this)"><span class="ico">📬</span>Unified Inbox</div>
+        <div class="sb-item" onclick="nav('crm',this)"><span class="ico">👤</span>Guest CRM</div>
+        <div class="sb-item" onclick="nav('payouts',this)"><span class="ico">💳</span>Payout Ledger</div>
+        <div class="sb-item" onclick="nav('photovault',this)"><span class="ico">📸</span>Photo Vault</div>
+        <div class="sb-item" onclick="nav('qrmanual',this)"><span class="ico">📱</span>QR House Manual</div>
+        <div class="sb-item" onclick="nav('aihours',this)"><span class="ico">🤖</span>AI Office Hours</div>
         <div class="sb-item" onclick="nav('checkininsurance',this)"><span class="ico">🛡</span>Check-in Insurance</div>
         <div class="sb-item" onclick="nav('rentals',this)"><span class="ico">🚲</span>Equipment Rentals</div>
         <div class="sb-item" onclick="nav('ical',this)"><span class="ico">🔄</span>iCal Sync</div>
@@ -1271,21 +1275,177 @@ select{color:var(--txt)!important;}
 </div>
 
 <!-- ██ UNIFIED INBOX ████████████████████████ -->
-<div class="page" id="page-inbox">
+<div class="page" id="page-crm">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-    <div style="font-size:13px;color:var(--txt2)">All guest messages in one place with smart auto-replies</div>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-ghost" id="autoreply-toggle-btn" onclick="toggleAutoReply()">🤖 Auto-Reply: OFF</button>
-      <button class="btn btn-pri" onclick="openModal('add-message-modal')">+ New Message</button>
+    <div style="font-size:13px;color:var(--txt2)">Every guest you've ever hosted — contact info, stay history, notes, loyalty tier</div>
+    <button class="btn btn-pri" onclick="openModal('add-crm-modal')">+ Add Guest</button>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Total Guests</div><div class="kpi-val" id="crm-total">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Return Guests</div><div class="kpi-val" id="crm-returns">0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Avg Spend</div><div class="kpi-val" id="crm-avg-spend">$0</div></div>
+    <div class="kpi k4"><div class="kpi-label">VIP Guests</div><div class="kpi-val" id="crm-vip">0</div></div>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+    <input id="crm-search" placeholder="🔍 Search guests…" oninput="renderCRM()" style="flex:1;min-width:200px;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--txt);outline:none">
+    <select id="crm-filter" onchange="renderCRM()" style="background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--txt);outline:none">
+      <option value="all">All Guests</option>
+      <option value="vip">VIP / Returning</option>
+      <option value="blacklist">Flagged</option>
+    </select>
+  </div>
+  <div class="card">
+    <div class="card-body" id="crm-list"><div class="empty-state"><div class="es-i">👤</div><h3>No guests yet</h3><p>Guests are added automatically from bookings, or add manually</p></div></div>
+  </div>
+</div>
+
+<!-- ██ PAYOUT LEDGER ████████████████████████ -->
+<div class="page" id="page-payouts">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Track contractor pay splits and keep your margins clear</div>
+    <button class="btn btn-pri" onclick="openModal('add-payout-modal')">+ Log Payout</button>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Total Paid Out</div><div class="kpi-val" id="pay-total">$0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Your Net</div><div class="kpi-val" id="pay-net">$0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Pending Payouts</div><div class="kpi-val" id="pay-pending">0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Avg Margin</div><div class="kpi-val" id="pay-margin">0%</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">💳 Payout History</div></div>
+      <div class="card-body" id="payout-list"><div class="empty-state"><div class="es-i">💳</div><h3>No payouts logged</h3><p>Log cleaning jobs to track contractor splits automatically</p></div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">📊 Margin Calculator</div></div>
+      <div class="card-body">
+        <div class="fi"><label>Host Charged ($)</label><input id="calc-charged" type="number" placeholder="200" oninput="calcMargin()"></div>
+        <div class="fi"><label>Contractor Owed ($)</label><input id="calc-owed" type="number" placeholder="120" oninput="calcMargin()"></div>
+        <div id="calc-result" style="background:var(--sand);border-radius:10px;padding:16px;text-align:center;margin-top:8px">
+          <div style="font-size:11px;color:var(--txt3);margin-bottom:4px">Your Net Margin</div>
+          <div style="font-family:Fraunces,serif;font-size:32px;color:var(--sage)">—</div>
+        </div>
+        <button class="btn btn-pri" style="width:100%;margin-top:12px" onclick="logPayoutFromCalc()">Log This Payout →</button>
+      </div>
     </div>
   </div>
-  <!-- Auto-reply rules -->
-  <div class="card" style="margin-bottom:14px" id="autoreply-card">
-    <div class="card-hd"><div class="card-title">🤖 Smart Auto-Reply Rules</div><button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="openModal('add-autoreply-modal')">+ Add Rule</button></div>
-    <div class="card-body" id="autoreply-rules-list"><div style="font-size:13px;color:var(--txt3)">No auto-reply rules yet. Add triggers like "WiFi?" or "check-in time?" to auto-respond instantly.</div></div>
+</div>
+
+<!-- ██ PHOTO VAULT ████████████████████████████ -->
+<div class="page" id="page-photovault">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div style="font-size:13px;color:var(--txt2)">Cleaners upload after-service photos. Hosts get peace of mind. You get a paper trail.</div>
+    <button class="btn btn-pri" onclick="openModal('add-vault-photo-modal')">📸 Upload Photos</button>
   </div>
-  <!-- All messages -->
-  <div class="card"><div class="card-hd"><div class="card-title">📬 All Conversations</div></div><div class="card-body" id="inbox-list"><div class="empty-state"><div class="es-i">📬</div><p>No messages yet</p></div></div></div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Total Photos</div><div class="kpi-val" id="vault-total">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Properties Covered</div><div class="kpi-val" id="vault-props">0</div></div>
+    <div class="kpi k3"><div class="kpi-label">This Month</div><div class="kpi-val" id="vault-month">0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Dispute-Ready</div><div class="kpi-val" id="vault-ready">0</div></div>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:14px">
+    <select id="vault-filter-prop" onchange="renderPhotoVault()" style="background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--txt);outline:none">
+      <option value="">All Properties</option>
+    </select>
+    <select id="vault-filter-type" onchange="renderPhotoVault()" style="background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--txt);outline:none">
+      <option value="">All Types</option>
+      <option value="after_clean">After Clean</option>
+      <option value="before_clean">Before Clean</option>
+      <option value="damage">Damage</option>
+      <option value="maintenance">Maintenance</option>
+    </select>
+  </div>
+  <div id="vault-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+    <div class="empty-state" style="grid-column:1/-1"><div class="es-i">📸</div><h3>No photos yet</h3><p>Upload after-cleaning photos to build your proof-of-service library</p></div>
+  </div>
+</div>
+
+<!-- ██ QR HOUSE MANUAL ████████████████████████ -->
+<div class="page" id="page-qrmanual">
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:18px">Generate a QR code for each property. Guests scan it to get WiFi, door codes, house rules — no messages needed.</div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">⚙️ Manual Builder</div></div>
+      <div class="card-body">
+        <div class="fi"><label>Property</label><select id="qr-prop" onchange="buildQRManual()" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none"><option value="">Select property…</option></select></div>
+        <div class="fi"><label>WiFi Name</label><input id="qr-wifi" placeholder="HomeNetwork_5G" oninput="buildQRManual()"></div>
+        <div class="fi"><label>WiFi Password</label><input id="qr-wifipw" placeholder="supersecret123" oninput="buildQRManual()"></div>
+        <div class="fi"><label>Door Code</label><input id="qr-door" placeholder="4829" oninput="buildQRManual()"></div>
+        <div class="fi"><label>Check-in Time</label><input id="qr-checkin" placeholder="3:00 PM" oninput="buildQRManual()"></div>
+        <div class="fi"><label>Check-out Time</label><input id="qr-checkout" placeholder="11:00 AM" oninput="buildQRManual()"></div>
+        <div class="fi"><label>Parking Instructions</label><input id="qr-parking" placeholder="Street parking on Oak Ave, permit not needed" oninput="buildQRManual()"></div>
+        <div class="fi"><label>House Rules (one per line)</label><textarea id="qr-rules" placeholder="No smoking inside&#10;No parties&#10;Quiet hours after 10pm" style="min-height:80px" oninput="buildQRManual()"></textarea></div>
+        <div class="fi"><label>Host Note / Welcome Message</label><textarea id="qr-welcome" placeholder="Welcome! We're so happy to have you. Help yourself to coffee and snacks in the kitchen." style="min-height:60px" oninput="buildQRManual()"></textarea></div>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <button class="btn btn-pri" style="flex:1" onclick="generateQRCode()">📱 Generate QR Code</button>
+          <button class="btn btn-ghost" onclick="downloadManualPage()">⬇️ Download Page</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">📱 Preview & QR Code</div></div>
+      <div class="card-body" id="qr-preview-area">
+        <div style="text-align:center;padding:30px;color:var(--txt3)">
+          <div style="font-size:40px;margin-bottom:12px">📱</div>
+          <div style="font-size:13px">Fill in the form and click Generate QR Code</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ AI OFFICE HOURS ████████████████████████ -->
+<div class="page" id="page-aihours">
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:18px">Set hours when AI handles all guest messages automatically so you can sleep</div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-title">🤖 Office Hours Settings</div>
+        <div class="toggle off" id="aihours-toggle" onclick="toggleAIHours(this)"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="card-body">
+        <div style="background:rgba(107,143,113,.1);border:1px solid var(--sage);border-radius:8px;padding:12px;font-size:12px;color:var(--txt2);margin-bottom:16px;line-height:1.6">
+          💡 When active, incoming messages during off-hours automatically receive your set response. The AI handles routine questions (WiFi, check-in, parking) and escalates anything urgent.
+        </div>
+        <div class="g2">
+          <div class="fi"><label>Off Hours Start</label><input id="ah-start" type="time" value="22:00"></div>
+          <div class="fi"><label>Off Hours End</label><input id="ah-end" type="time" value="08:00"></div>
+        </div>
+        <div class="fi"><label>Auto-Response Message</label><textarea id="ah-message" style="min-height:80px" placeholder="Hi! I've received your message and will personally respond during office hours (8am–10pm). For emergencies, call [phone]. — {host_name}">Hi! I've received your message and will personally respond during office hours (8am–10pm). The team has been notified for anything time-sensitive. See you soon! 🏡</textarea></div>
+        <div class="fi"><label>Escalation Keywords (auto-alert host even off-hours)</label><input id="ah-escalate" value="emergency,flood,fire,locked out,broken,urgent" placeholder="emergency,flood,fire,locked out"></div>
+        <button class="btn btn-pri" style="margin-top:4px" onclick="saveAIHours()">Save Settings</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">📊 Auto-Reply Stats</div></div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="background:var(--sand);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px">
+            <div style="font-size:28px">🤖</div>
+            <div><div style="font-size:24px;font-family:Fraunces,serif;color:var(--txt)" id="ah-auto-count">0</div><div style="font-size:11px;color:var(--txt3)">Auto-replies sent</div></div>
+          </div>
+          <div style="background:var(--sand);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px">
+            <div style="font-size:28px">⚡</div>
+            <div><div style="font-size:24px;font-family:Fraunces,serif;color:var(--sage)" id="ah-escalate-count">0</div><div style="font-size:11px;color:var(--txt3)">Escalations triggered</div></div>
+          </div>
+          <div style="background:var(--sand);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px">
+            <div style="font-size:28px">😴</div>
+            <div><div style="font-size:24px;font-family:Fraunces,serif;color:var(--gold)" id="ah-hours-saved">0h</div><div style="font-size:11px;color:var(--txt3)">Hours of sleep protected</div></div>
+          </div>
+        </div>
+        <div id="ah-log" style="margin-top:14px"><div style="font-size:12px;color:var(--txt3)">Auto-reply log will appear here</div></div>
+      </div>
+    </div>
+  </div>
+  <!-- Inventory Checklist for cleaning tasks -->
+  <div class="card">
+    <div class="card-hd"><div class="card-title">📋 Cleaning Inventory Checklist Template</div><button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="saveInventoryChecklist()">Save Template</button></div>
+    <div class="card-body">
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:12px">Cleaners tick these off during turnover to ensure guests never find missing essentials</div>
+      <div id="inv-checklist-items" style="display:flex;flex-direction:column;gap:8px"></div>
+      <button class="btn btn-ghost" style="margin-top:10px;font-size:12px" onclick="addChecklistItem()">+ Add Item</button>
+    </div>
+  </div>
 </div>
 
 <!-- ██ CONCIERGE ████████████████████████████ -->
@@ -1818,6 +1978,41 @@ select{color:var(--txt)!important;}
 </div></div>
 
 <!-- NEW FEATURE MODALS -->
+<!-- GUEST CRM MODAL -->
+<div class="modal-bg" id="add-crm-modal"><div class="modal"><h2>👤 Add Guest</h2>
+  <div class="g2"><div class="fi"><label>Guest Name</label><input id="crm-name" placeholder="Marcus Kim"></div><div class="fi"><label>Email</label><input id="crm-email" type="email" placeholder="guest@email.com"></div></div>
+  <div class="g2"><div class="fi"><label>Phone</label><input id="crm-phone" placeholder="+1 555 0100"></div><div class="fi"><label>Hometown</label><input id="crm-city" placeholder="Austin, TX"></div></div>
+  <div class="g2"><div class="fi"><label>Total Stays</label><input id="crm-stays" type="number" placeholder="2"></div><div class="fi"><label>Total Spent ($)</label><input id="crm-spent" type="number" placeholder="450"></div></div>
+  <div class="fi"><label>Notes / Preferences</label><textarea id="crm-notes" placeholder="Allergic to pets, loves coffee, travels with partner…" style="min-height:60px"></textarea></div>
+  <div class="fi"><label>Tags</label><input id="crm-tags" placeholder="vip, repeat, quiet, corporate"></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-crm-modal')">Cancel</button><button class="btn btn-pri" onclick="addCRMGuest()">Add Guest</button></div>
+</div></div>
+
+<!-- PAYOUT MODAL -->
+<div class="modal-bg" id="add-payout-modal"><div class="modal"><h2>💳 Log Payout</h2>
+  <div class="fi"><label>Contractor / Cleaner</label><select id="pay-cleaner" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none"><option value="">Select cleaner…</option></select></div>
+  <div class="fi"><label>Related Job / Booking</label><select id="pay-job" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none"><option value="">Select job…</option></select></div>
+  <div class="g2"><div class="fi"><label>Host Charged ($)</label><input id="pay-charged" type="number" placeholder="200" oninput="calcPayoutSplit()"></div><div class="fi"><label>Contractor Owed ($)</label><input id="pay-owed" type="number" placeholder="120" oninput="calcPayoutSplit()"></div></div>
+  <div id="pay-split-preview" style="background:var(--sand);border-radius:8px;padding:12px;margin-bottom:4px;display:none">
+    <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--txt2)">Your net margin:</span><span style="font-weight:700;color:var(--sage)" id="pay-split-net">—</span></div>
+  </div>
+  <div class="fi"><label>Status</label><select id="pay-status" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none"><option value="pending">Pending</option><option value="paid">Paid</option></select></div>
+  <div class="fi"><label>Date</label><input id="pay-date" type="date"></div>
+  <div class="fi"><label>Notes</label><input id="pay-notes" placeholder="Cash, Venmo @username, etc."></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-payout-modal')">Cancel</button><button class="btn btn-pri" onclick="addPayout()">Log Payout</button></div>
+</div></div>
+
+<!-- PHOTO VAULT MODAL -->
+<div class="modal-bg" id="add-vault-photo-modal"><div class="modal"><h2>📸 Upload Service Photos</h2>
+  <div class="fi"><label>Property</label><select id="vault-prop" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none"><option value="">Select property…</option></select></div>
+  <div class="fi"><label>Photo Type</label><select id="vault-type" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none"><option value="after_clean">✅ After Clean</option><option value="before_clean">🧹 Before Clean</option><option value="damage">⚠️ Damage</option><option value="maintenance">🔧 Maintenance</option></select></div>
+  <div class="fi"><label>Upload Photos</label><input id="vault-files" type="file" accept="image/*" multiple style="background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);width:100%"></div>
+  <div class="fi"><label>Cleaner / Technician</label><input id="vault-cleaner" placeholder="Maria C."></div>
+  <div class="fi"><label>Notes</label><textarea id="vault-notes" placeholder="All rooms cleaned, linens replaced, bathrooms stocked…" style="min-height:60px"></textarea></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-vault-photo-modal')">Cancel</button><button class="btn btn-pri" onclick="addVaultPhotos()">Save Photos</button></div>
+</div></div>
+
+
 <!-- CHECK-IN INSURANCE MODALS -->
 <div class="modal-bg" id="add-ci-policy-modal"><div class="modal"><h2>🛡 Add Flex Time Policy</h2>
   <div class="fi"><label>Policy Type</label><select id="ci-type" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="early_checkin">🔑 Early Check-in</option><option value="late_checkout">🚪 Late Checkout</option><option value="both">🔄 Both</option></select></div>
@@ -2011,7 +2206,7 @@ let wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
 const LOCAL_KEY = 'hh_local_v1';
 const getLocal = () => { try{return JSON.parse(localStorage.getItem(LOCAL_KEY))||{};}catch{return {};} };
 const setLocal = d => localStorage.setItem(LOCAL_KEY, JSON.stringify(d));
-const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],expenses:[],blacklist:[],seasons:[],cleaners:[],jobs:[],workorders:[],inventory:[],autoReplies:[],concierge:[],upsells:[],claims:[],ciPolicies:[],ciRequests:[],rentalItems:[],rentalBookings:[],templates:[],loyaltyMembers:[],optimizerSettings:{},plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; if(!d.expenses)d.expenses=[]; if(!d.blacklist)d.blacklist=[]; if(!d.seasons)d.seasons=[]; if(!d.cleaners)d.cleaners=[]; if(!d.jobs)d.jobs=[]; if(!d.workorders)d.workorders=[]; if(!d.inventory)d.inventory=[]; if(!d.autoReplies)d.autoReplies=[]; if(!d.concierge)d.concierge=[]; if(!d.upsells)d.upsells=[]; if(!d.claims)d.claims=[]; if(!d.ciPolicies)d.ciPolicies=[]; if(!d.ciRequests)d.ciRequests=[]; if(!d.rentalItems)d.rentalItems=[]; if(!d.rentalBookings)d.rentalBookings=[]; if(!d.templates)d.templates=[]; if(!d.loyaltyMembers)d.loyaltyMembers=[]; if(!d.optimizerSettings)d.optimizerSettings={}; return d; };
+const getLocalData = uid => { const l=getLocal(); const d=l[uid]||{properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],staff:[],notes:[],expenses:[],blacklist:[],seasons:[],cleaners:[],jobs:[],workorders:[],inventory:[],autoReplies:[],concierge:[],upsells:[],claims:[],ciPolicies:[],ciRequests:[],rentalItems:[],rentalBookings:[],templates:[],loyaltyMembers:[],optimizerSettings:{},plan:'free',apiKey:'',darkMode:false,onboarded:false,reviewAuto:{enabled:true}}; if(!d.staff)d.staff=[]; if(!d.reviewAuto)d.reviewAuto={enabled:true}; if(!d.notes)d.notes=[]; if(!d.expenses)d.expenses=[]; if(!d.blacklist)d.blacklist=[]; if(!d.seasons)d.seasons=[]; if(!d.cleaners)d.cleaners=[]; if(!d.jobs)d.jobs=[]; if(!d.workorders)d.workorders=[]; if(!d.inventory)d.inventory=[]; if(!d.autoReplies)d.autoReplies=[]; if(!d.concierge)d.concierge=[]; if(!d.upsells)d.upsells=[]; if(!d.claims)d.claims=[]; if(!d.ciPolicies)d.ciPolicies=[]; if(!d.ciRequests)d.ciRequests=[]; if(!d.rentalItems)d.rentalItems=[]; if(!d.rentalBookings)d.rentalBookings=[]; if(!d.templates)d.templates=[]; if(!d.loyaltyMembers)d.loyaltyMembers=[]; if(!d.optimizerSettings)d.optimizerSettings={}; if(!d.guestCRM)d.guestCRM=[]; if(!d.payouts)d.payouts=[]; if(!d.vaultPhotos)d.vaultPhotos=[]; if(!d.aiHours)d.aiHours={enabled:false,start:'22:00',end:'08:00',message:'Hi! I received your message and will respond during office hours (8am-10pm). 🏡',escalate:'emergency,flood,fire,locked out,broken,urgent',autoCount:0,escalateCount:0}; if(!d.invChecklist)d.invChecklist=['Coffee pods (6+)','Toilet paper (4+ rolls)','Paper towels (2+ rolls)','Hand soap','Dish soap','Shampoo & conditioner','Body wash','Bath towels (2 per guest)','Kitchen sponge','Trash bags']; return d; };
 const saveLocalData = (uid,d) => { const l=getLocal(); l[uid]=d; setLocal(l); };
 
 // Save to both local and Supabase
@@ -2508,7 +2703,7 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 //  NAV
 // ════════════════════════════════════════════
-const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',inbox:'📬 Unified Inbox',checkininsurance:'🛡 Check-in Insurance',rentals:'🚲 Equipment Rentals',ical:'iCal Sync',templates:'📝 Message Templates',loyalty:'🎁 Guest Loyalty',pricing_opt:'💡 Pricing Optimizer',scorecards:'🏆 Property Scorecards',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
+const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',crm:'👤 Guest CRM',payouts:'💳 Payout Ledger',photovault:'📸 Photo Vault',qrmanual:'📱 QR House Manual',aihours:'🤖 AI Office Hours',checkininsurance:'🛡 Check-in Insurance',rentals:'🚲 Equipment Rentals',ical:'iCal Sync',templates:'📝 Message Templates',loyalty:'🎁 Guest Loyalty',pricing_opt:'💡 Pricing Optimizer',scorecards:'🏆 Property Scorecards',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
@@ -2532,7 +2727,11 @@ function nav(id,el){
   if(id==='marketplace')setTimeout(()=>renderMarketplace(),50);
   if(id==='workorders')setTimeout(()=>renderWorkOrders(),50);
   if(id==='inventory')setTimeout(()=>renderInventory(),50);
-  if(id==='inbox')setTimeout(()=>renderInbox(),50);
+  if(id==='crm')setTimeout(()=>renderCRM(),50);
+  if(id==='payouts')setTimeout(()=>renderPayouts(),50);
+  if(id==='photovault')setTimeout(()=>renderPhotoVault(),50);
+  if(id==='qrmanual')setTimeout(()=>renderQRManual(),50);
+  if(id==='aihours')setTimeout(()=>renderAIHours(),50);
   if(id==='concierge')setTimeout(()=>renderConcierge(),50);
   if(id==='upsell')setTimeout(()=>renderUpsell(),50);
   if(id==='directbook')setTimeout(()=>renderDirectBook(),50);
@@ -5303,6 +5502,397 @@ function renderSmartNotifications() {
 }
 
 
+
+// ════════════════════════════════════════════
+//  GUEST CRM
+// ════════════════════════════════════════════
+function renderCRM() {
+  const query = (document.getElementById('crm-search')?.value||'').toLowerCase();
+  const filter = document.getElementById('crm-filter')?.value||'all';
+  let guests = [...(cData.guestCRM||[])];
+
+  // Auto-sync from bookings
+  (cData.bookings||[]).forEach(b => {
+    if(b.guestName && !guests.find(g => g.name.toLowerCase()===b.guestName.toLowerCase())) {
+      guests.push({id:'cg_'+b.id, name:b.guestName, email:b.guestEmail||'', phone:'', city:'', stays:1, spent:b.price||0, notes:'', tags:'', autoAdded:true, created:b.created||Date.now()});
+    } else {
+      const g = guests.find(g => g.name.toLowerCase()===b.guestName?.toLowerCase());
+      if(g && g.autoAdded) { g.stays = Math.max(g.stays||1, (cData.bookings||[]).filter(x=>x.guestName===b.guestName).length); g.spent = (cData.bookings||[]).filter(x=>x.guestName===b.guestName).reduce((s,x)=>s+(x.price||0),0); }
+    }
+  });
+
+  if(query) guests = guests.filter(g => g.name.toLowerCase().includes(query) || (g.email||'').toLowerCase().includes(query) || (g.tags||'').toLowerCase().includes(query));
+  if(filter==='vip') guests = guests.filter(g => g.stays >= 2);
+  if(filter==='blacklist') guests = guests.filter(g => (cData.blacklist||[]).some(b => b.name?.toLowerCase()===g.name.toLowerCase()));
+
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  const allGuests = cData.guestCRM||[];
+  set('crm-total', allGuests.length + (cData.bookings||[]).filter(b=>b.guestName&&!allGuests.find(g=>g.name.toLowerCase()===b.guestName.toLowerCase())).length);
+  set('crm-returns', allGuests.filter(g=>g.stays>=2).length);
+  const totalSpent = allGuests.reduce((s,g)=>s+(g.spent||0),0);
+  const avgSpend = allGuests.length ? Math.round(totalSpent/allGuests.length) : 0;
+  set('crm-avg-spend','$'+avgSpend.toLocaleString());
+  set('crm-vip', allGuests.filter(g=>g.stays>=5).length);
+
+  const list = document.getElementById('crm-list');
+  if(!list) return;
+  if(!guests.length) { list.innerHTML='<div class="empty-state"><div class="es-i">👤</div><h3>No guests found</h3></div>'; return; }
+
+  const blacklisted = (cData.blacklist||[]).map(b=>b.name?.toLowerCase());
+  list.innerHTML = guests.map(function(g) {
+    var tier = g.stays>=10?'🥇 Platinum':g.stays>=5?'🥈 Gold':g.stays>=2?'🥉 Silver':'⭐ New';
+    var isBlacklisted = blacklisted.includes(g.name.toLowerCase());
+    var tags = (g.tags||'').split(',').filter(Boolean).map(t=>'<span style="background:var(--sand);border-radius:4px;padding:2px 6px;font-size:10px;color:var(--txt2)">'+t.trim()+'</span>').join(' ');
+    return '<div class="row" style="cursor:default;'+(isBlacklisted?'border-left:3px solid var(--terra);':'')+'">'
+      +'<div style="width:40px;height:40px;border-radius:50%;background:var(--terra);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0">'+g.name[0].toUpperCase()+'</div>'
+      +'<div class="row-info"><div class="row-title">'+g.name+(isBlacklisted?' <span style="font-size:10px;color:var(--terra)">⛔ Flagged</span>':'')+'</div>'
+      +'<div class="row-sub">'+(g.email||'No email')+' · '+(g.city||'Unknown location')+'</div>'
+      +'<div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">'+tags+'</div></div>'
+      +'<div style="text-align:right;flex-shrink:0"><div style="font-size:11px;color:var(--txt3)">'+tier+'</div><div style="font-size:13px;font-weight:600;color:var(--txt)">'+g.stays+' stay'+(g.stays!==1?'s':'')+'</div><div style="font-size:12px;color:var(--sage)">$'+(g.spent||0).toLocaleString()+'</div></div>'
+      +'<div style="display:flex;flex-direction:column;gap:4px"><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="openCRMGuest(this.dataset.id)" data-id="'+g.id+'">View</button><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra)" onclick="removeCRMGuest(this.dataset.id)" data-id="'+g.id+'">🗑</button></div>'
+      +'</div>';
+  }).join('');
+}
+
+function addCRMGuest() {
+  const name = document.getElementById('crm-name').value.trim();
+  if(!name){toast('Enter guest name');return;}
+  if(!cData.guestCRM) cData.guestCRM=[];
+  cData.guestCRM.push({id:'cg_'+Date.now(), name, email:document.getElementById('crm-email').value, phone:document.getElementById('crm-phone').value, city:document.getElementById('crm-city').value, stays:parseInt(document.getElementById('crm-stays').value)||1, spent:parseFloat(document.getElementById('crm-spent').value)||0, notes:document.getElementById('crm-notes').value, tags:document.getElementById('crm-tags').value, created:Date.now()});
+  saveUserData(cUid,cData); closeModal('add-crm-modal'); toast(name+' added to CRM!'); renderCRM();
+}
+
+function openCRMGuest(id) {
+  const g = (cData.guestCRM||[]).find(x=>x.id===id);
+  if(!g) return;
+  const bookings = (cData.bookings||[]).filter(b=>b.guestName?.toLowerCase()===g.name.toLowerCase());
+  const msgs = (cData.messages||[]).filter(m=>m.guestName?.toLowerCase()===g.name.toLowerCase());
+  toast(g.name+' — '+g.stays+' stays · $'+(g.spent||0)+' spent · '+bookings.length+' bookings');
+}
+
+function removeCRMGuest(id){cData.guestCRM=(cData.guestCRM||[]).filter(x=>x.id!==id);saveUserData(cUid,cData);renderCRM();toast('Guest removed');}
+
+// ════════════════════════════════════════════
+//  PAYOUT LEDGER
+// ════════════════════════════════════════════
+function calcPayoutSplit() {
+  const charged = parseFloat(document.getElementById('pay-charged')?.value)||0;
+  const owed = parseFloat(document.getElementById('pay-owed')?.value)||0;
+  const preview = document.getElementById('pay-split-preview');
+  const netEl = document.getElementById('pay-split-net');
+  if(charged && owed && preview && netEl) {
+    const net = charged - owed;
+    const margin = charged ? Math.round(net/charged*100) : 0;
+    preview.style.display='block';
+    netEl.textContent = '$'+net.toFixed(2)+' ('+margin+'% margin)';
+    netEl.style.color = net >= 0 ? 'var(--sage)' : 'var(--terra)';
+  }
+}
+
+function calcMargin() {
+  const charged = parseFloat(document.getElementById('calc-charged')?.value)||0;
+  const owed = parseFloat(document.getElementById('calc-owed')?.value)||0;
+  const el = document.getElementById('calc-result');
+  if(!el) return;
+  if(!charged) { el.innerHTML='<div style="font-size:11px;color:var(--txt3);margin-bottom:4px">Your Net Margin</div><div style="font-family:Fraunces,serif;font-size:32px;color:var(--sage)">—</div>'; return; }
+  const net = charged - owed;
+  const margin = Math.round(net/charged*100);
+  el.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'
+    +'<div><div style="font-size:10px;color:var(--txt3);margin-bottom:2px">Net Profit</div><div style="font-family:Fraunces,serif;font-size:26px;color:'+(net>=0?'var(--sage)':'var(--terra)')+'">$'+net.toFixed(2)+'</div></div>'
+    +'<div><div style="font-size:10px;color:var(--txt3);margin-bottom:2px">Margin</div><div style="font-family:Fraunces,serif;font-size:26px;color:'+(margin>=30?'var(--sage)':margin>=15?'var(--gold)':'var(--terra)')+'">'+margin+'%</div></div>'
+    +'</div>'
+    +'<div style="margin-top:10px;height:6px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;background:'+(margin>=30?'var(--sage)':margin>=15?'var(--gold)':'var(--terra)')+';width:'+Math.min(100,Math.max(0,margin))+'%;border-radius:4px;transition:width .4s"></div></div>';
+}
+
+function logPayoutFromCalc() {
+  const charged = document.getElementById('calc-charged')?.value;
+  const owed = document.getElementById('calc-owed')?.value;
+  if(!charged||!owed){toast('Enter both amounts first');return;}
+  document.getElementById('pay-charged').value=charged;
+  document.getElementById('pay-owed').value=owed;
+  calcPayoutSplit();
+  openModal('add-payout-modal');
+}
+
+function addPayout() {
+  const charged = parseFloat(document.getElementById('pay-charged').value)||0;
+  const owed = parseFloat(document.getElementById('pay-owed').value)||0;
+  if(!charged){toast('Enter amount charged');return;}
+  if(!cData.payouts) cData.payouts=[];
+  const cleaner = document.getElementById('pay-cleaner').value;
+  const cleanerName = document.getElementById('pay-cleaner').selectedOptions[0]?.text||'Unknown';
+  cData.payouts.push({id:'pay_'+Date.now(), cleaner, cleanerName, charged, owed, net:charged-owed, margin:charged?Math.round((charged-owed)/charged*100):0, status:document.getElementById('pay-status').value, date:document.getElementById('pay-date').value||new Date().toISOString().slice(0,10), notes:document.getElementById('pay-notes').value, created:Date.now()});
+  saveUserData(cUid,cData); closeModal('add-payout-modal'); toast('Payout logged! Net: $'+(charged-owed).toFixed(2)); renderPayouts();
+}
+
+function renderPayouts() {
+  const payouts = cData.payouts||[];
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  const totalPaid = payouts.reduce((s,p)=>s+(p.owed||0),0);
+  const totalNet = payouts.reduce((s,p)=>s+(p.net||0),0);
+  const pending = payouts.filter(p=>p.status==='pending').length;
+  const avgMargin = payouts.length ? Math.round(payouts.reduce((s,p)=>s+(p.margin||0),0)/payouts.length) : 0;
+  set('pay-total','$'+totalPaid.toLocaleString());
+  set('pay-net','$'+totalNet.toLocaleString());
+  set('pay-pending',pending);
+  set('pay-margin',avgMargin+'%');
+
+  const list = document.getElementById('payout-list');
+  if(!list) return;
+  if(!payouts.length){list.innerHTML='<div class="empty-state"><div class="es-i">💳</div><h3>No payouts logged</h3></div>';return;}
+  list.innerHTML = [...payouts].reverse().map(function(p){
+    return '<div class="row" style="cursor:default">'
+      +'<div class="row-info"><div class="row-title">'+p.cleanerName+'</div><div class="row-sub">'+p.date+' · Charged: $'+p.charged+' · Owed: $'+p.owed+'</div></div>'
+      +'<div style="text-align:right;flex-shrink:0"><div style="font-size:12px;font-weight:700;color:var(--sage)">$'+p.net.toFixed(2)+' net</div><div style="font-size:10px;color:var(--txt3)">'+p.margin+'% margin</div></div>'
+      +'<span class="pill '+(p.status==='paid'?'pill-green':'pill-amber')+'">'+p.status+'</span>'
+      +'<button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="markPayoutPaid(this.dataset.id)" data-id="'+p.id+'">'+(p.status==='pending'?'Mark Paid':'✓ Paid')+'</button>'
+      +'</div>';
+  }).join('');
+
+  // Populate cleaner dropdown in modal
+  const sel = document.getElementById('pay-cleaner');
+  if(sel) sel.innerHTML='<option value="">Select cleaner…</option>'+(cData.cleaners||[]).map(c=>'<option value="'+c.id+'">'+c.name+'</option>').join('');
+  const jobSel = document.getElementById('pay-job');
+  if(jobSel) jobSel.innerHTML='<option value="">Select job…</option>'+(cData.jobs||[]).map(j=>'<option value="'+j.id+'">'+j.propName+' — '+(j.date||'')+'</option>').join('');
+}
+
+function markPayoutPaid(id){const p=(cData.payouts||[]).find(x=>x.id===id);if(p){p.status='paid';saveUserData(cUid,cData);renderPayouts();toast('Marked as paid ✓');}}
+
+// ════════════════════════════════════════════
+//  PHOTO VAULT
+// ════════════════════════════════════════════
+function addVaultPhotos() {
+  const propId = document.getElementById('vault-prop').value;
+  const prop = cData.properties.find(p=>p.id===propId);
+  const files = document.getElementById('vault-files').files;
+  const type = document.getElementById('vault-type').value;
+  const notes = document.getElementById('vault-notes').value;
+  const cleaner = document.getElementById('vault-cleaner').value;
+  if(!cData.vaultPhotos) cData.vaultPhotos=[];
+
+  if(files.length===0){toast('Select at least one photo');return;}
+
+  let processed=0;
+  Array.from(files).forEach(function(file){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      cData.vaultPhotos.push({id:'vp_'+Date.now()+'_'+Math.random().toString(36).slice(2), propId, propName:prop?.name||'Unknown', propEmoji:prop?.emoji||'🏠', type, cleaner, notes, dataUrl:e.target.result, date:new Date().toISOString().slice(0,10), created:Date.now()});
+      processed++;
+      if(processed===files.length){saveUserData(cUid,cData);closeModal('add-vault-photo-modal');toast(files.length+' photo'+(files.length!==1?'s':'')+' saved to vault!');renderPhotoVault();}
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderPhotoVault() {
+  const photos = cData.vaultPhotos||[];
+  const propFilter = document.getElementById('vault-filter-prop')?.value||'';
+  const typeFilter = document.getElementById('vault-filter-type')?.value||'';
+  const thisMonth = new Date().toISOString().slice(0,7);
+
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('vault-total',photos.length);
+  set('vault-props',new Set(photos.map(p=>p.propId)).size);
+  set('vault-month',photos.filter(p=>p.date?.startsWith(thisMonth)).length);
+  set('vault-ready',photos.filter(p=>p.type==='after_clean').length);
+
+  // Populate prop filter
+  const pf = document.getElementById('vault-filter-prop');
+  if(pf && cData.properties.length) {
+    const cur = pf.value;
+    pf.innerHTML='<option value="">All Properties</option>'+cData.properties.map(p=>'<option value="'+p.id+'">'+p.emoji+' '+p.name+'</option>').join('');
+    pf.value=cur;
+  }
+
+  let filtered = photos;
+  if(propFilter) filtered=filtered.filter(p=>p.propId===propFilter);
+  if(typeFilter) filtered=filtered.filter(p=>p.type===typeFilter);
+
+  const grid = document.getElementById('vault-grid');
+  if(!grid) return;
+  if(!filtered.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="es-i">📸</div><h3>No photos</h3><p>Upload service photos to build your proof-of-service library</p></div>';return;}
+
+  const typeLabel={'after_clean':'✅ After Clean','before_clean':'🧹 Before','damage':'⚠️ Damage','maintenance':'🔧 Maintenance'};
+  const typeColor={'after_clean':'var(--sage)','before_clean':'var(--txt3)','damage':'var(--terra)','maintenance':'var(--gold)'};
+  grid.innerHTML=[...filtered].reverse().map(function(p){
+    return '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden">'
+      +'<div style="position:relative">'
+      +(p.dataUrl?'<img src="'+p.dataUrl+'" style="width:100%;height:140px;object-fit:cover">':'<div style="width:100%;height:140px;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:36px">'+p.propEmoji+'</div>')
+      +'<span style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,.6);color:#fff;border-radius:4px;padding:2px 6px;font-size:10px">'+(typeLabel[p.type]||p.type)+'</span>'
+      +'</div>'
+      +'<div style="padding:10px">'
+      +'<div style="font-size:12px;font-weight:600;color:var(--txt)">'+p.propName+'</div>'
+      +'<div style="font-size:10px;color:var(--txt3)">'+p.date+(p.cleaner?' · '+p.cleaner:'')+'</div>'
+      +(p.notes?'<div style="font-size:11px;color:var(--txt2);margin-top:4px">'+p.notes+'</div>':'')
+      +'<button class="btn btn-ghost" style="font-size:10px;padding:2px 8px;margin-top:6px;color:var(--terra)" onclick="removeVaultPhoto(this.dataset.id)" data-id="'+p.id+'">Delete</button>'
+      +'</div></div>';
+  }).join('');
+}
+
+function removeVaultPhoto(id){cData.vaultPhotos=(cData.vaultPhotos||[]).filter(x=>x.id!==id);saveUserData(cUid,cData);renderPhotoVault();toast('Photo removed');}
+
+// ════════════════════════════════════════════
+//  QR HOUSE MANUAL
+// ════════════════════════════════════════════
+function renderQRManual() {
+  const sel = document.getElementById('qr-prop');
+  if(sel) sel.innerHTML='<option value="">Select property…</option>'+cData.properties.map(p=>'<option value="'+p.id+'">'+p.emoji+' '+p.name+'</option>').join('');
+}
+
+function buildQRManual() {
+  const propId = document.getElementById('qr-prop')?.value;
+  const prop = cData.properties.find(p=>p.id===propId);
+  const wifi = document.getElementById('qr-wifi')?.value||'—';
+  const wifipw = document.getElementById('qr-wifipw')?.value||'—';
+  const door = document.getElementById('qr-door')?.value||'—';
+  const checkin = document.getElementById('qr-checkin')?.value||'3:00 PM';
+  const checkout = document.getElementById('qr-checkout')?.value||'11:00 AM';
+  const parking = document.getElementById('qr-parking')?.value||'See host';
+  const rules = (document.getElementById('qr-rules')?.value||'').split('\n').filter(Boolean);
+  const welcome = document.getElementById('qr-welcome')?.value||'Welcome to your stay!';
+
+  const area = document.getElementById('qr-preview-area');
+  if(!area) return;
+
+  const manualHtml = '<div style="font-family:sans-serif;max-width:400px;margin:0 auto">'
+    +'<div style="background:var(--terra);color:#fff;padding:20px;border-radius:12px;text-align:center;margin-bottom:14px">'
+    +'<div style="font-size:36px;margin-bottom:6px">'+(prop?.emoji||'🏠')+'</div>'
+    +'<div style="font-size:18px;font-weight:700">'+(prop?.name||'Your Property')+'</div>'
+    +'<div style="font-size:12px;opacity:.8">'+(prop?.location||'')+'</div></div>'
+    +'<div style="background:var(--sand);border-radius:10px;padding:14px;margin-bottom:10px">'
+    +'<div style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--txt3);margin-bottom:8px">Welcome</div>'
+    +'<div style="font-size:13px;color:var(--txt);line-height:1.6">'+welcome+'</div></div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">'
+    +'<div style="background:var(--sand);border-radius:10px;padding:12px"><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">📶 WiFi</div><div style="font-size:13px;font-weight:600;color:var(--txt)">'+wifi+'</div><div style="font-size:11px;color:var(--txt2)">Password: '+wifipw+'</div></div>'
+    +'<div style="background:var(--sand);border-radius:10px;padding:12px"><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">🔑 Door Code</div><div style="font-size:22px;font-weight:700;color:var(--terra);letter-spacing:3px">'+door+'</div></div>'
+    +'<div style="background:var(--sand);border-radius:10px;padding:12px"><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">🕐 Check-in</div><div style="font-size:13px;font-weight:600;color:var(--txt)">After '+checkin+'</div></div>'
+    +'<div style="background:var(--sand);border-radius:10px;padding:12px"><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">🕙 Check-out</div><div style="font-size:13px;font-weight:600;color:var(--txt)">By '+checkout+'</div></div></div>'
+    +(parking!=='See host'?'<div style="background:var(--sand);border-radius:10px;padding:12px;margin-bottom:10px"><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">🅿️ Parking</div><div style="font-size:13px;color:var(--txt)">'+parking+'</div></div>':'')
+    +(rules.length?'<div style="background:var(--sand);border-radius:10px;padding:12px;margin-bottom:10px"><div style="font-size:10px;color:var(--txt3);margin-bottom:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase">House Rules</div>'+rules.map(r=>'<div style="font-size:12px;color:var(--txt);padding:3px 0">• '+r+'</div>').join('')+'</div>':'')
+    +'<div style="text-align:center;font-size:10px;color:var(--txt3);padding:10px">Powered by HostHaven</div></div>';
+
+  area.innerHTML = '<div id="qr-canvas-container" style="text-align:center;margin-bottom:14px">'
+    +'<div style="display:inline-block;padding:12px;background:#fff;border-radius:8px;box-shadow:var(--sh)">'
+    +'<div id="qr-placeholder" style="width:150px;height:150px;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--txt3)">Click Generate QR</div>'
+    +'</div>'
+    +'<div style="font-size:11px;color:var(--txt3);margin-top:6px">Scan to view house manual</div></div>'
+    +'<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;max-height:300px;overflow-y:auto">'+manualHtml+'</div>';
+}
+
+function generateQRCode() {
+  const wifi = document.getElementById('qr-wifi')?.value||'';
+  const prop = cData.properties.find(p=>p.id===document.getElementById('qr-prop')?.value);
+  if(!prop && !wifi){toast('Select a property or fill in WiFi details first');return;}
+
+  buildQRManual();
+
+  // Generate QR using a public API
+  const manualUrl = 'https://csopropertyservice-coder.github.io/hosthaven/?manual='+(prop?.id||'demo');
+  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data='+encodeURIComponent(manualUrl);
+  const container = document.getElementById('qr-placeholder');
+  if(container) {
+    container.innerHTML='';
+    const img = document.createElement('img');
+    img.src=qrUrl; img.style.cssText='width:150px;height:150px';
+    img.onerror=()=>{ container.innerHTML='<div style="padding:10px;font-size:11px;color:var(--txt2)">QR generated! Print this page to share.</div>'; };
+    container.appendChild(img);
+  }
+  toast('QR code generated! ✓ Print or screenshot to share with guests.');
+}
+
+function downloadManualPage() {
+  const area = document.getElementById('qr-preview-area');
+  if(!area){toast('Generate the manual first');return;}
+  const prop = cData.properties.find(p=>p.id===document.getElementById('qr-prop')?.value);
+  const blob = new Blob(['<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>House Manual</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#FAF7F2;padding:20px;font-family:sans-serif}:root{--terra:#C4693A;--sand:#EDE8DE;--txt:#1C1410;--txt2:#6B5D52;--txt3:#9B8E85;--border:#E2DBD0}</style></head><body>'+area.innerHTML+'</body></html>'], {type:'text/html'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=(prop?.name||'property')+'-house-manual.html'; a.click();
+  toast('Manual downloaded! ✓');
+}
+
+// ════════════════════════════════════════════
+//  AI OFFICE HOURS
+// ════════════════════════════════════════════
+function toggleAIHours(el) {
+  el.classList.toggle('on'); el.classList.toggle('off');
+  const enabled = el.classList.contains('on');
+  if(!cData.aiHours) cData.aiHours={};
+  cData.aiHours.enabled = enabled;
+  saveUserData(cUid,cData);
+  toast('AI Office Hours '+(enabled?'ENABLED — AI will handle messages during off-hours':'disabled'));
+}
+
+function saveAIHours() {
+  if(!cData.aiHours) cData.aiHours={};
+  cData.aiHours.start = document.getElementById('ah-start')?.value||'22:00';
+  cData.aiHours.end = document.getElementById('ah-end')?.value||'08:00';
+  cData.aiHours.message = document.getElementById('ah-message')?.value||'';
+  cData.aiHours.escalate = document.getElementById('ah-escalate')?.value||'emergency,urgent';
+  saveUserData(cUid,cData);
+  toast('Office hours settings saved ✓');
+}
+
+function renderAIHours() {
+  const ah = cData.aiHours||{};
+  const toggle = document.getElementById('aihours-toggle');
+  if(toggle) { toggle.className = 'toggle '+(ah.enabled?'on':'off'); }
+  const startEl = document.getElementById('ah-start'); if(startEl&&ah.start) startEl.value=ah.start;
+  const endEl = document.getElementById('ah-end'); if(endEl&&ah.end) endEl.value=ah.end;
+  const msgEl = document.getElementById('ah-message'); if(msgEl&&ah.message) msgEl.value=ah.message;
+  const escEl = document.getElementById('ah-escalate'); if(escEl&&ah.escalate) escEl.value=ah.escalate;
+
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('ah-auto-count', ah.autoCount||0);
+  set('ah-escalate-count', ah.escalateCount||0);
+  set('ah-hours-saved', Math.round((ah.autoCount||0)*0.1*10)/10+'h');
+
+  // Render inventory checklist
+  renderInvChecklist();
+}
+
+function renderInvChecklist() {
+  const items = cData.invChecklist||[];
+  const container = document.getElementById('inv-checklist-items');
+  if(!container) return;
+  container.innerHTML = items.map(function(item,i){
+    return '<div style="display:flex;align-items:center;gap:8px">'
+      +'<input type="checkbox" style="width:16px;height:16px;accent-color:var(--terra);flex-shrink:0">'
+      +'<input value="'+item+'" onchange="updateChecklistItem('+i+',this.value)" style="flex:1;background:var(--input-bg);border:1px solid var(--input-border);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--txt);outline:none">'
+      +'<button onclick="removeChecklistItem('+i+')" style="background:none;border:none;cursor:pointer;color:var(--txt3);font-size:14px">×</button>'
+      +'</div>';
+  }).join('');
+}
+
+function addChecklistItem(){if(!cData.invChecklist)cData.invChecklist=[];cData.invChecklist.push('New item');saveUserData(cUid,cData);renderInvChecklist();}
+function updateChecklistItem(i,v){if(cData.invChecklist&&cData.invChecklist[i]!==undefined){cData.invChecklist[i]=v;saveUserData(cUid,cData);}}
+function removeChecklistItem(i){cData.invChecklist=(cData.invChecklist||[]).filter((_,idx)=>idx!==i);saveUserData(cUid,cData);renderInvChecklist();}
+function saveInventoryChecklist(){saveUserData(cUid,cData);toast('Cleaning checklist saved ✓');}
+
+// Check if AI should auto-respond (called from message receive flow)
+function checkAIOfficeHours(messageText) {
+  const ah = cData.aiHours||{};
+  if(!ah.enabled) return null;
+  const now = new Date();
+  const hhmm = now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  const start = ah.start||'22:00'; const end = ah.end||'08:00';
+  const isOffHours = start > end ? (hhmm>=start||hhmm<end) : (hhmm>=start&&hhmm<end);
+  if(!isOffHours) return null;
+
+  // Check for escalation keywords
+  const escWords = (ah.escalate||'emergency,urgent').split(',').map(w=>w.trim().toLowerCase());
+  const isEscalation = escWords.some(w=>messageText.toLowerCase().includes(w));
+  if(isEscalation) {
+    if(!cData.aiHours.escalateCount) cData.aiHours.escalateCount=0;
+    cData.aiHours.escalateCount++;
+    saveUserData(cUid,cData);
+    return (ah.message||'Hi! Message received.')+' ⚡ URGENT: Your host has been alerted immediately.';
+  }
+
+  if(!cData.aiHours.autoCount) cData.aiHours.autoCount=0;
+  cData.aiHours.autoCount++;
+  saveUserData(cUid,cData);
+  return (ah.message||'Hi! I received your message and will respond during office hours.').replace('{host_name}', cUser?.name||'Your host');
+}
+
 function saveSettings(){const name=document.getElementById('set-name').value.trim();if(!name){toast('Enter your name');return;}if(cUser)cUser.name=name;document.getElementById('sb-uname').textContent=name;const init=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);document.getElementById('sb-av').textContent=init;sb.auth.updateUser({data:{full_name:name}});toast('Saved! ✓');}
 function saveApiKey(){const key=document.getElementById('set-api-key').value.trim();if(!key){toast('Enter your API key');return;}cData.apiKey=key;saveUserData(cUid,cData);toast('API key saved! AI messaging is live ✓');}
 function toggleSetting(el){el.classList.toggle('on');el.classList.toggle('off');toast(el.classList.contains('on')?'Enabled':'Disabled');}
@@ -5317,7 +5907,7 @@ function updateBadges(){
   if(bb){bb.textContent=pending;bb.style.display=pending?'':'none';}if(mb){mb.textContent=unread;mb.style.display=unread?'':'none';}
 }
 function openModal(id){
-  const drops=[{sel:'mb-prop',ph:'<option value="">Select property…</option>'},{sel:'mm-prop',ph:'<option value="">None</option>'},{sel:'mt-prop',ph:'<option value="">None</option>'},{sel:'mr-prop',ph:'<option value="">None</option>'},{sel:'ic-prop',ph:'<option value="">None</option>'},{sel:'exp-prop',ph:'<option value="">All Properties</option>'},{sel:'sea-prop',ph:'<option value="">All Properties</option>'},{sel:'job-prop',ph:'<option value="">Select property…</option>'},{sel:'wo-prop',ph:'<option value="">Select property…</option>'},{sel:'inv-prop',ph:'<option value="">All Properties</option>'},{sel:'ups-prop-filter',ph:'<option value="">All Properties</option>'},{sel:'ci-prop',ph:'<option value="">All Properties</option>'},{sel:'ri-prop',ph:'<option value="">All Properties</option>'}];
+  const drops=[{sel:'mb-prop',ph:'<option value="">Select property…</option>'},{sel:'mm-prop',ph:'<option value="">None</option>'},{sel:'mt-prop',ph:'<option value="">None</option>'},{sel:'mr-prop',ph:'<option value="">None</option>'},{sel:'ic-prop',ph:'<option value="">None</option>'},{sel:'exp-prop',ph:'<option value="">All Properties</option>'},{sel:'sea-prop',ph:'<option value="">All Properties</option>'},{sel:'job-prop',ph:'<option value="">Select property…</option>'},{sel:'wo-prop',ph:'<option value="">Select property…</option>'},{sel:'inv-prop',ph:'<option value="">All Properties</option>'},{sel:'ups-prop-filter',ph:'<option value="">All Properties</option>'},{sel:'ci-prop',ph:'<option value="">All Properties</option>'},{sel:'ri-prop',ph:'<option value="">All Properties</option>'},{sel:'vault-prop',ph:'<option value="">All Properties</option>'}];
   drops.forEach(({sel,ph})=>{const el=document.getElementById(sel);if(el)el.innerHTML=ph+cData.properties.map(p=>`<option value="${p.id}">${p.emoji} ${p.name}</option>`).join('');});
   const bookingDrop=document.getElementById('mm-booking');
   if(bookingDrop){bookingDrop.innerHTML='<option value="">No booking</option>'+cData.bookings.filter(b=>b.status!=='cancelled').map(b=>`<option value="${b.id}">${b.guestName} · ${b.propName} · ${b.checkin||'TBD'}</option>`).join('');}
