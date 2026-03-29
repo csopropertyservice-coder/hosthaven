@@ -3017,7 +3017,13 @@ function launchApp(user) {
   if(content) {
     content.style.opacity = '0';
     content.style.transition = 'opacity 0.3s';
-    const ma=document.querySelector('.main-area');if(ma)ma.scrollTo({top:0,behavior:'instant'});
+    const ma=document.querySelector('.main-area');
+    if(ma){ma.scrollTo({top:0,behavior:'instant'});ma.scrollTop=0;}
+    setTimeout(function(){
+      const ap=document.querySelector('.page.active');
+      const _ma=document.querySelector('.main-area');
+      if(ap&&_ma)_ma.scrollTop=0;
+    },50);
   }
 
   document.getElementById('sb-uname').textContent=user.name;
@@ -3182,10 +3188,17 @@ function nav(id,el){
   // Save last page for refresh restore
   try{sessionStorage.setItem('hh_last_page',id);}catch(e){}
   // Reset scroll to top on every page change
-  const mainArea=document.querySelector('.main-area');if(mainArea)mainArea.scrollTo({top:0,behavior:'instant'});
+  const mainArea=document.querySelector('.main-area');
+  if(mainArea){mainArea.scrollTo({top:0,behavior:'instant'});mainArea.scrollTop=0;}
   try{window.scrollTo(0,0);}catch(e){}
   try{document.documentElement.scrollTop=0;}catch(e){}
   try{document.body.scrollTop=0;}catch(e){}
+  // Force active page to top using scrollIntoView
+  setTimeout(function(){
+    const activePage=document.querySelector('.page.active');
+    const ma=document.querySelector('.main-area');
+    if(activePage&&ma){ma.scrollTop=activePage.offsetTop-58;}
+  },10);
   if(id==='website')setTimeout(updateWb,100);
   if(id==='portal')renderPortal();
   if(id==='reports')renderReports();
@@ -7613,6 +7626,22 @@ sb.auth.onAuthStateChange((event, session) => {
 });
 
 window.addEventListener('load', () => {
+  // Watch for page changes and auto-scroll to top
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(m) {
+      if(m.type==='attributes' && m.attributeName==='class') {
+        const el = m.target;
+        if(el.classList.contains('active') && el.classList.contains('page')) {
+          const ma = document.querySelector('.main-area');
+          if(ma) { ma.scrollTop = 0; }
+        }
+      }
+    });
+  });
+  setTimeout(function() {
+    const content = document.querySelector('.content');
+    if(content) observer.observe(content, {attributes:true, subtree:true, attributeFilter:['class']});
+  }, 2000);
   bootApp();
   // Register PWA service worker
   // No service worker
