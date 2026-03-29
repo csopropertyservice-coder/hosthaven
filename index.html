@@ -2,6 +2,9 @@
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HostHaven — Smarter Airbnb Management</title>
 <meta name="description" content="HostHaven is the all-in-one dashboard for Airbnb hosts and co-hosts. Manage bookings, guests, payouts, cleaning staff, and revenue — with AI built in. Start free.">
@@ -7613,10 +7616,21 @@ window.addEventListener('load', () => {
   bootApp();
   // Register PWA service worker
   if('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js?v=3').then(function(reg) {
-      // SW registered
-    }).catch(function(err) {
-      // SW registration failed silently
+    // Unregister all old service workers first to clear cache
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for(let registration of registrations) {
+        registration.unregister();
+      }
+    });
+    // Re-register fresh
+    setTimeout(function() {
+      navigator.serviceWorker.register('sw.js?v=4').catch(function(){});
+    }, 1000);
+  }
+  // Clear all caches
+  if('caches' in window) {
+    caches.keys().then(function(names) {
+      names.forEach(function(name) { caches.delete(name); });
     });
   }
 });
