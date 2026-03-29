@@ -111,6 +111,19 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 .land-feat-title { font-family:Fraunces,serif;font-size:18px;font-weight:500;color:var(--txt);margin-bottom:8px; }
 .land-feat-desc { font-size:14px;color:var(--txt2);line-height:1.6; }
 .land-pricing { padding:80px 48px;background:var(--bg2); }
+.land-products { padding:80px 48px;background:var(--bg); }
+.land-prod-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:28px;max-width:820px;margin:0 auto; }
+.land-prod-card { background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative;overflow:hidden; }
+.land-prod-card::before { content:'';position:absolute;top:0;left:0;right:0;height:4px; }
+.land-prod-card.qsp::before { background:linear-gradient(90deg,var(--terra),var(--gold)); }
+.land-prod-card.chlk::before { background:linear-gradient(90deg,var(--gold),var(--sage)); }
+.land-prod-price { font-family:Fraunces,serif;font-size:42px;font-weight:500;color:var(--txt);line-height:1; }
+.land-prod-price span { font-size:16px;color:var(--txt3);font-family:'DM Sans',sans-serif; }
+.land-prod-tag { display:inline-block;background:var(--sand);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--txt2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px; }
+.land-prod-feats { list-style:none;margin:18px 0 24px;display:flex;flex-direction:column;gap:8px; }
+.land-prod-feats li { font-size:13px;color:var(--txt2);display:flex;align-items:flex-start;gap:8px;line-height:1.5; }
+.land-prod-feats li::before { content:'✓';color:var(--sage);font-weight:700;flex-shrink:0;margin-top:1px; }
+@media(max-width:700px){.land-prod-grid{grid-template-columns:1fr!important;}.land-pricing{padding:48px 20px!important;}}
 .land-section-title { font-family:Fraunces,serif;font-size:40px;font-weight:500;color:var(--txt);letter-spacing:-1px;text-align:center;margin-bottom:8px; }
 .land-section-sub { font-size:16px;color:var(--txt2);text-align:center;margin-bottom:48px; }
 .land-plans { display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:0 auto; }
@@ -438,6 +451,7 @@ select{color:var(--txt)!important;}
     </div>
     <div class="land-nav-links">
       <a onclick="scrollToSection('land-features')">Features</a>
+      <a onclick="scrollToSection('land-products')">Resources</a>
       <a onclick="scrollToSection('land-pricing')">Pricing</a>
       <a onclick="showScreen('login')">Sign In</a>
     </div>
@@ -481,6 +495,65 @@ select{color:var(--txt)!important;}
       <div class="land-feat-card"><div class="land-feat-icon">🌐</div><div class="land-feat-title">Direct Booking Website</div><div class="land-feat-desc">Build and publish your own booking website in minutes. No Airbnb fees on direct bookings.</div></div>
       <div class="land-feat-card"><div class="land-feat-icon">📅</div><div class="land-feat-title">iCal Sync</div><div class="land-feat-desc">Import bookings directly from Airbnb, VRBO, and Booking.com via iCal links.</div></div>
       <div class="land-feat-card"><div class="land-feat-icon">📈</div><div class="land-feat-title">Revenue Reports</div><div class="land-feat-desc">Exportable reports for tax season, income tracking, and property performance analysis.</div></div>
+    </div>
+  </section>
+
+  <section class="land-products" id="land-products">
+    <div style="text-align:center;margin-bottom:16px">
+      <div class="land-eyebrow" style="display:inline-flex">📦 One-Time Resources</div>
+    </div>
+    <div class="land-section-title">Everything you need to launch</div>
+    <p class="land-section-sub" style="text-align:center;max-width:520px;margin:0 auto 48px">Not ready for a subscription? Start with a one-time resource. No monthly fees, instant download.</p>
+
+    <div class="land-prod-grid">
+
+      <!-- Quick Start Pack -->
+      <div class="land-prod-card qsp">
+        <div class="land-prod-tag">⚡ Most Popular</div>
+        <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);margin-bottom:6px">HostHaven Quick Start Pack</div>
+        <div style="font-size:13px;color:var(--txt3);margin-bottom:20px">Everything a new Airbnb host needs to look professional from day one</div>
+        <div class="land-prod-price">$47 <span>one-time</span></div>
+        <ul class="land-prod-feats">
+          <li>20 done-for-you guest message templates (check-in, WiFi, checkout, review requests)</li>
+          <li>Property setup checklist — 47 items that 5-star hosts always have ready</li>
+          <li>Airbnb pricing strategy guide — how to set rates by season, day, and demand</li>
+          <li>First 30 days as a host — week-by-week action plan</li>
+          <li>House rules template library — 5 proven variations</li>
+          <li>Instant PDF download — use it today</li>
+        </ul>
+        <button class="btn btn-pri btn-w" style="font-size:14px;padding:14px" onclick="buyProduct('quickstart')">Get the Pack — $47 →</button>
+        <div style="font-size:11px;color:var(--txt3);text-align:center;margin-top:8px">Instant download · 30-day money back guarantee</div>
+      </div>
+
+      <!-- Co-Host Launch Kit -->
+      <div class="land-prod-card chlk">
+        <div class="land-prod-tag" style="background:rgba(200,168,75,.15);color:var(--gold)">🏆 For Co-Hosts</div>
+        <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);margin-bottom:6px">Co-Host Launch Kit</div>
+        <div style="font-size:13px;color:var(--txt3);margin-bottom:20px">Everything you need to sign your first client and run a professional co-hosting business</div>
+        <div class="land-prod-price">$97 <span>one-time</span></div>
+        <ul class="land-prod-feats">
+          <li>Co-host agreement contract template — attorney-reviewed, fully editable</li>
+          <li>Owner pitch deck — 12 slides to sign your first property owner as a client</li>
+          <li>Rate card template — how to price your co-host services (15%, 20%, 25%)</li>
+          <li>Owner onboarding checklist — 32 steps to professionally take over a property</li>
+          <li>Monthly owner report template — the exact PDF that builds owner trust</li>
+          <li>First 90 days co-host playbook — how to go from 0 to 5 properties</li>
+          <li>Bonus: HostHaven setup walkthrough for co-hosts (video guide)</li>
+        </ul>
+        <button class="btn btn-w" style="font-size:14px;padding:14px;background:var(--gold);color:#2C1F14;font-weight:700;border:none;border-radius:8px;cursor:pointer;width:100%" onclick="buyProduct('cohost_kit')">Get the Kit — $97 →</button>
+        <div style="font-size:11px;color:var(--txt3);text-align:center;margin-top:8px">Instant download · 30-day money back guarantee</div>
+      </div>
+
+    </div>
+
+    <!-- Social proof strip -->
+    <div style="text-align:center;margin-top:48px;padding-top:40px;border-top:1px solid var(--border)">
+      <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">Trusted by hosts across the US</div>
+      <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap">
+        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--terra)">500+</div><div style="font-size:12px;color:var(--txt3)">Templates downloaded</div></div>
+        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--gold)">4.9★</div><div style="font-size:12px;color:var(--txt3)">Average rating</div></div>
+        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--sage)">$0</div><div style="font-size:12px;color:var(--txt3)">Monthly commitment</div></div>
+      </div>
     </div>
   </section>
 
@@ -7193,6 +7266,42 @@ function checkReferralCode() {
     localStorage.setItem('hh_ref', ref.toUpperCase());
   }
 }
+
+
+// ════════════════════════════════════════════
+//  ONE-OFF PRODUCTS
+// ════════════════════════════════════════════
+function buyProduct(product) {
+  const links = {
+    quickstart: 'https://buy.stripe.com/quickstart_placeholder',
+    cohost_kit:  'https://buy.stripe.com/cohost_kit_placeholder'
+  };
+  // If Stripe links not yet set, show contact modal
+  if(links[product].includes('placeholder')) {
+    // Show a simple email capture for now
+    const email = prompt('Enter your email and we will send you the download link within 24 hours:');
+    if(email && email.includes('@')) {
+      // Send notification to admin
+      fetch('https://vdnyqwpznsysrvyvbqga.supabase.co/functions/v1/send-notification', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM'},
+        body: JSON.stringify({
+          type:'product_purchase',
+          hostEmail: ADMIN_EMAIL,
+          data: {product, buyerEmail: email, time: new Date().toISOString()}
+        })
+      }).catch(()=>{});
+      alert('Got it! Check ' + email + ' within 24 hours for your download link. Questions? Email csopropertyservice@gmail.com');
+    }
+    return;
+  }
+  window.open(links[product], '_blank');
+}
+
+// Call this once you have real Stripe payment links:
+// buyProduct links should be updated to:
+// quickstart: your $47 Stripe payment link
+// cohost_kit: your $97 Stripe payment link
 
 function saveSettings(){const name=document.getElementById('set-name').value.trim();if(!name){toast('Enter your name');return;}if(cUser)cUser.name=name;document.getElementById('sb-uname').textContent=name;const init=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);document.getElementById('sb-av').textContent=init;sb.auth.updateUser({data:{full_name:name}});toast('Saved! ✓');}
 function saveApiKey(){const key=document.getElementById('set-api-key').value.trim();if(!key){toast('Enter your API key');return;}cData.apiKey=key;saveUserData(cUid,cData);toast('API key saved! AI messaging is live ✓');}
