@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+  'automations':'⚡ Automations',<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
@@ -638,8 +639,6 @@ select{color:var(--txt)!important;}
     </div>
     <div style="font-size:12px;color:rgba(255,255,255,.35)">© 2026 HostHaven. All rights reserved.</div>
     <div style="display:flex;gap:20px">
-      <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" href="https://www.instagram.com" target="_blank">Instagram</a>
-      <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" href="https://www.facebook.com" target="_blank">Facebook</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('privacy')">Privacy</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('terms')">Terms</a>
       <a href="/cdn-cgi/l/email-protection#2043534f50524f50455254595345525649434560474d41494c0e434f4d" style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:none">Support</a>
@@ -653,7 +652,52 @@ select{color:var(--txt)!important;}
     <h2 id="legal-title">Terms of Service</h2>
     <button class="btn btn-ghost" onclick="closeModal('legal-modal')" style="padding:5px 10px">✕</button>
   </div>
-  <div id="legal-content" style="font-size:13px;color:var(--txt2);line-height:1.8"></div>
+  <div id="legal-content" style="font-size:13px;color:var(--txt2);line-height:1.8">
+    <div id="privacy-content">
+      <p style="margin-bottom:12px"><strong style="color:var(--txt)">Last updated: March 2026</strong></p>
+      <p style="margin-bottom:16px">HostHaven is operated by CSO Property Service. This Privacy Policy explains how we collect, use, and protect your information.</p>
+      <h3 style="color:var(--txt);margin:16px 0 8px">1. Information We Collect</h3>
+      <p style="margin-bottom:8px"><strong style="color:var(--txt)">Account info:</strong> Name and email when you sign up.</p>
+      <p style="margin-bottom:8px"><strong style="color:var(--txt)">Property data:</strong> Listings, bookings, guests, and financials you enter.</p>
+      <p style="margin-bottom:8px"><strong style="color:var(--txt)">Payments:</strong> Processed by Stripe. We never store card details.</p>
+      <p style="margin-bottom:16px"><strong style="color:var(--txt)">Usage data:</strong> How you use the platform to improve our service.</p>
+      <h3 style="color:var(--txt);margin:16px 0 8px">2. How We Use It</h3>
+      <p style="margin-bottom:4px">• To provide and improve HostHaven</p>
+      <p style="margin-bottom:4px">• To process payments and subscriptions</p>
+      <p style="margin-bottom:4px">• To send account-related emails</p>
+      <p style="margin-bottom:16px">• To respond to support requests</p>
+      <h3 style="color:var(--txt);margin:16px 0 8px">3. Data Storage</h3>
+      <p style="margin-bottom:16px">Data is stored securely via Supabase with encryption in transit and at rest. Your data is private to your account and never shared with other users.</p>
+      <h3 style="color:var(--txt);margin:16px 0 8px">4. Third-Party Services</h3>
+      <p style="margin-bottom:4px">• <strong style="color:var(--txt)">Stripe</strong> — Payment processing</p>
+      <p style="margin-bottom:4px">• <strong style="color:var(--txt)">Supabase</strong> — Database and authentication</p>
+      <p style="margin-bottom:16px">• <strong style="color:var(--txt)">Resend</strong> — Email delivery</p>
+      <h3 style="color:var(--txt);margin:16px 0 8px">5. Your Rights</h3>
+      <p style="margin-bottom:16px">You can access, correct, or delete your data at any time. Email <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a7c4d4c8d7d5c8d7c2d5d3ded4c2d5d1cec4c2e7c0cac6cecb89c4c8ca">[email&#160;protected]</a> to request account deletion.</p>
+      <h3 style="color:var(--txt);margin:16px 0 8px">6. Contact</h3>
+      <p>Questions? Email <strong style="color:var(--txt)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0566766a75776a756077717c766077736c6660456268646c692b666a68">[email&#160;protected]</a></strong></p>
+    </div>
+    <div id="terms-content" style="display:none">
+      <p style="margin-bottom:12px"><strong style="color:var(--txt)">Last updated: March 2026</strong></p>
+      <p style="margin-bottom:16px">By using HostHaven you agree to these Terms of Service.</p>
+      <h3 style="color:var(--txt);margin:16px 0 8px">1. Use of Platform</h3>
+      <p style="margin-bottom:4px">• Use HostHaven only for lawful purposes</p>
+      <p style="margin-bottom:4px">• Keep your account credentials secure</p>
+      <p style="margin-bottom:16px">• Do not attempt to access other users data</p>
+      <h3 style="color:var(--txt);margin:16px 0 8px">2. Billing and Refunds</h3>
+      <p style="margin-bottom:8px">Paid plans bill monthly. Cancel anytime from your billing portal. We offer a <strong style="color:var(--txt)">30-day money-back guarantee</strong> on all paid plans.</p>
+      <p style="margin-bottom:16px">Quick Start Pack ($47) and Co-Host Launch Kit ($97) are one-time purchases with a 30-day refund policy.</p>
+      <h3 style="color:var(--txt);margin:16px 0 8px">3. Limitation of Liability</h3>
+      <p style="margin-bottom:16px">HostHaven is provided as-is. We are not responsible for booking disputes, guest issues, or property damage. Maintain your own insurance.</p>
+      <h3 style="color:var(--txt);margin:16px 0 8px">4. Termination</h3>
+      <p style="margin-bottom:16px">We may suspend accounts that violate these Terms. Close your account anytime by emailing <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4e2d3d213e3c213e2b3c3a373d2b3c38272d2b0e29232f2722602d2123">[email&#160;protected]</a>.</p>
+      <h3 style="color:var(--txt);margin:16px 0 8px">5. Contact</h3>
+      <p>Questions? Email <strong style="color:var(--txt)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9cffeff3eceef3ecf9eee8e5eff9eeeaf5fff9dcfbf1fdf5f0b2fff3f1">[email&#160;protected]</a></strong></p>
+    </div>
+  </div>
+  <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end">
+    <button class="btn btn-pri" onclick="closeModal('legal-modal')">Got it</button>
+  </div>
 </div></div>
 
 <!-- ══════════════════════════════════════
@@ -681,7 +725,7 @@ select{color:var(--txt)!important;}
     <div class="auth-title">Create your account</div>
     <div class="auth-sub">Start managing your properties smarter</div>
     <div class="auth-err" id="signup-err"></div>
-    <div class="fi"><label>Full Name</label><input id="signup-name" type="text" placeholder="Sarah Jensen"></div>
+    <div class="fi"><label>Full Name</label><input id="signup-name" type="text" placeholder="Your namen"></div>
     <div class="fi"><label>Email</label><input id="signup-email" type="email" placeholder="you@example.com"></div>
     <div class="fi"><label>Password</label><input id="signup-pw" type="password" placeholder="8+ characters"></div>
     <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px">
@@ -804,6 +848,7 @@ select{color:var(--txt)!important;}
 
         <div class="sb-sec" style="margin-top:10px">Automation</div>
         <div class="sb-item" onclick="nav('aihours',this)"><span class="ico">🤖</span>AI Office Hours</div>
+        <div class="sb-item" onclick="nav('automations',this)"><span class="ico">⚡</span>Automations</div>
         <div class="sb-item" onclick="nav('affiliates',this)"><span class="ico">🤝</span>Affiliates</div>
 
         <div class="sb-sec" style="margin-top:10px">Co-Host</div>
@@ -1414,9 +1459,18 @@ select{color:var(--txt)!important;}
 <!-- ██ EXPENSES ████████████████████████████ -->
 <div class="page" id="page-expenses">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-    <div style="font-size:13px;color:var(--txt2)">Track property expenses and calculate true profit</div>
+    <div>
+      <div style="display:flex;gap:6px;margin-bottom:12px" id="fin-tabs">
+        <button class="btn btn-pri" id="fin-tab-expenses" onclick="showFinTab('expenses',this)" style="font-size:12px;padding:6px 14px">💸 Expenses</button>
+        <button class="btn btn-ghost" id="fin-tab-pl" onclick="showFinTab('pl',this)" style="font-size:12px;padding:6px 14px">📊 P&L Statement</button>
+        <button class="btn btn-ghost" id="fin-tab-property" onclick="showFinTab('property',this)" style="font-size:12px;padding:6px 14px">🏠 Per Property</button>
+        <button class="btn btn-ghost" id="fin-tab-tax" onclick="showFinTab('tax',this)" style="font-size:12px;padding:6px 14px">🧾 Tax Export</button>
+      </div>
+    </div>
     <button class="btn btn-pri" onclick="openModal('add-expense-modal')">+ Add Expense</button>
   </div>
+  <!-- EXPENSES VIEW -->
+  <div id="fin-view-expenses">
   <!-- Summary cards -->
   <div class="g4" style="margin-bottom:18px">
     <div class="kpi k1"><div class="kpi-label">Total Revenue</div><div class="kpi-val" id="exp-revenue">$0</div></div>
@@ -1434,6 +1488,110 @@ select{color:var(--txt)!important;}
       <div class="empty-state"><div class="es-i">💸</div><h3>No expenses yet</h3><p>Track cleaning fees, repairs, supplies, and more</p><button class="btn btn-pri" onclick="openModal('add-expense-modal')" style="margin-top:10px">Add First Expense</button></div>
     </div>
   </div>
+  </div><!-- end fin-view-expenses -->
+
+  <!-- P&L STATEMENT VIEW -->
+  <div id="fin-view-pl" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-family:Fraunces,serif;font-size:20px;font-weight:500;color:var(--txt)">📊 Profit & Loss Statement</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select id="pl-year" onchange="renderPL()" style="background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:7px 12px;font-size:12px;color:var(--txt);outline:none">
+          <option value="2026">2026</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+        </select>
+        <button class="btn btn-ghost" style="font-size:11px;padding:5px 12px" onclick="exportPLCSV()">↓ Export CSV</button>
+      </div>
+    </div>
+
+    <!-- Annual Summary -->
+    <div class="g4" style="margin-bottom:18px">
+      <div class="kpi k1"><div class="kpi-label">Gross Revenue</div><div class="kpi-val" id="pl-gross">$0</div></div>
+      <div class="kpi k2"><div class="kpi-label">Total Expenses</div><div class="kpi-val" id="pl-expenses">$0</div></div>
+      <div class="kpi k3"><div class="kpi-label">Net Profit</div><div class="kpi-val" id="pl-net">$0</div></div>
+      <div class="kpi k4"><div class="kpi-label">Profit Margin</div><div class="kpi-val" id="pl-margin">0%</div></div>
+    </div>
+
+    <div class="g2">
+      <!-- Monthly Breakdown Table -->
+      <div class="card">
+        <div class="card-hd"><div class="card-title">📅 Monthly Breakdown</div></div>
+        <div class="card-body" id="pl-monthly-table" style="overflow-x:auto">
+          <div class="empty-state"><div class="es-i">📊</div><h3>No data yet</h3><p>Add bookings and expenses to see your P&L</p></div>
+        </div>
+      </div>
+
+      <!-- Expense Category Breakdown -->
+      <div class="card">
+        <div class="card-hd"><div class="card-title">🗂️ Expenses by Category</div></div>
+        <div class="card-body" id="pl-category-breakdown">
+          <div class="empty-state"><div class="es-i">🗂️</div><h3>No expenses yet</h3><p>Add expenses to see category breakdown</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Income vs Expense Bar Chart -->
+    <div class="card" style="margin-top:14px">
+      <div class="card-hd"><div class="card-title">📈 Revenue vs Expenses by Month</div></div>
+      <div class="card-body">
+        <div id="pl-bar-chart" style="display:flex;align-items:flex-end;gap:8px;height:160px;padding:10px 0"></div>
+        <div style="display:flex;gap:16px;margin-top:8px;font-size:11px">
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;border-radius:3px;background:var(--sage)"></div>Revenue</div>
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;border-radius:3px;background:var(--terra)"></div>Expenses</div>
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;border-radius:3px;background:var(--gold)"></div>Net Profit</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PER PROPERTY VIEW -->
+  <div id="fin-view-property" style="display:none">
+    <div style="font-family:Fraunces,serif;font-size:20px;font-weight:500;color:var(--txt);margin-bottom:16px">🏠 P&L by Property</div>
+    <div id="property-pl-grid" style="display:flex;flex-direction:column;gap:14px">
+      <div class="empty-state"><div class="es-i">🏠</div><h3>No properties yet</h3><p>Add properties and bookings to see per-property P&L</p></div>
+    </div>
+  </div>
+
+  <!-- TAX EXPORT VIEW -->
+  <div id="fin-view-tax" style="display:none">
+    <div style="font-family:Fraunces,serif;font-size:20px;font-weight:500;color:var(--txt);margin-bottom:16px">🧾 Tax-Ready Export</div>
+    <div class="card" style="margin-bottom:14px;border-left:3px solid var(--gold)">
+      <div class="card-body">
+        <div class="g4">
+          <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:22px;margin-bottom:5px">💰</div>
+            <div style="font-size:11px;font-weight:600;color:var(--txt);margin-bottom:2px">Total Income</div>
+            <div style="font-size:18px;font-weight:700;color:var(--sage)" id="tax-income">$0</div>
+          </div>
+          <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:22px;margin-bottom:5px">📋</div>
+            <div style="font-size:11px;font-weight:600;color:var(--txt);margin-bottom:2px">Deductible Expenses</div>
+            <div style="font-size:18px;font-weight:700;color:var(--terra)" id="tax-expenses">$0</div>
+          </div>
+          <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:22px;margin-bottom:5px">🧮</div>
+            <div style="font-size:11px;font-weight:600;color:var(--txt);margin-bottom:2px">Net Taxable Income</div>
+            <div style="font-size:18px;font-weight:700;color:var(--gold)" id="tax-net">$0</div>
+          </div>
+          <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:22px;margin-bottom:5px">📅</div>
+            <div style="font-size:11px;font-weight:600;color:var(--txt);margin-bottom:2px">Tax Year</div>
+            <div style="font-size:18px;font-weight:700;color:var(--txt)" id="tax-year">2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-hd"><div class="card-title">📋 Schedule E — Expense Categories</div></div>
+      <div class="card-body" id="tax-schedule-e"></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-pri" onclick="exportTaxCSV()">↓ Download Tax Summary CSV</button>
+      <button class="btn btn-ghost" onclick="exportExpensesCSV()">↓ Download All Expenses CSV</button>
+      <button class="btn btn-ghost" onclick="printTaxReport()">🖨️ Print Tax Report</button>
+    </div>
+  </div>
+
 </div>
 
 <!-- ██ BLACKLIST ████████████████████████████ -->
@@ -1861,6 +2019,309 @@ select{color:var(--txt)!important;}
   </div>
 </div>
 
+
+<!-- ██ AUTOMATIONS ████████████████████████ -->
+<div class="page" id="page-automations">
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:20px">Configure automatic actions that run without you — saving hours every week</div>
+
+  <!-- 1. Auto Guest Message Sequences -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-hd">
+      <div>
+        <div class="card-title">💬 Auto Guest Message Sequences</div>
+        <div style="font-size:12px;color:var(--txt3)">Automatically send messages based on booking milestones</div>
+      </div>
+      <div class="toggle" id="auto-messages-toggle" onclick="toggleAutomation('autoMessages',this)" style="cursor:pointer"></div>
+    </div>
+    <div class="card-body" id="auto-messages-body">
+      <div class="g2" style="margin-bottom:14px">
+        <div style="background:var(--sand);border-radius:10px;padding:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:13px;font-weight:600;color:var(--txt)">📅 Booking Confirmation</div>
+            <div class="toggle toggle-sm" id="msg-booking-toggle" onclick="toggleMsgSeq('booking',this)"></div>
+          </div>
+          <div style="font-size:11px;color:var(--txt3)">Sent immediately when booking is confirmed</div>
+          <textarea id="msg-booking-text" style="width:100%;margin-top:8px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:12px;color:var(--txt);resize:vertical;min-height:60px;font-family:'DM Sans',sans-serif" placeholder="Hi {guest_name}! Your booking at {property_name} is confirmed for {checkin_date}. I'll send check-in details 48 hours before your arrival. Can't wait to host you! 🏡"></textarea>
+        </div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:13px;font-weight:600;color:var(--txt)">🔑 Pre-Arrival (48hrs)</div>
+            <div class="toggle toggle-sm" id="msg-prearrival-toggle" onclick="toggleMsgSeq('prearrival',this)"></div>
+          </div>
+          <div style="font-size:11px;color:var(--txt3)">Sent 48 hours before check-in</div>
+          <textarea id="msg-prearrival-text" style="width:100%;margin-top:8px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:12px;color:var(--txt);resize:vertical;min-height:60px;font-family:'DM Sans',sans-serif" placeholder="Hi {guest_name}! Your stay at {property_name} is 2 days away 🏡 Door code: {door_code} | WiFi: {wifi_name} / {wifi_password} | Parking: {parking} See you soon!"></textarea>
+        </div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:13px;font-weight:600;color:var(--txt)">🌅 Check-in Day</div>
+            <div class="toggle toggle-sm" id="msg-checkin-toggle" onclick="toggleMsgSeq('checkin',this)"></div>
+          </div>
+          <div style="font-size:11px;color:var(--txt3)">Sent morning of check-in</div>
+          <textarea id="msg-checkin-text" style="width:100%;margin-top:8px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:12px;color:var(--txt);resize:vertical;min-height:60px;font-family:'DM Sans',sans-serif" placeholder="Good morning {guest_name}! Today's the day 🎉 Check-in is available after {checkin_time}. Door code: {door_code}. Message me anytime if you need anything!"></textarea>
+        </div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:13px;font-weight:600;color:var(--txt)">😊 Mid-Stay Check</div>
+            <div class="toggle toggle-sm" id="msg-midstay-toggle" onclick="toggleMsgSeq('midstay',this)"></div>
+          </div>
+          <div style="font-size:11px;color:var(--txt3)">Sent day after check-in</div>
+          <textarea id="msg-midstay-text" style="width:100%;margin-top:8px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:12px;color:var(--txt);resize:vertical;min-height:60px;font-family:'DM Sans',sans-serif" placeholder="Hi {guest_name}! Just checking in — is everything perfect? 😊 Let me know if you need anything at all. Enjoy your stay!"></textarea>
+        </div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:13px;font-weight:600;color:var(--txt)">🚪 Checkout Reminder</div>
+            <div class="toggle toggle-sm" id="msg-checkout-toggle" onclick="toggleMsgSeq('checkout',this)"></div>
+          </div>
+          <div style="font-size:11px;color:var(--txt3)">Sent morning of checkout</div>
+          <textarea id="msg-checkout-text" style="width:100%;margin-top:8px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:12px;color:var(--txt);resize:vertical;min-height:60px;font-family:'DM Sans',sans-serif" placeholder="Good morning {guest_name}! Checkout is at {checkout_time}. Hope you had an amazing stay! 🌟 Please leave keys {key_location}. Safe travels!"></textarea>
+        </div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:13px;font-weight:600;color:var(--txt)">⭐ Review Request</div>
+            <div class="toggle toggle-sm" id="msg-review-toggle" onclick="toggleMsgSeq('review',this)"></div>
+          </div>
+          <div style="font-size:11px;color:var(--txt3)">Sent 24 hours after checkout</div>
+          <textarea id="msg-review-text" style="width:100%;margin-top:8px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:12px;color:var(--txt);resize:vertical;min-height:60px;font-family:'DM Sans',sans-serif" placeholder="Hi {guest_name}! Thank you so much for staying at {property_name} 🙏 If you enjoyed your stay, a quick review would mean the world to us. Hope to host you again soon!"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-pri" onclick="saveMessageSequences()">💾 Save Sequences</button>
+        <button class="btn btn-ghost" onclick="previewMessageSequences()">👁 Preview</button>
+        <button class="btn btn-ghost" onclick="runMessageSequencesNow()">▶ Run Now (Test)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Auto Cleaning Task Creation -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-hd">
+      <div>
+        <div class="card-title">🧹 Auto Cleaning Task Creation</div>
+        <div style="font-size:12px;color:var(--txt3)">Automatically create a cleaning task when a booking checkout is logged</div>
+      </div>
+      <div class="toggle" id="auto-cleaning-toggle" onclick="toggleAutomation('autoCleaning',this)" style="cursor:pointer"></div>
+    </div>
+    <div class="card-body" id="auto-cleaning-body">
+      <div class="g2" style="margin-bottom:12px">
+        <div class="fi"><label>Default Cleaner</label>
+          <select id="auto-clean-assignee" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+            <option value="">— Select default cleaner —</option>
+          </select>
+        </div>
+        <div class="fi"><label>Task Priority</label>
+          <select id="auto-clean-priority" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+            <option value="high">🔴 High</option>
+            <option value="medium">🟡 Medium</option>
+            <option value="low">🟢 Low</option>
+          </select>
+        </div>
+        <div class="fi"><label>Task Title Template</label>
+          <input id="auto-clean-title" placeholder="Turnover clean — {property_name}" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+        </div>
+        <div class="fi"><label>Create Task</label>
+          <select id="auto-clean-timing" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+            <option value="on_checkout">On checkout date</option>
+            <option value="day_before">Day before checkout</option>
+            <option value="on_booking">When booking is added</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-pri" onclick="saveAutoClean()">💾 Save Settings</button>
+    </div>
+  </div>
+
+  <!-- 3. Low Inventory Alerts -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-hd">
+      <div>
+        <div class="card-title">📦 Low Inventory Alerts</div>
+        <div style="font-size:12px;color:var(--txt3)">Email you when supplies drop below threshold</div>
+      </div>
+      <div class="toggle" id="auto-inventory-toggle" onclick="toggleAutomation('autoInventory',this)" style="cursor:pointer"></div>
+    </div>
+    <div class="card-body">
+      <div class="g2" style="margin-bottom:12px">
+        <div class="fi"><label>Alert Email</label>
+          <input id="auto-inv-email" placeholder="your@email.com" type="email" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+        </div>
+        <div class="fi"><label>Check Frequency</label>
+          <select id="auto-inv-freq" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly (Monday)</option>
+            <option value="onbooking">Before each check-in</option>
+          </select>
+        </div>
+      </div>
+      <div id="auto-inv-status" style="font-size:12px;color:var(--txt3);margin-bottom:10px"></div>
+      <button class="btn btn-pri" onclick="saveAutoInventory()">💾 Save Settings</button>
+      <button class="btn btn-ghost" style="margin-left:8px" onclick="checkInventoryNow()">🔍 Check Now</button>
+    </div>
+  </div>
+
+  <!-- 4. Late Checkout Detection -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-hd">
+      <div>
+        <div class="card-title">🚪 Late Checkout Detection</div>
+        <div style="font-size:12px;color:var(--txt3)">Alert you and optionally message the guest if checkout time passes</div>
+      </div>
+      <div class="toggle" id="auto-latecheckout-toggle" onclick="toggleAutomation('autoLateCheckout',this)" style="cursor:pointer"></div>
+    </div>
+    <div class="card-body">
+      <div class="g2" style="margin-bottom:12px">
+        <div class="fi"><label>Standard Checkout Time</label>
+          <input id="auto-checkout-time" type="time" value="11:00" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+        </div>
+        <div class="fi"><label>Grace Period (minutes)</label>
+          <input id="auto-checkout-grace" type="number" value="30" min="0" max="120" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+        </div>
+        <div class="fi"><label>Guest Reminder Message</label>
+          <input id="auto-checkout-msg" placeholder="Hi {guest_name}! Just a friendly reminder that checkout is at {checkout_time}. Let me know if you need any help! 😊" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+        </div>
+        <div class="fi"><label>Host Alert Email</label>
+          <input id="auto-checkout-email" type="email" placeholder="your@email.com" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+        </div>
+      </div>
+      <button class="btn btn-pri" onclick="saveAutoLateCheckout()">💾 Save Settings</button>
+    </div>
+  </div>
+
+  <!-- 5. Birthday/Anniversary Perks -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-hd">
+      <div>
+        <div class="card-title">🎂 Guest Anniversary Perks</div>
+        <div style="font-size:12px;color:var(--txt3)">Automatically send loyalty members a discount on their booking anniversary</div>
+      </div>
+      <div class="toggle" id="auto-anniversary-toggle" onclick="toggleAutomation('autoAnniversary',this)" style="cursor:pointer"></div>
+    </div>
+    <div class="card-body">
+      <div class="g2" style="margin-bottom:12px">
+        <div class="fi"><label>Discount Amount</label>
+          <select id="auto-anniv-discount" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+            <option value="5">5% off</option>
+            <option value="10" selected>10% off</option>
+            <option value="15">15% off</option>
+            <option value="20">20% off</option>
+          </select>
+        </div>
+        <div class="fi"><label>Send Message</label>
+          <select id="auto-anniv-timing" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+            <option value="exact">On anniversary date</option>
+            <option value="week_before">1 week before</option>
+            <option value="month_before">1 month before</option>
+          </select>
+        </div>
+      </div>
+      <div class="fi"><label>Message Template</label>
+        <textarea id="auto-anniv-msg" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);resize:vertical;min-height:70px;font-family:'DM Sans',sans-serif" placeholder="Hi {guest_name}! 🎉 It's been a year since your first stay with us — thank you for being such a loyal guest! As a thank you, here's {discount}% off your next booking. Use code: {code}. Hope to see you again soon! 🏡"></textarea>
+      </div>
+      <div id="anniv-members-count" style="font-size:12px;color:var(--txt3);margin:10px 0"></div>
+      <button class="btn btn-pri" onclick="saveAutoAnniversary()">💾 Save Settings</button>
+      <button class="btn btn-ghost" style="margin-left:8px" onclick="runAnniversaryNow()">▶ Run Now (Test)</button>
+    </div>
+  </div>
+
+  <!-- 6. Weekly Revenue Summary -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-hd">
+      <div>
+        <div class="card-title">📊 Weekly Revenue Summary Email</div>
+        <div style="font-size:12px;color:var(--txt3)">Every Monday morning — last week's revenue, upcoming check-ins, and tasks due</div>
+      </div>
+      <div class="toggle" id="auto-weekly-toggle" onclick="toggleAutomation('autoWeekly',this)" style="cursor:pointer"></div>
+    </div>
+    <div class="card-body">
+      <div class="g2" style="margin-bottom:12px">
+        <div class="fi"><label>Send To</label>
+          <input id="auto-weekly-email" type="email" placeholder="your@email.com" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+        </div>
+        <div class="fi"><label>Send At</label>
+          <select id="auto-weekly-day" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+            <option value="monday">Monday morning</option>
+            <option value="sunday">Sunday evening</option>
+            <option value="friday">Friday afternoon</option>
+          </select>
+        </div>
+      </div>
+      <div class="fi" style="margin-bottom:12px"><label>Include in summary</label>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="wk-revenue" checked> Revenue & P&L</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="wk-checkins" checked> Upcoming check-ins</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="wk-tasks" checked> Pending tasks</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="wk-occupancy" checked> Occupancy rates</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="wk-expenses"> Expenses</label>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-pri" onclick="saveAutoWeekly()">💾 Save Settings</button>
+        <button class="btn btn-ghost" onclick="sendWeeklySummaryNow()">📧 Send Now (Test)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Auto Damage Claim Follow-up -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-hd">
+      <div>
+        <div class="card-title">🛡️ Damage Claim Follow-up</div>
+        <div style="font-size:12px;color:var(--txt3)">Remind you to follow up on open claims that haven't been updated</div>
+      </div>
+      <div class="toggle" id="auto-damage-toggle" onclick="toggleAutomation('autoDamage',this)" style="cursor:pointer"></div>
+    </div>
+    <div class="card-body">
+      <div class="g2" style="margin-bottom:12px">
+        <div class="fi"><label>Follow-up After (days)</label>
+          <input id="auto-damage-days" type="number" value="7" min="1" max="30" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+        </div>
+        <div class="fi"><label>Alert Email</label>
+          <input id="auto-damage-email" type="email" placeholder="your@email.com" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+        </div>
+      </div>
+      <div id="auto-damage-status" style="font-size:12px;color:var(--txt3);margin-bottom:10px"></div>
+      <button class="btn btn-pri" onclick="saveAutoDamage()">💾 Save Settings</button>
+      <button class="btn btn-ghost" style="margin-left:8px" onclick="checkDamageClaimsNow()">🔍 Check Now</button>
+    </div>
+  </div>
+
+  <!-- 8. Occupancy Drop Alert -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-hd">
+      <div>
+        <div class="card-title">📉 Occupancy Drop Alert</div>
+        <div style="font-size:12px;color:var(--txt3)">Alert you when a property has no bookings in the next X days</div>
+      </div>
+      <div class="toggle" id="auto-occupancy-toggle" onclick="toggleAutomation('autoOccupancy',this)" style="cursor:pointer"></div>
+    </div>
+    <div class="card-body">
+      <div class="g2" style="margin-bottom:12px">
+        <div class="fi"><label>Alert if no bookings in next (days)</label>
+          <input id="auto-occ-days" type="number" value="14" min="3" max="60" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+        </div>
+        <div class="fi"><label>Alert Email</label>
+          <input id="auto-occ-email" type="email" placeholder="your@email.com" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--txt3);margin-bottom:10px">Suggested action: lower price 10-15% or run a promotion on social media</div>
+      <div id="auto-occ-status" style="font-size:12px;color:var(--terra);margin-bottom:10px"></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-pri" onclick="saveAutoOccupancy()">💾 Save Settings</button>
+        <button class="btn btn-ghost" onclick="checkOccupancyNow()">🔍 Check Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Automation Log -->
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-title">📋 Automation Activity Log</div>
+      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" onclick="clearAutoLog()">Clear</button>
+    </div>
+    <div class="card-body" id="auto-log">
+      <div class="empty-state"><div class="es-i">⚡</div><h3>No automations run yet</h3><p>Enable automations above to see activity here</p></div>
+    </div>
+  </div>
+</div>
 
 <!-- ██ AFFILIATES ████████████████████████████ -->
 <div class="page" id="page-affiliates">
@@ -2533,7 +2994,7 @@ select{color:var(--txt)!important;}
   <h2>👥 Invite Team Member</h2>
   <div style="font-size:13px;color:var(--txt2);margin-bottom:16px;line-height:1.5">They'll receive an email invitation to join your HostHaven workspace.</div>
   <div class="fi"><label>Email Address</label><input id="invite-email" type="email" placeholder="colleague@example.com"></div>
-  <div class="fi"><label>Full Name</label><input id="invite-name" placeholder="Sarah Jensen"></div>
+  <div class="fi"><label>Full Name</label><input id="invite-name" placeholder="Your namen"></div>
   <div class="fi"><label>Role</label>
     <select id="invite-role" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)">
       <option value="manager">👔 Manager — can manage bookings, tasks, messages</option>
@@ -2829,7 +3290,7 @@ select{color:var(--txt)!important;}
 
 <div class="toast" id="toast-el"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ════════════════════════════════════════════
 //  SUPABASE CONFIG
@@ -3041,7 +3502,7 @@ async function loginDemo() {
     // Use a fixed demo UID that never conflicts with real users
     const DEMO_UID = 'demo_hosthaven_preview';
     cUid = DEMO_UID;
-    cUser = {email:'demo@hosthaven.co', name:'Sarah Jensen'};
+    cUser = {email:'', name:'New User'};
     // Always load fresh demo data
     const demo = buildDemoData();
     saveLocalData(DEMO_UID, demo);
@@ -3385,6 +3846,7 @@ function nav(id,el){
   if(id==='photovault')setTimeout(()=>renderPhotoVault(),50);
   if(id==='qrmanual')setTimeout(()=>renderQRManual(),50);
   if(id==='aihours')setTimeout(()=>renderAIHours(),50);
+  if(id==='automations')setTimeout(()=>renderAutomations(),50);
   if(id==='affiliates')setTimeout(()=>renderAffiliates(),50);
   if(id==='concierge')setTimeout(()=>renderConcierge(),50);
   if(id==='upsell')setTimeout(()=>renderUpsell(),50);
@@ -3413,6 +3875,7 @@ function renderPricingOpt(){
   if(s.longStay!=null){const el=document.getElementById('opt-longstay');if(el)el.value=s.longStay;}
 }
 function renderAll(){
+  setTimeout(runScheduledAutomations, 2000);
   const _ma=document.querySelector('.main-area');if(_ma)_ma.scrollTo({top:0,behavior:'instant'});
   renderDashboard();renderProperties();renderBookings();renderMessages();renderTasks();renderPricing();renderPortal();renderAnalytics();renderReports();renderReviews();renderICals();renderStaff();updateBadges();renderSmartNotifications();}
 
@@ -3924,6 +4387,12 @@ function dismissGettingStarted() {
 
 // ════════════════════════════════════════════
 // ════════════════════════════════════════════
+function toggleDay(el){
+  const sel=el.getAttribute('data-selected')==='1';
+  if(sel){el.removeAttribute('data-selected');el.style.background='';el.style.color='var(--txt)';el.style.borderColor='var(--border)';}
+  else{el.setAttribute('data-selected','1');el.style.background='var(--terra)';el.style.color='#fff';el.style.borderColor='var(--terra)';}
+}
+
 function addStaff() {
   const name = document.getElementById('sf-name').value.trim();
   if(!name){toast('Enter staff name');return;}
@@ -7785,26 +8254,741 @@ function buildDemoData(){
   cleaners:[{id:'cl_1',name:'Maria C.',rate:25,phone:'+1 555 0101',email:'maria@clean.com',rating:5,jobs:0,created:now-1000000},{id:'cl_2',name:'Jake M.',rate:28,phone:'+1 555 0202',email:'jake@clean.com',rating:4,jobs:0,created:now-900000}],
   inventory:[{id:'inv_1',name:'Coffee pods',cat:'amenities',qty:4,threshold:6,unit:'pods',propId:'p1',propName:'Sunset Loft',created:now},{id:'inv_2',name:'Toilet paper',cat:'toiletries',qty:8,threshold:4,unit:'rolls',propId:'p2',propName:'Garden Suite',created:now},{id:'inv_3',name:'Shampoo',cat:'toiletries',qty:2,threshold:3,unit:'bottles',propId:'p3',propName:'Beach House',created:now}],
   optimizerSettings:{weekend:25,peak:40,low:15,lastMin:10,longStay:15},
-  reviewAuto:{enabled:true},sentReports:[]
+  reviewAuto:{enabled:false,template:'Hi {guest_name}! Thank you so much for staying at {property_name}! We loved having you. If you enjoyed your stay, it would mean the world to us if you could leave a review. Hope to host you again soon! 😊'},
+  aiHours:{enabled:false,quietStart:'22:00',quietEnd:'08:00',apiKey:''},
+  sentReports:[],
+  feedback:[]
+};
+}
+const DEMO_DATA = JSON.parse(JSON.stringify(buildDemoData()));
+
+// ═══════════════════════════════════════════
+//  AUTOMATIONS
+// ═══════════════════════════════════════════
+
+function renderAutomations() {
+  const auto = cData.automations||{};
+  // Render toggles
+  const toggles = {
+    'auto-messages-toggle': auto.autoMessages?.enabled,
+    'auto-cleaning-toggle': auto.autoCleaning?.enabled,
+    'auto-inventory-toggle': auto.autoInventory?.enabled,
+    'auto-latecheckout-toggle': auto.autoLateCheckout?.enabled,
+    'auto-anniversary-toggle': auto.autoAnniversary?.enabled,
+    'auto-weekly-toggle': auto.autoWeekly?.enabled,
+    'auto-damage-toggle': auto.autoDamage?.enabled,
+    'auto-occupancy-toggle': auto.autoOccupancy?.enabled,
   };
+  Object.entries(toggles).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if(el) el.className = 'toggle '+(val?'on':'off');
+  });
+  // Fill in saved values
+  const s = auto.autoMessages||{};
+  ['booking','prearrival','checkin','midstay','checkout','review'].forEach(function(seq) {
+    const tog = document.getElementById('msg-'+seq+'-toggle');
+    if(tog) tog.className='toggle toggle-sm '+(s[seq]?.enabled?'on':'off');
+    const txt = document.getElementById('msg-'+seq+'-text');
+    if(txt&&s[seq]?.text) txt.value=s[seq].text;
+  });
+  // Fill cleaner dropdown
+  const sel = document.getElementById('auto-clean-assignee');
+  if(sel) {
+    const staff = cData.staff||[];
+    const cleaners = cData.cleaners||[];
+    const all = [...staff.map(s=>s.name), ...cleaners.map(c=>c.name)];
+    const saved = auto.autoCleaning?.assignee||'';
+    sel.innerHTML='<option value="">— Select default cleaner —</option>'+
+      all.map(n=>`<option value="${n}" ${n===saved?'selected':''}>${n}</option>`).join('');
+  }
+  // Fill other saved values
+  const ac = auto.autoCleaning||{};
+  if(document.getElementById('auto-clean-title')) document.getElementById('auto-clean-title').value=ac.title||'';
+  if(document.getElementById('auto-clean-timing')) document.getElementById('auto-clean-timing').value=ac.timing||'on_checkout';
+  if(document.getElementById('auto-clean-priority')) document.getElementById('auto-clean-priority').value=ac.priority||'high';
+  const ai = auto.autoInventory||{};
+  if(document.getElementById('auto-inv-email')) document.getElementById('auto-inv-email').value=ai.email||cData.email||'';
+  if(document.getElementById('auto-inv-freq')) document.getElementById('auto-inv-freq').value=ai.freq||'daily';
+  const lc = auto.autoLateCheckout||{};
+  if(document.getElementById('auto-checkout-time')) document.getElementById('auto-checkout-time').value=lc.time||'11:00';
+  if(document.getElementById('auto-checkout-grace')) document.getElementById('auto-checkout-grace').value=lc.grace||30;
+  if(document.getElementById('auto-checkout-msg')) document.getElementById('auto-checkout-msg').value=lc.msg||'';
+  if(document.getElementById('auto-checkout-email')) document.getElementById('auto-checkout-email').value=lc.email||'';
+  const an = auto.autoAnniversary||{};
+  if(document.getElementById('auto-anniv-discount')) document.getElementById('auto-anniv-discount').value=an.discount||10;
+  if(document.getElementById('auto-anniv-msg')) document.getElementById('auto-anniv-msg').value=an.msg||'';
+  const loyaltyCount = (cData.loyaltyMembers||[]).length;
+  const countEl = document.getElementById('anniv-members-count');
+  if(countEl) countEl.textContent = loyaltyCount+' loyalty member'+(loyaltyCount!==1?'s':'')+' enrolled';
+  const aw = auto.autoWeekly||{};
+  if(document.getElementById('auto-weekly-email')) document.getElementById('auto-weekly-email').value=aw.email||cData.email||'';
+  if(document.getElementById('auto-weekly-day')) document.getElementById('auto-weekly-day').value=aw.day||'monday';
+  const ad = auto.autoDamage||{};
+  if(document.getElementById('auto-damage-days')) document.getElementById('auto-damage-days').value=ad.days||7;
+  if(document.getElementById('auto-damage-email')) document.getElementById('auto-damage-email').value=ad.email||'';
+  checkDamageClaimsNow(true);
+  const ao = auto.autoOccupancy||{};
+  if(document.getElementById('auto-occ-days')) document.getElementById('auto-occ-days').value=ao.days||14;
+  if(document.getElementById('auto-occ-email')) document.getElementById('auto-occ-email').value=ao.email||'';
+  checkOccupancyNow(true);
+  renderAutoLog();
 }
 
-// ════════════════════════════════════════════
-//  INIT
-// ════════════════════════════════════════════
-// Listen for auth state changes including password recovery
-sb.auth.onAuthStateChange((event, session) => {
-  if(event === 'PASSWORD_RECOVERY') {
-    showScreen('reset');
+function toggleAutomation(key, el) {
+  if(!cData.automations) cData.automations={};
+  if(!cData.automations[key]) cData.automations[key]={};
+  const on = !cData.automations[key].enabled;
+  cData.automations[key].enabled = on;
+  el.className = 'toggle '+(on?'on':'off');
+  saveUserData(cUid,cData);
+  logAuto(key, on?'Enabled':'Disabled');
+  toast((on?'✅ ':'⏸ ')+(on?'Automation on':'Automation off'));
+}
+
+function toggleMsgSeq(seq, el) {
+  if(!cData.automations) cData.automations={};
+  if(!cData.automations.autoMessages) cData.automations.autoMessages={};
+  if(!cData.automations.autoMessages[seq]) cData.automations.autoMessages[seq]={};
+  const on = !cData.automations.autoMessages[seq].enabled;
+  cData.automations.autoMessages[seq].enabled = on;
+  el.className = 'toggle toggle-sm '+(on?'on':'off');
+  saveUserData(cUid,cData);
+}
+
+function saveMessageSequences() {
+  if(!cData.automations) cData.automations={};
+  if(!cData.automations.autoMessages) cData.automations.autoMessages={};
+  const seqs = ['booking','prearrival','checkin','midstay','checkout','review'];
+  seqs.forEach(function(seq) {
+    const txt = document.getElementById('msg-'+seq+'-text');
+    if(txt) {
+      if(!cData.automations.autoMessages[seq]) cData.automations.autoMessages[seq]={enabled:false};
+      cData.automations.autoMessages[seq].text = txt.value;
+    }
+  });
+  saveUserData(cUid,cData);
+  logAuto('autoMessages','Message sequences saved');
+  toast('Message sequences saved ✓');
+}
+
+function previewMessageSequences() {
+  const prop = (cData.properties||[])[0];
+  const booking = (cData.bookings||[])[0];
+  if(!prop||!booking){ toast('Add a property and booking first'); return; }
+  const vars = {
+    guest_name: booking.guestName||'Guest',
+    property_name: prop.name||'Your Property',
+    checkin_date: booking.checkin||'TBD',
+    checkout_date: booking.checkout||'TBD',
+    checkin_time: '3:00 PM',
+    checkout_time: prop.checkoutTime||'11:00 AM',
+    door_code: prop.doorCode||'[door code]',
+    wifi_name: prop.wifi||'[WiFi name]',
+    wifi_password: prop.wifiPw||'[WiFi password]',
+    parking: prop.parking||'[parking info]',
+    key_location: 'on the kitchen counter',
+  };
+  const seqs = ['booking','prearrival','checkin','midstay','checkout','review'];
+  const labels = ['Booking Confirmation','Pre-Arrival (48hrs)','Check-in Day','Mid-Stay Check','Checkout Reminder','Review Request'];
+  let preview = '<div style="font-size:13px">';
+  seqs.forEach(function(seq, i) {
+    const txtEl = document.getElementById('msg-'+seq+'-text');
+    if(!txtEl||!txtEl.value) return;
+    let msg = txtEl.value;
+    Object.entries(vars).forEach(([k,v]) => { msg = msg.replace(new RegExp('{'+k+'}','g'), v); });
+    preview += '<div style="margin-bottom:16px"><div style="font-weight:600;color:var(--txt);margin-bottom:4px">'+labels[i]+'</div>'+
+      '<div style="background:var(--sand);border-radius:8px;padding:12px;font-size:12px;white-space:pre-wrap;color:var(--txt2)">'+msg+'</div></div>';
+  });
+  preview += '</div>';
+  const modal = document.getElementById('legal-modal');
+  if(modal) {
+    document.getElementById('legal-title').textContent = '💬 Message Preview';
+    document.getElementById('legal-content').innerHTML = preview;
+    openModal('legal-modal');
   }
-});
+}
 
+function runMessageSequencesNow() {
+  const bookings = cData.bookings||[];
+  if(!bookings.length){ toast('Add a booking first'); return; }
+  let ran = 0;
+  bookings.forEach(function(b) {
+    if(b.status==='confirmed') { ran++; }
+  });
+  logAuto('autoMessages', 'Test run — would send to '+ran+' active booking'+(ran!==1?'s':''));
+  toast('Test run complete — '+ran+' booking'+(ran!==1?'s':'')+' would receive messages');
+}
+
+function autoCreateCleaningTask(booking) {
+  const auto = cData.automations?.autoCleaning;
+  if(!auto?.enabled) return;
+  if(!cData.tasks) cData.tasks=[];
+  const prop = (cData.properties||[]).find(p=>p.id===booking.propId);
+  const title = (auto.title||'Turnover clean — {property_name}')
+    .replace('{property_name}', prop?.name||booking.propName||'Property');
+  const existing = cData.tasks.find(t=>t.bookingId===booking.id&&t.autoCreated);
+  if(existing) return;
+  const task = {
+    id:'t_auto_'+Date.now(),
+    title,
+    propId: booking.propId,
+    propName: booking.propName||prop?.name||'',
+    assignee: auto.assignee||'',
+    due: booking.checkout||'',
+    priority: auto.priority||'high',
+    done: false,
+    autoCreated: true,
+    bookingId: booking.id,
+    created: Date.now()
+  };
+  cData.tasks.push(task);
+  saveUserData(cUid,cData);
+  logAuto('autoCleaning','Task created: '+title+' for '+booking.checkout);
+  toast('🧹 Cleaning task auto-created for '+booking.checkout);
+}
+
+function saveAutoClean() {
+  if(!cData.automations) cData.automations={};
+  cData.automations.autoCleaning = {
+    enabled: cData.automations.autoCleaning?.enabled||false,
+    assignee: document.getElementById('auto-clean-assignee')?.value||'',
+    title: document.getElementById('auto-clean-title')?.value||'Turnover clean — {property_name}',
+    timing: document.getElementById('auto-clean-timing')?.value||'on_checkout',
+    priority: document.getElementById('auto-clean-priority')?.value||'high',
+  };
+  saveUserData(cUid,cData);
+  logAuto('autoCleaning','Settings saved');
+  toast('Auto-cleaning settings saved ✓');
+}
+
+function checkInventoryNow(silent) {
+  const items = cData.inventory||[];
+  const low = items.filter(i=>(i.qty||0)<=(i.threshold||0));
+  const statusEl = document.getElementById('auto-inv-status');
+  if(statusEl) {
+    if(!items.length) { statusEl.textContent='No inventory items tracked yet'; return; }
+    if(!low.length) { statusEl.style.color='var(--sage)'; statusEl.textContent='✅ All items fully stocked'; }
+    else { statusEl.style.color='var(--terra)'; statusEl.textContent='⚠️ '+low.length+' item'+(low.length!==1?'s':'')+' low: '+low.map(i=>i.name).join(', '); }
+  }
+  if(!silent&&low.length) {
+    logAuto('autoInventory', 'Low stock alert: '+low.map(i=>i.name+' ('+i.qty+' left)').join(', '));
+    toast('⚠️ '+low.length+' low stock item'+(low.length!==1?'s':''));
+  }
+}
+
+function saveAutoInventory() {
+  if(!cData.automations) cData.automations={};
+  cData.automations.autoInventory = {
+    enabled: cData.automations.autoInventory?.enabled||false,
+    email: document.getElementById('auto-inv-email')?.value||'',
+    freq: document.getElementById('auto-inv-freq')?.value||'daily',
+  };
+  saveUserData(cUid,cData);
+  checkInventoryNow(false);
+  toast('Inventory alert settings saved ✓');
+}
+
+function saveAutoLateCheckout() {
+  if(!cData.automations) cData.automations={};
+  cData.automations.autoLateCheckout = {
+    enabled: cData.automations.autoLateCheckout?.enabled||false,
+    time: document.getElementById('auto-checkout-time')?.value||'11:00',
+    grace: parseInt(document.getElementById('auto-checkout-grace')?.value||30),
+    msg: document.getElementById('auto-checkout-msg')?.value||'',
+    email: document.getElementById('auto-checkout-email')?.value||'',
+  };
+  saveUserData(cUid,cData);
+  logAuto('autoLateCheckout','Settings saved');
+  toast('Late checkout settings saved ✓');
+}
+
+function checkLateCheckoutsNow() {
+  const auto = cData.automations?.autoLateCheckout;
+  if(!auto?.enabled) return;
+  const today = new Date().toISOString().slice(0,10);
+  const now = new Date();
+  const [h,m] = (auto.time||'11:00').split(':').map(Number);
+  const checkoutTime = new Date(); checkoutTime.setHours(h,m+parseInt(auto.grace||30),0);
+  if(now < checkoutTime) return;
+  const lateBookings = (cData.bookings||[]).filter(b=>b.checkout===today&&b.status==='confirmed');
+  lateBookings.forEach(function(b) {
+    logAuto('autoLateCheckout','Late checkout alert: '+b.guestName+' at '+b.propName);
+    toast('🚪 Late checkout: '+b.guestName);
+  });
+}
+
+function saveAutoAnniversary() {
+  if(!cData.automations) cData.automations={};
+  cData.automations.autoAnniversary = {
+    enabled: cData.automations.autoAnniversary?.enabled||false,
+    discount: parseInt(document.getElementById('auto-anniv-discount')?.value||10),
+    timing: document.getElementById('auto-anniv-timing')?.value||'exact',
+    msg: document.getElementById('auto-anniv-msg')?.value||'',
+  };
+  saveUserData(cUid,cData);
+  logAuto('autoAnniversary','Settings saved');
+  toast('Anniversary perk settings saved ✓');
+}
+
+function runAnniversaryNow() {
+  const members = cData.loyaltyMembers||[];
+  if(!members.length){ toast('No loyalty members yet'); return; }
+  const today = new Date();
+  let sent = 0;
+  members.forEach(function(m) {
+    if(!m.created) return;
+    const joined = new Date(m.created);
+    if(joined.getMonth()===today.getMonth()&&joined.getDate()===today.getDate()) {
+      sent++;
+      logAuto('autoAnniversary','Anniversary perk sent to '+m.name);
+    }
+  });
+  if(!sent) toast('No anniversaries today — run manually works when dates match');
+  else toast('🎂 Anniversary perks sent to '+sent+' member'+(sent!==1?'s':''));
+}
+
+function saveAutoWeekly() {
+  if(!cData.automations) cData.automations={};
+  cData.automations.autoWeekly = {
+    enabled: cData.automations.autoWeekly?.enabled||false,
+    email: document.getElementById('auto-weekly-email')?.value||'',
+    day: document.getElementById('auto-weekly-day')?.value||'monday',
+    include: {
+      revenue: document.getElementById('wk-revenue')?.checked,
+      checkins: document.getElementById('wk-checkins')?.checked,
+      tasks: document.getElementById('wk-tasks')?.checked,
+      occupancy: document.getElementById('wk-occupancy')?.checked,
+      expenses: document.getElementById('wk-expenses')?.checked,
+    }
+  };
+  saveUserData(cUid,cData);
+  logAuto('autoWeekly','Settings saved');
+  toast('Weekly summary settings saved ✓');
+}
+
+function sendWeeklySummaryNow() {
+  const bookings = cData.bookings||[];
+  const tasks = (cData.tasks||[]).filter(t=>!t.done);
+  const expenses = cData.expenses||[];
+  const rev = bookings.filter(b=>b.status!=='cancelled').reduce((s,b)=>s+(b.price||0),0);
+  const exp = expenses.reduce((s,e)=>s+(e.amount||0),0);
+  const today = new Date().toISOString().slice(0,10);
+  const upcoming = bookings.filter(b=>b.checkin>=today&&b.status==='confirmed').slice(0,5);
+  const summary = [
+    '📊 Weekly HostHaven Summary',
+    '━━━━━━━━━━━━━━━━━━━━━━',
+    'Revenue (all time): $'+rev.toLocaleString(),
+    'Expenses (all time): $'+exp.toLocaleString(),
+    'Net Profit: $'+(rev-exp).toLocaleString(),
+    '',
+    '📅 Upcoming Check-ins ('+upcoming.length+'):',
+    ...upcoming.map(b=>'  • '+b.guestName+' → '+b.propName+' on '+b.checkin),
+    '',
+    '✅ Pending Tasks: '+tasks.length,
+    '🏠 Properties: '+(cData.properties||[]).length,
+  ].join('\n');
+  logAuto('autoWeekly', 'Summary generated: $'+rev.toLocaleString()+' revenue, '+upcoming.length+' upcoming check-ins');
+  toast('📊 Summary ready — check Activity Log');
+  const logEl = document.getElementById('auto-log');
+  if(logEl) renderAutoLog();
+}
+
+function checkDamageClaimsNow(silent) {
+  const claims = cData.damageClaims||[];
+  const days = parseInt(document.getElementById('auto-damage-days')?.value||7);
+  const cutoff = Date.now() - days*86400000;
+  const stale = claims.filter(c=>c.status==='open'&&c.created<cutoff);
+  const statusEl = document.getElementById('auto-damage-status');
+  if(statusEl) {
+    if(!stale.length) { statusEl.style.color='var(--sage)'; statusEl.textContent='✅ No stale claims'; }
+    else { statusEl.style.color='var(--terra)'; statusEl.textContent='⚠️ '+stale.length+' claim'+(stale.length!==1?'s':'')+' open for '+days+'+ days'; }
+  }
+  if(!silent&&stale.length) {
+    logAuto('autoDamage', stale.length+' stale damage claim'+(stale.length!==1?'s':'')+' need follow-up');
+    toast('🛡️ '+stale.length+' damage claim'+(stale.length!==1?'s':'')+' need follow-up');
+  }
+}
+
+function saveAutoDamage() {
+  if(!cData.automations) cData.automations={};
+  cData.automations.autoDamage = {
+    enabled: cData.automations.autoDamage?.enabled||false,
+    days: parseInt(document.getElementById('auto-damage-days')?.value||7),
+    email: document.getElementById('auto-damage-email')?.value||'',
+  };
+  saveUserData(cUid,cData);
+  checkDamageClaimsNow(false);
+  toast('Damage claim settings saved ✓');
+}
+
+function checkOccupancyNow(silent) {
+  const days = parseInt(document.getElementById('auto-occ-days')?.value||14);
+  const props = cData.properties||[];
+  const bookings = cData.bookings||[];
+  const today = new Date().toISOString().slice(0,10);
+  const future = new Date(); future.setDate(future.getDate()+days);
+  const futureStr = future.toISOString().slice(0,10);
+  const empty = props.filter(function(p) {
+    return !bookings.some(b=>b.propId===p.id&&b.status!=='cancelled'&&b.checkin>=today&&b.checkin<=futureStr);
+  });
+  const statusEl = document.getElementById('auto-occ-status');
+  if(statusEl) {
+    if(!props.length) { statusEl.textContent=''; return; }
+    if(!empty.length) { statusEl.style.color='var(--sage)'; statusEl.textContent='✅ All properties have bookings in the next '+days+' days'; }
+    else { statusEl.style.color='var(--terra)'; statusEl.textContent='⚠️ '+empty.length+' propert'+(empty.length!==1?'ies':'y')+' with no bookings in '+days+' days: '+empty.map(p=>p.name).join(', '); }
+  }
+  if(!silent&&empty.length) {
+    logAuto('autoOccupancy', empty.length+' propert'+(empty.length!==1?'ies':'y')+' with no bookings in '+days+' days');
+    toast('📉 '+empty.length+' propert'+(empty.length!==1?'ies':'y')+' need bookings');
+  }
+}
+
+function saveAutoOccupancy() {
+  if(!cData.automations) cData.automations={};
+  cData.automations.autoOccupancy = {
+    enabled: cData.automations.autoOccupancy?.enabled||false,
+    days: parseInt(document.getElementById('auto-occ-days')?.value||14),
+    email: document.getElementById('auto-occ-email')?.value||'',
+  };
+  saveUserData(cUid,cData);
+  checkOccupancyNow(false);
+  toast('Occupancy alert settings saved ✓');
+}
+
+function logAuto(type, message) {
+  if(!cData.autoLog) cData.autoLog=[];
+  cData.autoLog.unshift({
+    type, message,
+    time: new Date().toLocaleString(),
+    ts: Date.now()
+  });
+  if(cData.autoLog.length>50) cData.autoLog=cData.autoLog.slice(0,50);
+  saveUserData(cUid,cData);
+  renderAutoLog();
+}
+
+function renderAutoLog() {
+  const logEl = document.getElementById('auto-log');
+  if(!logEl) return;
+  const logs = cData.autoLog||[];
+  if(!logs.length) {
+    logEl.innerHTML='<div class="empty-state"><div class="es-i">⚡</div><h3>No automations run yet</h3><p>Enable automations above to see activity here</p></div>';
+    return;
+  }
+  const icons = {
+    autoMessages:'💬',autoCleaning:'🧹',autoInventory:'📦',
+    autoLateCheckout:'🚪',autoAnniversary:'🎂',autoWeekly:'📊',
+    autoDamage:'🛡️',autoOccupancy:'📉'
+  };
+  logEl.innerHTML = logs.slice(0,20).map(function(l) {
+    return '<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">'+
+      '<div style="font-size:18px;flex-shrink:0">'+(icons[l.type]||'⚡')+'</div>'+
+      '<div style="flex:1">'+
+        '<div style="font-size:13px;color:var(--txt)">'+l.message+'</div>'+
+        '<div style="font-size:11px;color:var(--txt3)">'+l.time+'</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function clearAutoLog() {
+  cData.autoLog=[];
+  saveUserData(cUid,cData);
+  renderAutoLog();
+  toast('Activity log cleared');
+}
+
+// Run automation checks on app load
+function runScheduledAutomations() {
+  const auto = cData.automations||{};
+  if(auto.autoCleaning?.enabled) {
+    (cData.bookings||[]).forEach(function(b) {
+      if(b.status==='confirmed') autoCreateCleaningTask(b);
+    });
+  }
+  if(auto.autoInventory?.enabled) checkInventoryNow(true);
+  if(auto.autoLateCheckout?.enabled) checkLateCheckoutsNow();
+  if(auto.autoOccupancy?.enabled) checkOccupancyNow(true);
+  if(auto.autoDamage?.enabled) checkDamageClaimsNow(true);
+  if(auto.autoAnniversary?.enabled) runAnniversaryNow();
+}
+
+// ═══════════════════════════════════════
+//  P&L / FINANCIAL FUNCTIONS
+// ═══════════════════════════════════════
+function showFinTab(tab, btn) {
+  ['expenses','pl','property','tax'].forEach(function(t) {
+    const view = document.getElementById('fin-view-'+t);
+    const tb = document.getElementById('fin-tab-'+t);
+    if(view) view.style.display = t===tab ? '' : 'none';
+    if(tb) { tb.className = t===tab ? 'btn btn-pri' : 'btn btn-ghost'; tb.style.fontSize='12px'; tb.style.padding='6px 14px'; }
+  });
+  if(tab==='pl') renderPL();
+  if(tab==='property') renderPropertyPL();
+  if(tab==='tax') renderTaxExport();
+}
+
+function renderPL() {
+  const year = parseInt(document.getElementById('pl-year')?.value||new Date().getFullYear());
+  const bookings = (cData.bookings||[]).filter(b=>b.status!=='cancelled'&&new Date(b.checkin||b.date||0).getFullYear()===year);
+  const expenses = (cData.expenses||[]).filter(e=>new Date(e.date||0).getFullYear()===year);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  
+  const grossRev = bookings.reduce((s,b)=>s+(b.price||0),0);
+  const totalExp = expenses.reduce((s,e)=>s+(e.amount||0),0);
+  const netProfit = grossRev - totalExp;
+  const margin = grossRev ? Math.round(netProfit/grossRev*100) : 0;
+  
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('pl-gross','$'+grossRev.toLocaleString());
+  set('pl-expenses','$'+totalExp.toLocaleString());
+  set('pl-net',(netProfit>=0?'+$':'-$')+Math.abs(netProfit).toLocaleString());
+  set('pl-margin',margin+'%');
+  
+  const netEl=document.getElementById('pl-net');
+  if(netEl) netEl.style.color=netProfit>=0?'var(--sage)':'var(--terra)';
+
+  // Monthly breakdown table
+  const monthly = months.map(function(m,i) {
+    const mBookings = bookings.filter(b=>new Date(b.checkin||b.date||0).getMonth()===i);
+    const mExpenses = expenses.filter(e=>new Date(e.date||0).getMonth()===i);
+    const rev = mBookings.reduce((s,b)=>s+(b.price||0),0);
+    const exp = mExpenses.reduce((s,e)=>s+(e.amount||0),0);
+    const net = rev - exp;
+    return {month:m, rev, exp, net};
+  });
+
+  const tableEl = document.getElementById('pl-monthly-table');
+  if(tableEl) {
+    const hasData = monthly.some(m=>m.rev>0||m.exp>0);
+    if(!hasData) {
+      tableEl.innerHTML='<div class="empty-state"><div class="es-i">📊</div><h3>No data for '+year+'</h3><p>Add bookings and expenses to see your P&L</p></div>';
+    } else {
+      tableEl.innerHTML='<table style="width:100%;border-collapse:collapse;font-size:12px">'+
+        '<thead><tr style="border-bottom:2px solid var(--border)">'+
+        '<th style="text-align:left;padding:8px 6px;color:var(--txt2)">Month</th>'+
+        '<th style="text-align:right;padding:8px 6px;color:var(--sage)">Revenue</th>'+
+        '<th style="text-align:right;padding:8px 6px;color:var(--terra)">Expenses</th>'+
+        '<th style="text-align:right;padding:8px 6px;color:var(--txt)">Net Profit</th>'+
+        '<th style="text-align:right;padding:8px 6px;color:var(--txt2)">Margin</th>'+
+        '</tr></thead><tbody>'+
+        monthly.map(function(m) {
+          const margin2 = m.rev ? Math.round(m.net/m.rev*100) : 0;
+          const color = m.net>=0?'var(--sage)':'var(--terra)';
+          return '<tr style="border-bottom:1px solid var(--border)">'+
+            '<td style="padding:8px 6px;font-weight:500;color:var(--txt)">'+m.month+'</td>'+
+            '<td style="text-align:right;padding:8px 6px;color:var(--sage)">'+
+              (m.rev>0?'$'+m.rev.toLocaleString():'—')+'</td>'+
+            '<td style="text-align:right;padding:8px 6px;color:var(--terra)">'+
+              (m.exp>0?'$'+m.exp.toLocaleString():'—')+'</td>'+
+            '<td style="text-align:right;padding:8px 6px;font-weight:700;color:'+color+'">'+
+              (m.rev>0||m.exp>0?(m.net>=0?'+$':'-$')+Math.abs(m.net).toLocaleString():'—')+'</td>'+
+            '<td style="text-align:right;padding:8px 6px;color:var(--txt2)">'+
+              (m.rev>0?margin2+'%':'—')+'</td>'+
+          '</tr>';
+        }).join('')+
+        '<tr style="border-top:2px solid var(--border);font-weight:700">'+
+          '<td style="padding:8px 6px;color:var(--txt)">TOTAL</td>'+
+          '<td style="text-align:right;padding:8px 6px;color:var(--sage)">$'+grossRev.toLocaleString()+'</td>'+
+          '<td style="text-align:right;padding:8px 6px;color:var(--terra)">$'+totalExp.toLocaleString()+'</td>'+
+          '<td style="text-align:right;padding:8px 6px;color:'+(netProfit>=0?'var(--sage)':'var(--terra)')+'">'+
+            (netProfit>=0?'+$':'-$')+Math.abs(netProfit).toLocaleString()+'</td>'+
+          '<td style="text-align:right;padding:8px 6px;color:var(--txt2)">'+margin+'%</td>'+
+        '</tr>'+
+        '</tbody></table>';
+    }
+  }
+
+  // Category breakdown
+  const cats = {};
+  const catLabels = {cleaning:'🧹 Cleaning',supplies:'🛒 Supplies',repair:'🔧 Repair',
+    utilities:'💡 Utilities',mortgage:'🏠 Mortgage',insurance:'🛡 Insurance',
+    taxes:'💰 Taxes',software:'💻 Software',marketing:'📣 Marketing',other:'📦 Other'};
+  expenses.forEach(function(e) {
+    const cat = e.category||e.cat||'other';
+    cats[cat] = (cats[cat]||0) + (e.amount||0);
+  });
+  const catEl = document.getElementById('pl-category-breakdown');
+  if(catEl) {
+    if(!Object.keys(cats).length) {
+      catEl.innerHTML='<div class="empty-state"><div class="es-i">🗂️</div><h3>No expenses yet</h3></div>';
+    } else {
+      const sorted = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+      const maxVal = sorted[0][1];
+      catEl.innerHTML = sorted.map(function([cat,amt]) {
+        const pct = Math.round(amt/totalExp*100);
+        const barW = Math.round(amt/maxVal*100);
+        return '<div style="margin-bottom:12px">'+
+          '<div style="display:flex;justify-content:space-between;margin-bottom:4px">'+
+            '<span style="font-size:12px;color:var(--txt)">'+(catLabels[cat]||cat)+'</span>'+
+            '<span style="font-size:12px;font-weight:600;color:var(--terra)">$'+amt.toLocaleString()+' ('+pct+'%)</span>'+
+          '</div>'+
+          '<div style="background:var(--sand);border-radius:4px;height:8px">'+
+            '<div style="background:var(--terra);height:8px;border-radius:4px;width:'+barW+'%"></div>'+
+          '</div>'+
+        '</div>';
+      }).join('');
+    }
+  }
+
+  // Bar chart
+  const chartEl = document.getElementById('pl-bar-chart');
+  if(chartEl && monthly.some(m=>m.rev>0||m.exp>0)) {
+    const maxVal2 = Math.max(...monthly.map(m=>Math.max(m.rev,m.exp)),1);
+    chartEl.innerHTML = monthly.map(function(m) {
+      const revH = Math.round(m.rev/maxVal2*140);
+      const expH = Math.round(m.exp/maxVal2*140);
+      const netH = Math.round(Math.abs(m.net)/maxVal2*140);
+      return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">'+
+        '<div style="display:flex;gap:1px;align-items:flex-end;height:140px">'+
+          '<div style="width:6px;background:var(--sage);border-radius:2px 2px 0 0;height:'+revH+'px"></div>'+
+          '<div style="width:6px;background:var(--terra);border-radius:2px 2px 0 0;height:'+expH+'px"></div>'+
+          '<div style="width:6px;background:var(--gold);border-radius:2px 2px 0 0;height:'+netH+'px"></div>'+
+        '</div>'+
+        '<div style="font-size:9px;color:var(--txt3)">'+m.month.slice(0,1)+'</div>'+
+      '</div>';
+    }).join('');
+  }
+}
+
+function renderPropertyPL() {
+  const props = cData.properties||[];
+  const bookings = cData.bookings||[];
+  const expenses = cData.expenses||[];
+  const grid = document.getElementById('property-pl-grid');
+  if(!grid) return;
+  if(!props.length) {
+    grid.innerHTML='<div class="empty-state"><div class="es-i">🏠</div><h3>No properties yet</h3><p>Add properties and bookings to see per-property P&L</p></div>';
+    return;
+  }
+  grid.innerHTML = props.map(function(p) {
+    const propBookings = bookings.filter(b=>b.propId===p.id&&b.status!=='cancelled');
+    const propExpenses = expenses.filter(e=>e.propId===p.id);
+    const rev = propBookings.reduce((s,b)=>s+(b.price||0),0);
+    const exp = propExpenses.reduce((s,e)=>s+(e.amount||0),0);
+    const net = rev - exp;
+    const margin = rev ? Math.round(net/rev*100) : 0;
+    const color = net>=0?'var(--sage)':'var(--terra)';
+    return '<div class="card">'+
+      '<div class="card-body">'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">'+
+          '<div style="display:flex;align-items:center;gap:12px">'+
+            '<div style="font-size:28px">'+p.emoji+'</div>'+
+            '<div><div style="font-weight:600;color:var(--txt);font-size:15px">'+p.name+'</div>'+
+            '<div style="font-size:12px;color:var(--txt3)">'+p.location+'</div></div>'+
+          '</div>'+
+          '<div style="display:flex;gap:20px;flex-wrap:wrap">'+
+            '<div style="text-align:center"><div style="font-size:11px;color:var(--txt3)">Revenue</div><div style="font-size:16px;font-weight:700;color:var(--sage)">$'+rev.toLocaleString()+'</div></div>'+
+            '<div style="text-align:center"><div style="font-size:11px;color:var(--txt3)">Expenses</div><div style="font-size:16px;font-weight:700;color:var(--terra)">$'+exp.toLocaleString()+'</div></div>'+
+            '<div style="text-align:center"><div style="font-size:11px;color:var(--txt3)">Net Profit</div><div style="font-size:16px;font-weight:700;color:'+color+'">'+(net>=0?'+$':'-$')+Math.abs(net).toLocaleString()+'</div></div>'+
+            '<div style="text-align:center"><div style="font-size:11px;color:var(--txt3)">Margin</div><div style="font-size:16px;font-weight:700;color:var(--txt2)">'+margin+'%</div></div>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function renderTaxExport() {
+  const year = new Date().getFullYear();
+  const bookings = (cData.bookings||[]).filter(b=>b.status!=='cancelled');
+  const expenses = cData.expenses||[];
+  const income = bookings.reduce((s,b)=>s+(b.price||0),0);
+  const totalExp = expenses.reduce((s,e)=>s+(e.amount||0),0);
+  const net = income - totalExp;
+  
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('tax-income','$'+income.toLocaleString());
+  set('tax-expenses','$'+totalExp.toLocaleString());
+  set('tax-net','$'+Math.max(0,net).toLocaleString());
+  set('tax-year',year);
+
+  const catLabels = {cleaning:'Cleaning & Maintenance',supplies:'Supplies & Amenities',
+    repair:'Repairs & Maintenance',utilities:'Utilities',mortgage:'Mortgage / Rent',
+    insurance:'Insurance',taxes:'Taxes & Licenses',software:'Software & Tools',
+    marketing:'Advertising & Marketing',other:'Other Expenses'};
+  const cats = {};
+  expenses.forEach(function(e){ const c=e.category||e.cat||'other'; cats[c]=(cats[c]||0)+(e.amount||0); });
+  
+  const schedEl = document.getElementById('tax-schedule-e');
+  if(schedEl) {
+    schedEl.innerHTML='<table style="width:100%;border-collapse:collapse;font-size:13px">'+
+      '<thead><tr style="border-bottom:2px solid var(--border)">'+
+        '<th style="text-align:left;padding:10px 8px;color:var(--txt2)">Expense Category (Schedule E)</th>'+
+        '<th style="text-align:right;padding:10px 8px;color:var(--txt2)">Amount</th>'+
+        '<th style="text-align:right;padding:10px 8px;color:var(--txt2)">% of Total</th>'+
+      '</tr></thead><tbody>'+
+      Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(function([cat,amt]) {
+        return '<tr style="border-bottom:1px solid var(--border)">'+
+          '<td style="padding:10px 8px;color:var(--txt)">'+(catLabels[cat]||cat)+'</td>'+
+          '<td style="text-align:right;padding:10px 8px;font-weight:600;color:var(--terra)">$'+amt.toLocaleString()+'</td>'+
+          '<td style="text-align:right;padding:10px 8px;color:var(--txt2)">'+(totalExp?Math.round(amt/totalExp*100):0)+'%</td>'+
+        '</tr>';
+      }).join('')+
+      '<tr style="border-top:2px solid var(--border);font-weight:700">'+
+        '<td style="padding:10px 8px;color:var(--txt)">TOTAL DEDUCTIBLE EXPENSES</td>'+
+        '<td style="text-align:right;padding:10px 8px;color:var(--terra)">$'+totalExp.toLocaleString()+'</td>'+
+        '<td style="text-align:right;padding:10px 8px;color:var(--txt2)">100%</td>'+
+      '</tr>'+
+    '</tbody></table>';
+  }
+}
+
+function exportPLCSV() {
+  const year = parseInt(document.getElementById('pl-year')?.value||new Date().getFullYear());
+  const bookings = (cData.bookings||[]).filter(b=>b.status!=='cancelled'&&new Date(b.checkin||b.date||0).getFullYear()===year);
+  const expenses = (cData.expenses||[]).filter(e=>new Date(e.date||0).getFullYear()===year);
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  let csv = 'Month,Revenue,Expenses,Net Profit,Margin\n';
+  let totalRev=0,totalExp=0;
+  months.forEach(function(m,i) {
+    const rev = bookings.filter(b=>new Date(b.checkin||b.date||0).getMonth()===i).reduce((s,b)=>s+(b.price||0),0);
+    const exp = expenses.filter(e=>new Date(e.date||0).getMonth()===i).reduce((s,e)=>s+(e.amount||0),0);
+    const net = rev-exp;
+    const margin = rev?Math.round(net/rev*100):0;
+    totalRev+=rev; totalExp+=exp;
+    csv+=m+','+rev+','+exp+','+net+','+margin+'%\n';
+  });
+  csv+='TOTAL,'+totalRev+','+totalExp+','+(totalRev-totalExp)+','+(totalRev?Math.round((totalRev-totalExp)/totalRev*100):0)+'%\n';
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='HostHaven-PL-'+year+'.csv';
+  a.click();
+  toast('P&L exported ✓');
+}
+
+function exportTaxCSV() {
+  const year = new Date().getFullYear();
+  const expenses = cData.expenses||[];
+  let csv = 'Date,Description,Category,Amount,Property\n';
+  expenses.forEach(function(e) {
+    csv+='"'+(e.date||'')+'"'+',"'+(e.desc||e.description||'')+'"'+',"'+(e.category||e.cat||'other')+'"'+','+(e.amount||0)+',"'+(e.propName||'All Properties')+'"\n';
+  });
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='HostHaven-Tax-Export-'+year+'.csv';
+  a.click();
+  toast('Tax export downloaded ✓');
+}
+
+function printTaxReport() {
+  window.print();
+}
+
+// ═════════════════════════════════════════
+//  BOOT
+// ═════════════════════════════════════════
 window.addEventListener('load', () => {
-
-
-  bootApp();
-  // Register PWA service worker
-  // No service worker
+  // Clear service workers
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.getRegistrations().then(function(regs){
+      regs.forEach(function(r){r.unregister();});
+    });
+  }
+  if('caches' in window){caches.keys().then(n=>n.forEach(k=>caches.delete(k)));}
+  initAuth();
 });
 </script>
 </body>
