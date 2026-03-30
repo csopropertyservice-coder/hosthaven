@@ -665,7 +665,7 @@ select{color:var(--txt)!important;}
     <div class="auth-title">Welcome back</div>
     <div class="auth-sub">Sign in to manage your properties</div>
     <div class="auth-err" id="login-err"></div>
-    <div class="fi"><label>Email</label><input id="login-email" type="email" placeholder="you@example.com" value="demo@hosthaven.co"></div>
+    <div class="fi"><label>Email</label><input id="login-email" type="email" placeholder="you@example.com" value=""></div>
     <div class="fi"><label>Password</label><input id="login-pw" type="password" placeholder="••••••••" value="demo1234"></div>
     <button class="btn btn-pri btn-w" onclick="doLogin()">Sign In →</button>
     <div class="auth-switch">No account? <a onclick="showScreen('signup')">Create one free</a> · <a onclick="showScreen('landing')">Back to home</a></div>
@@ -1280,13 +1280,46 @@ select{color:var(--txt)!important;}
     </div>
     <div style="display:flex;gap:8px">
       <button class="btn btn-ghost" onclick="openModal('add-staff-modal')">+ Add Staff</button>
+      <button class="btn btn-ghost" onclick="showStaffTab('availability')" id="avail-tab-btn">📅 Availability</button>
       <button class="btn btn-pri" onclick="openModal('add-task-modal')">+ Add Task</button>
     </div>
   </div>
+  <!-- Staff tabs -->
+  <div id="staff-roster-view">
 
   <!-- Staff cards -->
   <div class="g3" id="staff-grid" style="margin-bottom:20px">
     <div class="empty-state" style="grid-column:1/-1"><div class="es-i">👥</div><h3>No staff added yet</h3><p>Add your cleaners and maintenance staff to assign tasks</p><button class="btn btn-pri" onclick="openModal('add-staff-modal')" style="margin-top:10px">Add First Staff Member</button></div>
+  </div>
+
+  </div><!-- end staff-roster-view -->
+
+  <!-- Availability Calendar View -->
+  <div id="staff-availability-view" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-family:Fraunces,serif;font-size:18px;font-weight:500;color:var(--txt)">📅 Staff Availability</div>
+      <button class="btn btn-ghost" onclick="showStaffTab('roster')">← Back to Roster</button>
+    </div>
+    <div id="availability-grid" style="display:flex;flex-direction:column;gap:12px">
+      <div class="empty-state"><div class="es-i">📅</div><h3>No staff added yet</h3><p>Add staff members with their availability to see the schedule here</p></div>
+    </div>
+    <!-- Weekly Schedule Grid -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-hd"><div class="card-title">📆 Weekly Coverage</div></div>
+      <div class="card-body" id="weekly-coverage-grid">
+        <div style="display:grid;grid-template-columns:120px repeat(7,1fr);gap:4px;font-size:12px">
+          <div></div>
+          <div style="text-align:center;font-weight:600;color:var(--txt2);padding:6px">Mon</div>
+          <div style="text-align:center;font-weight:600;color:var(--txt2);padding:6px">Tue</div>
+          <div style="text-align:center;font-weight:600;color:var(--txt2);padding:6px">Wed</div>
+          <div style="text-align:center;font-weight:600;color:var(--txt2);padding:6px">Thu</div>
+          <div style="text-align:center;font-weight:600;color:var(--txt2);padding:6px">Fri</div>
+          <div style="text-align:center;font-weight:600;color:var(--txt2);padding:6px">Sat</div>
+          <div style="text-align:center;font-weight:600;color:var(--txt2);padding:6px">Sun</div>
+        </div>
+        <div id="coverage-rows"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Staff task view -->
@@ -3897,12 +3930,21 @@ function addStaff() {
   if(!cData.staff) cData.staff=[];
   const roleEmojis={cleaner:'🧹',handyman:'🔧',manager:'👔',other:'👤'};
   const role=document.getElementById('sf-role').value;
+  const availDays=[...document.querySelectorAll('#sf-avail-days [data-day]')]
+    .filter(d=>d.style.background.includes('var(--terra)')||d.classList.contains('day-selected'))
+    .map(d=>d.dataset.day);
   const member={
     id:'s_'+Date.now(), name,role,
     phone:document.getElementById('sf-phone').value,
     email:document.getElementById('sf-email').value,
     notes:document.getElementById('sf-notes').value,
     emoji:roleEmojis[role]||'👤',
+    availability:{
+      days:availDays,
+      from:document.getElementById('sf-avail-from').value||'08:00',
+      to:document.getElementById('sf-avail-to').value||'17:00',
+      blackout:(document.getElementById('sf-blackout').value||'').split(',').map(d=>d.trim()).filter(Boolean)
+    },
     created:Date.now()
   };
   cData.staff.push(member);
