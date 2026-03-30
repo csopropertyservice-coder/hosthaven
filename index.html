@@ -2,8 +2,11 @@
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HostHaven — Smarter Airbnb Management</title>
+<title>HostHaven — Smarter Airbnb Management v2</title>
 <meta name="description" content="HostHaven is the all-in-one dashboard for Airbnb hosts and co-hosts. Manage bookings, guests, payouts, cleaning staff, and revenue — with AI built in. Start free.">
 <meta property="og:title" content="HostHaven — Smarter Airbnb Management">
 <meta property="og:description" content="The all-in-one dashboard for Airbnb hosts and co-hosts. Bookings, AI messaging, payout tracking, owner reports, and more.">
@@ -14,10 +17,10 @@
 <meta name="twitter:title" content="HostHaven — Smarter Airbnb Management">
 <meta name="twitter:description" content="The all-in-one dashboard for Airbnb hosts and co-hosts. Start free.">
 <link rel="canonical" href="https://csopropertyservice-coder.github.io/hosthaven/">
-<link rel="manifest" href="manifest.json">
+<!-- manifest removed -->
 <meta name="theme-color" content="#C4693A">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
+
+
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HostHaven">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23C4693A'/><text y='.9em' font-size='70' x='12'>🏡</text></svg>">
@@ -55,8 +58,8 @@
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; transition:background .3s,color .3s; }
+html { scroll-behavior:auto; overflow:hidden; height:100vh; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt); height:100vh; overflow:hidden; transition:background .3s,color .3s; }
 
 /* ═══════════════════════════════════════
    LANDING PAGE
@@ -104,13 +107,26 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 .land-stat-num { font-family:Fraunces,serif;font-size:32px;color:#fff;letter-spacing:-1px; }
 .land-stat-label { font-size:12px;color:rgba(255,255,255,.45);font-weight:500;letter-spacing:.5px;text-transform:uppercase;margin-top:2px; }
 .land-features { padding:80px 48px;background:var(--bg); }
-.land-feat-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto; }
+.land-feat-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1200px;margin:0 auto; }
 .land-feat-card { background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .2s; }
 .land-feat-card:hover { box-shadow:var(--shm);transform:translateY(-3px); }
 .land-feat-icon { font-size:32px;margin-bottom:14px; }
 .land-feat-title { font-family:Fraunces,serif;font-size:18px;font-weight:500;color:var(--txt);margin-bottom:8px; }
 .land-feat-desc { font-size:14px;color:var(--txt2);line-height:1.6; }
 .land-pricing { padding:80px 48px;background:var(--bg2); }
+.land-products { padding:80px 48px;background:var(--bg); }
+.land-prod-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:28px;max-width:820px;margin:0 auto; }
+.land-prod-card { background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative;overflow:hidden; }
+.land-prod-card::before { content:'';position:absolute;top:0;left:0;right:0;height:4px; }
+.land-prod-card.qsp::before { background:linear-gradient(90deg,var(--terra),var(--gold)); }
+.land-prod-card.chlk::before { background:linear-gradient(90deg,var(--gold),var(--sage)); }
+.land-prod-price { font-family:Fraunces,serif;font-size:42px;font-weight:500;color:var(--txt);line-height:1; }
+.land-prod-price span { font-size:16px;color:var(--txt3);font-family:'DM Sans',sans-serif; }
+.land-prod-tag { display:inline-block;background:var(--sand);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--txt2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px; }
+.land-prod-feats { list-style:none;margin:18px 0 24px;display:flex;flex-direction:column;gap:8px; }
+.land-prod-feats li { font-size:13px;color:var(--txt2);display:flex;align-items:flex-start;gap:8px;line-height:1.5; }
+.land-prod-feats li::before { content:'✓';color:var(--sage);font-weight:700;flex-shrink:0;margin-top:1px; }
+@media(max-width:700px){.land-prod-grid{grid-template-columns:1fr!important;}.land-pricing{padding:48px 20px!important;}}
 .land-section-title { font-family:Fraunces,serif;font-size:40px;font-weight:500;color:var(--txt);letter-spacing:-1px;text-align:center;margin-bottom:8px; }
 .land-section-sub { font-size:16px;color:var(--txt2);text-align:center;margin-bottom:48px; }
 .land-plans { display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:0 auto; }
@@ -185,8 +201,8 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
    APP SHELL
 ═══════════════════════════════════════ */
 .app { display:none; }
-.app.visible { display:flex;flex-direction:column;min-height:100vh;background:var(--bg); }
-.shell { display:flex;flex:1;background:var(--bg); }
+.app.visible { display:flex;flex-direction:column;height:100vh;background:var(--bg); }
+.shell { height:calc(100vh - 0px);overflow:hidden;display:flex;flex:1;background:var(--bg); }
 
 /* SIDEBAR */
 .sidebar { width:230px;min-width:230px;background:var(--sb-bg);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;transition:background .3s; }
@@ -229,11 +245,12 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 @media(max-width:768px){ .hamburger { display:flex; } }
 
 /* CONTENT */
-.main-area { flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden;background:var(--bg); }
-.content { padding:20px 24px;flex:1;background:var(--bg); }
+.main-area { flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden;overflow-y:auto;background:var(--bg);scroll-behavior:auto; }
+.content { padding:0;background:var(--bg);position:relative; }
 @media(max-width:600px){ .content { padding:16px; } .g4{grid-template-columns:repeat(2,1fr)!important;} #dash-main-grid{grid-template-columns:1fr!important;} #dash-quick-actions button{font-size:11px!important;padding:6px 10px!important;} .kpi-val{font-size:22px!important;} }
-.page { display:none;animation:fadeUp .3s ease both; }
-.page.active { display:block; min-height:200px; }
+.page { display:none; }
+.page.active { display:block; padding:20px 24px; }
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes fadeUp { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
 @keyframes spin { to{transform:rotate(360deg)} }
 
@@ -363,7 +380,7 @@ select{color:var(--txt)!important;}
   .gp-layout{grid-template-columns:1fr!important;}
   .gp-frame{height:300px!important;}
   #dash-main-grid{grid-template-columns:1fr!important;}
-  .land-feat-grid{grid-template-columns:1fr!important;}
+  .land-feat-grid{grid-template-columns:1fr 1fr!important;}
   .land-plans{grid-template-columns:1fr!important;}
   .land-h1{font-size:36px!important;letter-spacing:-1px!important;}
   .land-nav-links{display:none!important;}
@@ -438,6 +455,7 @@ select{color:var(--txt)!important;}
     </div>
     <div class="land-nav-links">
       <a onclick="scrollToSection('land-features')">Features</a>
+      <a onclick="scrollToSection('land-products')">Products</a>
       <a onclick="scrollToSection('land-pricing')">Pricing</a>
       <a onclick="showScreen('login')">Sign In</a>
     </div>
@@ -451,7 +469,7 @@ select{color:var(--txt)!important;}
     <div class="land-hero-content">
       <div class="land-eyebrow">🏡 For Airbnb Hosts &amp; Co-Hosts</div>
       <h1 class="land-h1">Manage smarter.<br><em>Earn more.</em></h1>
-      <p class="land-sub">HostHaven gives individual hosts and professional co-hosts one dashboard for properties, bookings, guests, payouts, and revenue — with AI built in.</p>
+      <p class="land-sub">One dashboard for your properties, bookings, guests, cleaners, payouts, and revenue. Built for Airbnb hosts and co-hosts. Free to start — no credit card needed.</p>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:8px">
         <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 14px;font-size:12px;color:rgba(255,255,255,.8)">✓ Solo hosts</div>
         <div style="background:rgba(200,168,75,.2);border:1px solid rgba(200,168,75,.4);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--gold-l)">🏆 Co-hosts &amp; property managers</div>
@@ -462,9 +480,9 @@ select{color:var(--txt)!important;}
         <button class="btn btn-ghost" style="padding:14px 32px;font-size:15px;color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2)" onclick="loginDemo()">🚀 See Demo</button>
       </div>
       <div class="land-stats">
-        <div class="land-stat"><div class="land-stat-num">10k+</div><div class="land-stat-label">Hosts</div></div>
-        <div class="land-stat"><div class="land-stat-num">$2M+</div><div class="land-stat-label">Revenue Tracked</div></div>
-        <div class="land-stat"><div class="land-stat-num">4.9★</div><div class="land-stat-label">Average Rating</div></div>
+        <div class="land-stat"><div class="land-stat-num">Free</div><div class="land-stat-label">To start — always</div></div>
+        <div class="land-stat"><div class="land-stat-num">30+</div><div class="land-stat-label">Features built in</div></div>
+        <div class="land-stat"><div class="land-stat-num">100%</div><div class="land-stat-label">Your data, your control</div></div>
       </div>
     </div>
   </section>
@@ -472,15 +490,88 @@ select{color:var(--txt)!important;}
   <section class="land-features" id="land-features">
     <div style="text-align:center;margin-bottom:48px">
       <div class="land-section-title">Everything you need to host better</div>
-      <p class="land-section-sub">From day-one hosts to professional property managers</p>
+      <p class="land-section-sub">From day-one hosts to professional co-host businesses</p>
     </div>
     <div class="land-feat-grid">
-      <div class="land-feat-card"><div class="land-feat-icon">📊</div><div class="land-feat-title">Live Dashboard</div><div class="land-feat-desc">See your revenue, occupancy, bookings, and messages in real time — all in one place.</div></div>
-      <div class="land-feat-card"><div class="land-feat-icon">🤖</div><div class="land-feat-title">AI Guest Messaging</div><div class="land-feat-desc">Draft replies in seconds with Claude AI. Check-in info, local tips, house rules — one click.</div></div>
-      <div class="land-feat-card"><div class="land-feat-icon">🔑</div><div class="land-feat-title">Guest Portal</div><div class="land-feat-desc">Every guest gets a personalized check-in page with door codes, WiFi, and local tips.</div></div>
-      <div class="land-feat-card"><div class="land-feat-icon">🌐</div><div class="land-feat-title">Direct Booking Website</div><div class="land-feat-desc">Build and publish your own booking website in minutes. No Airbnb fees on direct bookings.</div></div>
-      <div class="land-feat-card"><div class="land-feat-icon">📅</div><div class="land-feat-title">iCal Sync</div><div class="land-feat-desc">Import bookings directly from Airbnb, VRBO, and Booking.com via iCal links.</div></div>
-      <div class="land-feat-card"><div class="land-feat-icon">📈</div><div class="land-feat-title">Revenue Reports</div><div class="land-feat-desc">Exportable reports for tax season, income tracking, and property performance analysis.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">📊</div><div class="land-feat-title">Live Dashboard</div><div class="land-feat-desc">Revenue, occupancy, bookings, upcoming check-ins, and task alerts — all visible the moment you log in.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">🤖</div><div class="land-feat-title">AI Office Hours</div><div class="land-feat-desc">Set your quiet hours and let AI handle guest messages overnight. Guests get instant replies. You sleep.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">📱</div><div class="land-feat-title">QR House Manual</div><div class="land-feat-desc">Generate a scannable QR code for each property. WiFi, door code, house rules, and local tips — one scan.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">🔑</div><div class="land-feat-title">Guest Portal</div><div class="land-feat-desc">Every guest gets a personalized digital check-in page with their door code, WiFi, parking, and a local guide.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">🧹</div><div class="land-feat-title">Cleaner Marketplace</div><div class="land-feat-desc">Add your cleaners, post turnover jobs, track completions, and log photo proof — all in one place.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">💳</div><div class="land-feat-title">Payout Ledger</div><div class="land-feat-desc">Track every dollar paid to contractors. See your platform fee, their take, and your net on every job automatically.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">📋</div><div class="land-feat-title">Owner Reports</div><div class="land-feat-desc">Generate branded monthly PDF reports for property owners — revenue, expenses, photos, and net payout in one click.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">📸</div><div class="land-feat-title">Photo Vault</div><div class="land-feat-desc">Upload after-clean photos as proof of service. Owners see their property was cared for. Disputes resolved instantly.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">💰</div><div class="land-feat-title">Pricing Optimizer</div><div class="land-feat-desc">Set weekend, peak, last-minute, and long-stay rate rules. Apply them across all properties at once.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">📅</div><div class="land-feat-title">iCal Sync</div><div class="land-feat-desc">Import bookings directly from Airbnb, VRBO, and Booking.com. Calendar stays in sync automatically.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">📈</div><div class="land-feat-title">Revenue Reports</div><div class="land-feat-desc">Exportable revenue reports, expense tracking, and property scorecards. Ready for tax season in one click.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">🌐</div><div class="land-feat-title">Direct Booking Website</div><div class="land-feat-desc">Build and publish your own booking website in minutes. Save guests the Airbnb service fee. Keep more revenue.</div></div>
+    </div>
+  </section>
+
+  <section class="land-products" id="land-products">
+    <div style="text-align:center;margin-bottom:16px">
+      <div class="land-eyebrow" style="display:inline-flex">📦 One-Time Resources</div>
+    </div>
+    <div class="land-section-title">Everything you need to launch</div>
+    <p class="land-section-sub" style="text-align:center;max-width:520px;margin:0 auto 48px">Not ready for a subscription? Start here. One-time purchase, no monthly fees, download and use immediately.</p>
+
+    <div class="land-prod-grid">
+
+      <!-- Quick Start Pack -->
+      <div class="land-prod-card qsp">
+        <div class="land-prod-tag">⚡ Most Popular — 11 Files</div>
+        <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);margin-bottom:6px">HostHaven Quick Start Pack</div>
+        <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">Everything a new Airbnb host needs to look professional from day one — 11 individual files, each focused on one skill</div>
+        <div class="land-prod-price">$47 <span>one-time</span></div>
+        <ul class="land-prod-feats">
+          <li>20 guest message templates + 5-part welcome automation sequence</li>
+          <li>47-item interactive property setup checklist with progress tracking</li>
+          <li>Airbnb pricing strategy guide + live rate calculator</li>
+          <li>50 high-converting listing title formulas + live title builder</li>
+          <li>AI image generation prompts — create pro photos for free</li>
+          <li>30-day social media launch blast (Facebook + Instagram captions)</li>
+          <li>City, Beach, and Rural local guidebook intro templates</li>
+          <li>7-day cold launch checklist + essential shopping list</li>
+          <li>Amenity power word descriptions + quick-copy house rules library</li>
+          <li>15-variation review response bank (5-star, 4-star, crisis)</li>
+          <li>Professional host bio templates + emergency contact card</li>
+        </ul>
+        <button class="btn btn-pri btn-w" style="font-size:14px;padding:14px" onclick="buyProduct('quickstart')">Get the Pack — $47 →</button>
+        <div style="font-size:11px;color:var(--txt3);text-align:center;margin-top:8px">11 instant downloads · 30-day money back guarantee</div>
+      </div>
+
+      <!-- Co-Host Launch Kit -->
+      <div class="land-prod-card chlk">
+        <div class="land-prod-tag" style="background:rgba(200,168,75,.15);color:var(--gold)">🏆 For Co-Hosts — 10 Files</div>
+        <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);margin-bottom:6px">Co-Host Launch Kit</div>
+        <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">Everything to sign your first client, run a professional operation, and build your brand — 10 individual files</div>
+        <div class="land-prod-price">$97 <span>one-time</span></div>
+        <ul class="land-prod-feats">
+          <li>90-day playbook — 0 to 5 properties with the math at every stage</li>
+          <li>12-slide owner pitch deck — fully written, ready to present</li>
+          <li>Rate card with 4 service tiers + live earnings calculator</li>
+          <li>Co-host agreement contract template — print and sign</li>
+          <li>32-step owner onboarding checklist with progress tracking</li>
+          <li>First 5 clients — DM, email, and Facebook group outreach sequences</li>
+          <li>AI image prompts — luxury estate photos for your pitch deck</li>
+          <li>30-day Instagram + LinkedIn content vault (9 ready-to-post captions)</li>
+          <li>Operations toolkit: VA daily checklist, 10 value-add upsells, SEO workbook, seasonal maintenance schedule</li>
+          <li>Brand story + management bio templates + 5 LinkedIn headline formulas</li>
+        </ul>
+        <button class="btn btn-w" style="font-size:14px;padding:14px;background:var(--gold);color:#2C1F14;font-weight:700;border:none;border-radius:8px;cursor:pointer;width:100%" onclick="buyProduct('cohost_kit')">Get the Kit — $97 →</button>
+        <div style="font-size:11px;color:var(--txt3);text-align:center;margin-top:8px">10 instant downloads · 30-day money back guarantee</div>
+      </div>
+
+    </div>
+
+    <!-- Social proof strip -->
+    <div style="text-align:center;margin-top:48px;padding-top:40px;border-top:1px solid var(--border)">
+      <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">One-time purchase · No subscription · Instant download</div>
+      <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap">
+        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--terra)">11</div><div style="font-size:12px;color:var(--txt3)">Files in the Pack</div></div>
+        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--gold)">10</div><div style="font-size:12px;color:var(--txt3)">Files in the Kit</div></div>
+        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--sage)">$0</div><div style="font-size:12px;color:var(--txt3)">Monthly commitment</div></div>
+      </div>
     </div>
   </section>
 
@@ -501,7 +592,7 @@ select{color:var(--txt)!important;}
       <div class="land-plan">
         <div class="plan-name">Free</div>
         <div class="plan-price">$0<span>/mo</span></div>
-        <div class="plan-desc">Perfect for getting started</div>
+        <div class="plan-desc">1 property, no credit card needed</div>
         <ul class="plan-feats">
           <li>1 property</li><li>Booking management</li><li>Guest portal</li><li>Basic analytics</li>
         </ul>
@@ -511,7 +602,7 @@ select{color:var(--txt)!important;}
         <div class="plan-badge">Most Popular</div>
         <div class="plan-name">Pro</div>
         <div class="plan-price" id="pro-price">$79<span>/mo</span></div>
-        <div class="plan-desc" id="pro-desc">For serious hosts · 14-day free trial</div>
+        <div class="plan-desc" id="pro-desc">For serious hosts growing their operation</div>
         <ul class="plan-feats">
           <li>10 properties</li><li>AI guest messaging</li><li>iCal sync (Airbnb/VRBO)</li><li>Tasks & cleaner management</li><li>Inventory tracking</li><li>QR house manuals</li><li>Revenue reports & CSV export</li><li>Pricing optimizer</li><li>Guest loyalty program</li><li>Priority support</li>
         </ul>
@@ -520,7 +611,7 @@ select{color:var(--txt)!important;}
       <div class="land-plan">
         <div class="plan-name">Business</div>
         <div class="plan-price" id="biz-price">$199<span>/mo</span></div>
-        <div class="plan-desc" id="biz-desc">For property managers · 14-day free trial</div>
+        <div class="plan-desc" id="biz-desc">For multi-property operators and teams</div>
         <ul class="plan-feats">
           <li>Unlimited properties</li><li>Everything in Pro</li><li>Team access</li><li>White-label portals</li><li>API access</li>
         </ul>
@@ -547,6 +638,8 @@ select{color:var(--txt)!important;}
     </div>
     <div style="font-size:12px;color:rgba(255,255,255,.35)">© 2026 HostHaven. All rights reserved.</div>
     <div style="display:flex;gap:20px">
+      <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" href="https://www.instagram.com" target="_blank">Instagram</a>
+      <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" href="https://www.facebook.com" target="_blank">Facebook</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('privacy')">Privacy</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('terms')">Terms</a>
       <a href="/cdn-cgi/l/email-protection#2043534f50524f50455254595345525649434560474d41494c0e434f4d" style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:none">Support</a>
@@ -846,6 +939,12 @@ select{color:var(--txt)!important;}
     <div style="font-size:13px;color:var(--txt2)" id="props-count">0 properties</div>
     <button class="btn btn-pri" onclick="openModal('add-property-modal')">+ Add Property</button>
   </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Total Properties</div><div class="kpi-val" id="prop-kpi-total">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">Avg Occupancy</div><div class="kpi-val" id="prop-kpi-occ">—</div></div>
+    <div class="kpi k3"><div class="kpi-label">Avg Rating</div><div class="kpi-val" id="prop-kpi-rating">—</div></div>
+    <div class="kpi k4"><div class="kpi-label">Total Revenue</div><div class="kpi-val" id="prop-kpi-rev">$0</div></div>
+  </div>
   <div class="g3" id="props-grid"><div class="empty-state" style="grid-column:1/-1"><div class="es-i">🏠</div><h3>No properties yet</h3><button class="btn btn-pri" onclick="openModal('add-property-modal')" style="margin-top:10px">Add First Property</button></div></div>
 </div>
 
@@ -949,6 +1048,12 @@ select{color:var(--txt)!important;}
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
     <div style="font-size:13px;color:var(--txt2)" id="tasks-count">0 tasks</div>
     <button class="btn btn-pri" onclick="openModal('add-task-modal')">+ Add Task</button>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Pending</div><div class="kpi-val" id="task-kpi-pending">0</div></div>
+    <div class="kpi k2"><div class="kpi-label">In Progress</div><div class="kpi-val" id="task-kpi-progress">0</div></div>
+    <div class="kpi k3"><div class="kpi-label">Completed</div><div class="kpi-val" id="task-kpi-done">0</div></div>
+    <div class="kpi k4"><div class="kpi-label">Overdue</div><div class="kpi-val" id="task-kpi-overdue" style="color:var(--terra)">0</div></div>
   </div>
   <div id="tasks-list"><div class="empty-state"><div class="es-i">🧹</div><h3>No tasks yet</h3><button class="btn btn-pri" onclick="openModal('add-task-modal')" style="margin-top:10px">Add Task</button></div></div>
 </div>
@@ -1304,6 +1409,16 @@ select{color:var(--txt)!important;}
     <div style="font-size:13px;color:var(--txt2)">Flag guests you never want to host again</div>
     <button class="btn btn-pri" onclick="openModal('add-blacklist-modal')">+ Flag Guest</button>
   </div>
+  <div class="card" style="margin-bottom:14px;border-left:3px solid var(--gold)">
+    <div class="card-hd"><div class="card-title">💡 How the Guest Blacklist Works</div></div>
+    <div class="card-body">
+      <div class="g3">
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;margin-bottom:6px">🚫</div><div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:3px">Flag a Guest</div><div style="font-size:11px;color:var(--txt3)">Add their name, email, or Airbnb profile to the list</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;margin-bottom:6px">📋</div><div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:3px">Add a Reason</div><div style="font-size:11px;color:var(--txt3)">Note why they were flagged — property damage, noise, no-show</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;margin-bottom:6px">⚠️</div><div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:3px">Stay Protected</div><div style="font-size:11px;color:var(--txt3)">Reference your list before accepting new bookings</div></div>
+      </div>
+    </div>
+  </div>
   <div class="card">
     <div class="card-hd"><div class="card-title">🚫 Flagged Guests</div></div>
     <div class="card-body" id="blacklist-list">
@@ -1620,6 +1735,17 @@ select{color:var(--txt)!important;}
     <div class="kpi k3"><div class="kpi-label">Avg Commission</div><div class="kpi-val" id="own-avg-comm">0%</div></div>
     <div class="kpi k4"><div class="kpi-label">Reports Sent</div><div class="kpi-val" id="own-reports">0</div></div>
   </div>
+  <div class="card" style="margin-bottom:14px;border-left:3px solid var(--gold)" id="owners-tip-card">
+    <div class="card-hd"><div class="card-title">💡 Owner Management — How It Works</div></div>
+    <div class="card-body">
+      <div class="g4">
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;margin-bottom:5px">🤝</div><div style="font-size:11px;font-weight:600;color:var(--txt);margin-bottom:2px">Add Owner</div><div style="font-size:11px;color:var(--txt3)">Name, email, commission %, properties</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;margin-bottom:5px">📊</div><div style="font-size:11px;font-weight:600;color:var(--txt);margin-bottom:2px">Track Earnings</div><div style="font-size:11px;color:var(--txt3)">See gross revenue, your cut, owner payout</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;margin-bottom:5px">📋</div><div style="font-size:11px;font-weight:600;color:var(--txt);margin-bottom:2px">Send Reports</div><div style="font-size:11px;color:var(--txt3)">One-click branded PDF emailed to owner</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;margin-bottom:5px">📧</div><div style="font-size:11px;font-weight:600;color:var(--txt);margin-bottom:2px">Bulk Send</div><div style="font-size:11px;color:var(--txt3)">Send all owner reports at once monthly</div></div>
+      </div>
+    </div>
+  </div>
   <div id="owners-list">
     <div class="empty-state"><div class="es-i">🤝</div><h3>No owners added yet</h3><p>Add property owners to track splits and send branded monthly reports</p><button class="btn btn-pri" onclick="openModal('add-owner-modal')" style="margin-top:10px">Add First Owner</button></div>
   </div>
@@ -1659,6 +1785,16 @@ select{color:var(--txt)!important;}
 <!-- ██ CONCIERGE ████████████████████████████ -->
 <div class="page" id="page-concierge">
   <div style="font-size:13px;color:var(--txt2);margin-bottom:18px">Build a custom concierge menu for your guests</div>
+  <div class="card" style="margin-bottom:14px;border-left:3px solid var(--sage)">
+    <div class="card-hd"><div class="card-title">💡 What is the Concierge?</div></div>
+    <div class="card-body">
+      <div class="g3">
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;margin-bottom:6px">🎩</div><div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:3px">Add Services</div><div style="font-size:11px;color:var(--txt3)">Create upsell offers — airport pickup, grocery stocking, city tours</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;margin-bottom:6px">💌</div><div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:3px">Guests Request</div><div style="font-size:11px;color:var(--txt3)">Guests browse and request services through their portal</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;margin-bottom:6px">💰</div><div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:3px">Earn More</div><div style="font-size:11px;color:var(--txt3)">Add revenue per stay without increasing your nightly rate</div></div>
+      </div>
+    </div>
+  </div>
   <div class="g2">
     <div class="card">
       <div class="card-hd"><div class="card-title">🎩 Concierge Services</div><button class="btn btn-pri" style="font-size:11px;padding:4px 9px" onclick="openModal('add-service-modal')">+ Add Service</button></div>
@@ -1904,6 +2040,12 @@ select{color:var(--txt)!important;}
 <!-- ██ SCORECARDS ████████████████████████████ -->
 <div class="page" id="page-scorecards">
   <div style="font-size:13px;color:var(--txt2);margin-bottom:18px">Track performance metrics for each property</div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="kpi-label">Avg Occupancy</div><div class="kpi-val" id="sc-occ">—</div></div>
+    <div class="kpi k2"><div class="kpi-label">Avg Rating</div><div class="kpi-val" id="sc-rating">—</div></div>
+    <div class="kpi k3"><div class="kpi-label">Top Property</div><div class="kpi-val" id="sc-top" style="font-size:13px">—</div></div>
+    <div class="kpi k4"><div class="kpi-label">Total Revenue</div><div class="kpi-val" id="sc-rev">$0</div></div>
+  </div>
   <div id="scorecards-grid" style="display:flex;flex-direction:column;gap:16px"><div class="empty-state"><div class="es-i">🏆</div><h3>No properties yet</h3><p>Add properties to see their performance scorecards</p></div></div>
 </div>
 
@@ -2874,7 +3016,9 @@ function launchApp(user) {
   const content = document.querySelector('.content');
   if(content) {
     content.style.opacity = '0';
+
     content.style.transition = 'opacity 0.3s';
+
   }
 
   document.getElementById('sb-uname').textContent=user.name;
@@ -3032,12 +3176,14 @@ const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
+  const activePg=document.getElementById('page-'+id);
+  activePg.classList.add('active');
   if(el)el.classList.add('active');
   document.getElementById('page-title').textContent=titles[id]||id;
   closeSidebar();
   // Save last page for refresh restore
   try{sessionStorage.setItem('hh_last_page',id);}catch(e){}
+
   if(id==='website')setTimeout(updateWb,100);
   if(id==='portal')renderPortal();
   if(id==='reports')renderReports();
@@ -3086,7 +3232,9 @@ function renderPricingOpt(){
   if(s.lastMin!=null){const el=document.getElementById('opt-lastmin');if(el)el.value=s.lastMin;}
   if(s.longStay!=null){const el=document.getElementById('opt-longstay');if(el)el.value=s.longStay;}
 }
-function renderAll(){renderDashboard();renderProperties();renderBookings();renderMessages();renderTasks();renderPricing();renderPortal();renderAnalytics();renderReports();renderReviews();renderICals();renderStaff();updateBadges();renderSmartNotifications();}
+function renderAll(){
+  const _ma=document.querySelector('.main-area');if(_ma)_ma.scrollTo({top:0,behavior:'instant'});
+  renderDashboard();renderProperties();renderBookings();renderMessages();renderTasks();renderPricing();renderPortal();renderAnalytics();renderReports();renderReviews();renderICals();renderStaff();updateBadges();renderSmartNotifications();}
 
 // ════════════════════════════════════════════
 //  ADMIN PANEL
@@ -3239,6 +3387,20 @@ async function addProperty(){
   toast(`"${name}" added! 🏠`);renderAll();
 }
 function renderProperties(){
+  {
+    const _pp=cData.properties||[];
+    const _bb=cData.bookings||[];
+    const _set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+    _set('prop-kpi-total',_pp.length);
+    const _avgOcc=_pp.length?Math.round(_pp.reduce((s,p)=>s+(p.occupancy||0),0)/_pp.length)+'%':'—';
+    _set('prop-kpi-occ',_avgOcc);
+    const _rated=_pp.filter(p=>p.rating);
+    const _avgRat=_rated.length?(_rated.reduce((s,p)=>s+parseFloat(p.rating||0),0)/_rated.length).toFixed(2)+'★':'—';
+    _set('prop-kpi-rating',_avgRat);
+    const _rev=_bb.filter(b=>b.status!=='cancelled').reduce((s,b)=>s+(b.price||0),0);
+    _set('prop-kpi-rev','$'+_rev.toLocaleString());
+  }
+
   const grid=document.getElementById('props-grid');const count=document.getElementById('props-count');
   const props=cData.properties;count.textContent=props.length+' propert'+(props.length===1?'y':'ies');
   if(!props.length){grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="es-i">🏠</div><h3>No properties yet</h3><button class="btn btn-pri" onclick="openModal('add-property-modal')" style="margin-top:10px">Add First</button></div>`;return;}
@@ -4792,6 +4954,20 @@ function renderPricingImpact(){
 
 
 function renderScorecards(){
+  {
+    const _sp=cData.properties||[];
+    const _sb=(cData.bookings||[]).filter(b=>b.status!=='cancelled');
+    const _ss=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+    const _socc=_sp.length?Math.round(_sp.reduce((s,p)=>s+(p.occupancy||0),0)/_sp.length)+'%':'—';
+    const _srated=_sp.filter(p=>p.rating);
+    const _srat=_srated.length?(_srated.reduce((s,p)=>s+parseFloat(p.rating||0),0)/_srated.length).toFixed(2)+'★':'—';
+    const _srev=_sb.reduce((s,b)=>s+(b.price||0),0);
+    const _stop=_sp.length?_sp.reduce((a,b)=>(a.occupancy||0)>(b.occupancy||0)?a:b,_sp[0]):null;
+    _ss('sc-occ',_socc);_ss('sc-rating',_srat);
+    _ss('sc-rev','$'+_srev.toLocaleString());
+    _ss('sc-top',_stop?_stop.emoji+' '+_stop.name:'—');
+  }
+
   const grid=document.getElementById('scorecards-grid');
   if(!grid)return;
   if(!cData.properties.length){grid.innerHTML='<div class="empty-state"><div class="es-i">🏆</div><h3>No properties yet</h3></div>';return;}
@@ -5437,6 +5613,16 @@ function addTask(){
 }
 function toggleTask(id){const t=cData.tasks.find(x=>x.id===id);if(!t)return;t.done=!t.done;saveUserData(cUid,cData);renderTasks();if(t.done)toast('Done! ✓');}
 function renderTasks(){
+  {
+    const _tt=cData.tasks||[];
+    const _now=new Date().toISOString().slice(0,10);
+    const _s=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+    _s('task-kpi-pending',_tt.filter(t=>!t.done&&t.status!=='in_progress').length);
+    _s('task-kpi-progress',_tt.filter(t=>t.status==='in_progress').length);
+    _s('task-kpi-done',_tt.filter(t=>t.done).length);
+    _s('task-kpi-overdue',_tt.filter(t=>!t.done&&t.due&&t.due<_now).length);
+  }
+
   const list=document.getElementById('tasks-list');const count=document.getElementById('tasks-count');
   const tasks=[...cData.tasks].sort((a,b)=>(a.done===b.done)?({high:0,medium:1,low:2}[a.priority]-{high:0,medium:1,low:2}[b.priority]):(a.done?1:-1));
   count.textContent=`${tasks.length} tasks · ${tasks.filter(t=>!t.done).length} pending`;
@@ -7194,6 +7380,42 @@ function checkReferralCode() {
   }
 }
 
+
+// ════════════════════════════════════════════
+//  ONE-OFF PRODUCTS
+// ════════════════════════════════════════════
+function buyProduct(product) {
+  const links = {
+    quickstart: 'https://csoproperty.gumroad.com/l/ebqdf',
+    cohost_kit:  'https://csoproperty.gumroad.com/l/wnzfh'
+  };
+  // If Stripe links not yet set, show contact modal
+  if(links[product].includes('placeholder')) {
+    // Show a simple email capture for now
+    const email = prompt('Enter your email and we will send you the download link within 24 hours:');
+    if(email && email.includes('@')) {
+      // Send notification to admin
+      fetch('https://vdnyqwpznsysrvyvbqga.supabase.co/functions/v1/send-notification', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM'},
+        body: JSON.stringify({
+          type:'product_purchase',
+          hostEmail: ADMIN_EMAIL,
+          data: {product, buyerEmail: email, time: new Date().toISOString()}
+        })
+      }).catch(()=>{});
+      alert('Got it! Check ' + email + ' within 24 hours for your download link. Questions? Email csopropertyservice@gmail.com');
+    }
+    return;
+  }
+  window.open(links[product], '_blank');
+}
+
+// Call this once you have real Stripe payment links:
+// buyProduct links should be updated to:
+// quickstart: your $47 Stripe payment link
+// cohost_kit: your $97 Stripe payment link
+
 function saveSettings(){const name=document.getElementById('set-name').value.trim();if(!name){toast('Enter your name');return;}if(cUser)cUser.name=name;document.getElementById('sb-uname').textContent=name;const init=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);document.getElementById('sb-av').textContent=init;sb.auth.updateUser({data:{full_name:name}});toast('Saved! ✓');}
 function saveApiKey(){const key=document.getElementById('set-api-key').value.trim();if(!key){toast('Enter your API key');return;}cData.apiKey=key;saveUserData(cUid,cData);toast('API key saved! AI messaging is live ✓');}
 function toggleSetting(el){el.classList.toggle('on');el.classList.toggle('off');toast(el.classList.contains('on')?'Enabled':'Disabled');}
@@ -7389,15 +7611,11 @@ sb.auth.onAuthStateChange((event, session) => {
 });
 
 window.addEventListener('load', () => {
+
+
   bootApp();
   // Register PWA service worker
-  if('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').then(function(reg) {
-      // SW registered
-    }).catch(function(err) {
-      // SW registration failed silently
-    });
-  }
+  // No service worker
 });
 </script>
 </body>
