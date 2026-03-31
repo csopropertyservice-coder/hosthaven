@@ -3,6 +3,7 @@
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23C4693A'/><text y='.9em' font-size='75' x='12'>🏡</text></svg>">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -9060,30 +9061,42 @@ function printTaxReport() {
 // ═════════════════════════════════════════
 //  AUTH INIT
 // ═════════════════════════════════════════
+let _authHandled = false;
+
 async function initAuth() {
-  try {
-    const { data: { session } } = await sb.auth.getSession();
+  // Listen for auth state changes - fires on load AND on login/logout
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if(_authHandled && event === 'INITIAL_SESSION') return;
+    
     if(session && session.user) {
+      _authHandled = true;
       cUid = session.user.id;
       cUser = {
         email: session.user.email,
         name: session.user.user_metadata?.full_name || session.user.email.split('@')[0]
       };
-      const data = await loadUserData(cUid);
-      if(data) {
-        cData = data;
-      } else {
+      try {
+        const data = await loadUserData(cUid);
+        cData = data || (buildDemoData ? buildDemoData() : {});
+        if(!data) await saveUserData(cUid, cData);
+      } catch(e) {
         cData = buildDemoData ? buildDemoData() : {};
-        await saveUserData(cUid, cData);
       }
-      launchApp(cUser);
-    } else {
+      // Only launch if app not already visible
+      const app = document.getElementById('app');
+      if(!app || !app.classList.contains('visible')) {
+        launchApp(cUser);
+      }
+    } else if(event === 'SIGNED_OUT') {
+      _authHandled = false;
       showScreen('landing');
+    } else if(!_authHandled) {
+      // No session - show landing
+      setTimeout(() => {
+        if(!_authHandled) showScreen('landing');
+      }, 500);
     }
-  } catch(e) {
-    console.error('Auth init error:', e);
-    showScreen('landing');
-  }
+  });
 }
 
 // ═════════════════════════════════════════
