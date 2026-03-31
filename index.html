@@ -482,7 +482,7 @@ select{color:var(--txt)!important;}
       </div>
       <div class="land-stats">
         <div class="land-stat"><div class="land-stat-num">Free</div><div class="land-stat-label">To start — always</div></div>
-        <div class="land-stat"><div class="land-stat-num">30+</div><div class="land-stat-label">Features built in</div></div>
+        <div class="land-stat"><div class="land-stat-num">40+</div><div class="land-stat-label">Features built in</div></div>
         <div class="land-stat"><div class="land-stat-num">100%</div><div class="land-stat-label">Your data, your control</div></div>
       </div>
     </div>
@@ -506,6 +506,8 @@ select{color:var(--txt)!important;}
       <div class="land-feat-card"><div class="land-feat-icon">📅</div><div class="land-feat-title">iCal Sync</div><div class="land-feat-desc">Import bookings directly from Airbnb, VRBO, and Booking.com. Calendar stays in sync automatically.</div></div>
       <div class="land-feat-card"><div class="land-feat-icon">📈</div><div class="land-feat-title">Revenue Reports</div><div class="land-feat-desc">Exportable revenue reports, expense tracking, and property scorecards. Ready for tax season in one click.</div></div>
       <div class="land-feat-card"><div class="land-feat-icon">🌐</div><div class="land-feat-title">Direct Booking Website</div><div class="land-feat-desc">Build and publish your own booking website in minutes. Save guests the Airbnb service fee. Keep more revenue.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">⚡</div><div class="land-feat-title">Automations</div><div class="land-feat-desc">Auto guest messages, cleaning task creation, inventory alerts, late checkout detection, weekly revenue summaries, and more — all running without you.</div></div>
+      <div class="land-feat-card"><div class="land-feat-icon">📅</div><div class="land-feat-title">Staff Scheduling</div><div class="land-feat-desc">Add 1099 cleaners, set their weekly availability and hours, view a coverage calendar, and schedule jobs on days they're free.</div></div>
     </div>
   </section>
 
@@ -637,8 +639,10 @@ select{color:var(--txt)!important;}
       <div style="width:28px;height:28px;background:var(--terra);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px">🏡</div>
       <div style="font-family:Fraunces,serif;font-size:16px;color:#fff">HostHaven</div>
     </div>
-    <div style="font-size:12px;color:rgba(255,255,255,.35)">© 2026 HostHaven. All rights reserved.</div>
+    <div style="font-size:12px;color:rgba(255,255,255,.35)">© 2026 HostHaven by CSO Property Service. All rights reserved.</div>
     <div style="display:flex;gap:20px">
+      <a style="font-size:12px;color:rgba(255,255,255,.4)" href="https://www.instagram.com/hosthaven_" target="_blank">Instagram</a>
+      <a style="font-size:12px;color:rgba(255,255,255,.4)" href="https://www.facebook.com/profile.php?id=61575103389941" target="_blank">Facebook</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('privacy')">Privacy</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('terms')">Terms</a>
       <a href="/cdn-cgi/l/email-protection#2043534f50524f50455254595345525649434560474d41494c0e434f4d" style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:none">Support</a>
@@ -846,7 +850,7 @@ select{color:var(--txt)!important;}
         <div class="sb-item" onclick="nav('damage',this)"><span class="ico">🛡</span>Damage Claims</div>
         <div class="sb-item" onclick="nav('blacklist',this)"><span class="ico">🚫</span>Guest Blacklist</div>
 
-        <div class="sb-sec" style="margin-top:10px">Automation</div>
+        <div class="sb-sec" style="margin-top:10px">AUTOMATION</div>
         <div class="sb-item" onclick="nav('aihours',this)"><span class="ico">🤖</span>AI Office Hours</div>
         <div class="sb-item" onclick="nav('automations',this)"><span class="ico">⚡</span>Automations</div>
         <div class="sb-item" onclick="nav('affiliates',this)"><span class="ico">🤝</span>Affiliates</div>
@@ -1176,6 +1180,25 @@ select{color:var(--txt)!important;}
 
 <!-- ██ ANALYTICS ████████████████████████████ -->
 <div class="page" id="page-analytics">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <select id="an-period" onchange="renderAnalytics()" style="background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:7px 12px;font-size:12px;color:var(--txt);outline:none">
+        <option value="all">All Time</option>
+        <option value="thismonth">This Month</option>
+        <option value="lastmonth">Last Month</option>
+        <option value="thisyear">This Year</option>
+        <option value="last30">Last 30 Days</option>
+        <option value="last90">Last 90 Days</option>
+      </select>
+      <select id="an-prop" onchange="renderAnalytics()" style="background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:7px 12px;font-size:12px;color:var(--txt);outline:none">
+        <option value="all">All Properties</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button class="btn btn-ghost" style="font-size:11px;padding:5px 12px" onclick="exportAnalyticsCSV()">↓ Export CSV</button>
+      <button class="btn btn-ghost" style="font-size:11px;padding:5px 12px" onclick="window.print()">🖨️ Print</button>
+    </div>
+  </div>
   <div class="g4" style="margin-bottom:18px">
     <div class="kpi k1"><div class="kpi-label">Total Revenue</div><div class="kpi-val" id="an-rev">$0</div><span class="delta up">all time</span></div>
     <div class="kpi k2"><div class="kpi-label">Total Bookings</div><div class="kpi-val" id="an-book">0</div></div>
@@ -1445,6 +1468,7 @@ select{color:var(--txt)!important;}
   <div style="max-width:560px">
     <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Account</div></div><div class="card-body"><div class="fi"><label>Full Name</label><input id="set-name"></div><div class="fi"><label>Email</label><input id="set-email" readonly style="opacity:.6"></div><div class="fi" style="margin-bottom:0"><label>Plan</label><div style="display:flex;align-items:center;gap:10px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:8px;padding:9px 12px"><span id="set-plan" style="font-size:13px;flex:1">Free Plan</span><button class="btn btn-pri" style="font-size:10px;padding:4px 9px" onclick="showUpgradeModal()">Upgrade →</button></div></div><div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-pri" onclick="saveSettings()">Save Changes</button><button class="btn btn-ghost" onclick="openBillingPortal()">💳 Manage Billing</button><button class="btn btn-w" style="background:var(--gold);color:#2C1F14;font-weight:600;border:none;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer" onclick="openStripe('cohost')">🏆 Co-Host $299</button></div></div></div>
     <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">AI Messaging (Anthropic API)</div></div><div class="card-body"><div style="font-size:13px;color:var(--txt2);margin-bottom:10px;line-height:1.5">Add your API key from <strong>console.anthropic.com</strong> for real AI drafts. Free to start.</div><div class="fi" style="margin-bottom:10px"><label>API Key</label><input id="set-api-key" type="password" placeholder="sk-ant-…"></div><button class="btn btn-sage" onclick="saveApiKey()">Save Key</button></div></div>
+    <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Email (Resend API)</div></div><div class="card-body"><div style="font-size:13px;color:var(--txt2);margin-bottom:10px;line-height:1.5">Add your Resend API key to enable owner report emails and automation notifications. Get your key at <strong>resend.com</strong>.</div><div class="fi" style="margin-bottom:10px"><label>Resend API Key</label><input id="set-resend-key" type="password" placeholder="re_…"></div><button class="btn btn-sage" onclick="saveResendKey()">Save Key</button></div></div>
     <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Appearance</div></div><div class="card-body"><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">Dark Mode</div><div style="font-size:11px;color:var(--txt3)">Switch between light and dark</div></div><div class="toggle" id="dark-setting-toggle" onclick="toggleDark()"><div class="toggle-knob"></div></div></div></div></div>
     <div class="card" style="margin-bottom:12px"><div class="card-hd"><div class="card-title">Notifications</div></div><div class="card-body"><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">New bookings</div></div><div class="toggle on" onclick="toggleSetting(this)"><div class="toggle-knob"></div></div></div><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">Guest messages</div></div><div class="toggle on" onclick="toggleSetting(this)"><div class="toggle-knob"></div></div></div><div class="setting-row"><div><div style="font-size:13px;font-weight:500;color:var(--txt)">Task reminders</div></div><div class="toggle off" onclick="toggleSetting(this)"><div class="toggle-knob"></div></div></div></div></div>
     <div class="card"><div class="card-hd"><div class="card-title">Data</div></div><div class="card-body" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-ghost" onclick="cData.gsDismissed=false;saveUserData(cUid,cData);toast('Getting started guide restored!');renderDashboard();">🚀 Show Getting Started</button><button class="btn btn-ghost" style="color:var(--terra);border-color:var(--terra-l)" onclick="if(confirm('Clear all data?')){clearAll()}">🗑 Clear All Data</button></div></div>
@@ -3813,7 +3837,7 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 //  NAV
 // ════════════════════════════════════════════
-const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',cohost_cmd:'🏢 Co-Host Command Center',owners:'🤝 Owner Management',crm:'👤 Guest CRM',payouts:'💳 Payout Ledger',photovault:'📸 Photo Vault',qrmanual:'📱 QR House Manual',aihours:'🤖 AI Office Hours',affiliates:'🤝 Affiliate Program',checkininsurance:'🛡 Check-in Insurance',rentals:'🚲 Equipment Rentals',ical:'iCal Sync',templates:'📝 Message Templates',loyalty:'🎁 Guest Loyalty',pricing_opt:'💡 Pricing Optimizer',scorecards:'🏆 Property Scorecards',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
+const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',cohost_cmd:'🏢 Command Center',owners:'🤝 Owner Management',crm:'👤 Guest CRM',payouts:'💳 Payout Ledger',photovault:'📸 Photo Vault',qrmanual:'📱 QR House Manual',aihours:'🤖 AI Office Hours',affiliates:'🤝 Affiliate Program',checkininsurance:'🛡 Check-in Insurance',rentals:'🚲 Equipment Rentals',ical:'iCal Sync',templates:'📝 Message Templates',loyalty:'🎁 Guest Loyalty',pricing_opt:'💡 Pricing Optimizer',scorecards:'🏆 Property Scorecards',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
@@ -3826,6 +3850,18 @@ function nav(id,el){
   try{sessionStorage.setItem('hh_last_page',id);}catch(e){}
 
   if(id==='website')setTimeout(updateWb,100);
+  if(id==='settings'){
+    setTimeout(function(){
+      const akEl=document.getElementById('set-api-key');
+      if(akEl&&cData.apiKey) akEl.value=cData.apiKey;
+      const rkEl=document.getElementById('set-resend-key');
+      if(rkEl&&cData.resendKey) rkEl.value=cData.resendKey;
+      const nmEl=document.getElementById('set-name');
+      if(nmEl&&cUser) nmEl.value=cUser.name||'';
+      const emEl=document.getElementById('set-email');
+      if(emEl&&cUser) emEl.value=cUser.email||'';
+    },50);
+  }
   if(id==='portal')renderPortal();
   if(id==='reports')renderReports();
   if(id==='analytics'){renderAnalytics();}
@@ -4552,6 +4588,13 @@ function printChecklist(){
   toast('Print dialog opening…');
 }
 
+function showStaffTab(tab){
+  const r=document.getElementById('staff-roster-view');
+  const a=document.getElementById('staff-availability-view');
+  if(!r||!a)return;
+  if(tab==='availability'){r.style.display='none';a.style.display='block';if(typeof renderAvailability==='function')renderAvailability();}
+  else{r.style.display='block';a.style.display='none';}
+}
 function renderStaff() {
   const grid=document.getElementById('staff-grid');
   if(!grid)return;
@@ -6435,6 +6478,20 @@ function selectPortal(bookingId,el){
 // ════════════════════════════════════════════
 //  ANALYTICS
 // ════════════════════════════════════════════
+function exportAnalyticsCSV() {
+  const bookings = cData.bookings||[];
+  let csv = 'Date,Property,Guest,Nights,Revenue,Status,Source\n';
+  bookings.forEach(function(b) {
+    csv += '"'+(b.checkin||'')+'","'+(b.propName||'')+'","'+(b.guestName||'')+'",'+(b.nights||1)+','+(b.price||0)+',"'+(b.status||'')+'","'+(b.source||'')+'"\n';
+  });
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'HostHaven-Analytics-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  toast('Analytics exported ✓');
+}
+
 function renderAnalytics(){
   const bookings=cData.bookings.filter(x=>x.status!=='cancelled');
   const rev=bookings.reduce((s,x)=>s+x.price,0);
@@ -8076,6 +8133,14 @@ function buyProduct(product) {
 
 function saveSettings(){const name=document.getElementById('set-name').value.trim();if(!name){toast('Enter your name');return;}if(cUser)cUser.name=name;document.getElementById('sb-uname').textContent=name;const init=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);document.getElementById('sb-av').textContent=init;sb.auth.updateUser({data:{full_name:name}});toast('Saved! ✓');}
 function saveApiKey(){const key=document.getElementById('set-api-key').value.trim();if(!key){toast('Enter your API key');return;}cData.apiKey=key;saveUserData(cUid,cData);toast('API key saved! AI messaging is live ✓');}
+function saveResendKey(){
+  const key=document.getElementById('set-resend-key').value.trim();
+  if(!key){toast('Enter your Resend key');return;}
+  cData.resendKey=key;
+  saveUserData(cUid,cData);
+  toast('Resend key saved! Email delivery enabled ✓');
+}
+
 function toggleSetting(el){el.classList.toggle('on');el.classList.toggle('off');toast(el.classList.contains('on')?'Enabled':'Disabled');}
 function clearAll(){cData={properties:[],bookings:[],messages:[],tasks:[],reviews:[],icals:[],plan:cData.plan,apiKey:cData.apiKey,darkMode:cData.darkMode,onboarded:true};saveUserData(cUid,cData);renderAll();toast('All data cleared');}
 
