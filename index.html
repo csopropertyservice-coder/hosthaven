@@ -9182,37 +9182,18 @@ function printTaxReport() {
 //  AUTH INIT
 // ═════════════════════════════════════════
 async function initAuth() {
-  try {
-    const { data: { session } } = await sb.auth.getSession();
-    if(session && session.user) {
-      cUid = session.user.id;
-      cUser = {
-        email: session.user.email,
-        name: session.user.user_metadata?.full_name || session.user.email.split('@')[0]
-      };
-      try {
-        const data = await loadUserData(cUid);
-        cData = data || (buildDemoData ? buildDemoData() : {});
-        if(!data) await saveUserData(cUid, cData);
-      } catch(e) {
-        cData = buildDemoData ? buildDemoData() : {};
-      }
-      launchApp(cUser);
-      return;
-    }
-  } catch(e) {
-    console.error('initAuth error:', e);
-  }
-  // No active session - use onAuthStateChange as fallback
+  // onAuthStateChange is the single source of truth for session state
+  // It fires immediately on load with INITIAL_SESSION or SIGNED_IN if session exists
+  let launched = false;
   sb.auth.onAuthStateChange(async function(event, session) {
-    if(event === 'SIGNED_IN' && session && session.user) {
+    if(launched) return;
+    if(session && session.user) {
+      launched = true;
       cUid = session.user.id;
       cUser = {
         email: session.user.email,
         name: session.user.user_metadata?.full_name || session.user.email.split('@')[0]
       };
-      const app = document.getElementById('app');
-      if(app && app.classList.contains('visible')) return;
       try {
         const data = await loadUserData(cUid);
         cData = data || (buildDemoData ? buildDemoData() : {});
@@ -9221,11 +9202,10 @@ async function initAuth() {
         cData = buildDemoData ? buildDemoData() : {};
       }
       launchApp(cUser);
-    } else if(event === 'SIGNED_OUT') {
-      showScreen('landing');
+    } else if(event === 'INITIAL_SESSION' || event === 'SIGNED_OUT') {
+      if(!launched) showScreen('landing');
     }
   });
-  showScreen('landing');
 }
 
 // ═════════════════════════════════════════
