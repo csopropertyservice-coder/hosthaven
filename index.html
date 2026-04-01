@@ -247,8 +247,8 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 @media(max-width:768px){ .hamburger { display:flex; } }
 
 /* CONTENT */
-.main-area { flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden;overflow-y:auto;background:var(--bg);scroll-behavior:auto; }
-.content { padding:0; background:var(--bg); flex:1; position:relative; overflow-y:auto; }
+.main-area { flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden;background:var(--bg);scroll-behavior:auto; }
+.content { padding:0; background:var(--bg); flex:1; position:relative; overflow-y:auto; min-height:0; }
 @media(max-width:600px){ .content { padding:16px; } .g4{grid-template-columns:repeat(2,1fr)!important;} #dash-main-grid{grid-template-columns:1fr!important;} #dash-quick-actions button{font-size:11px!important;padding:6px 10px!important;} .kpi-val{font-size:22px!important;} }
 .page { display:none; }
 .page.active { display:block !important; padding:20px 24px; }
@@ -537,6 +537,69 @@ select{color:var(--txt)!important;}
 .mob-nav-item .mob-ico { font-size:22px; line-height:1; }
 
 
+
+/* HOSTHAVEN PREMIUM - DARK ANIME THEME v2 */
+:root {
+  --burgundy:#722F37;--burgundy-light:#9B4F57;--burgundy-dark:#4A1F25;
+  --rose-gold:#E8B4B8;--champagne:#F7E7CE;--champagne-light:#FAF0E6;
+  --gradient-primary:linear-gradient(135deg,#722F37 0%,#9B4F57 50%,#E8B4B8 100%);
+  --gradient-accent:linear-gradient(45deg,#E8B4B8 0%,#F7E7CE 100%);
+  --gradient-card:linear-gradient(135deg,rgba(26,15,17,.92) 0%,rgba(45,27,31,.92) 100%);
+  --gradient-button:linear-gradient(135deg,#722F37 0%,#9B4F57 100%);
+  --shadow-glow:0 0 20px rgba(114,47,55,.3);
+  --shadow-rose-gold:0 0 20px rgba(232,180,184,.4);
+  --shadow-xl:0 20px 25px -5px rgba(0,0,0,.4),0 10px 10px -5px rgba(0,0,0,.25);
+}
+.premium-badge{background:var(--gradient-primary);color:var(--champagne);padding:3px 9px;border-radius:12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:inline-flex;align-items:center;gap:3px;flex-shrink:0;}
+.premium-card{background:var(--gradient-card)!important;border:1px solid rgba(232,180,184,.22)!important;box-shadow:var(--shadow-glow)!important;position:relative;overflow:hidden;}
+.premium-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gradient-accent);pointer-events:none;z-index:1;}
+.premium-button{background:var(--gradient-button);color:var(--champagne);border:none;padding:10px 20px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;transition:all .3s;box-shadow:0 4px 12px rgba(114,47,55,.35);position:relative;overflow:hidden;font-family:'DM Sans',sans-serif;}
+.premium-button:hover{transform:translateY(-2px);box-shadow:var(--shadow-rose-gold);}
+.premium-button::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.25);transform:translate(-50%,-50%);transition:width .5s,height .5s;}
+.premium-button:active::after{width:280px;height:280px;}
+#premium-toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none;}
+.premium-toast{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;min-width:260px;max-width:360px;box-shadow:var(--shadow-xl);animation:premToastIn .3s ease;pointer-events:all;border-left:3px solid var(--terra);}
+.premium-toast.success{border-left-color:var(--sage);}.premium-toast.error{border-left-color:#E53E3E;}
+.premium-toast.warning{border-left-color:var(--gold);}.premium-toast.info{border-left-color:var(--burgundy);}
+@keyframes premToastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+#shadow-support-toggle{position:fixed;bottom:80px;right:20px;width:52px;height:52px;background:var(--gradient-button);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-xl);z-index:800;transition:all .3s;border:none;font-size:20px;color:#fff;}
+#shadow-support-toggle:hover{transform:scale(1.1);box-shadow:var(--shadow-rose-gold);}
+#shadow-support-chat{position:fixed;bottom:80px;right:20px;width:340px;height:480px;background:var(--card);border:1px solid rgba(232,180,184,.3);border-radius:14px;display:none;flex-direction:column;box-shadow:var(--shadow-xl);z-index:800;overflow:hidden;}
+@media(max-width:480px){#shadow-support-chat{width:calc(100vw - 32px);right:16px;left:16px;}}
+.ss-header{padding:14px 16px;background:var(--gradient-button);color:var(--champagne);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.ss-header-title{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;}
+.ss-close{background:transparent;border:none;color:var(--champagne);cursor:pointer;font-size:18px;line-height:1;padding:2px;}
+.ss-messages{flex:1;padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;background:var(--bg);}
+.ss-msg{max-width:82%;padding:10px 13px;border-radius:10px;font-size:13px;line-height:1.5;}
+.ss-msg.user{background:var(--gradient-button);color:var(--champagne);align-self:flex-end;border-radius:10px 10px 2px 10px;}
+.ss-msg.bot{background:var(--card);border:1px solid var(--border);color:var(--txt);align-self:flex-start;border-radius:10px 10px 10px 2px;}
+.ss-input-row{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px;background:var(--card);flex-shrink:0;}
+.ss-input{flex:1;padding:8px 12px;border:1px solid var(--input-border);border-radius:7px;background:var(--input-bg);color:var(--txt);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s;}
+.ss-input:focus{border-color:var(--burgundy);}
+.ss-send{background:var(--gradient-button);color:#fff;border:none;border-radius:7px;padding:8px 12px;cursor:pointer;font-size:14px;}
+.ss-send:hover{opacity:.85;}
+#self-healing-monitor{position:fixed;bottom:80px;left:20px;width:320px;max-height:420px;background:var(--card);border:1px solid rgba(114,47,55,.45);border-radius:12px;display:none;flex-direction:column;box-shadow:var(--shadow-xl);z-index:800;overflow:hidden;}
+.shm-header{padding:12px 16px;background:linear-gradient(135deg,#0A0608,#1A0F11);border-bottom:1px solid rgba(114,47,55,.4);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.shm-title{font-size:13px;font-weight:700;color:var(--rose-gold);display:flex;align-items:center;gap:7px;}
+.shm-close{background:transparent;border:none;color:var(--txt3);cursor:pointer;font-size:16px;}
+.shm-log{flex:1;overflow-y:auto;padding:10px 12px;background:var(--bg);font-size:11px;font-family:monospace;display:flex;flex-direction:column;gap:6px;}
+.shm-entry{padding:7px 10px;border-radius:6px;border-left:2px solid;word-break:break-all;}
+.shm-entry.ok{background:rgba(107,143,113,.1);border-color:var(--sage);color:var(--sage);}
+.shm-entry.warn{background:rgba(200,168,75,.1);border-color:var(--gold);color:#C8A84B;}
+.shm-entry.err{background:rgba(114,47,55,.15);border-color:var(--burgundy);color:var(--rose-gold);}
+.shm-entry.fix{background:rgba(107,143,113,.15);border-color:#4CAF50;color:#4CAF50;}
+.health-dot{width:8px;height:8px;border-radius:50%;background:var(--sage);animation:dotPulse 2s infinite;flex-shrink:0;display:inline-block;}
+.health-dot.warn{background:var(--gold);}.health-dot.err{background:var(--burgundy);}
+@keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.owiz-step{display:none;}.owiz-step.active{display:block;}
+.owiz-progress{display:flex;gap:6px;margin-bottom:24px;}
+.owiz-dot{flex:1;height:4px;border-radius:2px;background:var(--border);transition:background .3s;}
+.owiz-dot.done{background:var(--sage);}.owiz-dot.active{background:var(--burgundy);}
+.tax-badge{background:linear-gradient(135deg,rgba(200,168,75,.2),rgba(200,168,75,.1));border:1px solid rgba(200,168,75,.3);color:var(--gold);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.anime-glow{position:relative;}
+.anime-glow::after{content:'';position:absolute;inset:-1px;border-radius:inherit;background:var(--gradient-accent);z-index:-1;opacity:0;transition:opacity .3s;filter:blur(8px);}
+.anime-glow:hover::after{opacity:.45;}
+
 </style>
 </head>
 <body>
@@ -741,7 +804,7 @@ select{color:var(--txt)!important;}
       <a style="font-size:12px;color:rgba(255,255,255,.4)" href="https://www.facebook.com/profile.php?id=61575103389941" target="_blank">Facebook</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('privacy')">Privacy</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('terms')">Terms</a>
-      <a href="mailto:csopropertyservice@gmail.com" style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:none">Support</a>
+      <a href="/cdn-cgi/l/email-protection#cdaebea2bdbfa2bda8bfb9b4bea8bfbba4aea88daaa0aca4a1e3aea2a0" style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:none">Support</a>
     </div>
   </footer>
 </div>
@@ -773,9 +836,9 @@ select{color:var(--txt)!important;}
       <p style="margin-bottom:4px">• <strong style="color:var(--txt)">Supabase</strong> — Database and authentication</p>
       <p style="margin-bottom:16px">• <strong style="color:var(--txt)">Resend</strong> — Email delivery</p>
       <h3 style="color:var(--txt);margin:16px 0 8px">5. Your Rights</h3>
-      <p style="margin-bottom:16px">You can access, correct, or delete your data at any time. Email <a href="mailto:csopropertyservice@gmail.com">csopropertyservice@gmail.com</a> to request account deletion.</p>
+      <p style="margin-bottom:16px">You can access, correct, or delete your data at any time. Email <a href="/cdn-cgi/l/email-protection#1172627e61637e61746365686274636778727451767c70787d3f727e7c"><span class="__cf_email__" data-cfemail="690a1a06191b06190c1b1d101a0c1b1f000a0c290e04080005470a0604">[email&#160;protected]</span></a> to request account deletion.</p>
       <h3 style="color:var(--txt);margin:16px 0 8px">6. Contact</h3>
-      <p>Questions? Email <strong style="color:var(--txt)"><a href="mailto:csopropertyservice@gmail.com">csopropertyservice@gmail.com</a></strong></p>
+      <p>Questions? Email <strong style="color:var(--txt)"><a href="/cdn-cgi/l/email-protection#4320302c33312c332631373a302631352a202603242e222a2f6d202c2e"><span class="__cf_email__" data-cfemail="0b6878647b79647b6e797f72786e797d62686e4b6c666a626725686466">[email&#160;protected]</span></a></strong></p>
     </div>
     <div id="terms-content" style="display:none">
       <p style="margin-bottom:12px"><strong style="color:var(--txt)">Last updated: March 2026</strong></p>
@@ -790,9 +853,9 @@ select{color:var(--txt)!important;}
       <h3 style="color:var(--txt);margin:16px 0 8px">3. Limitation of Liability</h3>
       <p style="margin-bottom:16px">HostHaven is provided as-is. We are not responsible for booking disputes, guest issues, or property damage. Maintain your own insurance.</p>
       <h3 style="color:var(--txt);margin:16px 0 8px">4. Termination</h3>
-      <p style="margin-bottom:16px">We may suspend accounts that violate these Terms. Close your account anytime by emailing <a href="mailto:csopropertyservice@gmail.com">csopropertyservice@gmail.com</a>.</p>
+      <p style="margin-bottom:16px">We may suspend accounts that violate these Terms. Close your account anytime by emailing <a href="/cdn-cgi/l/email-protection#26455549565449564354525f554354504f454366414b474f4a0845494b"><span class="__cf_email__" data-cfemail="0e6d7d617e7c617e6b7c7a777d6b7c78676d6b4e69636f6762206d6163">[email&#160;protected]</span></a>.</p>
       <h3 style="color:var(--txt);margin:16px 0 8px">5. Contact</h3>
-      <p>Questions? Email <strong style="color:var(--txt)"><a href="mailto:csopropertyservice@gmail.com">csopropertyservice@gmail.com</a></strong></p>
+      <p>Questions? Email <strong style="color:var(--txt)"><a href="/cdn-cgi/l/email-protection#dcbfafb3acaeb3acb9aea8a5afb9aeaab5bfb99cbbb1bdb5b0f2bfb3b1"><span class="__cf_email__" data-cfemail="3a5949554a48554a5f484e43495f484c53595f7a5d575b535614595557">[email&#160;protected]</span></a></strong></p>
     </div>
   </div>
   <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end">
@@ -3411,18 +3474,46 @@ select{color:var(--txt)!important;}
 <div class="toast" id="toast-el"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
 <script>
 // ════════════════════════════════════════════
 //  SUPABASE CONFIG
 // ════════════════════════════════════════════
-const SUPABASE_URL = 'https://vdnyqwpznsysrvyvbqga.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM';
+const __cfg = (typeof window !== 'undefined' && window.HH_CONFIG) || {};
+const SUPABASE_URL = __cfg.SUPABASE_URL || 'https://vdnyqwpznsysrvyvbqga.supabase.co';
+const SUPABASE_ANON_KEY = __cfg.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ════════════════════════════════════════════
+// Input sanitization to prevent XSS attacks
+function sanitizeInput(input) {
+  if (!input) return '';
+  return input
+    .replace(/[<>]/g, '') // Remove potential HTML tags
+    .trim()
+    .substring(0, 1000); // Limit length
+}
+
+function sanitizeHTML(html) {
+  const div = document.createElement('div');
+  div.textContent = html;
+  return div.innerHTML;
+}
+
+// Enhanced error handling wrapper
+async function safeAsync(fn, errorMessage = 'Operation failed') {
+  try {
+    return await fn();
+  } catch (error) {
+    console.error(errorMessage, error);
+    toast(errorMessage + ': ' + error.message);
+    throw error;
+  }
+}
+
+// ══════════════════════════════════════════
 //  ADMIN CONFIG
 // ════════════════════════════════════════════
-const ADMIN_EMAIL = 'csopropertyservice@gmail.com';
+const ADMIN_EMAIL = __cfg.ADMIN_EMAIL || '';
 
 // ════════════════════════════════════════════
 //  STATE
@@ -3787,6 +3878,9 @@ async function bootApp() {
     }
   }
 
+  // Wait a bit longer for Supabase to fully initialize session
+  await new Promise(resolve => setTimeout(resolve, 100));
+  
   const {data:{session}} = await sb.auth.getSession();
   document.getElementById('boot-loader')?.remove();
 
@@ -3847,14 +3941,32 @@ function launchApp(user) {
   }
   checkTrialStatus();
 
-  // Admin check — must come before plan is used
-  isAdmin = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-  if(isAdmin) {
-    cData.plan='business';
-    saveUserData(cUid,cData);
-    const adminNav=document.getElementById('admin-nav-item');
-    if(adminNav) adminNav.style.display='flex';
+  // Secure admin check via Supabase Function
+async function checkAdminStatus(userEmail) {
+  try {
+    const { data, error } = await sb.functions.invoke('check-admin-status', { 
+      email: userEmail 
+    });
+    if (error) throw error;
+    isAdmin = data?.isAdmin || false;
+    return isAdmin;
+  } catch (e) {
+    console.warn('Admin check failed:', e);
+    isAdmin = false;
+    return false;
   }
+}
+
+// Check admin status securely
+  (async () => {
+    await checkAdminStatus(user.email);
+    if(isAdmin) {
+      cData.plan='business';
+      saveUserData(cUid,cData);
+      const adminNav=document.getElementById('admin-nav-item');
+      if(adminNav) adminNav.style.display='flex';
+    }
+  })();
 
   const plan=cData.plan||'free';
 
@@ -4220,6 +4332,7 @@ async function upgradePlan(uid, email, name, plan) {
 async function setupSupabase() {
   toast('Creating database tables… check console for SQL to run in Supabase');
   console.log(`-- Run this SQL in Supabase SQL Editor:
+-- Create profiles table with proper RLS
 CREATE TABLE IF NOT EXISTS public.profiles (
   id uuid PRIMARY KEY,
   email text,
@@ -4228,8 +4341,65 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
+
+-- Enable Row Level Security
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Public profiles" ON public.profiles FOR ALL USING (true);`);
+
+-- Users can only read/write their own profile
+CREATE POLICY "Users can view own profile" ON public.profiles
+  FOR SELECT USING (auth.uid() = id);
+
+CREATE POLICY "Users can update own profile" ON public.profiles
+  FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "Users can insert own profile" ON public.profiles
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- Admins can access all profiles
+CREATE POLICY "Admins can view all profiles" ON public.profiles
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles 
+      WHERE id = auth.uid() AND plan = 'business'
+    )
+  );
+
+CREATE POLICY "Admins can update all profiles" ON public.profiles
+  FOR UPDATE USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles 
+      WHERE id = auth.uid() AND plan = 'business'
+    )
+  );
+
+-- Create user_data table for storing user-specific data
+CREATE TABLE IF NOT EXISTS public.user_data (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE,
+  data jsonb,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+-- Enable RLS for user_data
+ALTER TABLE public.user_data ENABLE ROW LEVEL SECURITY;
+
+-- Users can only access their own data
+CREATE POLICY "Users can own their data" ON public.user_data
+  FOR ALL USING (user_id = auth.uid());
+
+-- Create functions for secure admin checks
+CREATE OR REPLACE FUNCTION check_admin_status(user_email text)
+RETURNS TABLE(is_admin boolean)
+LANGUAGE sql SECURITY DEFINER
+AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.profiles 
+    WHERE email = user_email AND plan = 'business'
+  );
+END;
+$$ SECURITY DEFINER;`);
   alert('SQL copied to console (F12). Go to Supabase → SQL Editor → paste and run it, then refresh.');
 }
 
@@ -4238,16 +4408,14 @@ CREATE POLICY "Public profiles" ON public.profiles FOR ALL USING (true);`);
 // ════════════════════════════════════════════
 const GRADS=['pi1','pi2','pi3','pi4','pi5','pi6'];
 async function addProperty(){
-  const name=document.getElementById('mp-name').value.trim();
+  const name = sanitizeInput(document.getElementById('mp-name')?.value?.trim());
   if(!name){toast('Enter a property name');return;}
   const _plan=cData.plan||'free';const _limit=_plan==='free'?1:_plan==='pro'||_plan==='trial'?10:_plan==='cohost'?25:9999;if(cData.properties.length>=_limit&&!isAdmin){closeModal('add-property-modal');showUpgradeModal('You\'ve reached your '+_limit+'-property limit. Upgrade to unlock more.');return;}
   const photo = await getPhotoData('mp-photo');
-  const p={id:'p_'+Date.now(),name,emoji:document.getElementById('mp-emoji').value||'🏡',location:document.getElementById('mp-loc').value||'',description:document.getElementById('mp-desc').value||'',rate:parseFloat(document.getElementById('mp-rate').value)||100,maxGuests:parseInt(document.getElementById('mp-guests').value)||2,wifi:document.getElementById('mp-wifi').value||'',wifiPw:document.getElementById('mp-wifipw').value||'',doorCode:document.getElementById('mp-door').value||'',parking:document.getElementById('mp-parking').value||'',photo:photo||null,occupancy:Math.floor(Math.random()*25)+65,rating:(4.7+Math.random()*.3).toFixed(2),gradient:GRADS[cData.properties.length%6],created:Date.now()};
+  const p={id:'p_'+Date.now(),name,emoji:sanitizeInput(document.getElementById('mp-emoji')?.value)||'🏡',location:sanitizeInput(document.getElementById('mp-loc')?.value)||'',description:sanitizeInput(document.getElementById('mp-desc')?.value)||'',rate:parseFloat(document.getElementById('mp-rate')?.value)||100,maxGuests:parseInt(document.getElementById('mp-guests')?.value)||2,wifi:sanitizeInput(document.getElementById('mp-wifi')?.value)||'',wifiPw:sanitizeInput(document.getElementById('mp-wifipw')?.value)||'',doorCode:sanitizeInput(document.getElementById('mp-door')?.value)||'',parking:sanitizeInput(document.getElementById('mp-parking')?.value)||'',photo:photo||null,occupancy:Math.floor(Math.random()*25)+65,rating:(4.7+Math.random()*.3).toFixed(2),gradient:GRADS[cData.properties.length%6],created:Date.now()};
   cData.properties.push(p);saveUserData(cUid,cData);closeModal('add-property-modal');
-  ['mp-name','mp-loc','mp-desc','mp-rate','mp-guests','mp-wifi','mp-wifipw','mp-door','mp-parking'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  document.getElementById('mp-emoji').value='🏡';
-  document.getElementById('mp-photo-preview').innerHTML='';
-  toast(`"${name}" added! 🏠`);renderAll();
+  toast(sanitizeHTML(name)+' added!');
+  renderAll();
 }
 function renderProperties(){
   {
@@ -4364,7 +4532,7 @@ async function sendNotification(type, data) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM`,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
       },
       body: JSON.stringify({ type, hostEmail, data }),
     });
@@ -6424,7 +6592,7 @@ async function sendSMS(convId) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM`,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
       },
       body: JSON.stringify({ to: phone, message }),
     });
@@ -6558,7 +6726,7 @@ async function syncIcalUrl(url, propId, propName) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM`,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
       },
       body: JSON.stringify({ url }),
       signal: controller.signal,
@@ -7734,7 +7902,7 @@ async function sendOwnerReport() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM'
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
       },
       body: JSON.stringify({
         to: ownerEmail,
@@ -9253,6 +9421,8 @@ async function initAuth() {
   //   SIGNED_IN is ignored — doLogin/doSignup handle that path directly
   //   to avoid double-calling launchApp() and racing the button restore in finally{}
   sb.auth.onAuthStateChange(async function(event, session) {
+    console.log('Auth state change:', event, session?.user?.email);
+    
     // Handle password reset links — Supabase fires PASSWORD_RECOVERY when user clicks reset email
     if(event === 'PASSWORD_RECOVERY') { showScreen('reset'); return; }
     if(event === 'SIGNED_IN') return;
@@ -9293,7 +9463,345 @@ window.addEventListener('load', () => {
   if('caches' in window){caches.keys().then(n=>n.forEach(k=>caches.delete(k)));}
   initAuth();
 });
+
+// PREMIUM ADDITIONS
+// MARKETPLACE TAX ENGINE
+var PLATFORM_FEE_PCT = 0.10;
+
+function calcMarketplaceTax(jobAmount) {
+  var fee = parseFloat((jobAmount * PLATFORM_FEE_PCT).toFixed(2));
+  return { fee: fee, providerPayout: parseFloat((jobAmount - fee).toFixed(2)), total: jobAmount };
+}
+
+async function processMarketplaceJob(jobId, amount, providerId) {
+  try {
+    var tx = calcMarketplaceTax(amount);
+    shmLog('Job #' + jobId + ': $' + amount + ' fee=$' + tx.fee + ' payout=$' + tx.providerPayout, 'ok');
+    if (typeof sb !== 'undefined' && typeof cUid !== 'undefined' && cUid) {
+      await sb.from('jobs').update({
+        platform_fee: tx.fee, provider_payout: tx.providerPayout,
+        fee_pct: PLATFORM_FEE_PCT, status: 'completed',
+        completed_at: new Date().toISOString()
+      }).eq('id', jobId).eq('uid', cUid);
+      await sb.from('platform_earnings').upsert({
+        uid: cUid, job_id: jobId, amount: tx.fee,
+        provider_id: providerId, created_at: new Date().toISOString()
+      });
+      shmLog('Marketplace tax saved to Supabase', 'fix');
+    }
+    var jobs = (typeof cData !== 'undefined' ? cData.jobs : null) || [];
+    var job = jobs.find(function(j){ return j.id === jobId; });
+    if (job) { job.platformFee = tx.fee; job.providerPayout = tx.providerPayout; job.status = 'completed'; }
+    var totalFees = jobs.filter(function(j){ return j.status === 'completed'; })
+      .reduce(function(s,j){ return s + (j.platformFee || 0); }, 0);
+    var feeEl = document.getElementById('mkt-fees');
+    if (feeEl) feeEl.textContent = '$' + totalFees.toFixed(2);
+    showPremiumNotification('Job done! Platform fee $' + tx.fee + ' retained', 'success');
+    return tx;
+  } catch(e) {
+    shmLog('processMarketplaceJob: ' + e.message, 'err');
+    analyzeAndSuggestFix(e);
+    throw e;
+  }
+}
+
+// SHADOW SUPPORT AI
+var _shadowOpen = false;
+
+function toggleShadowSupport() {
+  _shadowOpen = !_shadowOpen;
+  var chat = document.getElementById('shadow-support-chat');
+  var btn  = document.getElementById('shadow-support-toggle');
+  if (!chat || !btn) return;
+  chat.style.display = _shadowOpen ? 'flex' : 'none';
+  btn.style.display  = _shadowOpen ? 'none' : 'flex';
+  if (_shadowOpen) { var inp = document.getElementById('ss-input'); if(inp) inp.focus(); }
+}
+
+function sendShadowMsg() {
+  var input = document.getElementById('ss-input');
+  var msgBox = document.getElementById('ss-messages');
+  if (!input || !msgBox) return;
+  var msg = (input.value || '').trim();
+  if (!msg) return;
+  input.value = '';
+  var ud = document.createElement('div');
+  ud.className = 'ss-msg user'; ud.textContent = msg;
+  msgBox.appendChild(ud);
+  var td = document.createElement('div');
+  td.className = 'ss-msg bot'; td.textContent = 'Querying data...';
+  msgBox.appendChild(td);
+  msgBox.scrollTop = msgBox.scrollHeight;
+  setTimeout(function(){
+    td.innerHTML = shadowQueryData(msg.toLowerCase());
+    msgBox.scrollTop = msgBox.scrollHeight;
+  }, 600);
+}
+
+function shadowQueryData(q) {
+  var d = (typeof cData !== 'undefined' ? cData : null) || {};
+  var bookings = d.bookings || []; var expenses = d.expenses || [];
+  var guests   = d.guests   || []; var cleaners = d.cleaners || [];
+  var jobs     = d.jobs     || []; var props    = d.properties || [];
+  var now = new Date(); var mo = now.getMonth(); var yr = now.getFullYear();
+  var moBk = bookings.filter(function(b){ var dt=new Date(b.checkin||b.date||0); return dt.getMonth()===mo&&dt.getFullYear()===yr&&b.status!=='cancelled'; });
+  var totRev = bookings.filter(function(b){ return b.status!=='cancelled'; }).reduce(function(s,b){ return s+(b.price||0); }, 0);
+  var moRev  = moBk.reduce(function(s,b){ return s+(b.price||0); }, 0);
+  var totFee = jobs.filter(function(j){ return j.status==='completed'; }).reduce(function(s,j){ return s+(j.platformFee||0); }, 0);
+  var actBk  = bookings.filter(function(b){ return b.status==='confirmed'||b.status==='active'; });
+  var next   = bookings.filter(function(b){ return new Date(b.checkin||b.date||0)>=now&&b.status!=='cancelled'; }).sort(function(a,b){ return new Date(a.checkin||0)-new Date(b.checkin||0); });
+  if(q.indexOf('booking')>-1||q.indexOf('reservation')>-1)
+    return '📅 <strong>Bookings:</strong> Total: '+bookings.length+' | Active: '+actBk.length+' | This month: '+moBk.length+(next.length?'<br>Next: '+(next[0].guestName||'Guest')+' on '+(next[0].checkin||'TBD'):'');
+  if(q.indexOf('revenue')>-1||q.indexOf('income')>-1||q.indexOf('earn')>-1)
+    return '💰 <strong>Revenue:</strong> All-time: $'+totRev.toLocaleString()+'<br>This month: $'+moRev.toLocaleString()+'<br>Platform fees: $'+totFee.toFixed(2);
+  if(q.indexOf('expense')>-1||q.indexOf('cost')>-1)
+    return '📊 <strong>Expenses:</strong> $'+expenses.reduce(function(s,e){return s+(e.amount||0);},0).toLocaleString()+' across '+expenses.length+' entries';
+  if(q.indexOf('guest')>-1)
+    return '👥 <strong>Guests:</strong> '+guests.length+' total | '+actBk.length+' active bookings';
+  if(q.indexOf('clean')>-1||q.indexOf('job')>-1)
+    return '🧹 <strong>Cleaning:</strong> '+cleaners.length+' cleaners | '+jobs.filter(function(j){return j.status==='open';}).length+' open | '+jobs.filter(function(j){return j.status==='completed';}).length+' done';
+  if(q.indexOf('propert')>-1)
+    return '🏠 <strong>Properties:</strong> '+props.length+' in portfolio';
+  if(q.indexOf('fee')>-1||q.indexOf('platform')>-1)
+    return '💎 <strong>Platform Fees:</strong> $'+totFee.toFixed(2)+' from '+jobs.filter(function(j){return j.status==='completed';}).length+' jobs (10%)';
+  return '🔍 Try: bookings, revenue, expenses, guests, cleaning jobs, properties, platform fees';
+}
+
+// SELF-HEALING MONITOR
+var _shmOpen = false;
+
+function shmLog(message, type) {
+  type = type || 'ok';
+  var log = document.getElementById('shm-log');
+  if (!log) return;
+  var e = document.createElement('div');
+  e.className = 'shm-entry ' + type;
+  e.textContent = '[' + new Date().toLocaleTimeString() + '] ' + message;
+  log.appendChild(e); log.scrollTop = log.scrollHeight;
+  var dot = document.getElementById('shm-dot');
+  if (dot) {
+    dot.className = 'health-dot' + (type==='err'?' err':type==='warn'?' warn':'');
+    if(type==='ok'||type==='fix') setTimeout(function(){ if(dot) dot.className='health-dot'; }, 3000);
+  }
+}
+
+function analyzeAndSuggestFix(error) {
+  var stack = (error && (error.stack || error.message)) || String(error);
+  shmLog('Analyzing: ' + stack.substring(0,100), 'warn');
+  var fix = 'Manual review required.';
+  if(stack.indexOf('null')>-1||stack.indexOf('undefined')>-1) fix='Fix: Add null check — use optional chaining (obj?.prop).';
+  else if(stack.indexOf('NetworkError')>-1) fix='Fix: Network error — check Supabase URL/key.';
+  else if(stack.indexOf('RLS')>-1||stack.indexOf('permission')>-1) fix='Fix: RLS policy blocking. Check auth.uid()=uid policy.';
+  else if(stack.indexOf('duplicate')>-1) fix='Fix: Unique constraint — use upsert() instead of insert().';
+  else if(stack.indexOf('JWT')>-1||stack.indexOf('session')>-1) fix='Fix: Session expired. Call sb.auth.refreshSession().';
+  else if(stack.indexOf('CORS')>-1) fix='Fix: CORS — check Supabase allowed origins.';
+  else if(stack.indexOf('500')>-1) fix='Fix: Server 500 — check Supabase Edge Function logs.';
+  shmLog('Suggested ' + fix, 'fix');
+  showPremiumNotification('Self-healer: ' + fix.substring(0,55), 'warning');
+}
+
+function toggleSelfHealingMonitor() {
+  _shmOpen = !_shmOpen;
+  var mon = document.getElementById('self-healing-monitor');
+  if (mon) mon.style.display = _shmOpen ? 'flex' : 'none';
+}
+
+window.addEventListener('error', function(e){
+  shmLog('ERROR: '+(e.message||'Unknown'), 'err');
+  analyzeAndSuggestFix(e);
+});
+window.addEventListener('unhandledrejection', function(e){
+  shmLog('PROMISE: '+(e.reason&&e.reason.message?e.reason.message:String(e.reason)), 'err');
+  analyzeAndSuggestFix(e.reason);
+});
+(function patchFetch(){
+  var orig = window.fetch;
+  window.fetch = async function(){
+    try {
+      var res = await orig.apply(this, arguments);
+      if(res && res.status >= 500){
+        var url = typeof arguments[0]==='string'?arguments[0]:(arguments[0]&&arguments[0].url)||'?';
+        shmLog('HTTP '+res.status+' from '+String(url).substring(0,50), 'err');
+        analyzeAndSuggestFix({message:'HTTP '+res.status, stack:'HTTP 500 error'});
+      }
+      return res;
+    } catch(e){ shmLog('Fetch failed: '+e.message,'err'); analyzeAndSuggestFix(e); throw e; }
+  };
+})();
+
+// ONBOARDING WIZARD
+var _owizStep = 1;
+var _OWIZ_MAX = 4;
+
+function openOnboardingWizard() {
+  _owizStep = 1;
+  var el = document.getElementById('onboarding-wizard-modal');
+  if(el) { el.style.display = 'flex'; _owizRender(); }
+}
+function closeOnboardingWizard() {
+  var el = document.getElementById('onboarding-wizard-modal');
+  if(el) el.style.display = 'none';
+}
+function _owizRender() {
+  for(var i=1;i<=_OWIZ_MAX;i++){
+    var s=document.getElementById('owiz-step-'+i);
+    var dd=document.getElementById('owiz-d'+i);
+    if(s) s.classList.toggle('active', i===_owizStep);
+    if(dd){ dd.classList.remove('done','active'); if(i<_owizStep)dd.classList.add('done'); else if(i===_owizStep)dd.classList.add('active'); }
+  }
+  var bb=document.getElementById('owiz-back-btn');
+  var nb=document.getElementById('owiz-next-btn');
+  if(bb) bb.style.display = _owizStep>1?'':'none';
+  if(nb) nb.textContent = _owizStep===_OWIZ_MAX?'Finish':'Next';
+}
+function owizNext() {
+  if(_owizStep===1){ var n=document.getElementById('owiz-prop-name'); if(n&&!n.value.trim()){showPremiumNotification('Please enter a property name','warning');return;} }
+  if(_owizStep>=_OWIZ_MAX){ _owizFinish(); return; }
+  _owizStep++; _owizRender();
+}
+function owizBack() { if(_owizStep>1){_owizStep--;_owizRender();} }
+function _owizFinish() {
+  closeOnboardingWizard();
+  showPremiumNotification('Co-Host Launch Kit setup complete!','success');
+  shmLog('Onboarding wizard completed','fix');
+  try { localStorage.setItem('hh_wizard_done','1'); } catch(e){}
+}
+
+// PREMIUM NOTIFICATIONS
+function showPremiumNotification(message, type) {
+  type = type || 'success';
+  var c = document.getElementById('premium-toast-container');
+  if(!c){ if(typeof toast==='function') toast(message); return; }
+  var t = document.createElement('div');
+  t.className = 'premium-toast ' + type;
+  var icons = {success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
+  t.innerHTML = '<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:15px">'+(icons[type]||'ℹ️')+'</span><span style="font-size:13px;color:var(--txt)">'+String(message).replace(/</g,'&lt;')+'</span></div>';
+  c.appendChild(t);
+  setTimeout(function(){ t.style.cssText='opacity:0;transform:translateX(40px);transition:all .3s;'; setTimeout(function(){t.remove();},350); }, 3200);
+}
+
+// TOPBAR BUTTON INJECTION
+function _injectPremiumButtons() {
+  var r = document.querySelector('.topbar-r');
+  if(!r) return;
+  if(!document.getElementById('shm-btn')){
+    var b1=document.createElement('button');
+    b1.id='shm-btn';b1.className='icon-btn';b1.title='Self-Healing Monitor';b1.textContent='🛡️';
+    b1.onclick=toggleSelfHealingMonitor;
+    r.insertBefore(b1,r.firstChild);
+  }
+  if(!document.getElementById('wizard-btn')){
+    var b2=document.createElement('button');
+    b2.id='wizard-btn';b2.className='icon-btn';b2.title='Setup Wizard';b2.textContent='🧙';
+    b2.onclick=openOnboardingWizard;
+    r.insertBefore(b2,r.firstChild);
+  }
+}
+
+// BOOT
+setTimeout(function(){
+  _injectPremiumButtons();
+  shmLog('HostHaven Premium v2 loaded','ok');
+  shmLog('Marketplace tax engine ready (10% fee)','ok');
+  shmLog('Shadow Support AI ready','ok');
+  shmLog('Self-Healing Monitor watching','fix');
+  try {
+    var lk = typeof LOCAL_KEY !== 'undefined' ? LOCAL_KEY : 'hh_local_v1';
+    if(!localStorage.getItem('hh_wizard_done') && !localStorage.getItem(lk)){
+      setTimeout(openOnboardingWizard, 2500);
+    }
+  } catch(e){}
+}, 1200);
 </script>
-<div id="mobile-bottom-nav"><button class="mob-nav-item active" id="mob-nav-dashboard" onclick="nav('dashboard',null);updateMobNav('dashboard')"><span class="mob-ico">📊</span><span>Home</span></button><button class="mob-nav-item" id="mob-nav-bookings" onclick="nav('bookings',null);updateMobNav('bookings')"><span class="mob-ico">📅</span><span>Bookings</span></button><button class="mob-nav-item" id="mob-nav-messages" onclick="nav('messages',null);updateMobNav('messages')"><span class="mob-ico">💬</span><span>Messages</span></button><button class="mob-nav-item" id="mob-nav-cleaning" onclick="nav('cleaning',null);updateMobNav('cleaning')"><span class="mob-ico">🧹</span><span>Tasks</span></button><button class="mob-nav-item" onclick="openSidebar()"><span class="mob-ico">☰</span><span>More</span></button></div>
+<!-- PREMIUM WIDGETS -->
+<div id="premium-toast-container"></div>
+
+<button id="shadow-support-toggle" onclick="toggleShadowSupport()" title="Shadow Support AI">🤖</button>
+<div id="shadow-support-chat">
+  <div class="ss-header">
+    <div class="ss-header-title"><span class="health-dot"></span>Shadow Support AI</div>
+    <button class="ss-close" onclick="toggleShadowSupport()">✕</button>
+  </div>
+  <div class="ss-messages" id="ss-messages">
+    <div class="ss-msg bot">👋 Ask me about your bookings, revenue, guests, or cleaning jobs!<br><br>Try: <em>"How many bookings?"</em> or <em>"What is my revenue?"</em></div>
+  </div>
+  <div class="ss-input-row">
+    <input class="ss-input" id="ss-input" placeholder="Ask about your data..." onkeydown="if(event.key==='Enter')sendShadowMsg()">
+    <button class="ss-send" onclick="sendShadowMsg()">&#10148;</button>
+  </div>
+</div>
+
+<div id="self-healing-monitor">
+  <div class="shm-header">
+    <div class="shm-title"><span class="health-dot" id="shm-dot"></span>Self-Healing Monitor</div>
+    <button class="shm-close" onclick="toggleSelfHealingMonitor()">✕</button>
+  </div>
+  <div class="shm-log" id="shm-log">
+    <div class="shm-entry ok">[BOOT] HostHaven initialized</div>
+  </div>
+</div>
+
+<div id="onboarding-wizard-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;align-items:center;justify-content:center;padding:20px;">
+  <div style="max-width:560px;width:100%;border-radius:20px;padding:36px;background:var(--card);border:1px solid rgba(232,180,184,.25);box-shadow:0 20px 60px rgba(0,0,0,.4);position:relative;">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(45deg,#E8B4B8,#F7E7CE);border-radius:20px 20px 0 0;"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);">Co-Host Launch Kit <span class="premium-badge">NEW</span></div>
+      <button onclick="closeOnboardingWizard()" style="background:transparent;border:none;font-size:18px;color:var(--txt3);cursor:pointer;">✕</button>
+    </div>
+    <div style="font-size:13px;color:var(--txt2);margin-bottom:20px;">Set up your property management in 4 steps.</div>
+    <div class="owiz-progress">
+      <div class="owiz-dot active" id="owiz-d1"></div>
+      <div class="owiz-dot" id="owiz-d2"></div>
+      <div class="owiz-dot" id="owiz-d3"></div>
+      <div class="owiz-dot" id="owiz-d4"></div>
+    </div>
+    <div class="owiz-step active" id="owiz-step-1">
+      <div style="font-size:32px;margin-bottom:12px;">🏠</div>
+      <div style="font-family:Fraunces,serif;font-size:18px;color:var(--txt);margin-bottom:6px;">Add Your First Property</div>
+      <div style="font-size:13px;color:var(--txt2);margin-bottom:18px;">Tell us about your rental property.</div>
+      <div class="fi"><label>Property Name</label><input id="owiz-prop-name" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--txt);outline:none;" placeholder="e.g. Beach House Cabo"></div>
+      <div class="fi"><label>Location</label><input id="owiz-prop-loc" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--txt);outline:none;" placeholder="e.g. Miami, FL"></div>
+      <div class="fi"><label>Nightly Rate ($)</label><input id="owiz-prop-rate" type="number" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--txt);outline:none;" placeholder="150"></div>
+    </div>
+    <div class="owiz-step" id="owiz-step-2">
+      <div style="font-size:32px;margin-bottom:12px;">🔗</div>
+      <div style="font-family:Fraunces,serif;font-size:18px;color:var(--txt);margin-bottom:6px;">Connect Your Platforms</div>
+      <div style="font-size:13px;color:var(--txt2);margin-bottom:18px;">Sync calendars to prevent double-bookings.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <label style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card2);border:1px solid var(--border);border-radius:10px;cursor:pointer;"><input type="checkbox" id="owiz-airbnb" style="width:16px;height:16px;accent-color:var(--terra);"><span style="font-size:20px;">🏠</span><div><div style="font-size:13px;font-weight:600;color:var(--txt)">Airbnb</div><div style="font-size:11px;color:var(--txt3)">iCal sync</div></div></label>
+        <label style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card2);border:1px solid var(--border);border-radius:10px;cursor:pointer;"><input type="checkbox" id="owiz-vrbo" style="width:16px;height:16px;accent-color:var(--terra);"><span style="font-size:20px;">🏡</span><div><div style="font-size:13px;font-weight:600;color:var(--txt)">VRBO</div><div style="font-size:11px;color:var(--txt3)">iCal sync</div></div></label>
+        <label style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card2);border:1px solid var(--border);border-radius:10px;cursor:pointer;"><input type="checkbox" id="owiz-booking" style="width:16px;height:16px;accent-color:var(--terra);"><span style="font-size:20px;">🌐</span><div><div style="font-size:13px;font-weight:600;color:var(--txt)">Booking.com</div><div style="font-size:11px;color:var(--txt3)">iCal sync</div></div></label>
+      </div>
+    </div>
+    <div class="owiz-step" id="owiz-step-3">
+      <div style="font-size:32px;margin-bottom:12px;">🧹</div>
+      <div style="font-family:Fraunces,serif;font-size:18px;color:var(--txt);margin-bottom:6px;">Add Your Cleaning Team</div>
+      <div style="font-size:13px;color:var(--txt2);margin-bottom:18px;">Marketplace auto-applies a <span class="tax-badge">10% platform fee</span> per job.</div>
+      <div class="fi"><label>Cleaner Name</label><input id="owiz-cleaner-name" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--txt);outline:none;" placeholder="e.g. Maria Garcia"></div>
+      <div class="fi"><label>Hourly Rate ($)</label><input id="owiz-cleaner-rate" type="number" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--txt);outline:none;" placeholder="35"></div>
+    </div>
+    <div class="owiz-step" id="owiz-step-4">
+      <div style="text-align:center;padding:20px 0;">
+        <div style="font-size:56px;margin-bottom:16px;">🎉</div>
+        <div style="font-family:Fraunces,serif;font-size:22px;color:var(--txt);margin-bottom:10px;">You're All Set!</div>
+        <div style="font-size:14px;color:var(--txt2);line-height:1.6;">HostHaven is ready to manage bookings, cleaners, and track earnings automatically.</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:24px;padding-top:20px;border-top:1px solid var(--border);">
+      <button class="btn btn-ghost" id="owiz-back-btn" onclick="owizBack()" style="display:none;">Back</button>
+      <div style="flex:1;"></div>
+      <button class="premium-button" id="owiz-next-btn" onclick="owizNext()">Next</button>
+    </div>
+  </div>
+</div>
+
+<div id="mobile-bottom-nav">
+  <button class="mob-nav-item active" id="mob-nav-dashboard" onclick="nav('dashboard',this)"><span class="mob-ico">📊</span><span>Dashboard</span></button>
+  <button class="mob-nav-item" id="mob-nav-bookings" onclick="nav('bookings',this)"><span class="mob-ico">📅</span><span>Bookings</span></button>
+  <button class="mob-nav-item" id="mob-nav-messages" onclick="nav('messages',this)"><span class="mob-ico">💬</span><span>Messages</span></button>
+  <button class="mob-nav-item" id="mob-nav-marketplace" onclick="nav('marketplace',this)"><span class="mob-ico">🏪</span><span>Market</span></button>
+  <button class="mob-nav-item" id="mob-nav-settings" onclick="nav('settings',this)"><span class="mob-ico">⚙️</span><span>Settings</span></button>
+</div>
+
 </body>
 </html>
