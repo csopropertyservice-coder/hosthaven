@@ -3620,8 +3620,11 @@ async function doLogin() {
     } catch(e){}
     applyDark(cData.darkMode||false);
     try{sessionStorage.removeItem('hh_last_page');}catch(e){}
-    // Reload cleanly so initAuth handles the session
-    window.location.reload();
+    ['landing','login','signup','onboard','forgot','reset'].forEach(function(n){
+      const el=document.getElementById('screen-'+n);
+      if(el)el.style.display='none';
+    });
+    launchApp(cUser);
   } catch(e) {
     showErr('login-err', e.message==='Invalid login credentials'?'Invalid email or password — try signing up first':e.message);
   } finally {
@@ -9180,7 +9183,6 @@ function printTaxReport() {
 // ═════════════════════════════════════════
 async function initAuth() {
   try {
-    // First check for existing session (handles refresh)
     const { data: { session } } = await sb.auth.getSession();
     if(session && session.user) {
       cUid = session.user.id;
@@ -9198,8 +9200,31 @@ async function initAuth() {
       launchApp(cUser);
       return;
     }
-  } catch(e) {}
-  // No session found - show landing
+  } catch(e) {
+    console.error('initAuth error:', e);
+  }
+  // No active session - use onAuthStateChange as fallback
+  sb.auth.onAuthStateChange(async function(event, session) {
+    if(event === 'SIGNED_IN' && session && session.user) {
+      cUid = session.user.id;
+      cUser = {
+        email: session.user.email,
+        name: session.user.user_metadata?.full_name || session.user.email.split('@')[0]
+      };
+      const app = document.getElementById('app');
+      if(app && app.classList.contains('visible')) return;
+      try {
+        const data = await loadUserData(cUid);
+        cData = data || (buildDemoData ? buildDemoData() : {});
+        if(!data) await saveUserData(cUid, cData);
+      } catch(e) {
+        cData = buildDemoData ? buildDemoData() : {};
+      }
+      launchApp(cUser);
+    } else if(event === 'SIGNED_OUT') {
+      showScreen('landing');
+    }
+  });
   showScreen('landing');
 }
 
