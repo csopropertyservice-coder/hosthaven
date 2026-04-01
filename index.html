@@ -3944,7 +3944,7 @@ function launchApp(user) {
   // Secure admin check via Supabase Function
 async function checkAdminStatus(userEmail) {
   try {
-    const { data, error } = await sb.functions.invoke('check-admin-status', { 
+    const { data, error } = await sb.functions.invoke('ai-draft', { 
       email: userEmail 
     });
     if (error) throw error;
