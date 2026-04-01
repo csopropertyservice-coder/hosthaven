@@ -1,4 +1,240 @@
 <!DOCTYPE html>
+<script>
+// --- LAYOUT FIX SCRIPT ---
+/*
+ * Fixes for major layout bug:
+ * - Ensures .main-area and .page always start at the top (no offset on nav)
+ * - Fixes position/height conflicts and forces scroll restoration to top
+ */
+
+// Updated nav() function to always reset scroll and clear offsets
+function nav(pageId) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(page => {
+    page.classList.remove('active');
+    // Remove any transforms or offsets introduced previously
+    page.style.transform = 'none';
+    page.style.top = '0px';
+    page.style.marginTop = '0px';
+    page.style.position = 'static';
+  });
+  // Show new page
+  const page = document.getElementById(pageId);
+  if (page) {
+    page.classList.add('active');
+    page.style.transform = 'none';
+    page.style.top = '0px';
+    page.style.marginTop = '0px';
+    page.style.position = 'static';
+    page.scrollTop = 0;
+  }
+  // Reset main-area offsets
+  const mainArea = document.querySelector('.main-area');
+  if (mainArea) {
+    mainArea.style.transform = 'none';
+    mainArea.style.top = '0px';
+    mainArea.style.marginTop = '0px';
+    mainArea.style.position = 'static';
+    mainArea.scrollTop = 0;
+  }
+  // Force window scroll to top
+  window.scrollTo(0, 0);
+}
+</script>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <!-- ... unchanged head ... -->
+  <style>
+    html, body {
+      height: 100%;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      position: relative;
+      width: 100vw;
+      min-height: 100vh; /* Ensure full viewport */
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .main-area {
+      position: static !important; /* Use static to clear any offset context */
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100%;
+      min-height: 100vh;
+      height: auto !important; /* Let content define height */
+      transform: none !important;
+      box-sizing: border-box;
+      z-index: 0 !important;
+    }
+
+    .page {
+      position: static !important; /* Remove any relative/absolute offset */
+      top: 0 !important;
+      left: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      min-height: 0 !important;
+      height: auto !important;
+      width: 100%;
+      transform: none !important;
+      display: block;
+      visibility: visible;
+      box-sizing: border-box;
+      z-index: 0 !important;
+    }
+
+    .page:not(.active) {
+      display: none !important;
+      visibility: hidden !important;
+    }
+
+    .sidebar {
+      position: static !important; /* Prevent from affecting flow */
+      z-index: 1;
+    }
+  </style>
+  <script>
+    // Helper to clear scroll/top/offsets
+    function resetMainArea() {
+      // Remove scroll and offsets
+      const main = document.querySelector('.main-area');
+      if (main) {
+        main.scrollTop = 0;
+        main.style.top = '0px';
+        main.style.marginTop = '0px';
+        main.style.transform = 'none';
+      }
+      // Ensure all .page are reset
+      document.querySelectorAll('.page').forEach(pg => {
+        pg.style.top = '0px';
+        pg.style.marginTop = '0px';
+        pg.style.transform = 'none';
+        pg.scrollTop = 0;
+      });
+      // Remove any unwanted scroll/offset on html/body
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+
+    // Patch nav function to clear scroll/offsets and show the correct page
+    function nav(tabId) {
+      // Hide all pages and remove 'active'
+      document.querySelectorAll('.page').forEach(pg => {
+        pg.classList.remove('active');
+        pg.style.display = 'none';
+        pg.style.visibility = 'hidden';
+        pg.style.marginTop = '0px';
+        pg.style.top = '0px';
+        pg.style.transform = 'none';
+      });
+      // Show the selected page at the very top
+      const activePg = document.getElementById(tabId);
+      if (activePg) {
+        activePg.classList.add('active');
+        activePg.style.display = 'block';
+        activePg.style.visibility = 'visible';
+        activePg.style.marginTop = '0px';
+        activePg.style.top = '0px';
+        activePg.style.transform = 'none';
+        activePg.scrollTop = 0;
+      }
+      // Reset .main-area and body scroll positions and offsets
+      resetMainArea();
+    }
+
+    // Optionally, reset on page load as a safety
+    window.addEventListener('DOMContentLoaded', resetMainArea);
+  </script>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<!-- ... unchanged head ... -->
+<style>
+/* Fix for layout bug: Ensure .main-area and .page are properly positioned and any offsets cleared */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100%;
+}
+
+.main-area {
+  position: relative !important;
+  top: 0 !important;
+  margin-top: 0 !important;
+  height: 100%;
+  min-height: 0;
+  transform: none !important;
+}
+
+.page {
+  position: relative !important;
+  top: 0 !important;
+  margin-top: 0 !important;
+  min-height: 0;
+  height: auto;
+  transform: none !important;
+  display: block;
+  visibility: visible;
+}
+
+.page:not(.active) {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.sidebar {
+  /* Ensure sidebar does not affect normal flow */
+  position: relative;
+  z-index: 1;
+}
+
+</style>
+<script>
+// Patch nav function to clear scroll/offsets when switching tabs
+function nav(tab) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(pg => {
+    pg.classList.remove('active');
+    pg.style.display = 'none';
+    pg.style.visibility = 'hidden';
+    pg.style.top = '0';
+    pg.style.marginTop = '0';
+    pg.style.transform = 'none';
+  });
+  // Show selected page
+  var active = document.getElementById(tab);
+  if (active) {
+    active.classList.add('active');
+    active.style.display = 'block';
+    active.style.visibility = 'visible';
+    active.style.top = '0';
+    active.style.marginTop = '0';
+    active.style.transform = 'none';
+    // Also make sure main-area is at top
+    let mainArea = document.querySelector('.main-area');
+    if (mainArea) {
+      mainArea.style.top = '0';
+      mainArea.style.marginTop = '0';
+      mainArea.style.transform = 'none';
+      mainArea.scrollTop = 0;
+    }
+  }
+  // Optionally scroll to top
+  window.scrollTo(0,0);
+}
+</script>
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
