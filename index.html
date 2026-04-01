@@ -9182,28 +9182,33 @@ function printTaxReport() {
 //  AUTH INIT
 // ═════════════════════════════════════════
 async function initAuth() {
-  // onAuthStateChange is the single source of truth for session state
-  // It fires immediately on load with INITIAL_SESSION or SIGNED_IN if session exists
-  let initialSessionHandled = false;
+  // Handles cold-start only:
+  //   INITIAL_SESSION + user  → page refresh while logged in, restore session
+  //   INITIAL_SESSION no user → not logged in, show landing
+  //   SIGNED_OUT              → show landing
+  //   SIGNED_IN is ignored — doLogin/doSignup handle that path directly
+  //   to avoid double-calling launchApp() and racing the button restore in finally{}
   sb.auth.onAuthStateChange(async function(event, session) {
-    // Only skip duplicate INITIAL_SESSION fires, never skip SIGNED_IN
-    if(event === 'INITIAL_SESSION' && initialSessionHandled) return;
-    if(event === 'INITIAL_SESSION') initialSessionHandled = true;
-    if(session && session.user) {
-      cUid = session.user.id;
-      cUser = {
-        email: session.user.email,
-        name: session.user.user_metadata?.full_name || session.user.email.split('@')[0]
-      };
-      try {
-        const data = await loadUserData(cUid);
-        cData = data || (buildDemoData ? buildDemoData() : {});
-        if(!data) await saveUserData(cUid, cData);
-      } catch(e) {
-        cData = buildDemoData ? buildDemoData() : {};
+    if(event === 'SIGNED_IN') return;
+    if(event === 'INITIAL_SESSION') {
+      if(session && session.user) {
+        cUid = session.user.id;
+        cUser = {
+          email: session.user.email,
+          name: session.user.user_metadata?.full_name || session.user.email.split('@')[0]
+        };
+        try {
+          const data = await loadUserData(cUid);
+          cData = data || (buildDemoData ? buildDemoData() : {});
+          if(!data) await saveUserData(cUid, cData);
+        } catch(e) {
+          cData = buildDemoData ? buildDemoData() : {};
+        }
+        launchApp(cUser);
+      } else {
+        showScreen('landing');
       }
-      launchApp(cUser);
-    } else if(event === 'INITIAL_SESSION' || event === 'SIGNED_OUT') {
+    } else if(event === 'SIGNED_OUT') {
       showScreen('landing');
     }
   });
