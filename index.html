@@ -3620,8 +3620,8 @@ async function doLogin() {
     } catch(e){}
     applyDark(cData.darkMode||false);
     try{sessionStorage.removeItem('hh_last_page');}catch(e){}
-    ['landing','login','signup','onboard'].forEach(n=>{const el=document.getElementById('screen-'+n);if(el)el.style.display='none';});
-    launchApp(cUser);
+    // Reload cleanly so initAuth handles the session
+    window.location.reload();
   } catch(e) {
     showErr('login-err', e.message==='Invalid login credentials'?'Invalid email or password — try signing up first':e.message);
   } finally {
@@ -9178,15 +9178,11 @@ function printTaxReport() {
 // ═════════════════════════════════════════
 //  AUTH INIT
 // ═════════════════════════════════════════
-let _authHandled = false;
-
 async function initAuth() {
-  // Listen for auth state changes - fires on load AND on login/logout
-  sb.auth.onAuthStateChange(async (event, session) => {
-    if(_authHandled && event === 'INITIAL_SESSION') return;
-    
+  try {
+    // First check for existing session (handles refresh)
+    const { data: { session } } = await sb.auth.getSession();
     if(session && session.user) {
-      _authHandled = true;
       cUid = session.user.id;
       cUser = {
         email: session.user.email,
@@ -9199,21 +9195,12 @@ async function initAuth() {
       } catch(e) {
         cData = buildDemoData ? buildDemoData() : {};
       }
-      // Only launch if app not already visible
-      const app = document.getElementById('app');
-      if(!app || !app.classList.contains('visible')) {
-        launchApp(cUser);
-      }
-    } else if(event === 'SIGNED_OUT') {
-      _authHandled = false;
-      showScreen('landing');
-    } else if(!_authHandled) {
-      // No session - show landing
-      setTimeout(() => {
-        if(!_authHandled) showScreen('landing');
-      }, 500);
+      launchApp(cUser);
+      return;
     }
-  });
+  } catch(e) {}
+  // No session found - show landing
+  showScreen('landing');
 }
 
 // ═════════════════════════════════════════
