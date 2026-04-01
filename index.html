@@ -3843,9 +3843,12 @@ async function doSignup() {
 
 async function doLogout() {
   await sb.auth.signOut();
-  cUid=null; cData=null; cUser=null;
+  cUid=null; cData=null; cUser=null; isAdmin=false;
   try{sessionStorage.removeItem('hh_last_page');}catch(e){}
-  location.reload();
+  // Use setTimeout to avoid race condition with auth state change
+  setTimeout(() => {
+    window.location.href = window.location.origin + window.location.pathname;
+  }, 100);
 }
 
 function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',5000);}
@@ -3934,20 +3937,30 @@ function launchApp(user) {
   document.getElementById('sb-av').textContent=init;
 
   // Free trial for new users
-  if(!cData.trialStarted && !cData.onboarded && (cData.plan==='free'||cData.plan==='trial') && cData.plan!=='cohost' && cData.plan!=='pro' && cData.plan!=='business') {
+  if(cData && !cData.trialStarted && !cData.onboarded && (cData.plan==='free'||cData.plan==='trial') && cData.plan!=='cohost' && cData.plan!=='pro' && cData.plan!=='business') {
     cData.trialStarted = Date.now();
     cData.plan = 'trial';
     saveUserData(cUid, cData);
   }
-  checkTrialStatus();
+  if(cData) checkTrialStatus();
 
   // Secure admin check via Supabase Function
 async function checkAdminStatus(userEmail) {
   try {
+    if (!userEmail) {
+      console.warn('No user email provided for admin check');
+      return false;
+    }
+    
     const { data, error } = await sb.functions.invoke('ai-draft', { 
       email: userEmail 
     });
-    if (error) throw error;
+    
+    if (error) {
+      console.warn('Admin function error:', error);
+      return false;
+    }
+    
     isAdmin = data?.isAdmin || false;
     return isAdmin;
   } catch (e) {
@@ -9420,13 +9433,20 @@ async function initAuth() {
   //   SIGNED_OUT              → show landing
   //   SIGNED_IN is ignored — doLogin/doSignup handle that path directly
   //   to avoid double-calling launchApp() and racing the button restore in finally{}
+  
+  let initialized = false;
+  
   sb.auth.onAuthStateChange(async function(event, session) {
     console.log('Auth state change:', event, session?.user?.email);
+    
+    // Prevent multiple initializations
+    if(event === 'INITIAL_SESSION' && initialized) return;
     
     // Handle password reset links — Supabase fires PASSWORD_RECOVERY when user clicks reset email
     if(event === 'PASSWORD_RECOVERY') { showScreen('reset'); return; }
     if(event === 'SIGNED_IN') return;
     if(event === 'INITIAL_SESSION') {
+      initialized = true;
       if(session && session.user) {
         cUid = session.user.id;
         cUser = {
