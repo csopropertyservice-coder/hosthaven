@@ -4099,15 +4099,28 @@ function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg
 //  LANDING PAGE FUNCTIONS
 // ════════════════════════════════════════════
 function showLandingPage() {
-  // Hide all screens and dashboard elements
-  ['landing','login','signup','onboard','forgot','reset'].forEach(s=>{
-    const el=document.getElementById('screen-'+s);
-    if(el) el.style.display = s==='landing' ? 'block' : 'none';
-  });
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('onboarding-wizard-modal').style.display = 'none';
-  document.getElementById('mobile-bottom-nav').style.display = 'none';
+  const lp = document.getElementById('screen-landing');
+  const dw = document.getElementById('app');
+  const nav = document.getElementById('mobile-bottom-nav');
+  const onboarding = document.getElementById('onboarding-wizard-modal');
+  if (lp) lp.style.display = 'block';
+  if (dw) dw.style.display = 'none';
+  if (nav) nav.style.display = 'none';
+  if (onboarding) onboarding.style.display = 'none';
+  document.body.style.display = 'block'; // Force body to show
   window.scrollTo(0,0);
+}
+
+function showDashboard() {
+  const lp = document.getElementById('screen-landing');
+  const dw = document.getElementById('app');
+  const nav = document.getElementById('mobile-bottom-nav');
+  const onboarding = document.getElementById('onboarding-wizard-modal');
+  if (lp) lp.style.display = 'none';
+  if (dw) dw.style.display = 'block';
+  if (nav) nav.style.display = 'grid'; // Mobile nav uses grid display
+  if (onboarding) onboarding.style.display = 'none';
+  document.body.style.display = 'block'; // Force body to show
 }
 
 // ════════════════════════════════════════════
@@ -4208,6 +4221,9 @@ async function checkAdminStatus(userEmail) {
 }
 
 async function launchApp(user) {
+  // Show dashboard and hide landing page
+  showDashboard();
+  
   // Show a brief loading overlay so data has time to be ready
   const app = document.getElementById('app');
   app.classList.add('visible');
@@ -9940,7 +9956,7 @@ async function initAuth() {
         }
         await launchApp(cUser);
       } else {
-        showScreen('landing');
+        showLandingPage();
       }
     } else if(event === 'SIGNED_OUT') {
       const appVis = document.getElementById('app')?.classList.contains('visible');
@@ -9951,7 +9967,7 @@ async function initAuth() {
         try { if (window.location.protocol !== 'file:') history.replaceState(null, '', '/login'); } catch(e) {}
         toast('Session ended — please sign in again');
       } else {
-        showScreen('landing');
+        showLandingPage();
       }
     }
   });
