@@ -3967,7 +3967,7 @@ async function doLogin() {
     }
     const user = data.user;
     cUid = user.id;
-    cUser = {email:user.email, name:user.user_metadata?.full_name||email.split('@')[0]};
+    cUser = {email:user.email, name:user.user_metadata?.full_name||email.split('@')[0], role:user.user_metadata?.role||'user'};
     // Load cloud data first
     const cloudData = await loadFromSupabase(cUid);
     if(cloudData) {
@@ -4087,9 +4087,10 @@ async function doSignup() {
 
 async function doLogout() {
   await sb.auth.signOut().catch((e) => console.warn('signOut:', e));
-  cUid=null; cData=null; cUser=null;
+  cUid=null; cData=null; cUser=null; isAdmin = false;
   try{sessionStorage.removeItem('hh_last_page');}catch(e){}
-  location.reload();
+  try{localStorage.removeItem('hh_last_page');}catch(e){}
+  showLandingPage();
 }
 async function logout() { await doLogout(); }
 
@@ -4292,7 +4293,8 @@ async function launchApp(user) {
       safeRender(renderAll, 'renderAll-frame');
       // Restore last page after refresh
       try {
-        const lastPage = sessionStorage.getItem('hh_last_page');
+        let lastPage = sessionStorage.getItem('hh_last_page');
+        if(!lastPage) lastPage = localStorage.getItem('hh_last_page');
         if(lastPage && lastPage !== 'dashboard') {
           const pageEl = document.getElementById('page-'+lastPage);
           const navEl = document.querySelector(`[onclick*="nav('${lastPage}'"]`);
@@ -4432,6 +4434,7 @@ function nav(id,el){
   updateMobNav(id);
   // Save last page for refresh restore
   try{sessionStorage.setItem('hh_last_page',id);}catch(e){}
+  try{localStorage.setItem('hh_last_page',id);}catch(e){}
 
   if(id==='website')setTimeout(updateWb,100);
   if(id==='settings'){
@@ -9947,6 +9950,31 @@ function printTaxReport() {
 //  AUTH INIT
 // ═════════════════════════════════════════
 async function initAuth() {
+  // Immediate session check to prevent any delay
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session?.user) {
+      cUid = session.user.id;
+      cUser = {
+        email: session.user.email,
+        name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
+        role: session.user.user_metadata?.role || 'user'
+      };
+      try {
+        const data = await loadUserData(cUid);
+        cData = data || (buildDemoData ? buildDemoData() : {});
+        if(!data) await saveUserData(cUid, cData);
+      } catch(e) {
+        sbHandleError(e, 'initAuth loadUserData');
+        cData = buildDemoData ? buildDemoData() : {};
+      }
+      await launchApp(cUser);
+      return;
+    }
+  } catch(e) {
+    console.warn('Session check failed:', e);
+  }
+  
   // Handles cold-start only:
   //   INITIAL_SESSION + user  → page refresh while logged in, restore session
   //   INITIAL_SESSION no user → not logged in, show landing
@@ -9964,7 +9992,8 @@ async function initAuth() {
         cUid = session.user.id;
         cUser = {
           email: session.user.email,
-          name: session.user.user_metadata?.full_name || session.user.email.split('@')[0]
+          name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
+          role: session.user.user_metadata?.role || 'user'
         };
         try {
           const data = await loadUserData(cUid);
