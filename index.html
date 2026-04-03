@@ -9950,29 +9950,54 @@ function printTaxReport() {
 //  AUTH INIT
 // ═════════════════════════════════════════
 async function initAuth() {
-  // Immediate session check to prevent any delay
-  try {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session?.user) {
-      cUid = session.user.id;
-      cUser = {
-        email: session.user.email,
-        name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
-        role: session.user.user_metadata?.role || 'user'
-      };
-      try {
-        const data = await loadUserData(cUid);
-        cData = data || (buildDemoData ? buildDemoData() : {});
-        if(!data) await saveUserData(cUid, cData);
-      } catch(e) {
-        sbHandleError(e, 'initAuth loadUserData');
-        cData = buildDemoData ? buildDemoData() : {};
+  // Fix 404 redirects - ensure clean URL
+  if (window.location.pathname !== '/' && window.location.pathname !== '/index_integrated.html') {
+    window.history.replaceState({}, '', '/');
+  }
+  
+  // Wait for Supabase to be ready
+  let sessionCheckAttempts = 0;
+  const maxAttempts = 3;
+  
+  while (sessionCheckAttempts < maxAttempts) {
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session?.user) {
+        cUid = session.user.id;
+        cUser = {
+          email: session.user.email,
+          name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
+          role: session.user.user_metadata?.role || 'user'
+        };
+        try {
+          const data = await loadUserData(cUid);
+          cData = data || (buildDemoData ? buildDemoData() : {});
+          if(!data) await saveUserData(cUid, cData);
+        } catch(e) {
+          sbHandleError(e, 'initAuth loadUserData');
+          cData = buildDemoData ? buildDemoData() : {};
+        }
+        await launchApp(cUser);
+        
+        // Restore tab memory immediately after session confirmed
+        try {
+          let lastPage = sessionStorage.getItem('hh_last_page');
+          if(!lastPage) lastPage = localStorage.getItem('hh_last_page');
+          if(lastPage && lastPage !== 'dashboard') {
+            const pageEl = document.getElementById('page-'+lastPage);
+            if(pageEl) nav(lastPage);
+          }
+        } catch(e){}
+        
+        return;
       }
-      await launchApp(cUser);
-      return;
+      break; // No session found, exit loop
+    } catch(e) {
+      sessionCheckAttempts++;
+      if (sessionCheckAttempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
     }
-  } catch(e) {
-    console.warn('Session check failed:', e);
   }
   
   // Handles cold-start only:
@@ -10026,6 +10051,11 @@ async function initAuth() {
 //  BOOT
 // ═════════════════════════════════════════
 window.addEventListener('load', () => {
+  // Fix 404 redirects - clean URL while staying on correct view
+  if (window.location.pathname !== '/' && window.location.pathname !== '/index_integrated.html') {
+    window.history.replaceState({}, '', '/');
+  }
+  
   // Clear service workers
   if('serviceWorker' in navigator){
     navigator.serviceWorker.getRegistrations().then(function(regs){
