@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<script>
-/* Theme hint before paint — prevents light → dark flash (runs synchronously before any CSS) */
-(function(){
-  try {
-    var t = localStorage.getItem('hh_ui_theme');
-    if (t === 'dark' || t === 'light') {
-      document.documentElement.setAttribute('data-theme', t);
+<!-- 
+  VERCEL DEPLOYMENT NOTE:
+  Create a vercel.json file in your repo root with:
+  {
+    "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  }
+  This fixes 404 on refresh for single-page apps on Vercel.
+-->
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<title>CSO Property Services — STR Management Platform</title>' +
+    '<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Georgia,serif;background:#FAF7F2;color:#1C1410}@media print{body{background:#fff}.no-print{display:none}}      document.documentElement.setAttribute('data-theme', t);
       document.documentElement.setAttribute('data-theme-set', 'true');
     } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       document.documentElement.setAttribute('data-theme', 'dark');
@@ -26,17 +27,17 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>CSO Property Services — Professional Property Management</title>
-<meta name="description" content="CSO Property Services is the professional property management dashboard. Manage properties, bookings, guests, staff, and revenue with enterprise-grade tools.">
-<meta property="og:title" content="CSO Property Services — Professional Property Management">
-<meta property="og:description" content="Professional property management dashboard. Properties, bookings, AI messaging, payout tracking, owner reports, and more.">
+<title>CSO Property Services — Smarter Airbnb Management v2</title>
+<meta name="description" content="CSO Property Services is the all-in-one dashboard for short-term rental hosts and co-hosts. Manage bookings, guests, payouts, cleaning staff, and revenue — with AI built in. Start free.">
+<meta property="og:title" content="CSO Property Services — Smarter Airbnb Management">
+<meta property="og:description" content="The all-in-one dashboard for short-term rental hosts and co-hosts. Bookings, AI messaging, payout tracking, owner reports, and more.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://csopropertyservice-coder.github.io/cso-property-services/">
-<meta property="og:image" content="https://csopropertyservice-coder.github.io/cso-property-services/og-image.png">
+<meta property="og:url" content="https://csopropertyservice-coder.github.io/hosthaven/">
+<meta property="og:image" content="https://csopropertyservice-coder.github.io/hosthaven/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="CSO Property Services — Professional Property Management">
-<meta name="twitter:description" content="Professional property management dashboard. Start free.">
-<link rel="canonical" href="https://csopropertyservice-coder.github.io/cso-property-services/">
+<meta name="twitter:title" content="CSO Property Services — Smarter Airbnb Management">
+<meta name="twitter:description" content="The all-in-one dashboard for short-term rental hosts and co-hosts. Start free.">
+<link rel="canonical" href="https://csopropertyservice-coder.github.io/hosthaven/">
 <!-- manifest removed -->
 <meta name="theme-color" content="#C4693A">
 
@@ -65,42 +66,24 @@
   --input-bg:#EDE8DE;--input-border:#D4C9B4;
 }
 [data-theme="dark"] {
-  --bg: var(--primary-charcoal);
-  --bg2: var(--charcoal-light);
-  --bg3: var(--charcoal-dark);
-  --card: var(--card-bg);
-  --card2: var(--card-light);
-  --txt: var(--text-primary);
-  --txt2: var(--text-secondary);
-  --txt3: var(--text-muted);
-  --terra: var(--accent-gold);
-  --terra-l: var(--gold-light);
-  --terra-d: var(--gold-dark);
-  --sage: var(--gold-light);
-  --sage-l: var(--gold-dark);
-  --sand: var(--charcoal-light);
-  --espresso: var(--charcoal-dark);
-  --bark: var(--accent-gold);
-  --border: var(--border-light);
-  --border2: var(--border-dark);
-  --sh: 0 1px 4px rgba(0,0,0,.3);
-  --shm: 0 4px 16px rgba(0,0,0,.35);
-  --shl: 0 8px 32px rgba(0,0,0,.45);
-  --sb-bg: var(--charcoal-dark);
-  --sb-txt: var(--text-muted);
-  --sb-active: var(--accent-gold);
-  --input-bg: var(--card-light);
-  --input-border: var(--border-light);
+  --bg:#0F0B08;--bg2:#1A1410;--sand:#2A2218;--tan:#3A3028;
+  --espresso:#FAF7F2;--bark:#C4A882;
+  --txt:#F0EBE3;--txt2:#B8A898;--txt3:#7A6E64;
+  --border:#2E2620;--border2:#3A3028;
+  --card:#1A1410;--card2:#221C16;
+  --sh:0 1px 4px rgba(0,0,0,.3);--shm:0 4px 16px rgba(0,0,0,.35);--shl:0 8px 32px rgba(0,0,0,.45);
+  --sb-bg:#0A0806;--sb-txt:rgba(255,255,255,.45);--sb-active:var(--terra);
+  --input-bg:#221C16;--input-border:#3A3028;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:auto; overflow:hidden; }
-body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt); transition:background .3s,color .3s; overflow:hidden; }
+html { scroll-behavior:auto; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt); transition:background .3s,color .3s; }
 
 /* ═══════════════════════════════════════
    LANDING PAGE
 ═══════════════════════════════════════ */
-#screen-landing { display:block; scroll-behavior:smooth; z-index:10; position:relative; }
+#screen-landing { display:block; scroll-behavior:smooth; position:relative; z-index:0; }
 .land-nav {
   position:fixed; top:0; left:0; right:0; z-index:100;
   padding:18px 48px; display:flex; align-items:center; justify-content:space-between;
@@ -186,10 +169,10 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 /* ═══════════════════════════════════════
    AUTH
 ═══════════════════════════════════════ */
-.auth-wrap { min-height:100vh;display:flex;align-items:center;justify-content:center;background:#2C1F14;position:relative;overflow:hidden; }
+.auth-wrap { position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:var(--auth-bg,#1a1209);overflow:hidden; }
 .auth-wrap::before { content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:rgba(196,105,58,.12);top:-200px;right:-200px; }
 .auth-wrap::after { content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:rgba(107,143,113,.08);bottom:-150px;left:-100px; }
-.auth-card { background:var(--card);border-radius:22px;padding:44px;width:min(420px,92vw);position:relative;z-index:1;box-shadow:0 24px 64px rgba(0,0,0,.3); }
+.auth-card { background:var(--card);border-radius:16px;padding:44px;width:min(420px,92vw);position:relative;z-index:1;box-shadow:0 32px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);backdrop-filter:none; }
 .auth-logo { display:flex;align-items:center;gap:12px;margin-bottom:32px; }
 .auth-logo-icon { width:42px;height:42px;background:var(--terra);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:21px; }
 .auth-logo-txt { font-family:Fraunces,serif;font-size:22px;font-weight:600;color:var(--txt); }
@@ -241,7 +224,7 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 .shell { overflow:hidden;display:flex;flex:1;background:var(--bg); }
 
 /* SIDEBAR */
-.sidebar { width:230px;min-width:230px;background:var(--sb-bg);display:flex;flex-direction:column;position:sticky;top:0;overflow-y:auto;transition:background .3s; }
+.sidebar { width:230px;min-width:230px;background:var(--sb-bg);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;transition:background .3s; }
 @media(max-width:768px){
   .sidebar { position:fixed;left:-230px;top:0;bottom:0;z-index:200;transition:left .3s,background .3s; }
   .sidebar.open { left:0; }
@@ -284,8 +267,8 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 .main-area { flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden;background:var(--bg);scroll-behavior:auto; }
 .content { padding:0; background:var(--bg); flex:1; position:relative; overflow-y:auto; min-height:0; display:flex; flex-direction:column; justify-content:flex-start !important; align-items:stretch !important; }
 @media(max-width:600px){ .content { padding:16px; padding-bottom:90px; } .g4{grid-template-columns:repeat(2,1fr)!important;} #dash-main-grid{grid-template-columns:1fr!important;} #dash-quick-actions button{font-size:11px!important;padding:6px 10px!important;} .kpi-val{font-size:22px!important;} }
-.page { display:none; display:flex; flex-direction:column; justify-content:flex-start !important; align-items:stretch !important; }
-.page.active { display:flex !important; padding:20px 24px; flex-direction:column; justify-content:flex-start !important; align-items:stretch !important; }
+.page { display:none !important; }
+.page.active { display:block !important; padding:20px 24px; position:relative !important; }
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes fadeUp { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
 @keyframes spin { to{transform:rotate(360deg)} }
@@ -576,29 +559,17 @@ select{color:var(--txt)!important;}
 
 
 
-/* CSO PROPERTY SERVICES - PREMIUM PROFESSIONAL THEME */
+/* HOSTHAVEN PREMIUM - DARK ANIME THEME v2 */
 :root {
-  --primary-charcoal:#1A1A1B;
-  --charcoal-light:#2D2D2E;
-  --charcoal-dark:#0F0F10;
-  --accent-gold:#C4693A;
-  --gold-light:#D4A574;
-  --gold-dark:#B45A2A;
-  --crisp-white:#FFFFFF;
-  --off-white:#F8F9FA;
-  --text-primary:#FFFFFF;
-  --text-secondary:#B8B8B9;
-  --text-muted:#6C6C6D;
-  --border-light:#2D2D2E;
-  --border-dark:#1A1A1B;
-  --card-bg:#1F1F20;
-  --card-light:#2A2A2B;
-  --gradient-primary:linear-gradient(135deg,#1A1A1B 0%,#2D2D2E 100%);
-  --gradient-accent:linear-gradient(135deg,#C4693A 0%,#D4A574 100%);
-  --gradient-hero:linear-gradient(180deg,rgba(26,26,27,0.9) 0%,rgba(26,26,27,0.7) 100%);
-  --shadow-floating:0 20px 40px rgba(0,0,0,0.3),0 10px 20px rgba(0,0,0,0.2);
-  --shadow-card:0 8px 32px rgba(0,0,0,0.15);
-  --shadow-gold:0 0 20px rgba(196,105,58,0.3);
+  --burgundy:#722F37;--burgundy-light:#9B4F57;--burgundy-dark:#4A1F25;
+  --rose-gold:#E8B4B8;--champagne:#F7E7CE;--champagne-light:#FAF0E6;
+  --gradient-primary:linear-gradient(135deg,#722F37 0%,#9B4F57 50%,#E8B4B8 100%);
+  --gradient-accent:linear-gradient(45deg,#E8B4B8 0%,#F7E7CE 100%);
+  --gradient-card:linear-gradient(135deg,rgba(26,15,17,.92) 0%,rgba(45,27,31,.92) 100%);
+  --gradient-button:linear-gradient(135deg,#722F37 0%,#9B4F57 100%);
+  --shadow-glow:0 0 20px rgba(114,47,55,.3);
+  --shadow-rose-gold:0 0 20px rgba(232,180,184,.4);
+  --shadow-xl:0 20px 25px -5px rgba(0,0,0,.4),0 10px 10px -5px rgba(0,0,0,.25);
 }
 .premium-badge{background:var(--gradient-primary);color:var(--champagne);padding:3px 9px;border-radius:12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:inline-flex;align-items:center;gap:3px;flex-shrink:0;}
 .premium-card{background:var(--gradient-card)!important;border:1px solid rgba(232,180,184,.22)!important;box-shadow:var(--shadow-glow)!important;position:relative;overflow:hidden;}
@@ -650,55 +621,61 @@ select{color:var(--txt)!important;}
 .anime-glow::after{content:'';position:absolute;inset:-1px;border-radius:inherit;background:var(--gradient-accent);z-index:-1;opacity:0;transition:opacity .3s;filter:blur(8px);}
 .anime-glow:hover::after{opacity:.45;}
 
+
+/* ── COLLAPSIBLE SIDEBAR ── */
+.sb-logo-wrap { display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,.08); }
+.sb-collapse-btn { background:none; border:none; color:rgba(255,255,255,.35); font-size:18px; cursor:pointer; padding:8px 14px; line-height:1; transition:all .2s; flex-shrink:0; }
+.sb-collapse-btn:hover { color:rgba(255,255,255,.8); }
+.sidebar.collapsed { width:58px!important; min-width:58px!important; }
+.sidebar.collapsed .sb-logo-txt,.sidebar.collapsed .sb-plan,.sidebar.collapsed .sb-hide-collapsed { display:none!important; }
+.sidebar.collapsed .sb-logo { padding:12px 0; justify-content:center; }
+.sidebar.collapsed .sb-logo-icon { margin:0 auto; }
+.sidebar.collapsed .sb-collapse-btn { transform:rotate(180deg); }
+.sidebar.collapsed .sb-item { padding:10px 0; justify-content:center; }
+.sidebar.collapsed .sb-nav { padding:8px 0; }
+.sidebar.collapsed .sb-user { padding:10px 8px; }
+.sidebar.collapsed .sb-av { margin:0 auto; }
+.sidebar.collapsed .sb-bonus { display:none; }
+.sidebar.collapsed .sb-item { position:relative; }
+.sidebar.collapsed .sb-item:hover::after { content:attr(data-title); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#2C1F14; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; white-space:nowrap; z-index:999; pointer-events:none; box-shadow:0 4px 12px rgba(0,0,0,.3); }
+</style>
+</head>
+<body>
+
 <!-- ══════════════════════════════════════
-     LANDING PAGE - PREMIUM REDESIGN
+     LANDING PAGE
 ══════════════════════════════════════ -->
-<div id="screen-landing" style="display:block; scroll-behavior:smooth; z-index:10; position:relative; min-height:100vh;">
-  <!-- Premium Sticky Navigation with Glassmorphism -->
-  <nav class="land-nav" style="position:sticky; top:0; z-index:1000; background:rgba(26,26,27,0.8); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.1);">
+<div id="screen-landing" style="display:none">
+  <nav class="land-nav">
     <div class="land-logo">
-      <div class="land-logo-icon">🏢</div>
+      <div class="land-logo-icon" style="font-size:13px;font-weight:800;letter-spacing:-1px;display:flex;align-items:center;justify-content:center">CSO</div>
       <div class="land-logo-txt">CSO Property Services</div>
     </div>
     <div class="land-nav-links">
-      <a onclick="scrollToSection('land-features')">Services</a>
-      <a onclick="scrollToSection('land-products')">Solutions</a>
+      <a onclick="scrollToSection('land-features')">Features</a>
+      <a onclick="scrollToSection('land-products')">Products</a>
       <a onclick="scrollToSection('land-pricing')">Pricing</a>
-      <a onclick="showScreen('login')">Client Portal</a>
+      <a onclick="showScreen('login')">Sign In</a>
     </div>
     <div class="land-nav-btns">
-      <button class="btn btn-ghost" style="color:rgba(255,255,255,0.8);border-color:rgba(255,255,255,0.2)" onclick="showScreen('login')">Client Login</button>
-      <button class="btn btn-pri" onclick="showScreen('signup')">Get Started →</button>
+      <button class="btn btn-ghost" style="color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2)" onclick="showScreen('login')">Log In</button>
+      <button class="btn btn-pri" onclick="showScreen('signup')">Start Free →</button>
     </div>
   </nav>
 
-  <!-- Premium Hero Section with Architectural Background -->
-  <section class="land-hero" style="position:relative; min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,rgba(26,26,27,0.95) 0%,rgba(26,26,27,0.85) 100%), url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1920 1080\"><defs><linearGradient id=\"bg\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"><stop offset=\"0%\" style=\"stop-color:%231A1A1B\"/><stop offset=\"100%\" style=\"stop-color:%232D2D2E\"/></linearGradient></defs><rect width=\"1920\" height=\"1080\" fill=\"url(%23bg)\"/><g opacity=\"0.1\"><rect x=\"100\" y=\"100\" width=\"300\" height=\"600\" fill=\"%23C4693A\" opacity=\"0.3\"/><rect x=\"500\" y=\"200\" width=\"200\" height=\"400\" fill=\"%23C4693A\" opacity=\"0.2\"/><rect x=\"800\" y=\"150\" width=\"250\" height=\"500\" fill=\"%23C4693A\" opacity=\"0.25\"/><rect x=\"1200\" y=\"100\" width=\"350\" height=\"700\" fill=\"%23C4693A\" opacity=\"0.3\"/><rect x=\"1600\" y=\"250\" width=\"180\" height=\"300\" fill=\"%23C4693A\" opacity=\"0.2\"/></g></svg>'); background-size:cover; background-position:center; background-attachment:fixed;">
-    <div style="text-align:center; max-width:800px; padding:0 20px; position:relative; z-index:2;">
-      <!-- Premium Badge -->
-      <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(196,105,58,0.15); color:var(--gold-light); padding:8px 16px; border-radius:20px; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:32px; border:1px solid rgba(196,105,58,0.3);">
-        <span style="width:8px; height:8px; background:var(--accent-gold); border-radius:50%; animation:pulse 2s infinite;"></span>
-        Dallas-Fort Worth Premier Property Management
+  <section class="land-hero">
+    <div class="land-hero-content">
+      <div class="land-eyebrow">🏡 For Airbnb Hosts &amp; Co-Hosts</div>
+      <h1 class="land-h1">Manage smarter.<br><em>Earn more.</em></h1>
+      <p class="land-sub">One dashboard for your properties, bookings, guests, cleaners, payouts, and revenue. Built for Airbnb, VRBO, and Booking.com hosts. Free to start — no credit card needed.</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:8px">
+        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 14px;font-size:12px;color:rgba(255,255,255,.8)">✓ Airbnb hosts</div>
+        <div style="background:rgba(200,168,75,.2);border:1px solid rgba(200,168,75,.4);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--gold-l)">🏆 Co-hosts &amp; property managers</div>
+        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 14px;font-size:12px;color:rgba(255,255,255,.8)">✓ Multi-property operators</div>
       </div>
-      
-      <!-- Main Headline -->
-      <h1 style="font-family:'Fraunces',serif; font-size:clamp(2.5rem, 5vw, 4rem); font-weight:600; color:var(--text-primary); margin-bottom:24px; line-height:1.1; letter-spacing:-0.02em;">
-        Professional STR Logistics &<br>Management
-      </h1>
-      
-      <!-- Sub-headline -->
-      <p style="font-size:clamp(1.1rem, 2vw, 1.4rem); color:var(--text-secondary); margin-bottom:48px; line-height:1.6; max-width:600px; margin-left:auto; margin-right:auto;">
-        The elite standard for Dallas property owners.
-      </p>
-      
-      <!-- CTA Buttons -->
-      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:64px;">
-        <button class="btn btn-pri" style="background:var(--gradient-accent); color:var(--primary-charcoal); font-weight:600; padding:16px 32px; font-size:16px; border-radius:8px; box-shadow:var(--shadow-gold);" onclick="showScreen('signup')">
-          Start Management Consultation →
-        </button>
-        <button class="btn btn-ghost" style="color:var(--text-primary); border-color:rgba(255,255,255,0.3); padding:16px 32px; font-size:16px; border-radius:8px;" onclick="scrollToSection('land-features')">
-          View Our Services
-        </button>
+      <div class="land-cta-row">
+        <button class="btn btn-pri" style="padding:14px 32px;font-size:15px" onclick="showScreen('signup')">Start for Free →</button>
+        <button class="btn btn-ghost" style="padding:14px 32px;font-size:15px;color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2)" onclick="loginDemo()">🚀 See Demo</button>
       </div>
       <div class="land-stats">
         <div class="land-stat"><div class="land-stat-num">Free</div><div class="land-stat-label">To start — always</div></div>
@@ -740,10 +717,10 @@ select{color:var(--txt)!important;}
 
     <div class="land-prod-grid">
 
-      <!-- Quick Start Pack -->
+      <!-- CSO Quick Start -->
       <div class="land-prod-card qsp">
         <div class="land-prod-tag">⚡ Most Popular — 11 Files</div>
-        <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);margin-bottom:6px">CSO Ops Setup</div>
+        <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);margin-bottom:6px">CSO Property Services CSO Quick Start</div>
         <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">Everything a new short-term rental host needs to look professional from day one — 11 individual files, each focused on one skill</div>
         <div class="land-prod-price">$47 <span>one-time</span></div>
         <ul class="land-prod-feats">
@@ -765,9 +742,9 @@ select{color:var(--txt)!important;}
 
       <!-- CSO Ops Masterclass -->
       <div class="land-prod-card chlk">
-        <div class="land-prod-tag" style="background:rgba(200,168,75,.15);color:var(--gold)">🏆 Professional Operations — 10 Modules</div>
+        <div class="land-prod-tag" style="background:rgba(200,168,75,.15);color:var(--gold)">🏆 For Co-Hosts — 10 Files</div>
         <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);margin-bottom:6px">CSO Ops Masterclass</div>
-        <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">Complete curriculum for professional property management operations and client acquisition — 10 comprehensive modules</div>
+        <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">Everything to sign your first client, run a professional operation, and build your brand — 10 individual files</div>
         <div class="land-prod-price">$97 <span>one-time</span></div>
         <ul class="land-prod-feats">
           <li>90-day playbook — 0 to 5 properties with the math at every stage</li>
@@ -775,19 +752,14 @@ select{color:var(--txt)!important;}
           <li>Rate card with 4 service tiers + live earnings calculator</li>
           <li>Co-host agreement contract template — print and sign</li>
           <li>32-step owner onboarding checklist with progress tracking</li>
-        <li><strong>Module 1:</strong> Client acquisition strategy — DM, email, and Facebook group outreach sequences</li>
-          <li><strong>Module 2:</strong> Professional branding — AI image prompts and brand story templates</li>
-          <li><strong>Module 3:</strong> Content marketing — 30-day Instagram + LinkedIn content vault</li>
-          <li><strong>Module 4:</strong> Operations management — VA daily checklist and maintenance schedules</li>
-          <li><strong>Module 5:</strong> Revenue optimization — 10 value-add upsells and pricing strategies</li>
-          <li><strong>Module 6:</strong> SEO and marketing — SEO workbook and digital presence guide</li>
-          <li><strong>Module 7:</strong> Team management — Staff training and performance tracking</li>
-          <li><strong>Module 8:</strong> Financial operations — Budget tracking and profit optimization</li>
-          <li><strong>Module 9:</strong> Client relations — Communication templates and satisfaction surveys</li>
-          <li><strong>Module 10:</strong> Business scaling — Growth strategies and expansion planning</li>
+          <li>First 5 clients — DM, email, and Facebook group outreach sequences</li>
+          <li>AI image prompts — luxury estate photos for your pitch deck</li>
+          <li>30-day Instagram + LinkedIn content vault (9 ready-to-post captions)</li>
+          <li>Operations toolkit: VA daily checklist, 10 value-add upsells, SEO workbook, seasonal maintenance schedule</li>
+          <li>Brand story + management bio templates + 5 LinkedIn headline formulas</li>
         </ul>
-        <button class="btn btn-w" style="font-size:14px;padding:14px;background:var(--gold);color:#2C1F14;font-weight:700;border:none;border-radius:8px;cursor:pointer;width:100%" onclick="buyProduct('cso_masterclass')">Enroll in Masterclass — $97 →</button>
-        <div style="font-size:11px;color:var(--txt3);text-align:center;margin-top:8px">10 comprehensive modules · Lifetime access · Certificate of completion</div>
+        <button class="btn btn-w" style="font-size:14px;padding:14px;background:var(--gold);color:#2C1F14;font-weight:700;border:none;border-radius:8px;cursor:pointer;width:100%" onclick="buyProduct('cohost_kit')">Get the Kit — $97 →</button>
+        <div style="font-size:11px;color:var(--txt3);text-align:center;margin-top:8px">10 instant downloads · 30-day money back guarantee</div>
       </div>
 
     </div>
@@ -797,7 +769,7 @@ select{color:var(--txt)!important;}
       <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">One-time purchase · No subscription · Instant download</div>
       <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap">
         <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--terra)">11</div><div style="font-size:12px;color:var(--txt3)">Files in the Pack</div></div>
-        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--gold)">10</div><div style="font-size:12px;color:var(--txt3)">Masterclass Modules</div></div>
+        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--gold)">10</div><div style="font-size:12px;color:var(--txt3)">Files in the Kit</div></div>
         <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--sage)">$0</div><div style="font-size:12px;color:var(--txt3)">Monthly commitment</div></div>
       </div>
     </div>
@@ -864,9 +836,9 @@ select{color:var(--txt)!important;}
       <div style="width:28px;height:28px;background:var(--terra);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px">🏡</div>
       <div style="font-family:Fraunces,serif;font-size:16px;color:#fff">CSO Property Services</div>
     </div>
-    <div style="font-size:12px;color:rgba(255,255,255,.35)"> 2026 CSO Property Services. All rights reserved.</div>
+    <div style="font-size:12px;color:rgba(255,255,255,.35)">© 2026 CSO Property Services. All rights reserved.</div>
     <div style="display:flex;gap:20px">
-      <a style="font-size:12px;color:rgba(255,255,255,.4)" href="https://www.instagram.com/csopropertyservices" target="_blank">Instagram</a>
+      <a style="font-size:12px;color:rgba(255,255,255,.4)" href="https://www.instagram.com/hosthaven_" target="_blank">Instagram</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4)" href="https://www.facebook.com/profile.php?id=61575103389941" target="_blank">Facebook</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('privacy')">Privacy</a>
       <a style="font-size:12px;color:rgba(255,255,255,.4);cursor:pointer" onclick="showLegal('terms')">Terms</a>
@@ -884,7 +856,7 @@ select{color:var(--txt)!important;}
   <div id="legal-content" style="font-size:13px;color:var(--txt2);line-height:1.8">
     <div id="privacy-content">
       <p style="margin-bottom:12px"><strong style="color:var(--txt)">Last updated: March 2026</strong></p>
-      <p style="margin-bottom:16px">CSO Property Services is operated by professional property managers. This Privacy Policy explains how we collect, use, and protect your information.</p>
+      <p style="margin-bottom:16px">CSO Property Services is operated by CSO Property Service. This Privacy Policy explains how we collect, use, and protect your information.</p>
       <h3 style="color:var(--txt);margin:16px 0 8px">1. Information We Collect</h3>
       <p style="margin-bottom:8px"><strong style="color:var(--txt)">Account info:</strong> Name and email when you sign up.</p>
       <p style="margin-bottom:8px"><strong style="color:var(--txt)">Property data:</strong> Listings, bookings, guests, and financials you enter.</p>
@@ -915,7 +887,7 @@ select{color:var(--txt)!important;}
       <p style="margin-bottom:16px">• Do not attempt to access other users data</p>
       <h3 style="color:var(--txt);margin:16px 0 8px">2. Billing and Refunds</h3>
       <p style="margin-bottom:8px">Paid plans bill monthly. Cancel anytime from your billing portal. We offer a <strong style="color:var(--txt)">30-day money-back guarantee</strong> on all paid plans.</p>
-      <p style="margin-bottom:16px">Quick Start Pack ($47) and CSO Ops Masterclass ($97) are one-time purchases with a 30-day refund policy.</p>
+      <p style="margin-bottom:16px">CSO Quick Start ($47) and CSO Ops Masterclass ($97) are one-time purchases with a 30-day refund policy.</p>
       <h3 style="color:var(--txt);margin:16px 0 8px">3. Limitation of Liability</h3>
       <p style="margin-bottom:16px">CSO Property Services is provided as-is. We are not responsible for booking disputes, guest issues, or property damage. Maintain your own insurance.</p>
       <h3 style="color:var(--txt);margin:16px 0 8px">4. Termination</h3>
@@ -930,65 +902,27 @@ select{color:var(--txt)!important;}
 </div></div>
 
 <!-- ══════════════════════════════════════
-     AUTH SCREENS - PREMIUM REDESIGN
+     AUTH SCREENS
 ══════════════════════════════════════ -->
-<div id="screen-login" class="auth-wrap" style="display:none; grid-template-columns:1fr; place-items:center; min-height:100vh; width:100vw; position:fixed; top:0; left:0; z-index:9999; background:var(--primary-charcoal);">
-  <!-- Premium Background Pattern -->
-  <div style="position:absolute; inset:0; opacity:0.05; background-image:repeating-linear-gradient(45deg, transparent, transparent 35px, var(--accent-gold) 35px, var(--accent-gold) 70px); pointer-events:none;"></div>
-  
-  <!-- Premium Login Card -->
-  <div class="auth-card" style="background:var(--card-bg); border-radius:12px; box-shadow:var(--shadow-floating); border:1px solid var(--border-light); padding:40px; width:100%; max-width:420px; position:relative; z-index:1;">
-    <!-- Gold Accent Line -->
-    <div style="position:absolute; top:0; left:0; right:0; height:3px; background:var(--gradient-accent); border-radius:12px 12px 0 0;"></div>
-    
-    <!-- Clean Logo -->
-    <div style="text-align:center; margin-bottom:32px;">
-      <div style="width:64px; height:64px; background:var(--gradient-accent); border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:28px; box-shadow:var(--shadow-gold);">🏢</div>
-      <div style="font-family:'Fraunces',serif; font-size:24px; font-weight:600; color:var(--text-primary); letter-spacing:-0.02em;">CSO Property Services</div>
-      <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Professional Property Management</div>
-    </div>
-    
-    <!-- Login Form -->
-    <div style="margin-bottom:24px;">
-      <div style="font-size:20px; font-weight:600; color:var(--text-primary); margin-bottom:8px;">Welcome Back</div>
-      <div style="font-size:14px; color:var(--text-secondary); margin-bottom:24px;">Sign in to manage your properties</div>
-    </div>
-    
-    <div class="auth-err" id="login-err" style="margin-bottom:16px;"></div>
-    
-    <div style="margin-bottom:16px;">
-      <label style="display:block; font-size:13px; font-weight:500; color:var(--text-secondary); margin-bottom:8px;">Email Address</label>
-      <input id="login-email" type="email" placeholder="you@example.com" value="" style="width:100%; padding:12px 16px; border:1px solid var(--border-light); border-radius:8px; background:var(--input-bg); color:var(--text-primary); font-size:14px; transition:border-color 0.2s;">
-    </div>
-    
-    <div style="margin-bottom:24px;">
-      <label style="display:block; font-size:13px; font-weight:500; color:var(--text-secondary); margin-bottom:8px;">Password</label>
-      <input id="login-pw" type="password" placeholder="••••••••" value="demo1234" style="width:100%; padding:12px 16px; border:1px solid var(--border-light); border-radius:8px; background:var(--input-bg); color:var(--text-primary); font-size:14px; transition:border-color 0.2s;">
-    </div>
-    
-    <button class="btn btn-pri btn-w" onclick="doLogin()" style="width:100%; padding:14px; background:var(--gradient-accent); color:var(--primary-charcoal); font-weight:600; font-size:14px; border-radius:8px; border:none; cursor:pointer; transition:transform 0.2s, box-shadow 0.2s; margin-bottom:16px;">Sign In →</button>
-    
-    <!-- Subtle Links -->
-    <div style="text-align:center; font-size:13px; color:var(--text-secondary); line-height:1.6;">
-      <div>No account? <a onclick="showScreen('signup')" style="color:var(--accent-gold); text-decoration:none; font-weight:500;">Create one free</a> · <a onclick="showLandingPage()" style="color:var(--accent-gold); text-decoration:none; font-weight:500;">Back to home</a></div>
-      <div style="margin-top:8px;"><a onclick="showForgotPassword()" style="color:var(--text-muted); text-decoration:none; font-size:12px;">Forgot password?</a></div>
-    </div>
-    
-    <!-- Demo Button -->
-    <div style="text-align:center; margin-top:24px; padding-top:24px; border-top:1px solid var(--border-light);">
-      <button class="btn btn-dark btn-w" onclick="loginDemo()" style="background:transparent; color:var(--text-secondary); border:1px solid var(--border-light); padding:10px 20px; font-size:13px; border-radius:6px; cursor:pointer; transition:all 0.2s;">🚀 Launch Demo</button>
-    </div>
-    
-    <!-- Subtle Self Healer Link -->
-    <div style="text-align:center; margin-top:16px;">
-      <a onclick="selfHeal()" style="color:var(--text-muted); font-size:11px; text-decoration:none; opacity:0.7; transition:opacity 0.2s;">System Recovery</a>
-    </div>
+<div id="screen-login" class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo"><div class="auth-logo-icon" style="font-size:12px;font-weight:800;letter-spacing:-1px;display:flex;align-items:center;justify-content:center">CSO</div><div class="auth-logo-txt">CSO Property Services</div></div>
+    <div class="auth-title">Welcome back</div>
+    <div class="auth-sub">Sign in to manage your properties</div>
+    <div class="auth-err" id="login-err"></div>
+    <div class="fi"><label>Email</label><input id="login-email" type="email" placeholder="you@example.com" value=""></div>
+    <div class="fi"><label>Password</label><input id="login-pw" type="password" placeholder="••••••••" value="demo1234"></div>
+    <button class="btn btn-pri btn-w" onclick="doLogin()">Sign In →</button>
+    <div class="auth-switch">No account? <a onclick="showScreen('signup')">Create one free</a> · <a onclick="showLandingPage()">Back to home</a></div>
+    <div class="auth-switch" style="margin-top:6px"><a onclick="showForgotPassword()" style="color:var(--txt3);font-size:12px">Forgot password?</a></div>
+    <div class="auth-divider">or</div>
+    <button class="btn btn-dark btn-w" onclick="loginDemo()">🚀 Launch Demo</button>
   </div>
 </div>
 
 <div id="screen-signup" class="auth-wrap" style="display:none">
   <div class="auth-card">
-    <div class="auth-logo"><div class="auth-logo-icon">🏢</div><div class="auth-logo-txt">CSO Property Services</div></div>
+    <div class="auth-logo"><div class="auth-logo-icon" style="font-size:12px;font-weight:800;letter-spacing:-1px;display:flex;align-items:center;justify-content:center">CSO</div><div class="auth-logo-txt">CSO Property Services</div></div>
     <div class="auth-title">Create your account</div>
     <div class="auth-sub">Start managing your properties smarter</div>
     <div class="auth-err" id="signup-err"></div>
@@ -1006,7 +940,7 @@ select{color:var(--txt)!important;}
 
 <div id="screen-forgot" class="auth-wrap" style="display:none">
   <div class="auth-card">
-    <div class="auth-logo"><div class="auth-logo-icon">🏢</div><div class="auth-logo-txt">CSO Property Services</div></div>
+    <div class="auth-logo"><div class="auth-logo-icon" style="font-size:12px;font-weight:800;letter-spacing:-1px;display:flex;align-items:center;justify-content:center">CSO</div><div class="auth-logo-txt">CSO Property Services</div></div>
     <div class="auth-title">Reset Password</div>
     <div class="auth-sub">Enter your email and we'll send you a reset link</div>
     <div class="auth-err" id="forgot-err"></div>
@@ -1019,7 +953,7 @@ select{color:var(--txt)!important;}
 
 <div id="screen-reset" class="auth-wrap" style="display:none">
   <div class="auth-card">
-    <div class="auth-logo"><div class="auth-logo-icon">🏢</div><div class="auth-logo-txt">CSO Property Services</div></div>
+    <div class="auth-logo"><div class="auth-logo-icon" style="font-size:12px;font-weight:800;letter-spacing:-1px;display:flex;align-items:center;justify-content:center">CSO</div><div class="auth-logo-txt">CSO Property Services</div></div>
     <div class="auth-title">Set New Password</div>
     <div class="auth-sub">Choose a strong password for your account</div>
     <div class="auth-err" id="reset-err"></div>
@@ -1063,69 +997,72 @@ select{color:var(--txt)!important;}
   <div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
   <div class="shell">
     <aside class="sidebar" id="sidebar">
-      <div class="sb-logo" onclick="showLandingPage()" style="cursor:pointer;">
-        <div class="sb-logo-row">
-          <div class="sb-logo-icon">🏡</div>
-          <div class="sb-logo-txt">CSO Property Services</div>
+      <div class="sb-logo-wrap">
+        <div class="sb-logo" onclick="showLandingPage()" style="cursor:pointer;">
+          <div class="sb-logo-row">
+            <div class="sb-logo-icon" style="font-size:16px;font-weight:700;letter-spacing:-0.5px">HH</div>
+            <div class="sb-logo-txt sb-hide-collapsed">CSO Property Services</div>
+          </div>
+          <div class="sb-plan sb-hide-collapsed" id="sb-plan">⭐ Free</div>
         </div>
-        <div class="sb-plan" id="sb-plan">⭐ Free</div>
+        <button class="sb-collapse-btn" onclick="toggleSidebarCollapse()" title="Collapse sidebar" id="sb-collapse-btn">‹</button>
       </div>
       <nav class="sb-nav">
-        <div class="sb-sec">Core</div>
-        <div class="sb-item active" onclick="nav('dashboard',this)"><span class="ico">📊</span>Dashboard</div>
-        <div class="sb-item" onclick="nav('properties',this)"><span class="ico">🏠</span>Properties</div>
-        <div class="sb-item" onclick="nav('bookings',this)"><span class="ico">📅</span>Bookings<span class="sb-badge" id="sb-b-badge" style="display:none">0</span></div>
-        <div class="sb-item" onclick="nav('messages',this)"><span class="ico">💬</span>Messages<span class="sb-badge" id="sb-m-badge" style="display:none">0</span></div>
+        <div class="sb-sec sb-hide-collapsed">Core</div>
+        <div class="sb-item" data-title="◈Dashboard" active" onclick="nav('dashboard',this)"><span class="ico">◈</span><span class="sb-hide-collapsed">Dashboard</span></div>
+        <div class="sb-item" data-title="⌂Properties"" onclick="nav('properties',this)"><span class="ico">⌂</span><span class="sb-hide-collapsed">Properties</span></div>
+        <div class="sb-item" data-title="▦Bookings0"" onclick="nav('bookings',this)"><span class="ico">▦</span><span class="sb-hide-collapsed">Bookings</span><span class="sb-badge" id="sb-b-badge" style="display:none">0</span></div>
+        <div class="sb-item" data-title="⌑Messages0"" onclick="nav('messages',this)"><span class="ico">⌑</span><span class="sb-hide-collapsed">Messages</span><span class="sb-badge" id="sb-m-badge" style="display:none">0</span></div>
 
         <div class="sb-sec" style="margin-top:10px">Operations</div>
-        <div class="sb-item" onclick="nav('cleaning',this)"><span class="ico">🧹</span>Tasks</div>
-        <div class="sb-item" onclick="nav('staff',this)"><span class="ico">👥</span>Staff Portal</div>
-        <div class="sb-item" onclick="nav('marketplace',this)"><span class="ico">🏪</span>Cleaner Marketplace</div>
-        <div class="sb-item" onclick="nav('workorders',this)"><span class="ico">🔧</span>Work Orders</div>
-        <div class="sb-item" onclick="nav('inventory',this)"><span class="ico">📦</span>Inventory</div>
-        <div class="sb-item" onclick="nav('payouts',this)"><span class="ico">💳</span>Payout Ledger</div>
-        <div class="sb-item" onclick="nav('photovault',this)"><span class="ico">📸</span>Photo Vault</div>
-        <div class="sb-item" onclick="nav('ical',this)"><span class="ico">🔄</span>iCal Sync</div>
+        <div class="sb-item" data-title="✓Tasks"" onclick="nav('cleaning',this)"><span class="ico">✓</span><span class="sb-hide-collapsed">Tasks</span></div>
+        <div class="sb-item" data-title="⊹Staff Portal"" onclick="nav('staff',this)"><span class="ico">⊹</span><span class="sb-hide-collapsed">Staff Portal</span></div>
+        <div class="sb-item" data-title="◉Cleaner Marketplace"" onclick="nav('marketplace',this)"><span class="ico">◉</span><span class="sb-hide-collapsed">Cleaner Marketplace</span></div>
+        <div class="sb-item" data-title="⚙Work Orders"" onclick="nav('workorders',this)"><span class="ico">⚙</span><span class="sb-hide-collapsed">Work Orders</span></div>
+        <div class="sb-item" data-title="▣Inventory"" onclick="nav('inventory',this)"><span class="ico">▣</span><span class="sb-hide-collapsed">Inventory</span></div>
+        <div class="sb-item" data-title="▤Payout Ledger"" onclick="nav('payouts',this)"><span class="ico">▤</span><span class="sb-hide-collapsed">Payout Ledger</span></div>
+        <div class="sb-item" data-title="⊡Photo Vault"" onclick="nav('photovault',this)"><span class="ico">⊡</span><span class="sb-hide-collapsed">Photo Vault</span></div>
+        <div class="sb-item" data-title="↻iCal Sync"" onclick="nav('ical',this)"><span class="ico">↻</span><span class="sb-hide-collapsed">iCal Sync</span></div>
 
         <div class="sb-sec" style="margin-top:10px">Guest Experience</div>
-        <div class="sb-item" onclick="nav('crm',this)"><span class="ico">👤</span>Guest CRM</div>
-        <div class="sb-item" onclick="nav('loyalty',this)"><span class="ico">🎁</span>Guest Loyalty</div>
-        <div class="sb-item" onclick="nav('portal',this)"><span class="ico">🔑</span>Guest Portal</div>
-        <div class="sb-item" onclick="nav('qrmanual',this)"><span class="ico">📱</span>QR House Manual</div>
-        <div class="sb-item" onclick="nav('concierge',this)"><span class="ico">🎩</span>Concierge</div>
-        <div class="sb-item" onclick="nav('templates',this)"><span class="ico">📝</span>Templates</div>
+        <div class="sb-item" data-title="◎Guest CRM"" onclick="nav('crm',this)"><span class="ico">◎</span><span class="sb-hide-collapsed">Guest CRM</span></div>
+        <div class="sb-item" data-title="◇Guest Loyalty"" onclick="nav('loyalty',this)"><span class="ico">◇</span><span class="sb-hide-collapsed">Guest Loyalty</span></div>
+        <div class="sb-item" data-title="⊕Guest Portal"" onclick="nav('portal',this)"><span class="ico">⊕</span><span class="sb-hide-collapsed">Guest Portal</span></div>
+        <div class="sb-item" data-title="▭QR House Manual"" onclick="nav('qrmanual',this)"><span class="ico">▭</span><span class="sb-hide-collapsed">QR House Manual</span></div>
+        <div class="sb-item" data-title="◈Concierge"" onclick="nav('concierge',this)"><span class="ico">◈</span><span class="sb-hide-collapsed">Concierge</span></div>
+        <div class="sb-item" data-title="≡Templates"" onclick="nav('templates',this)"><span class="ico">≡</span><span class="sb-hide-collapsed">Templates</span></div>
 
         <div class="sb-sec" style="margin-top:10px">Revenue</div>
-        <div class="sb-item" onclick="nav('pricing',this)"><span class="ico">💰</span>Nightly Rates</div>
-        <div class="sb-item" onclick="nav('pricing_opt',this)"><span class="ico">💡</span>Pricing Optimizer</div>
-        <div class="sb-item" onclick="nav('checkininsurance',this)"><span class="ico">🛡</span>Check-in Insurance</div>
-        <div class="sb-item" onclick="nav('rentals',this)"><span class="ico">🚲</span>Equipment Rentals</div>
-        <div class="sb-item" onclick="nav('upsell',this)"><span class="ico">🛎</span>Upsell Portal</div>
-        <div class="sb-item" onclick="nav('directbook',this)"><span class="ico">🔗</span>Direct Booking</div>
-        <div class="sb-item" onclick="nav('website',this)"><span class="ico">🌐</span>Website Builder</div>
+        <div class="sb-item" data-title="$Nightly Rates"" onclick="nav('pricing',this)"><span class="ico">$</span><span class="sb-hide-collapsed">Nightly Rates</span></div>
+        <div class="sb-item" data-title="◌Pricing Optimizer"" onclick="nav('pricing_opt',this)"><span class="ico">◌</span><span class="sb-hide-collapsed">Pricing Optimizer</span></div>
+        <div class="sb-item" data-title="⊘Check-in Insurance"" onclick="nav('checkininsurance',this)"><span class="ico">⊘</span><span class="sb-hide-collapsed">Check-in Insurance</span></div>
+        <div class="sb-item" data-title="◫Equipment Rentals"" onclick="nav('rentals',this)"><span class="ico">◫</span><span class="sb-hide-collapsed">Equipment Rentals</span></div>
+        <div class="sb-item" data-title="◬Upsell Portal"" onclick="nav('upsell',this)"><span class="ico">◬</span><span class="sb-hide-collapsed">Upsell Portal</span></div>
+        <div class="sb-item" data-title="⊞Direct Booking"" onclick="nav('directbook',this)"><span class="ico">⊞</span><span class="sb-hide-collapsed">Direct Booking</span></div>
+        <div class="sb-item" data-title="⊛Website Builder"" onclick="nav('website',this)"><span class="ico">⊛</span><span class="sb-hide-collapsed">Website Builder</span></div>
 
         <div class="sb-sec" style="margin-top:10px">Insights</div>
-        <div class="sb-item" onclick="nav('analytics',this)"><span class="ico">📈</span>Analytics</div>
-        <div class="sb-item" onclick="nav('reports',this)"><span class="ico">📄</span>Reports</div>
-        <div class="sb-item" onclick="nav('reviews',this)"><span class="ico">⭐</span>Reviews</div>
-        <div class="sb-item" onclick="nav('expenses',this)"><span class="ico">💸</span>Expenses</div>
-        <div class="sb-item" onclick="nav('scorecards',this)"><span class="ico">🏆</span>Scorecards</div>
-        <div class="sb-item" onclick="nav('damage',this)"><span class="ico">🛡</span>Damage Claims</div>
-        <div class="sb-item" onclick="nav('blacklist',this)"><span class="ico">🚫</span>Guest Blacklist</div>
+        <div class="sb-item" data-title="↗Analytics"" onclick="nav('analytics',this)"><span class="ico">↗</span><span class="sb-hide-collapsed">Analytics</span></div>
+        <div class="sb-item" data-title="▱Reports"" onclick="nav('reports',this)"><span class="ico">▱</span><span class="sb-hide-collapsed">Reports</span></div>
+        <div class="sb-item" data-title="★Reviews"" onclick="nav('reviews',this)"><span class="ico">★</span><span class="sb-hide-collapsed">Reviews</span></div>
+        <div class="sb-item" data-title="¢Expenses"" onclick="nav('expenses',this)"><span class="ico">¢</span><span class="sb-hide-collapsed">Expenses</span></div>
+        <div class="sb-item" data-title="◆Scorecards"" onclick="nav('scorecards',this)"><span class="ico">◆</span><span class="sb-hide-collapsed">Scorecards</span></div>
+        <div class="sb-item" data-title="⊘Damage Claims"" onclick="nav('damage',this)"><span class="ico">⊘</span><span class="sb-hide-collapsed">Damage Claims</span></div>
+        <div class="sb-item" data-title="⊗Guest Blacklist"" onclick="nav('blacklist',this)"><span class="ico">⊗</span><span class="sb-hide-collapsed">Guest Blacklist</span></div>
 
         <div class="sb-sec" style="margin-top:10px">AUTOMATION</div>
-        <div class="sb-item" onclick="nav('aihours',this)"><span class="ico">🤖</span>AI Office Hours</div>
-        <div class="sb-item" onclick="nav('automations',this)"><span class="ico">⚡</span>Automations</div>
-        <div class="sb-item" onclick="nav('affiliates',this)"><span class="ico">🤝</span>Affiliates</div>
+        <div class="sb-item" data-title="◍AI Office Hours"" onclick="nav('aihours',this)"><span class="ico">◍</span><span class="sb-hide-collapsed">AI Office Hours</span></div>
+        <div class="sb-item" data-title="⚡Automations"" onclick="nav('automations',this)"><span class="ico">⚡</span><span class="sb-hide-collapsed">Automations</span></div>
+        <div class="sb-item" data-title="⊜Affiliates"" onclick="nav('affiliates',this)"><span class="ico">⊜</span><span class="sb-hide-collapsed">Affiliates</span></div>
 
         <div class="sb-sec" style="margin-top:10px">Co-Host</div>
-        <div class="sb-item" onclick="nav('cohost_cmd',this)"><span class="ico">🏢</span>Command Center</div>
-        <div class="sb-item" onclick="nav('owners',this)"><span class="ico">🤝</span>Owner Management</div>
+        <div class="sb-item" data-title="▦Command Center"" onclick="nav('cohost_cmd',this)"><span class="ico">▦</span><span class="sb-hide-collapsed">Command Center</span></div>
+        <div class="sb-item" data-title="⊜Owner Management"" onclick="nav('owners',this)"><span class="ico">⊜</span><span class="sb-hide-collapsed">Owner Management</span></div>
 
         <div class="sb-sec" style="margin-top:10px">Account</div>
-        <div class="sb-item" onclick="nav('settings',this)"><span class="ico">⚙️</span>Settings</div>
-        <div class="sb-item" id="team-nav-item" style="display:none" onclick="nav('team',this)"><span class="ico">👥</span>Team Access</div>
-        <div class="sb-item" id="admin-nav-item" style="display:none" onclick="nav('admin',this)"><span class="ico">👑</span>Admin Panel</div>
+        <div class="sb-item" data-title="⚙Settings"" onclick="nav('settings',this)"><span class="ico">⚙</span><span class="sb-hide-collapsed">Settings</span></div>
+        <div class="sb-item" data-title="⊹Team Access"" id="team-nav-item" style="display:none" onclick="nav('team',this)"><span class="ico">⊹</span><span class="sb-hide-collapsed">Team Access</span></div>
+        <div class="sb-item" data-title="◈Admin Panel"" id="admin-nav-item" style="display:none" onclick="nav('admin',this)"><span class="ico">◈</span><span class="sb-hide-collapsed">Admin Panel</span></div>
       </nav>
       <div class="sb-foot">
         <div class="sb-user">
@@ -2635,7 +2572,7 @@ select{color:var(--txt)!important;}
     <div class="card-hd"><div class="card-title">💡 How the Affiliate Program Works</div></div>
     <div class="card-body">
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">🔗</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">1. Generate Link</div><div style="font-size:12px;color:var(--txt2)">Each affiliate gets a unique tracking URL like csopropertyservices/?ref=THEIRCODE</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">🔗</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">1. Generate Link</div><div style="font-size:12px;color:var(--txt2)">Each affiliate gets a unique tracking URL like hosthaven/?ref=THEIRCODE</div></div>
         <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">📣</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">2. They Promote</div><div style="font-size:12px;color:var(--txt2)">YouTube, TikTok, Facebook Groups — they bring the audience, you keep 80%</div></div>
         <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">💰</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">3. You Pay 20%</div><div style="font-size:12px;color:var(--txt2)">Monthly recurring commission for every user they referred. Track it all here.</div></div>
       </div>
@@ -3146,7 +3083,7 @@ select{color:var(--txt)!important;}
 <!-- FEEDBACK MODAL -->
 <div class="modal-bg" id="feedback-modal"><div class="modal" style="max-width:420px">
   <h2>💬 Share Your Feedback</h2>
-  <div style="font-size:13px;color:var(--txt2);margin-bottom:16px">Help us improve HostHaven. What's working? What's not? What do you wish existed?</div>
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:16px">Help us improve CSO Property Services. What's working? What's not? What do you wish existed?</div>
   <div class="fi"><label>Type</label>
     <select id="fb-type" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--txt);outline:none">
       <option value="feature">💡 Feature request</option>
@@ -3279,7 +3216,7 @@ select{color:var(--txt)!important;}
 
 <div class="modal-bg" id="invite-team-modal"><div class="modal">
   <h2>👥 Invite Team Member</h2>
-  <div style="font-size:13px;color:var(--txt2);margin-bottom:16px;line-height:1.5">They'll receive an email invitation to join your HostHaven workspace.</div>
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:16px;line-height:1.5">They'll receive an email invitation to join your CSO Property Services workspace.</div>
   <div class="fi"><label>Email Address</label><input id="invite-email" type="email" placeholder="colleague@example.com"></div>
   <div class="fi"><label>Full Name</label><input id="invite-name" placeholder="Your namen"></div>
   <div class="fi"><label>Role</label>
@@ -3289,7 +3226,7 @@ select{color:var(--txt)!important;}
     </select>
   </div>
   <div style="background:var(--sand);border-radius:8px;padding:12px;font-size:12px;color:var(--txt2);line-height:1.6;margin-bottom:4px">
-    📧 An invitation email will be sent with a link to join your workspace. They'll need to create a HostHaven account if they don't have one.
+    📧 An invitation email will be sent with a link to join your workspace. They'll need to create a CSO Property Services account if they don't have one.
   </div>
   <div class="modal-foot">
     <button class="btn btn-ghost" onclick="closeModal('invite-team-modal')">Cancel</button>
@@ -3501,7 +3438,7 @@ select{color:var(--txt)!important;}
 </div></div>
 
 <div class="modal-bg" id="add-autoreply-modal"><div class="modal"><h2>🤖 Add Auto-Reply Rule</h2>
-  <div style="font-size:13px;color:var(--txt2);margin-bottom:14px;line-height:1.5">When a guest message contains your trigger words, HostHaven will auto-draft a reply.</div>
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:14px;line-height:1.5">When a guest message contains your trigger words, CSO Property Services will auto-draft a reply.</div>
   <div class="fi"><label>Trigger Keywords (comma separated)</label><input id="ar-trigger" placeholder="wifi, password, internet"></div>
   <div class="fi"><label>Auto Reply Message</label><textarea id="ar-reply" placeholder="Our WiFi name is {wifi_name} and password is {wifi_password}. Enjoy!" style="min-height:80px"></textarea></div>
   <div style="background:var(--sand);border-radius:8px;padding:10px;font-size:11px;color:var(--txt2);line-height:1.6;margin-bottom:4px">💡 <strong>Smart variables:</strong> {wifi_name} {wifi_password} {door_code} {checkin_time} {checkout_time} {host_name} {property_name}</div>
@@ -3700,116 +3637,6 @@ const ADMIN_EMAIL = __cfg.ADMIN_EMAIL || '';
 let cUid=null, cData=null, cUser=null, activeConvId=null, isAdmin=false;
 let wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
 
-// IndexedDB for images/vault to prevent LocalStorage crashes
-class ImageVaultDB {
-  constructor() {
-    this.dbName = 'CSOImageVault';
-    this.dbVersion = 1;
-    this.db = null;
-  }
-
-  async init() {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, this.dbVersion);
-      
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => {
-        this.db = request.result;
-        resolve(this.db);
-      };
-      
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains('images')) {
-          db.createObjectStore('images', { keyPath: 'id' });
-        }
-        if (!db.objectStoreNames.contains('vault')) {
-          db.createObjectStore('vault', { keyPath: 'id' });
-        }
-      };
-    });
-  }
-
-  async storeImage(id, imageData) {
-    if (!this.db) await this.init();
-    return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction(['images'], 'readwrite');
-      const store = transaction.objectStore('images');
-      const request = store.put({ id, data: imageData, timestamp: Date.now() });
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-  }
-
-  async getImage(id) {
-    if (!this.db) await this.init();
-    return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction(['images'], 'readonly');
-      const store = transaction.objectStore('images');
-      const request = store.get(id);
-      request.onsuccess = () => resolve(request.result?.data);
-      request.onerror = () => reject(request.error);
-    });
-  }
-
-  async storeVaultItem(id, itemData) {
-    if (!this.db) await this.init();
-    return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction(['vault'], 'readwrite');
-      const store = transaction.objectStore('vault');
-      const request = store.put({ id, data: itemData, timestamp: Date.now() });
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-  }
-
-  async getVaultItem(id) {
-    if (!this.db) await this.init();
-    return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction(['vault'], 'readonly');
-      const store = transaction.objectStore('vault');
-      const request = store.get(id);
-      request.onsuccess = () => resolve(request.result?.data);
-      request.onerror = () => reject(request.error);
-    });
-  }
-
-  async clearOldImages(maxAge = 7 * 24 * 60 * 60 * 1000) { // 7 days
-    if (!this.db) await this.init();
-    const cutoff = Date.now() - maxAge;
-    return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction(['images', 'vault'], 'readwrite');
-      const imageStore = transaction.objectStore('images');
-      const vaultStore = transaction.objectStore('vault');
-      
-      let completed = 0;
-      const total = 2;
-      
-      const clearStore = (store) => {
-        const request = store.openCursor();
-        request.onsuccess = (event) => {
-          const cursor = event.target.result;
-          if (cursor) {
-            if (cursor.value.timestamp < cutoff) {
-              cursor.delete();
-            }
-            cursor.continue();
-          } else {
-            completed++;
-            if (completed === total) resolve();
-          }
-        };
-        request.onerror = () => reject(request.error);
-      };
-      
-      clearStore(imageStore);
-      clearStore(vaultStore);
-    });
-  }
-}
-
-const imageVaultDB = new ImageVaultDB();
-
 // Local cache for fast UI — syncs to Supabase (per-user payload obfuscated at rest)
 const LOCAL_KEY = 'hh_local_v1';
 function hhExpandLocalKey(seed, len) {
@@ -3857,7 +3684,7 @@ const getLocal = () => {
           try {
             out[uid] = hhDeobfuscateUserBlob(uid, cell);
           } catch (e) {
-            console.warn('[HostHaven] Could not decode local cache for', uid);
+            console.warn('[CSO Property Services] Could not decode local cache for', uid);
           }
         }
       }
@@ -3877,7 +3704,7 @@ const setLocal = (d) => {
     try {
       blob[uid] = hhObfuscateUserBlob(uid, v);
     } catch (e) {
-      console.warn('[HostHaven] Could not encode local cache for', uid);
+      console.warn('[CSO Property Services] Could not encode local cache for', uid);
     }
   }
   localStorage.setItem(LOCAL_KEY, JSON.stringify({ __hh_v2: true, blob }));
@@ -4065,41 +3892,28 @@ function toggleDark() {
 //  SCREENS
 // ════════════════════════════════════════════
 function showScreen(name) {
-  // Save current screen to localStorage for persistence
-  localStorage.setItem('cso_current_screen', name);
-  
   ['landing','login','signup','onboard','forgot','reset'].forEach(s=>{
     const el=document.getElementById('screen-'+s);
-    if(el) {
-      if(s===name) {
-        el.style.display = s==='landing'?'block':'flex';
-        // Special handling for login screen - ensure full screen coverage
-        if(s==='login') {
-          el.style.position = 'fixed';
-          el.style.top = '0';
-          el.style.left = '0';
-          el.style.width = '100vw';
-          el.style.height = '100vh';
-          el.style.zIndex = '9999';
-        }
-      } else {
-        el.style.display = 'none';
+    if(!el) return;
+    if(s===name) {
+      el.style.display = s==='landing' ? 'block' : 'flex';
+      el.style.visibility = 'visible';
+      el.style.pointerEvents = 'auto';
+      el.style.position = s==='landing' ? 'relative' : 'fixed';
+      if(s !== 'landing') {
+        el.style.inset = '0';
+        el.style.zIndex = '500';
+        el.style.background = 'var(--auth-bg, #1a1209)';
       }
+    } else {
+      el.style.display = 'none';
+      el.style.visibility = 'hidden';
+      el.style.pointerEvents = 'none';
     }
   });
-  document.getElementById('app').classList.remove('visible');
+  const app = document.getElementById('app');
+  if(app) app.classList.remove('visible');
   window.scrollTo(0,0);
-}
-
-function showLandingPage() {
-  localStorage.setItem('cso_current_screen', 'landing');
-  showScreen('landing');
-}
-
-// Restore screen state on page load
-function restoreScreenState() {
-  const savedScreen = localStorage.getItem('cso_current_screen') || 'landing';
-  showScreen(savedScreen);
 }
 
 function showForgotPassword() {
@@ -4370,7 +4184,7 @@ async function bootApp() {
   document.body.insertAdjacentHTML('beforeend',`
     <div id="boot-loader" style="position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px">
       <div style="width:44px;height:44px;background:var(--terra);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px">🏡</div>
-      <div style="font-family:Fraunces,serif;font-size:20px;color:var(--txt);letter-spacing:-.3px">HostHaven</div>
+      <div style="font-family:Fraunces,serif;font-size:20px;color:var(--txt);letter-spacing:-.3px">CSO Property Services</div>
       <div class="spinner"></div>
     </div>`);
 
@@ -4457,6 +4271,7 @@ async function checkAdminStatus(userEmail) {
 async function launchApp(user) {
   // Show dashboard and hide landing page
   showDashboard();
+  restoreSidebarState();
   
   // Show a brief loading overlay so data has time to be ready
   const app = document.getElementById('app');
@@ -4537,7 +4352,7 @@ async function launchApp(user) {
 //  ONBOARDING
 // ════════════════════════════════════════════
 const obSteps=[
-  {title:"Welcome to HostHaven! 🎉",sub:"Let's get you set up in a few quick steps. You can skip any step.",content:`
+  {title:"Welcome to CSO Property Services! 🎉",sub:"Let's get you set up in a few quick steps. You can skip any step.",content:`
     <div style="background:var(--sand);border-radius:12px;padding:20px;text-align:center;margin-bottom:14px">
       <div style="font-size:52px;margin-bottom:12px">🏡</div>
       <div style="font-family:Fraunces,serif;font-size:18px;color:var(--txt);margin-bottom:8px">Your complete Airbnb management hub</div>
@@ -4626,7 +4441,7 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 //  NAV
 // ════════════════════════════════════════════
-const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',cohost_cmd:'🏢 Command Center',owners:'🤝 Owner Management',crm:'👤 Guest CRM',payouts:'💳 Payout Ledger',photovault:'📸 Photo Vault',qrmanual:'📱 QR House Manual',aihours:'🤖 AI Office Hours',affiliates:'🤝 Affiliate Program',checkininsurance:'🛡 Check-in Insurance',rentals:'🚲 Equipment Rentals',ical:'iCal Sync',templates:'📝 Message Templates',loyalty:'🎁 Guest Loyalty',pricing_opt:'💡 Pricing Optimizer',scorecards:'🏆 Property Scorecards',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
+const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'Staff Portal',marketplace:'Cleaner Marketplace',workorders:'Work Orders',inventory:'Inventory',cohost_cmd:'Command Center',owners:'Owner Management',crm:'Guest CRM',payouts:'Payout Ledger',photovault:'Photo Vault',qrmanual:'QR House Manual',aihours:'AI Office Hours',affiliates:'Affiliate Program',checkininsurance:'Check-in Insurance',rentals:'Equipment Rentals',ical:'iCal Sync',templates:'Message Templates',loyalty:'Guest Loyalty',pricing_opt:'Pricing Optimizer',scorecards:'Property Scorecards',concierge:'Concierge',upsell:'Upsell Portal',directbook:'Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'Reviews',expenses:'Expenses',damage:'Damage Claims',blacklist:'Guest Blacklist',settings:'Settings',team:'Team Access',admin:'Admin Panel',automations:'Automations'};
 function nav(id,el){
   // Reset scroll to top for every tab navigation
   window.scrollTo(0,0);
@@ -4652,14 +4467,13 @@ function nav(id,el){
   const activePg=document.getElementById('page-'+id);
   activePg.classList.add('active');
   activePg.style.display='block';
+  activePg.style.position='relative';
   document.getElementById('page-title').textContent=titles[id]||id;
   closeSidebar();
   updateMobNav(id);
-  // Save last page for refresh restore - both sessionStorage and localStorage
-  try{
-    sessionStorage.setItem('hh_last_page',id);
-    localStorage.setItem('hh_last_page',id);
-  }catch(e){}
+  // Save last page for refresh restore
+  try{sessionStorage.setItem('hh_last_page',id);}catch(e){}
+  try{localStorage.setItem('hh_last_page',id);}catch(e){}
 
   if(id==='website')setTimeout(updateWb,100);
   if(id==='settings'){
@@ -4731,8 +4545,23 @@ function updateMobNav(id) {
 }
 
 function safeRender(fn, name) {
-  try { fn(); } catch(e) { console.warn('[HostHaven] render error in ' + name + ':', e); }
+  try { fn(); } catch(e) { console.warn('[CSO Property Services] render error in ' + name + ':', e); }
 }
+function toggleSidebarCollapse() {
+  const sb = document.getElementById('sidebar');
+  const btn = document.getElementById('sb-collapse-btn');
+  const collapsed = sb.classList.toggle('collapsed');
+  try { localStorage.setItem('hh_sb_collapsed', collapsed ? '1' : '0'); } catch(e) {}
+}
+
+function restoreSidebarState() {
+  try {
+    if(localStorage.getItem('hh_sb_collapsed') === '1') {
+      document.getElementById('sidebar')?.classList.add('collapsed');
+    }
+  } catch(e) {}
+}
+
 function renderAll(){
   setTimeout(runScheduledAutomations, 2000);
   // Force hide all inactive pages on load
@@ -5518,7 +5347,7 @@ function printChecklist(){
   const cl=CHECKLISTS[activeChecklist];if(!cl)return;
   const state=checklistState[activeChecklist]||{};
   let html='<!DOCTYPE html><html><head><title>'+cl.title+'</title><style>body{font-family:Georgia,serif;padding:32px;color:#1C1410;max-width:700px;margin:0 auto}h1{font-size:24px;margin-bottom:8px}h2{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#9B8E85;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid #E2DBD0}.item{display:flex;align-items:center;gap:12px;padding:7px 0;font-size:13px;border-bottom:1px solid #F5F0E8}.box{width:16px;height:16px;border:2px solid #C4693A;border-radius:4px;flex-shrink:0;text-align:center;line-height:14px;font-size:11px}@media print{body{padding:16px}}</style></head><body>';
-  html+='<h1>'+cl.title+'</h1><p style="font-size:12px;color:#9B8E85;margin-bottom:24px">Generated by HostHaven · '+new Date().toLocaleDateString()+'</p>';
+  html+='<h1>'+cl.title+'</h1><p style="font-size:12px;color:#9B8E85;margin-bottom:24px">Generated by CSO Property Services · '+new Date().toLocaleDateString()+'</p>';
   cl.sections.forEach((section,si)=>{
     html+='<h2>'+section.name+'</h2>';
     section.items.forEach((item,ii)=>{
@@ -5616,7 +5445,7 @@ function copyStaffLink() {
   // In a real app this would be a unique URL — for now copy a shareable message
   const tasks=cData.tasks.filter(t=>t.assignee===s.name&&!t.done);
   const taskList=tasks.map(t=>`• ${t.title}${t.due?' (Due: '+t.due+')':''}`).join('\n');
-  const msg=`Hi ${s.name}! Here are your current tasks:\n\n${taskList||'No pending tasks'}\n\nPlease update your status when complete. - via HostHaven`;
+  const msg=`Hi ${s.name}! Here are your current tasks:\n\n${taskList||'No pending tasks'}\n\nPlease update your status when complete. - via CSO Property Services`;
   navigator.clipboard.writeText(msg).then(()=>toast('Task list copied to clipboard! Send to '+s.name)).catch(()=>toast('Copy failed — try again'));
 }
 
@@ -6782,28 +6611,28 @@ function showLegal(type) {
     if(title) title.textContent = 'Terms of Service';
     if(content) content.innerHTML = `
       <p><strong>Last updated: March 2026</strong></p>
-      <p>By using HostHaven ("Service"), you agree to these Terms of Service. Please read them carefully.</p>
+      <p>By using CSO Property Services ("Service"), you agree to these Terms of Service. Please read them carefully.</p>
       <h3 style="color:var(--txt);margin:14px 0 6px">1. Acceptance of Terms</h3>
-      <p>By accessing or using HostHaven, you agree to be bound by these Terms. If you do not agree, do not use the Service.</p>
+      <p>By accessing or using CSO Property Services, you agree to be bound by these Terms. If you do not agree, do not use the Service.</p>
       <h3 style="color:var(--txt);margin:14px 0 6px">2. Description of Service</h3>
-      <p>HostHaven is a property management platform for short-term rental hosts. We provide tools for booking management, guest communication, and analytics.</p>
+      <p>CSO Property Services is a property management platform for short-term rental hosts. We provide tools for booking management, guest communication, and analytics.</p>
       <h3 style="color:var(--txt);margin:14px 0 6px">3. Subscription & Billing</h3>
       <p>Paid plans are billed monthly or annually. You may cancel at any time through the billing portal. Refunds are not provided for partial months. We reserve the right to change pricing with 30 days notice.</p>
       <h3 style="color:var(--txt);margin:14px 0 6px">4. Free Trial</h3>
       <p>No credit card is required to start your free trial. At the end of the 14-day trial period, your account automatically reverts to the Free plan. To continue using Pro features, you will need to upgrade to a paid plan.</p>
       <h3 style="color:var(--txt);margin:14px 0 6px">5. User Data</h3>
-      <p>You retain ownership of all data you enter into HostHaven. We store your data securely using Supabase. We do not sell your data to third parties.</p>
+      <p>You retain ownership of all data you enter into CSO Property Services. We store your data securely using Supabase. We do not sell your data to third parties.</p>
       <h3 style="color:var(--txt);margin:14px 0 6px">6. Acceptable Use</h3>
       <p>You agree not to misuse the Service, attempt to gain unauthorized access, or use the Service for illegal purposes.</p>
       <h3 style="color:var(--txt);margin:14px 0 6px">7. Limitation of Liability</h3>
-      <p>HostHaven is provided "as is" without warranties. We are not liable for any indirect or consequential damages arising from your use of the Service.</p>
+      <p>CSO Property Services is provided "as is" without warranties. We are not liable for any indirect or consequential damages arising from your use of the Service.</p>
       <h3 style="color:var(--txt);margin:14px 0 6px">8. Contact</h3>
       <p>Questions? Email us at <a href="mailto:csopropertyservice@gmail.com" style="color:var(--terra)">csopropertyservice@gmail.com</a></p>`;
   } else {
     if(title) title.textContent = 'Privacy Policy';
     if(content) content.innerHTML = `
       <p><strong>Last updated: March 2026</strong></p>
-      <p>HostHaven ("we", "us") is committed to protecting your privacy. This policy explains how we collect, use, and protect your information.</p>
+      <p>CSO Property Services ("we", "us") is committed to protecting your privacy. This policy explains how we collect, use, and protect your information.</p>
       <h3 style="color:var(--txt);margin:14px 0 6px">1. Information We Collect</h3>
       <p>We collect information you provide directly: name, email address, property details, booking information, and payment information (processed securely by Stripe — we never store card details).</p>
       <h3 style="color:var(--txt);margin:14px 0 6px">2. How We Use Your Information</h3>
@@ -7527,7 +7356,7 @@ function updateWb(){
   const slug=getWbSlug();const urlBar=document.getElementById('wb-url-bar');if(urlBar)urlBar.textContent=`Preview: ${n}`;
   const amenities=[...document.querySelectorAll('.amenity-chip.on')].map(a=>a.textContent.replace('✓ ','')).join(', ');
   const c=wbTheme.primary,bg=wbTheme.bg;
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Georgia,serif;background:${bg}}.hero{background:${c};color:#fff;padding:52px 32px 44px;text-align:center}.hero h1{font-size:40px;letter-spacing:-1px;font-weight:normal;margin-bottom:10px}.hero p{font-size:15px;opacity:.8;max-width:420px;margin:0 auto 6px;line-height:1.5}.hero small{font-size:11px;opacity:.55;letter-spacing:1px;text-transform:uppercase;font-family:sans-serif}.cta{display:inline-block;margin-top:22px;background:rgba(255,255,255,.2);color:#fff;padding:11px 26px;border-radius:28px;text-decoration:none;font-size:14px;border:1px solid rgba(255,255,255,.3);font-family:sans-serif}.sec{padding:32px;max-width:700px;margin:0 auto}.sec h2{font-size:20px;color:${c};margin-bottom:12px;font-weight:normal}.desc{font-size:14px;line-height:1.8;color:#4a3a2e}.pbox{background:#fff;border:1px solid #e0d8ce;border-radius:12px;padding:22px 26px;display:flex;align-items:center;justify-content:space-between;margin-top:12px}.pbig{font-size:40px;color:${c};letter-spacing:-1.5px}.pbook{background:${c};color:#fff;padding:11px 24px;border-radius:8px;font-size:13px;border:none;cursor:pointer;font-family:sans-serif}.ams{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.am{background:#fff;border:1px solid #e0d8ce;border-radius:18px;padding:4px 12px;font-size:12px;color:#4a3a2e;font-family:sans-serif}.hcard{background:#fff;border:1px solid #e0d8ce;border-radius:12px;padding:20px;display:flex;align-items:center;gap:16px}.hav{width:48px;height:48px;border-radius:50%;background:${c};color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px}hr{border:none;border-top:1px solid #e0d8ce}.foot{background:${c};color:rgba(255,255,255,.5);text-align:center;padding:16px;font-size:11px;font-family:sans-serif}</style></head><body><div class="hero"><h1>${n}</h1><p>${tl}</p><small>📍 ${loc}</small><br><a class="cta">Book Your Stay</a></div><div class="sec"><h2>About</h2><p class="desc">${desc}</p></div><hr><div class="sec"><h2>Pricing</h2><div class="pbox"><div><div class="pbig">${price}</div><div style="font-size:12px;color:#9b8e85;font-family:sans-serif">per night · Min ${min}</div></div><button class="pbook">Check Availability</button></div></div><hr><div class="sec"><h2>Amenities</h2><div class="ams">${amenities.split(', ').filter(Boolean).map(a=>`<span class="am">✓ ${a}</span>`).join('')}</div></div><hr><div class="sec"><h2>Your Host</h2><div class="hcard"><div class="hav">${host.split(' ').map(n=>n[0]).join('')}</div><div><div style="font-size:16px;color:#1c1410;margin-bottom:3px">${host}</div><div style="font-size:12px;color:#6b5d52;font-family:sans-serif">${email}</div></div></div></div><div class="foot">© 2026 ${n} · Powered by HostHaven</div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Georgia,serif;background:${bg}}.hero{background:${c};color:#fff;padding:52px 32px 44px;text-align:center}.hero h1{font-size:40px;letter-spacing:-1px;font-weight:normal;margin-bottom:10px}.hero p{font-size:15px;opacity:.8;max-width:420px;margin:0 auto 6px;line-height:1.5}.hero small{font-size:11px;opacity:.55;letter-spacing:1px;text-transform:uppercase;font-family:sans-serif}.cta{display:inline-block;margin-top:22px;background:rgba(255,255,255,.2);color:#fff;padding:11px 26px;border-radius:28px;text-decoration:none;font-size:14px;border:1px solid rgba(255,255,255,.3);font-family:sans-serif}.sec{padding:32px;max-width:700px;margin:0 auto}.sec h2{font-size:20px;color:${c};margin-bottom:12px;font-weight:normal}.desc{font-size:14px;line-height:1.8;color:#4a3a2e}.pbox{background:#fff;border:1px solid #e0d8ce;border-radius:12px;padding:22px 26px;display:flex;align-items:center;justify-content:space-between;margin-top:12px}.pbig{font-size:40px;color:${c};letter-spacing:-1.5px}.pbook{background:${c};color:#fff;padding:11px 24px;border-radius:8px;font-size:13px;border:none;cursor:pointer;font-family:sans-serif}.ams{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.am{background:#fff;border:1px solid #e0d8ce;border-radius:18px;padding:4px 12px;font-size:12px;color:#4a3a2e;font-family:sans-serif}.hcard{background:#fff;border:1px solid #e0d8ce;border-radius:12px;padding:20px;display:flex;align-items:center;gap:16px}.hav{width:48px;height:48px;border-radius:50%;background:${c};color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px}hr{border:none;border-top:1px solid #e0d8ce}.foot{background:${c};color:rgba(255,255,255,.5);text-align:center;padding:16px;font-size:11px;font-family:sans-serif}</style></head><body><div class="hero"><h1>${n}</h1><p>${tl}</p><small>📍 ${loc}</small><br><a class="cta">Book Your Stay</a></div><div class="sec"><h2>About</h2><p class="desc">${desc}</p></div><hr><div class="sec"><h2>Pricing</h2><div class="pbox"><div><div class="pbig">${price}</div><div style="font-size:12px;color:#9b8e85;font-family:sans-serif">per night · Min ${min}</div></div><button class="pbook">Check Availability</button></div></div><hr><div class="sec"><h2>Amenities</h2><div class="ams">${amenities.split(', ').filter(Boolean).map(a=>`<span class="am">✓ ${a}</span>`).join('')}</div></div><hr><div class="sec"><h2>Your Host</h2><div class="hcard"><div class="hav">${host.split(' ').map(n=>n[0]).join('')}</div><div><div style="font-size:16px;color:#1c1410;margin-bottom:3px">${host}</div><div style="font-size:12px;color:#6b5d52;font-family:sans-serif">${email}</div></div></div></div><div class="foot">© 2026 ${n} · Powered by CSO Property Services</div></body></html>`;
   const iframe=document.getElementById('wb-iframe');if(iframe){const doc=iframe.contentDocument||iframe.contentWindow.document;doc.open();doc.write(html);doc.close();}
 }
 
@@ -7548,7 +7377,7 @@ function selectPortal(bookingId,el){
   const user=cUser;const color='#C4693A';
   document.getElementById('portal-url-bar').textContent=`Guest portal for ${b.guestName} · ${b.propName}`;
   const firstName=b.guestName.split(' ')[0];
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Georgia,serif;background:#FAF7F2;min-height:100vh}.hdr{background:${color};padding:36px 24px;text-align:center;color:#fff}.hdr-e{font-size:48px;margin-bottom:12px}.hdr h1{font-size:26px;font-weight:normal;margin-bottom:5px;letter-spacing:-.3px}.hdr p{font-size:13px;opacity:.7;font-family:sans-serif}.wlc{background:#fff;margin:18px;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}.wlc h2{font-size:16px;color:${color};margin-bottom:8px;font-weight:normal}.wlc p{font-size:13px;line-height:1.7;color:#4a3a2e;font-family:sans-serif}.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 18px 10px}.ic{background:#fff;border-radius:11px;padding:16px;box-shadow:0 2px 7px rgba(0,0,0,.05)}.ic h3{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:8px;font-family:sans-serif}.code{font-size:34px;font-family:monospace;color:${color};letter-spacing:4px;font-weight:bold}.ir{display:flex;flex-direction:column;gap:2px;margin-bottom:7px}.il{font-size:9px;color:#9b8e85;font-family:sans-serif}.iv{font-size:13px;color:#1c1410;font-weight:600;font-family:sans-serif}.tl{background:#fff;border-radius:12px;margin:0 18px 10px;padding:16px;box-shadow:0 2px 7px rgba(0,0,0,.05)}.tl h3{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:12px;font-family:sans-serif}.ti{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}.td{width:28px;height:28px;border-radius:50%;background:${color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}.tt{font-size:12px;font-weight:500;color:#1c1410;font-family:sans-serif}.ts{font-size:10px;color:#9b8e85;font-family:sans-serif;margin-top:1px}.tips{background:#fff;border-radius:12px;margin:0 18px 12px;padding:16px;box-shadow:0 2px 7px rgba(0,0,0,.05)}.tip{display:flex;gap:7px;font-family:sans-serif;font-size:12px;color:#4a3a2e;line-height:1.5;margin-bottom:8px}.cta{display:block;margin:0 18px 24px;background:${color};color:#fff;padding:13px;border-radius:10px;text-align:center;font-size:13px;text-decoration:none;font-family:sans-serif}.foot{text-align:center;padding:12px;font-size:10px;color:#9b8e85;font-family:sans-serif;border-top:1px solid #e0d8ce}</style></head><body><div class="hdr"><div class="hdr-e">${prop?.emoji||'🏡'}</div><h1>Welcome, ${firstName}!</h1><p>${prop?.name||'Your Property'} · ${prop?.location||''}</p></div><div class="wlc"><h2>We're so happy you're here!</h2><p>Everything you need for your stay is right here. Reach out anytime if you need anything at all.</p></div><div class="cards"><div class="ic"><h3>Door Code</h3><div class="code">${prop?.doorCode||'See host'}</div></div><div class="ic"><h3>WiFi</h3><div class="ir"><div class="il">Network</div><div class="iv">${prop?.wifi||'See welcome book'}</div></div><div class="ir"><div class="il">Password</div><div class="iv">${prop?.wifiPw||'See welcome book'}</div></div></div><div class="ic"><h3>Check-in</h3><div class="iv" style="font-size:12px">${b.checkin||'TBD'}</div><div style="font-size:10px;color:#9b8e85;font-family:sans-serif;margin-top:2px">After 3:00 PM</div></div><div class="ic"><h3>Check-out</h3><div class="iv" style="font-size:12px">${b.checkout||'TBD'}</div><div style="font-size:10px;color:#9b8e85;font-family:sans-serif;margin-top:2px">By 11:00 AM</div></div></div><div class="ic" style="margin:0 18px 10px;padding:14px;border-radius:11px;background:#fff;box-shadow:0 2px 7px rgba(0,0,0,.05)"><h3 style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:6px;font-family:sans-serif">Parking</h3><div class="iv" style="font-size:12px">${prop?.parking||'See listing'}</div></div><div class="tl"><h3>Your Stay</h3><div class="ti"><div class="td">✈️</div><div><div class="tt">Arrive & Check In</div><div class="ts">${b.checkin||'Your check-in date'}</div></div></div><div class="ti"><div class="td">🏠</div><div><div class="tt">Enjoy Your Stay</div><div class="ts">Make yourself at home</div></div></div><div class="ti"><div class="td">👋</div><div><div class="tt">Check Out</div><div class="ts">${b.checkout||'Your checkout date'} · Leave key on counter</div></div></div></div><div class="tips"><h3 style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:10px;font-family:sans-serif">House Tips</h3><div class="tip"><span>🔇</span>Quiet hours 10pm–8am</div><div class="tip"><span>🚭</span>No smoking indoors</div><div class="tip"><span>🌟</span>We'd love a review after your stay!</div></div><a class="cta" href="mailto:${user?.email||'host@hosthaven.co'}">💬 Message Your Host</a><div class="foot">Powered by HostHaven</div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Georgia,serif;background:#FAF7F2;min-height:100vh}.hdr{background:${color};padding:36px 24px;text-align:center;color:#fff}.hdr-e{font-size:48px;margin-bottom:12px}.hdr h1{font-size:26px;font-weight:normal;margin-bottom:5px;letter-spacing:-.3px}.hdr p{font-size:13px;opacity:.7;font-family:sans-serif}.wlc{background:#fff;margin:18px;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}.wlc h2{font-size:16px;color:${color};margin-bottom:8px;font-weight:normal}.wlc p{font-size:13px;line-height:1.7;color:#4a3a2e;font-family:sans-serif}.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 18px 10px}.ic{background:#fff;border-radius:11px;padding:16px;box-shadow:0 2px 7px rgba(0,0,0,.05)}.ic h3{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:8px;font-family:sans-serif}.code{font-size:34px;font-family:monospace;color:${color};letter-spacing:4px;font-weight:bold}.ir{display:flex;flex-direction:column;gap:2px;margin-bottom:7px}.il{font-size:9px;color:#9b8e85;font-family:sans-serif}.iv{font-size:13px;color:#1c1410;font-weight:600;font-family:sans-serif}.tl{background:#fff;border-radius:12px;margin:0 18px 10px;padding:16px;box-shadow:0 2px 7px rgba(0,0,0,.05)}.tl h3{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:12px;font-family:sans-serif}.ti{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}.td{width:28px;height:28px;border-radius:50%;background:${color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}.tt{font-size:12px;font-weight:500;color:#1c1410;font-family:sans-serif}.ts{font-size:10px;color:#9b8e85;font-family:sans-serif;margin-top:1px}.tips{background:#fff;border-radius:12px;margin:0 18px 12px;padding:16px;box-shadow:0 2px 7px rgba(0,0,0,.05)}.tip{display:flex;gap:7px;font-family:sans-serif;font-size:12px;color:#4a3a2e;line-height:1.5;margin-bottom:8px}.cta{display:block;margin:0 18px 24px;background:${color};color:#fff;padding:13px;border-radius:10px;text-align:center;font-size:13px;text-decoration:none;font-family:sans-serif}.foot{text-align:center;padding:12px;font-size:10px;color:#9b8e85;font-family:sans-serif;border-top:1px solid #e0d8ce}</style></head><body><div class="hdr"><div class="hdr-e">${prop?.emoji||'🏡'}</div><h1>Welcome, ${firstName}!</h1><p>${prop?.name||'Your Property'} · ${prop?.location||''}</p></div><div class="wlc"><h2>We're so happy you're here!</h2><p>Everything you need for your stay is right here. Reach out anytime if you need anything at all.</p></div><div class="cards"><div class="ic"><h3>Door Code</h3><div class="code">${prop?.doorCode||'See host'}</div></div><div class="ic"><h3>WiFi</h3><div class="ir"><div class="il">Network</div><div class="iv">${prop?.wifi||'See welcome book'}</div></div><div class="ir"><div class="il">Password</div><div class="iv">${prop?.wifiPw||'See welcome book'}</div></div></div><div class="ic"><h3>Check-in</h3><div class="iv" style="font-size:12px">${b.checkin||'TBD'}</div><div style="font-size:10px;color:#9b8e85;font-family:sans-serif;margin-top:2px">After 3:00 PM</div></div><div class="ic"><h3>Check-out</h3><div class="iv" style="font-size:12px">${b.checkout||'TBD'}</div><div style="font-size:10px;color:#9b8e85;font-family:sans-serif;margin-top:2px">By 11:00 AM</div></div></div><div class="ic" style="margin:0 18px 10px;padding:14px;border-radius:11px;background:#fff;box-shadow:0 2px 7px rgba(0,0,0,.05)"><h3 style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:6px;font-family:sans-serif">Parking</h3><div class="iv" style="font-size:12px">${prop?.parking||'See listing'}</div></div><div class="tl"><h3>Your Stay</h3><div class="ti"><div class="td">✈️</div><div><div class="tt">Arrive & Check In</div><div class="ts">${b.checkin||'Your check-in date'}</div></div></div><div class="ti"><div class="td">🏠</div><div><div class="tt">Enjoy Your Stay</div><div class="ts">Make yourself at home</div></div></div><div class="ti"><div class="td">👋</div><div><div class="tt">Check Out</div><div class="ts">${b.checkout||'Your checkout date'} · Leave key on counter</div></div></div></div><div class="tips"><h3 style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9b8e85;margin-bottom:10px;font-family:sans-serif">House Tips</h3><div class="tip"><span>🔇</span>Quiet hours 10pm–8am</div><div class="tip"><span>🚭</span>No smoking indoors</div><div class="tip"><span>🌟</span>We'd love a review after your stay!</div></div><a class="cta" href="mailto:${user?.email||'host@hosthaven.co'}">💬 Message Your Host</a><div class="foot">Powered by CSO Property Services</div></body></html>`;
   const iframe=document.getElementById('portal-iframe');const doc=iframe.contentDocument||iframe.contentWindow.document;doc.open();doc.write(html);doc.close();
 }
 
@@ -7564,7 +7393,7 @@ function exportAnalyticsCSV() {
   const blob = new Blob([csv],{type:'text/csv'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'HostHaven-Analytics-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.download = 'CSO-Analytics-'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();
   toast('Analytics exported ✓');
 }
@@ -7719,7 +7548,7 @@ function printReport(){
   renderReports();
   const content=document.getElementById('page-reports').innerHTML;
   const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><title>HostHaven Report</title><style>body{font-family:Georgia,serif;padding:32px;color:#1C1410}h1{font-size:28px;margin-bottom:24px}table{width:100%;border-collapse:collapse}th{font-size:11px;text-transform:uppercase;letter-spacing:.7px;padding:7px;border-bottom:2px solid #E2DBD0;text-align:left}td{padding:9px 7px;border-bottom:1px solid #EDE8DE;font-size:13px}@media print{body{padding:16px}}</style></head><body><h1>HostHaven Revenue Report</h1><p style="color:#9B8E85;margin-bottom:20px">Generated ${new Date().toLocaleDateString()}</p>${content}</body></html>`);
+  w.document.write(`<!DOCTYPE html><html><head><title>CSO Property Services Report</title><style>body{font-family:Georgia,serif;padding:32px;color:#1C1410}h1{font-size:28px;margin-bottom:24px}table{width:100%;border-collapse:collapse}th{font-size:11px;text-transform:uppercase;letter-spacing:.7px;padding:7px;border-bottom:2px solid #E2DBD0;text-align:left}td{padding:9px 7px;border-bottom:1px solid #EDE8DE;font-size:13px}@media print{body{padding:16px}}</style></head><body><h1>CSO Property Services Revenue Report</h1><p style="color:#9B8E85;margin-bottom:20px">Generated ${new Date().toLocaleDateString()}</p>${content}</body></html>`);
   w.document.close();setTimeout(()=>w.print(),500);
   toast('Print dialog opening…');
 }
@@ -8180,7 +8009,7 @@ function buildQRManual() {
     +'<div style="background:var(--sand);border-radius:10px;padding:12px"><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">🕙 Check-out</div><div style="font-size:13px;font-weight:600;color:var(--txt)">By '+checkout+'</div></div></div>'
     +(parking!=='See host'?'<div style="background:var(--sand);border-radius:10px;padding:12px;margin-bottom:10px"><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">🅿️ Parking</div><div style="font-size:13px;color:var(--txt)">'+parking+'</div></div>':'')
     +(rules.length?'<div style="background:var(--sand);border-radius:10px;padding:12px;margin-bottom:10px"><div style="font-size:10px;color:var(--txt3);margin-bottom:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase">House Rules</div>'+rules.map(r=>'<div style="font-size:12px;color:var(--txt);padding:3px 0">• '+r+'</div>').join('')+'</div>':'')
-    +'<div style="text-align:center;font-size:10px;color:var(--txt3);padding:10px">Powered by HostHaven</div></div>';
+    +'<div style="text-align:center;font-size:10px;color:var(--txt3);padding:10px">Powered by CSO Property Services</div></div>';
 
   area.innerHTML = '<div id="qr-canvas-container" style="text-align:center;margin-bottom:14px">'
     +'<div style="display:inline-block;padding:12px;background:#fff;border-radius:8px;box-shadow:var(--sh)">'
@@ -8563,7 +8392,7 @@ function generateOwnerReportHTML(forEmail) {
 
       // Footer
       '<div style="margin-top:32px;padding-top:20px;border-top:1px solid #E2DBD0;text-align:center">' +
-        '<div style="font-size:12px;color:#9B8E85">This report was prepared by <strong>'+bizName+'</strong> using HostHaven Property Management.</div>' +
+        '<div style="font-size:12px;color:#9B8E85">This report was prepared by <strong>'+bizName+'</strong> using CSO Property Services Property Management.</div>' +
         '<div style="font-size:11px;color:#C4C4B4;margin-top:4px">Questions? Reply to this email or contact your property manager directly.</div>' +
       '</div>' +
 
@@ -9195,8 +9024,8 @@ function checkReferralCode() {
 // ════════════════════════════════════════════
 function buyProduct(product) {
   const links = {
-    quickstart: 'https://csoproperty.gumroad.com/l/ebqdf',
-    cohost_kit:  'https://csoproperty.gumroad.com/l/wnzfh'
+    quickstart: 'https://csoproperty.gumroad.com/l/wnzfh',
+    cohost_kit:  'https://csoproperty.gumroad.com/l/ebqdf'
   };
   // If Stripe links not yet set, show contact modal
   if(links[product].includes('placeholder')) {
@@ -9374,8 +9203,38 @@ function runSearch(q) {
 
 // Keyboard shortcut for search
 document.addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    const ls=document.getElementById('screen-login');
+    const ae=document.activeElement;
+    if(ls&&ls.style.display!=='none'&&ae&&(ae.id==='login-email'||ae.id==='login-pw')){e.preventDefault();doLogin();return;}
+    const ss=document.getElementById('screen-signup');
+    if(ss&&ss.style.display!=='none'&&ae&&ae.closest('#screen-signup')){e.preventDefault();doSignup();return;}
+    const fs=document.getElementById('screen-forgot');
+    if(fs&&fs.style.display!=='none'&&ae&&ae.closest('#screen-forgot')){e.preventDefault();doForgotPassword();return;}
+  }
   if((e.metaKey||e.ctrlKey) && e.key==='k') { e.preventDefault(); openSearch(); }
   if(e.key==='Escape') { closeModal('search-modal'); }
+  // Enter key submits login/signup forms
+  if(e.key==='Enter') {
+    const loginScreen = document.getElementById('screen-login');
+    const signupScreen = document.getElementById('screen-signup');
+    const forgotScreen = document.getElementById('screen-forgot');
+    if(loginScreen && loginScreen.style.display !== 'none' && getComputedStyle(loginScreen).display !== 'none') {
+      const emailEl = document.getElementById('login-email');
+      const pwEl = document.getElementById('login-pw');
+      if(emailEl && pwEl && (document.activeElement === emailEl || document.activeElement === pwEl)) {
+        doLogin();
+      }
+    }
+    if(signupScreen && signupScreen.style.display !== 'none' && getComputedStyle(signupScreen).display !== 'none') {
+      const activeEl = document.activeElement;
+      if(activeEl && activeEl.closest('#screen-signup')) doSignup();
+    }
+    if(forgotScreen && forgotScreen.style.display !== 'none' && getComputedStyle(forgotScreen).display !== 'none') {
+      const activeEl = document.activeElement;
+      if(activeEl && activeEl.closest('#screen-forgot')) doForgotPassword();
+    }
+  }
 });
 
 // ════════════════════════════════════════════
@@ -9768,7 +9627,7 @@ function sendWeeklySummaryNow() {
   const today = new Date().toISOString().slice(0,10);
   const upcoming = bookings.filter(b=>b.checkin>=today&&b.status==='confirmed').slice(0,5);
   const summary = [
-    '📊 Weekly HostHaven Summary',
+    '📊 Weekly CSO Property Services Summary',
     '━━━━━━━━━━━━━━━━━━━━━━',
     'Revenue (all time): $'+rev.toLocaleString(),
     'Expenses (all time): $'+exp.toLocaleString(),
@@ -10146,7 +10005,7 @@ function exportPLCSV() {
   const blob=new Blob([csv],{type:'text/csv'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download='HostHaven-PL-'+year+'.csv';
+  a.download='CSO-PL-'+year+'.csv';
   a.click();
   toast('P&L exported ✓');
 }
@@ -10161,7 +10020,7 @@ function exportTaxCSV() {
   const blob=new Blob([csv],{type:'text/csv'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download='HostHaven-Tax-Export-'+year+'.csv';
+  a.download='CSO-Tax-Export-'+year+'.csv';
   a.click();
   toast('Tax export downloaded ✓');
 }
@@ -10175,10 +10034,7 @@ function printTaxReport() {
 //  AUTH INIT
 // ═════════════════════════════════════════
 async function initAuth() {
-  // Fix 404 redirects - ensure clean URL
-  if (window.location.pathname !== '/' && window.location.pathname !== '/index_integrated.html') {
-    window.history.replaceState({}, '', '/');
-  }
+  let _launched = false;
   
   // Wait for Supabase to be ready
   let sessionCheckAttempts = 0;
@@ -10188,19 +10044,14 @@ async function initAuth() {
     try {
       const { data: { session } } = await sb.auth.getSession();
       if (session?.user) {
+        if(_launched) return;
+        _launched = true;
         cUid = session.user.id;
         cUser = {
           email: session.user.email,
           name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
           role: session.user.user_metadata?.role || 'user'
         };
-        
-        // Force admin access for CSO Property Services owner
-        if (session.user.email === 'csopropertservice@gmail.com') {
-          cUser.role = 'owner';
-          isAdmin = true;
-          cData.plan = 'business';
-        }
         try {
           const data = await loadUserData(cUid);
           cData = data || (buildDemoData ? buildDemoData() : {});
@@ -10246,19 +10097,14 @@ async function initAuth() {
     if(event === 'SIGNED_IN') return;
     if(event === 'INITIAL_SESSION') {
       if(session && session.user) {
+        if(_launched) return;
+        _launched = true;
         cUid = session.user.id;
         cUser = {
           email: session.user.email,
           name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
           role: session.user.user_metadata?.role || 'user'
         };
-        
-        // Force admin access for CSO Property Services owner
-        if (session.user.email === 'csopropertservice@gmail.com') {
-          cUser.role = 'owner';
-          isAdmin = true;
-          cData.plan = 'business';
-        }
         try {
           const data = await loadUserData(cUid);
           cData = data || (buildDemoData ? buildDemoData() : {});
@@ -10269,7 +10115,7 @@ async function initAuth() {
         }
         await launchApp(cUser);
       } else {
-        showLandingPage();
+        if(!_launched) showLandingPage();
       }
     } else if(event === 'SIGNED_OUT') {
       const appVis = document.getElementById('app')?.classList.contains('visible');
@@ -10290,10 +10136,11 @@ async function initAuth() {
 //  BOOT
 // ═════════════════════════════════════════
 window.addEventListener('load', () => {
-  // Fix 404 redirects - clean URL while staying on correct view
-  if (window.location.pathname !== '/' && window.location.pathname !== '/index_integrated.html') {
-    window.history.replaceState({}, '', '/');
-  }
+  try {
+    if (window.location.pathname !== '/' && window.location.pathname !== '/index_integrated.html') {
+      window.history.replaceState({}, '', '/');
+    }
+  } catch(e) {}
   
   // Clear service workers
   if('serviceWorker' in navigator){
@@ -10302,7 +10149,16 @@ window.addEventListener('load', () => {
     });
   }
   if('caches' in window){caches.keys().then(n=>n.forEach(k=>caches.delete(k)));}
-  initAuth();
+
+  // Wrapped init — if anything fails, fallback to login screen (never white screen)
+  try {
+    initAuth();
+  } catch(e) {
+    console.error('Init failed:', e);
+    try { showScreen('login'); } catch(e2) {
+      document.body.innerHTML = '<div style="display:grid;place-items:center;min-height:100vh;background:#1a1209;color:#fff;font-family:sans-serif"><div style="text-align:center"><div style="font-size:32px;margin-bottom:16px">CSO Property Services</div><button onclick="location.reload()" style="padding:12px 24px;background:#C4693A;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer">Reload App</button></div></div>';
+    }
+  }
 });
 
 // PREMIUM ADDITIONS
@@ -10505,7 +10361,7 @@ function owizNext() {
 function owizBack() { if(_owizStep>1){_owizStep--;_owizRender();} }
 function _owizFinish() {
   closeOnboardingWizard();
-  showPremiumNotification('Co-Host Launch Kit setup complete!','success');
+  showPremiumNotification('CSO Ops Masterclass setup complete!','success');
   shmLog('Onboarding wizard completed','fix');
   try { localStorage.setItem('hh_wizard_done','1'); } catch(e){}
 }
@@ -10544,7 +10400,7 @@ function _injectPremiumButtons() {
 // BOOT
 setTimeout(function(){
   _injectPremiumButtons();
-  shmLog('HostHaven Premium v2 loaded','ok');
+  shmLog('CSO Property Services Premium v2 loaded','ok');
   shmLog('Marketplace tax engine ready (10% fee)','ok');
   shmLog('Shadow Support AI ready','ok');
   shmLog('Self-Healing Monitor watching','fix');
@@ -10580,7 +10436,7 @@ setTimeout(function(){
     <button class="shm-close" onclick="toggleSelfHealingMonitor()">✕</button>
   </div>
   <div class="shm-log" id="shm-log">
-    <div class="shm-entry ok">[BOOT] HostHaven initialized</div>
+    <div class="shm-entry ok">[BOOT] CSO Property Services initialized</div>
   </div>
 </div>
 
@@ -10588,7 +10444,7 @@ setTimeout(function(){
   <div style="max-width:560px;width:100%;border-radius:20px;padding:36px;background:var(--card);border:1px solid rgba(232,180,184,.25);box-shadow:0 20px 60px rgba(0,0,0,.4);position:relative;">
     <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(45deg,#E8B4B8,#F7E7CE);border-radius:20px 20px 0 0;"></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-      <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);">Co-Host Launch Kit <span class="premium-badge">NEW</span></div>
+      <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);">CSO Ops Masterclass <span class="premium-badge">NEW</span></div>
       <button onclick="closeOnboardingWizard()" style="background:transparent;border:none;font-size:18px;color:var(--txt3);cursor:pointer;">✕</button>
     </div>
     <div style="font-size:13px;color:var(--txt2);margin-bottom:20px;">Set up your property management in 4 steps.</div>
@@ -10627,7 +10483,7 @@ setTimeout(function(){
       <div style="text-align:center;padding:20px 0;">
         <div style="font-size:56px;margin-bottom:16px;">🎉</div>
         <div style="font-family:Fraunces,serif;font-size:22px;color:var(--txt);margin-bottom:10px;">You're All Set!</div>
-        <div style="font-size:14px;color:var(--txt2);line-height:1.6;">HostHaven is ready to manage bookings, cleaners, and track earnings automatically.</div>
+        <div style="font-size:14px;color:var(--txt2);line-height:1.6;">CSO Property Services is ready to manage bookings, cleaners, and track earnings automatically.</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:24px;padding-top:20px;border-top:1px solid var(--border);">
@@ -10639,4 +10495,12 @@ setTimeout(function(){
 </div>
 
 <div id="mobile-bottom-nav">
-  <button class="mob-nav-item acti
+  <button class="mob-nav-item active" id="mob-nav-dashboard" onclick="nav('dashboard',this)"><span class="mob-ico">📊</span><span>Dashboard</span></button>
+  <button class="mob-nav-item" id="mob-nav-bookings" onclick="nav('bookings',this)"><span class="mob-ico">📅</span><span>Bookings</span></button>
+  <button class="mob-nav-item" id="mob-nav-messages" onclick="nav('messages',this)"><span class="mob-ico">💬</span><span>Messages</span></button>
+  <button class="mob-nav-item" id="mob-nav-marketplace" onclick="nav('marketplace',this)"><span class="mob-ico">🏪</span><span>Market</span></button>
+  <button class="mob-nav-item" id="mob-nav-settings" onclick="nav('settings',this)"><span class="mob-ico">⚙️</span><span>Settings</span></button>
+</div>
+
+</body>
+</html>
