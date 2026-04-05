@@ -7,18 +7,20 @@
   }
   This fixes 404 on refresh for single-page apps on Vercel.
 -->
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
-    '<title>CSO Property Services — STR Management Platform</title>' +
-    '<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Georgia,serif;background:#FAF7F2;color:#1C1410}@media print{body{background:#fff}.no-print{display:none}}      document.documentElement.setAttribute('data-theme', t);
-      document.documentElement.setAttribute('data-theme-set', 'true');
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+<html lang="en" data-theme="light"><head><meta charset="UTF-8">
+<script>
+(function(){
+  try {
+    var t = localStorage.getItem('hh_theme') || localStorage.getItem('hh_dark');
+    if(t === 'dark' || t === 'true') {
       document.documentElement.setAttribute('data-theme', 'dark');
-      document.documentElement.setAttribute('data-theme-set', 'true');
+    } else if (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
     }
-  } catch (e) {
-    // Fallback: default to light theme if localStorage fails
+  } catch(e) {
     document.documentElement.setAttribute('data-theme', 'light');
-    document.documentElement.setAttribute('data-theme-set', 'false');
   }
 })();
 </script>
@@ -148,7 +150,7 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 @media(max-width:700px){.land-prod-grid{grid-template-columns:1fr!important;}.land-pricing{padding:48px 20px!important;}}
 .land-section-title { font-family:Fraunces,serif;font-size:40px;font-weight:500;color:var(--txt);letter-spacing:-1px;text-align:center;margin-bottom:8px; }
 .land-section-sub { font-size:16px;color:var(--txt2);text-align:center;margin-bottom:48px; }
-.land-plans { display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:0 auto; }
+.land-plans { display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1100px;margin:0 auto; }
 .land-plan { background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative; }
 .land-plan.pop { background:var(--terra);border-color:var(--terra); }
 .plan-badge { position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--espresso);font-size:10px;font-weight:700;padding:3px 14px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap; }
@@ -400,7 +402,7 @@ select{color:var(--txt)!important;}
   .gp-frame{height:300px!important;}
   #dash-main-grid{grid-template-columns:1fr!important;}
   .land-feat-grid{grid-template-columns:1fr 1fr!important;}
-  .land-plans{grid-template-columns:1fr!important;}
+  @media(max-width:900px){.land-plans{grid-template-columns:repeat(2,1fr)!important;}} @media(max-width:500px){.land-plans{grid-template-columns:1fr!important;}}
   .land-h1{font-size:36px!important;letter-spacing:-1px!important;}
   .land-nav-links{display:none!important;}
   .land-nav{padding:14px 20px!important;}
@@ -3529,11 +3531,7 @@ const _hhStorage = {
   removeItem: (key) => { try { localStorage.removeItem(key); } catch(e) { try { sessionStorage.removeItem(key); } catch(e2) {} } }
 };
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: {
-    storage: _hhStorage,
-    persistSession: true,
-    detectSessionInUrl: true
-  }
+  auth: { storage: _hhStorage, persistSession: true, detectSessionInUrl: true }
 });
 
 function hhSessionExpiredError(err) {
@@ -3903,7 +3901,6 @@ function toggleDark() {
 //  SCREENS
 // ════════════════════════════════════════════
 function showScreen(name) {
-  // Always hide the onboarding wizard when switching screens
   const owm = document.getElementById('onboarding-wizard-modal');
   if (owm) owm.style.display = 'none';
   ['landing','login','signup','onboard','forgot','reset'].forEach(s=>{
@@ -4158,14 +4155,12 @@ function showLandingPage() {
   const screenLogin = document.getElementById('screen-login');
   const screenSignup = document.getElementById('screen-signup');
   const screenOnboard = document.getElementById('screen-onboard');
-  // Hide everything else first
   if (dw) { dw.style.display = 'none'; dw.classList.remove('visible'); }
   if (nav) nav.style.display = 'none';
   if (onboarding) onboarding.style.display = 'none';
   if (screenLogin) screenLogin.style.display = 'none';
   if (screenSignup) screenSignup.style.display = 'none';
   if (screenOnboard) screenOnboard.style.display = 'none';
-  // Then show landing
   if (lp) { lp.style.display = 'block'; lp.style.visibility = 'visible'; lp.style.zIndex = '1'; }
   document.body.style.display = 'block';
   window.scrollTo(0,0);
@@ -10428,17 +10423,13 @@ setTimeout(function(){
   shmLog('Self-Healing Monitor watching','fix');
   try {
     var lk = typeof LOCAL_KEY !== 'undefined' ? LOCAL_KEY : 'hh_local_v1';
-    // Only show wizard if user is logged in (app visible) and hasn't completed it
     if(!localStorage.getItem('hh_wizard_done') && !localStorage.getItem(lk)){
       setTimeout(function(){
         var app = document.getElementById('app');
         var landing = document.getElementById('screen-landing');
-        // Only open if app is visible (logged in) and landing is hidden
         var appVisible = app && (app.classList.contains('visible') || app.style.display === 'block');
         var landingHidden = !landing || landing.style.display === 'none';
-        if(appVisible && landingHidden) {
-          openOnboardingWizard();
-        }
+        if(appVisible && landingHidden) { openOnboardingWizard(); }
       }, 2500);
     }
   } catch(e){}
