@@ -3523,7 +3523,18 @@ select{color:var(--txt)!important;}
 const __cfg = (typeof window !== 'undefined' && window.HH_CONFIG) || {};
 const SUPABASE_URL = __cfg.SUPABASE_URL || 'https://vdnyqwpznsysrvyvbqga.supabase.co';
 const SUPABASE_ANON_KEY = __cfg.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const _hhStorage = {
+  getItem: (key) => { try { return localStorage.getItem(key); } catch(e) { try { return sessionStorage.getItem(key); } catch(e2) { return null; } } },
+  setItem: (key, val) => { try { localStorage.setItem(key, val); } catch(e) { try { sessionStorage.setItem(key, val); } catch(e2) {} } },
+  removeItem: (key) => { try { localStorage.removeItem(key); } catch(e) { try { sessionStorage.removeItem(key); } catch(e2) {} } }
+};
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    storage: _hhStorage,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+});
 
 function hhSessionExpiredError(err) {
   if (!err) return false;
@@ -3892,6 +3903,9 @@ function toggleDark() {
 //  SCREENS
 // ════════════════════════════════════════════
 function showScreen(name) {
+  // Always hide the onboarding wizard when switching screens
+  const owm = document.getElementById('onboarding-wizard-modal');
+  if (owm) owm.style.display = 'none';
   ['landing','login','signup','onboard','forgot','reset'].forEach(s=>{
     const el=document.getElementById('screen-'+s);
     if(!el) return;
@@ -4141,11 +4155,19 @@ function showLandingPage() {
   const dw = document.getElementById('app');
   const nav = document.getElementById('mobile-bottom-nav');
   const onboarding = document.getElementById('onboarding-wizard-modal');
-  if (lp) lp.style.display = 'block';
-  if (dw) dw.style.display = 'none';
+  const screenLogin = document.getElementById('screen-login');
+  const screenSignup = document.getElementById('screen-signup');
+  const screenOnboard = document.getElementById('screen-onboard');
+  // Hide everything else first
+  if (dw) { dw.style.display = 'none'; dw.classList.remove('visible'); }
   if (nav) nav.style.display = 'none';
   if (onboarding) onboarding.style.display = 'none';
-  document.body.style.display = 'block'; // Force body to show
+  if (screenLogin) screenLogin.style.display = 'none';
+  if (screenSignup) screenSignup.style.display = 'none';
+  if (screenOnboard) screenOnboard.style.display = 'none';
+  // Then show landing
+  if (lp) { lp.style.display = 'block'; lp.style.visibility = 'visible'; lp.style.zIndex = '1'; }
+  document.body.style.display = 'block';
   window.scrollTo(0,0);
 }
 
@@ -10406,8 +10428,18 @@ setTimeout(function(){
   shmLog('Self-Healing Monitor watching','fix');
   try {
     var lk = typeof LOCAL_KEY !== 'undefined' ? LOCAL_KEY : 'hh_local_v1';
+    // Only show wizard if user is logged in (app visible) and hasn't completed it
     if(!localStorage.getItem('hh_wizard_done') && !localStorage.getItem(lk)){
-      setTimeout(openOnboardingWizard, 2500);
+      setTimeout(function(){
+        var app = document.getElementById('app');
+        var landing = document.getElementById('screen-landing');
+        // Only open if app is visible (logged in) and landing is hidden
+        var appVisible = app && (app.classList.contains('visible') || app.style.display === 'block');
+        var landingHidden = !landing || landing.style.display === 'none';
+        if(appVisible && landingHidden) {
+          openOnboardingWizard();
+        }
+      }, 2500);
     }
   } catch(e){}
 }, 1200);
