@@ -3638,6 +3638,39 @@ async function safeAsync(fn, errorMessage = 'Operation failed') {
 // ══════════════════════════════════════════
 //  ADMIN CONFIG
 // ════════════════════════════════════════════
+
+// Polyfill: restore .catch() support on Supabase query builders
+// (removed in supabase-js v2.x — wraps the thenable to add .catch)
+(function patchSupabaseCatch() {
+  const origFrom = sb.from.bind(sb);
+  sb.from = function(...args) {
+    const builder = origFrom(...args);
+    const origThen = builder.then?.bind(builder);
+    if (origThen && !builder._catchPatched) {
+      builder.catch = function(fn) {
+        return this.then(undefined, fn);
+      };
+      builder._catchPatched = true;
+      // Also patch chained methods to carry .catch
+      const methods = ['select','insert','upsert','update','delete','eq','neq','gt','lt','gte','lte','like','ilike','is','in','order','limit','single','maybeSingle','range','filter','match','not','or','and','textSearch','overlaps','containedBy','contains','returns'];
+      methods.forEach(m => {
+        if (typeof builder[m] === 'function') {
+          const orig = builder[m].bind(builder);
+          builder[m] = function(...a) {
+            const result = orig(...a);
+            if (result && !result._catchPatched) {
+              result.catch = function(fn) { return this.then(undefined, fn); };
+              result._catchPatched = true;
+            }
+            return result;
+          };
+        }
+      });
+    }
+    return builder;
+  };
+})();
+
 const ADMIN_EMAIL = __cfg.ADMIN_EMAIL || 'csopropertyservice@gmail.com';
 
 // ════════════════════════════════════════════
@@ -4641,7 +4674,9 @@ async function renderAdmin() {
   getTable().innerHTML = `<div style="text-align:center;padding:20px;color:var(--txt3)">Loading users…</div>`;
 
   try {
-    const {data:profiles, error} = await sb.from('profiles').select('*').order('created_at',{ascending:false}).catch((e)=>({data:null,error:e}));
+    let profiles = null, profilesError = null;
+    try { const r = await sb.from('profiles').select('*').order('created_at',{ascending:false}); profiles = r.data; profilesError = r.error; } catch(e) { profilesError = e; }
+    const error = profilesError;
     
     // Re-get element after async — page may have changed
     const table = getTable();
@@ -5062,7 +5097,9 @@ async function renderTeam() {
   if(!listEl)return;
   listEl.innerHTML=`<div style="text-align:center;padding:16px;color:var(--txt3)">Loading…</div>`;
   try {
-    const {data:members,error}=await sb.from('teams').select('*').eq('owner_id',cUid).order('created_at',{ascending:true}).catch((e)=>({data:null,error:e}));
+    let members = null, membersError = null;
+  try { const r = await sb.from('teams').select('*').eq('owner_id',cUid).order('created_at',{ascending:true}); members = r.data; membersError = r.error; } catch(e) { membersError = e; }
+  const error = membersError;
     if(error){ sbHandleError(error,'renderTeam'); throw error; }
     if(!members||members.length===0){listEl.innerHTML=`<div style="font-size:13px;color:var(--txt3);padding:16px 0;text-align:center">No team members yet — invite someone to get started!</div>`;return;}
     const roleColors={manager:'pill-blue',viewer:'pill-amber'};
@@ -8858,7 +8895,9 @@ async function loadFeedback() {
   el.innerHTML = '<div style="font-size:13px;color:var(--txt3)">Loading…</div>';
 
   try {
-    const {data, error} = await sb.from('feedback').select('*').order('created_at',{ascending:false}).catch((e)=>({data:null,error:e}));
+    let feedbackData = null, feedbackError = null;
+  try { const r = await sb.from('feedback').select('*').order('created_at',{ascending:false}); feedbackData = r.data; feedbackError = r.error; } catch(e) { feedbackError = e; }
+  const data = feedbackData, error = feedbackError;
     if(error) sbHandleError(error, 'loadFeedback');
     if(error || !data) {
       el.innerHTML = '<div style="font-size:13px;color:var(--txt2)">No feedback yet — or run this SQL in Supabase to create the table:<br><br><code style="background:var(--sand);padding:8px;border-radius:6px;font-size:11px;display:block;margin-top:8px">CREATE TABLE feedback (id uuid DEFAULT gen_random_uuid() PRIMARY KEY, user_id text, user_email text, user_name text, user_plan text, type text, message text, rating int, created_at timestamptz DEFAULT now());</code></div>';
@@ -10519,28 +10558,4 @@ setTimeout(function(){
       <div class="fi"><label>Cleaner Name</label><input id="owiz-cleaner-name" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--txt);outline:none;" placeholder="e.g. Maria Garcia"></div>
       <div class="fi"><label>Hourly Rate ($)</label><input id="owiz-cleaner-rate" type="number" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--txt);outline:none;" placeholder="35"></div>
     </div>
-    <div class="owiz-step" id="owiz-step-4">
-      <div style="text-align:center;padding:20px 0;">
-        <div style="font-size:56px;margin-bottom:16px;">🎉</div>
-        <div style="font-family:Fraunces,serif;font-size:22px;color:var(--txt);margin-bottom:10px;">You're All Set!</div>
-        <div style="font-size:14px;color:var(--txt2);line-height:1.6;">CSO Property Services is ready to manage bookings, cleaners, and track earnings automatically.</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:24px;padding-top:20px;border-top:1px solid var(--border);">
-      <button class="btn btn-ghost" id="owiz-back-btn" onclick="owizBack()" style="display:none;">Back</button>
-      <div style="flex:1;"></div>
-      <button class="premium-button" id="owiz-next-btn" onclick="owizNext()">Next</button>
-    </div>
-  </div>
-</div>
-
-<div id="mobile-bottom-nav">
-  <button class="mob-nav-item active" id="mob-nav-dashboard" onclick="nav('dashboard',this)"><span class="mob-ico">📊</span><span>Dashboard</span></button>
-  <button class="mob-nav-item" id="mob-nav-bookings" onclick="nav('bookings',this)"><span class="mob-ico">📅</span><span>Bookings</span></button>
-  <button class="mob-nav-item" id="mob-nav-messages" onclick="nav('messages',this)"><span class="mob-ico">💬</span><span>Messages</span></button>
-  <button class="mob-nav-item" id="mob-nav-marketplace" onclick="nav('marketplace',this)"><span class="mob-ico">🏪</span><span>Market</span></button>
-  <button class="mob-nav-item" id="mob-nav-settings" onclick="nav('settings',this)"><span class="mob-ico">⚙️</span><span>Settings</span></button>
-</div>
-
-</body>
-</html>
+    <div class="owiz-step" id="o
