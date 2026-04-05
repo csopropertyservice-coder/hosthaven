@@ -1,6 +1,14 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
-    '<title>Owner Report — '+prop.name+' — '+periodLabel+'</title>' +
-    '<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Georgia,serif;background:#FAF7F2;color:#1C1410}@media print{body{background:#fff}.no-print{display:none}}      document.documentElement.setAttribute('data-theme', t);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+/* Theme hint before paint — prevents light → dark flash (runs synchronously before any CSS) */
+(function(){
+  try {
+    var t = localStorage.getItem('hh_ui_theme');
+    if (t === 'dark' || t === 'light') {
+      document.documentElement.setAttribute('data-theme', t);
       document.documentElement.setAttribute('data-theme-set', 'true');
     } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       document.documentElement.setAttribute('data-theme', 'dark');
@@ -18,22 +26,22 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>HostHaven — Smarter Airbnb Management v2</title>
-<meta name="description" content="HostHaven is the all-in-one dashboard for short-term rental hosts and co-hosts. Manage bookings, guests, payouts, cleaning staff, and revenue — with AI built in. Start free.">
-<meta property="og:title" content="HostHaven — Smarter Airbnb Management">
-<meta property="og:description" content="The all-in-one dashboard for short-term rental hosts and co-hosts. Bookings, AI messaging, payout tracking, owner reports, and more.">
+<title>CSO Property Services — Professional Property Management</title>
+<meta name="description" content="CSO Property Services is the professional property management dashboard. Manage properties, bookings, guests, staff, and revenue with enterprise-grade tools.">
+<meta property="og:title" content="CSO Property Services — Professional Property Management">
+<meta property="og:description" content="Professional property management dashboard. Properties, bookings, AI messaging, payout tracking, owner reports, and more.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://csopropertyservice-coder.github.io/hosthaven/">
 <meta property="og:image" content="https://csopropertyservice-coder.github.io/hosthaven/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="HostHaven — Smarter Airbnb Management">
-<meta name="twitter:description" content="The all-in-one dashboard for short-term rental hosts and co-hosts. Start free.">
+<meta name="twitter:title" content="CSO Property Services — Professional Property Management">
+<meta name="twitter:description" content="Professional property management dashboard. Start free.">
 <link rel="canonical" href="https://csopropertyservice-coder.github.io/hosthaven/">
 <!-- manifest removed -->
 <meta name="theme-color" content="#C4693A">
 
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="HostHaven">
+<meta name="apple-mobile-web-app-title" content="CSO Property Services">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23C4693A'/><text y='.9em' font-size='70' x='12'>🏡</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
@@ -68,8 +76,8 @@
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:auto; }
-body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt); transition:background .3s,color .3s; }
+html { scroll-behavior:auto; overflow:hidden; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt); transition:background .3s,color .3s; overflow:hidden; }
 
 /* ═══════════════════════════════════════
    LANDING PAGE
@@ -258,8 +266,8 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 .main-area { flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden;background:var(--bg);scroll-behavior:auto; }
 .content { padding:0; background:var(--bg); flex:1; position:relative; overflow-y:auto; min-height:0; display:flex; flex-direction:column; justify-content:flex-start !important; align-items:stretch !important; }
 @media(max-width:600px){ .content { padding:16px; padding-bottom:90px; } .g4{grid-template-columns:repeat(2,1fr)!important;} #dash-main-grid{grid-template-columns:1fr!important;} #dash-quick-actions button{font-size:11px!important;padding:6px 10px!important;} .kpi-val{font-size:22px!important;} }
-.page { display:none !important; }
-.page.active { display:block !important; padding:20px 24px; position:relative !important; }
+.page { display:none; display:flex; flex-direction:column; justify-content:flex-start !important; align-items:stretch !important; }
+.page.active { display:flex !important; padding:20px 24px; flex-direction:column; justify-content:flex-start !important; align-items:stretch !important; }
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes fadeUp { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
 @keyframes spin { to{transform:rotate(360deg)} }
@@ -612,23 +620,6 @@ select{color:var(--txt)!important;}
 .anime-glow::after{content:'';position:absolute;inset:-1px;border-radius:inherit;background:var(--gradient-accent);z-index:-1;opacity:0;transition:opacity .3s;filter:blur(8px);}
 .anime-glow:hover::after{opacity:.45;}
 
-
-/* ── COLLAPSIBLE SIDEBAR ── */
-.sb-logo-wrap { display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,.08); }
-.sb-collapse-btn { background:none; border:none; color:rgba(255,255,255,.35); font-size:18px; cursor:pointer; padding:8px 14px; line-height:1; transition:all .2s; flex-shrink:0; }
-.sb-collapse-btn:hover { color:rgba(255,255,255,.8); }
-.sidebar.collapsed { width:58px!important; min-width:58px!important; }
-.sidebar.collapsed .sb-logo-txt,.sidebar.collapsed .sb-plan,.sidebar.collapsed .sb-hide-collapsed { display:none!important; }
-.sidebar.collapsed .sb-logo { padding:12px 0; justify-content:center; }
-.sidebar.collapsed .sb-logo-icon { margin:0 auto; }
-.sidebar.collapsed .sb-collapse-btn { transform:rotate(180deg); }
-.sidebar.collapsed .sb-item { padding:10px 0; justify-content:center; }
-.sidebar.collapsed .sb-nav { padding:8px 0; }
-.sidebar.collapsed .sb-user { padding:10px 8px; }
-.sidebar.collapsed .sb-av { margin:0 auto; }
-.sidebar.collapsed .sb-bonus { display:none; }
-.sidebar.collapsed .sb-item { position:relative; }
-.sidebar.collapsed .sb-item:hover::after { content:attr(data-title); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#2C1F14; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; white-space:nowrap; z-index:999; pointer-events:none; box-shadow:0 4px 12px rgba(0,0,0,.3); }
 </style>
 </head>
 <body>
@@ -731,11 +722,11 @@ select{color:var(--txt)!important;}
         <div style="font-size:11px;color:var(--txt3);text-align:center;margin-top:8px">11 instant downloads · 30-day money back guarantee</div>
       </div>
 
-      <!-- Co-Host Launch Kit -->
+      <!-- CSO Ops Masterclass -->
       <div class="land-prod-card chlk">
-        <div class="land-prod-tag" style="background:rgba(200,168,75,.15);color:var(--gold)">🏆 For Co-Hosts — 10 Files</div>
-        <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);margin-bottom:6px">Co-Host Launch Kit</div>
-        <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">Everything to sign your first client, run a professional operation, and build your brand — 10 individual files</div>
+        <div class="land-prod-tag" style="background:rgba(200,168,75,.15);color:var(--gold)">🏆 Professional Operations — 10 Modules</div>
+        <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);margin-bottom:6px">CSO Ops Masterclass</div>
+        <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">Complete curriculum for professional property management operations and client acquisition — 10 comprehensive modules</div>
         <div class="land-prod-price">$97 <span>one-time</span></div>
         <ul class="land-prod-feats">
           <li>90-day playbook — 0 to 5 properties with the math at every stage</li>
@@ -743,14 +734,19 @@ select{color:var(--txt)!important;}
           <li>Rate card with 4 service tiers + live earnings calculator</li>
           <li>Co-host agreement contract template — print and sign</li>
           <li>32-step owner onboarding checklist with progress tracking</li>
-          <li>First 5 clients — DM, email, and Facebook group outreach sequences</li>
-          <li>AI image prompts — luxury estate photos for your pitch deck</li>
-          <li>30-day Instagram + LinkedIn content vault (9 ready-to-post captions)</li>
-          <li>Operations toolkit: VA daily checklist, 10 value-add upsells, SEO workbook, seasonal maintenance schedule</li>
-          <li>Brand story + management bio templates + 5 LinkedIn headline formulas</li>
+        <li><strong>Module 1:</strong> Client acquisition strategy — DM, email, and Facebook group outreach sequences</li>
+          <li><strong>Module 2:</strong> Professional branding — AI image prompts and brand story templates</li>
+          <li><strong>Module 3:</strong> Content marketing — 30-day Instagram + LinkedIn content vault</li>
+          <li><strong>Module 4:</strong> Operations management — VA daily checklist and maintenance schedules</li>
+          <li><strong>Module 5:</strong> Revenue optimization — 10 value-add upsells and pricing strategies</li>
+          <li><strong>Module 6:</strong> SEO and marketing — SEO workbook and digital presence guide</li>
+          <li><strong>Module 7:</strong> Team management — Staff training and performance tracking</li>
+          <li><strong>Module 8:</strong> Financial operations — Budget tracking and profit optimization</li>
+          <li><strong>Module 9:</strong> Client relations — Communication templates and satisfaction surveys</li>
+          <li><strong>Module 10:</strong> Business scaling — Growth strategies and expansion planning</li>
         </ul>
-        <button class="btn btn-w" style="font-size:14px;padding:14px;background:var(--gold);color:#2C1F14;font-weight:700;border:none;border-radius:8px;cursor:pointer;width:100%" onclick="buyProduct('cohost_kit')">Get the Kit — $97 →</button>
-        <div style="font-size:11px;color:var(--txt3);text-align:center;margin-top:8px">10 instant downloads · 30-day money back guarantee</div>
+        <button class="btn btn-w" style="font-size:14px;padding:14px;background:var(--gold);color:#2C1F14;font-weight:700;border:none;border-radius:8px;cursor:pointer;width:100%" onclick="buyProduct('cso_masterclass')">Enroll in Masterclass — $97 →</button>
+        <div style="font-size:11px;color:var(--txt3);text-align:center;margin-top:8px">10 comprehensive modules · Lifetime access · Certificate of completion</div>
       </div>
 
     </div>
@@ -760,7 +756,7 @@ select{color:var(--txt)!important;}
       <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">One-time purchase · No subscription · Instant download</div>
       <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap">
         <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--terra)">11</div><div style="font-size:12px;color:var(--txt3)">Files in the Pack</div></div>
-        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--gold)">10</div><div style="font-size:12px;color:var(--txt3)">Files in the Kit</div></div>
+        <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--gold)">10</div><div style="font-size:12px;color:var(--txt3)">Masterclass Modules</div></div>
         <div style="text-align:center"><div style="font-family:Fraunces,serif;font-size:28px;color:var(--sage)">$0</div><div style="font-size:12px;color:var(--txt3)">Monthly commitment</div></div>
       </div>
     </div>
@@ -878,7 +874,7 @@ select{color:var(--txt)!important;}
       <p style="margin-bottom:16px">• Do not attempt to access other users data</p>
       <h3 style="color:var(--txt);margin:16px 0 8px">2. Billing and Refunds</h3>
       <p style="margin-bottom:8px">Paid plans bill monthly. Cancel anytime from your billing portal. We offer a <strong style="color:var(--txt)">30-day money-back guarantee</strong> on all paid plans.</p>
-      <p style="margin-bottom:16px">Quick Start Pack ($47) and Co-Host Launch Kit ($97) are one-time purchases with a 30-day refund policy.</p>
+      <p style="margin-bottom:16px">Quick Start Pack ($47) and CSO Ops Masterclass ($97) are one-time purchases with a 30-day refund policy.</p>
       <h3 style="color:var(--txt);margin:16px 0 8px">3. Limitation of Liability</h3>
       <p style="margin-bottom:16px">HostHaven is provided as-is. We are not responsible for booking disputes, guest issues, or property damage. Maintain your own insurance.</p>
       <h3 style="color:var(--txt);margin:16px 0 8px">4. Termination</h3>
@@ -897,7 +893,7 @@ select{color:var(--txt)!important;}
 ══════════════════════════════════════ -->
 <div id="screen-login" class="auth-wrap">
   <div class="auth-card">
-    <div class="auth-logo"><div class="auth-logo-icon">🏡</div><div class="auth-logo-txt">HostHaven</div></div>
+    <div class="auth-logo"><div class="auth-logo-icon">🏢</div><div class="auth-logo-txt">CSO Property Services</div></div>
     <div class="auth-title">Welcome back</div>
     <div class="auth-sub">Sign in to manage your properties</div>
     <div class="auth-err" id="login-err"></div>
@@ -913,7 +909,7 @@ select{color:var(--txt)!important;}
 
 <div id="screen-signup" class="auth-wrap" style="display:none">
   <div class="auth-card">
-    <div class="auth-logo"><div class="auth-logo-icon">🏡</div><div class="auth-logo-txt">HostHaven</div></div>
+    <div class="auth-logo"><div class="auth-logo-icon">🏢</div><div class="auth-logo-txt">CSO Property Services</div></div>
     <div class="auth-title">Create your account</div>
     <div class="auth-sub">Start managing your properties smarter</div>
     <div class="auth-err" id="signup-err"></div>
@@ -931,7 +927,7 @@ select{color:var(--txt)!important;}
 
 <div id="screen-forgot" class="auth-wrap" style="display:none">
   <div class="auth-card">
-    <div class="auth-logo"><div class="auth-logo-icon">🏡</div><div class="auth-logo-txt">HostHaven</div></div>
+    <div class="auth-logo"><div class="auth-logo-icon">🏢</div><div class="auth-logo-txt">CSO Property Services</div></div>
     <div class="auth-title">Reset Password</div>
     <div class="auth-sub">Enter your email and we'll send you a reset link</div>
     <div class="auth-err" id="forgot-err"></div>
@@ -944,7 +940,7 @@ select{color:var(--txt)!important;}
 
 <div id="screen-reset" class="auth-wrap" style="display:none">
   <div class="auth-card">
-    <div class="auth-logo"><div class="auth-logo-icon">🏡</div><div class="auth-logo-txt">HostHaven</div></div>
+    <div class="auth-logo"><div class="auth-logo-icon">🏢</div><div class="auth-logo-txt">CSO Property Services</div></div>
     <div class="auth-title">Set New Password</div>
     <div class="auth-sub">Choose a strong password for your account</div>
     <div class="auth-err" id="reset-err"></div>
@@ -988,72 +984,69 @@ select{color:var(--txt)!important;}
   <div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
   <div class="shell">
     <aside class="sidebar" id="sidebar">
-      <div class="sb-logo-wrap">
-        <div class="sb-logo" onclick="showLandingPage()" style="cursor:pointer;">
-          <div class="sb-logo-row">
-            <div class="sb-logo-icon" style="font-size:16px;font-weight:700;letter-spacing:-0.5px">HH</div>
-            <div class="sb-logo-txt sb-hide-collapsed">HostHaven</div>
-          </div>
-          <div class="sb-plan sb-hide-collapsed" id="sb-plan">⭐ Free</div>
+      <div class="sb-logo" onclick="showLandingPage()" style="cursor:pointer;">
+        <div class="sb-logo-row">
+          <div class="sb-logo-icon">🏡</div>
+          <div class="sb-logo-txt">HostHaven</div>
         </div>
-        <button class="sb-collapse-btn" onclick="toggleSidebarCollapse()" title="Collapse sidebar" id="sb-collapse-btn">‹</button>
+        <div class="sb-plan" id="sb-plan">⭐ Free</div>
       </div>
       <nav class="sb-nav">
-        <div class="sb-sec sb-hide-collapsed">Core</div>
-        <div class="sb-item" data-title="◈Dashboard" active" onclick="nav('dashboard',this)"><span class="ico">◈</span><span class="sb-hide-collapsed">Dashboard</span></div>
-        <div class="sb-item" data-title="⌂Properties"" onclick="nav('properties',this)"><span class="ico">⌂</span><span class="sb-hide-collapsed">Properties</span></div>
-        <div class="sb-item" data-title="▦Bookings0"" onclick="nav('bookings',this)"><span class="ico">▦</span><span class="sb-hide-collapsed">Bookings</span><span class="sb-badge" id="sb-b-badge" style="display:none">0</span></div>
-        <div class="sb-item" data-title="⌑Messages0"" onclick="nav('messages',this)"><span class="ico">⌑</span><span class="sb-hide-collapsed">Messages</span><span class="sb-badge" id="sb-m-badge" style="display:none">0</span></div>
+        <div class="sb-sec">Core</div>
+        <div class="sb-item active" onclick="nav('dashboard',this)"><span class="ico">📊</span>Dashboard</div>
+        <div class="sb-item" onclick="nav('properties',this)"><span class="ico">🏠</span>Properties</div>
+        <div class="sb-item" onclick="nav('bookings',this)"><span class="ico">📅</span>Bookings<span class="sb-badge" id="sb-b-badge" style="display:none">0</span></div>
+        <div class="sb-item" onclick="nav('messages',this)"><span class="ico">💬</span>Messages<span class="sb-badge" id="sb-m-badge" style="display:none">0</span></div>
 
         <div class="sb-sec" style="margin-top:10px">Operations</div>
-        <div class="sb-item" data-title="✓Tasks"" onclick="nav('cleaning',this)"><span class="ico">✓</span><span class="sb-hide-collapsed">Tasks</span></div>
-        <div class="sb-item" data-title="⊹Staff Portal"" onclick="nav('staff',this)"><span class="ico">⊹</span><span class="sb-hide-collapsed">Staff Portal</span></div>
-        <div class="sb-item" data-title="◉Cleaner Marketplace"" onclick="nav('marketplace',this)"><span class="ico">◉</span><span class="sb-hide-collapsed">Cleaner Marketplace</span></div>
-        <div class="sb-item" data-title="⚙Work Orders"" onclick="nav('workorders',this)"><span class="ico">⚙</span><span class="sb-hide-collapsed">Work Orders</span></div>
-        <div class="sb-item" data-title="▣Inventory"" onclick="nav('inventory',this)"><span class="ico">▣</span><span class="sb-hide-collapsed">Inventory</span></div>
-        <div class="sb-item" data-title="▤Payout Ledger"" onclick="nav('payouts',this)"><span class="ico">▤</span><span class="sb-hide-collapsed">Payout Ledger</span></div>
-        <div class="sb-item" data-title="⊡Photo Vault"" onclick="nav('photovault',this)"><span class="ico">⊡</span><span class="sb-hide-collapsed">Photo Vault</span></div>
-        <div class="sb-item" data-title="↻iCal Sync"" onclick="nav('ical',this)"><span class="ico">↻</span><span class="sb-hide-collapsed">iCal Sync</span></div>
+        <div class="sb-item" onclick="nav('cleaning',this)"><span class="ico">🧹</span>Tasks</div>
+        <div class="sb-item" onclick="nav('staff',this)"><span class="ico">👥</span>Staff Portal</div>
+        <div class="sb-item" onclick="nav('marketplace',this)"><span class="ico">🏪</span>Cleaner Marketplace</div>
+        <div class="sb-item" onclick="nav('workorders',this)"><span class="ico">🔧</span>Work Orders</div>
+        <div class="sb-item" onclick="nav('inventory',this)"><span class="ico">📦</span>Inventory</div>
+        <div class="sb-item" onclick="nav('payouts',this)"><span class="ico">💳</span>Payout Ledger</div>
+        <div class="sb-item" onclick="nav('photovault',this)"><span class="ico">📸</span>Photo Vault</div>
+        <div class="sb-item" onclick="nav('ical',this)"><span class="ico">🔄</span>iCal Sync</div>
 
         <div class="sb-sec" style="margin-top:10px">Guest Experience</div>
-        <div class="sb-item" data-title="◎Guest CRM"" onclick="nav('crm',this)"><span class="ico">◎</span><span class="sb-hide-collapsed">Guest CRM</span></div>
-        <div class="sb-item" data-title="◇Guest Loyalty"" onclick="nav('loyalty',this)"><span class="ico">◇</span><span class="sb-hide-collapsed">Guest Loyalty</span></div>
-        <div class="sb-item" data-title="⊕Guest Portal"" onclick="nav('portal',this)"><span class="ico">⊕</span><span class="sb-hide-collapsed">Guest Portal</span></div>
-        <div class="sb-item" data-title="▭QR House Manual"" onclick="nav('qrmanual',this)"><span class="ico">▭</span><span class="sb-hide-collapsed">QR House Manual</span></div>
-        <div class="sb-item" data-title="◈Concierge"" onclick="nav('concierge',this)"><span class="ico">◈</span><span class="sb-hide-collapsed">Concierge</span></div>
-        <div class="sb-item" data-title="≡Templates"" onclick="nav('templates',this)"><span class="ico">≡</span><span class="sb-hide-collapsed">Templates</span></div>
+        <div class="sb-item" onclick="nav('crm',this)"><span class="ico">👤</span>Guest CRM</div>
+        <div class="sb-item" onclick="nav('loyalty',this)"><span class="ico">🎁</span>Guest Loyalty</div>
+        <div class="sb-item" onclick="nav('portal',this)"><span class="ico">🔑</span>Guest Portal</div>
+        <div class="sb-item" onclick="nav('qrmanual',this)"><span class="ico">📱</span>QR House Manual</div>
+        <div class="sb-item" onclick="nav('concierge',this)"><span class="ico">🎩</span>Concierge</div>
+        <div class="sb-item" onclick="nav('templates',this)"><span class="ico">📝</span>Templates</div>
 
         <div class="sb-sec" style="margin-top:10px">Revenue</div>
-        <div class="sb-item" data-title="$Nightly Rates"" onclick="nav('pricing',this)"><span class="ico">$</span><span class="sb-hide-collapsed">Nightly Rates</span></div>
-        <div class="sb-item" data-title="◌Pricing Optimizer"" onclick="nav('pricing_opt',this)"><span class="ico">◌</span><span class="sb-hide-collapsed">Pricing Optimizer</span></div>
-        <div class="sb-item" data-title="⊘Check-in Insurance"" onclick="nav('checkininsurance',this)"><span class="ico">⊘</span><span class="sb-hide-collapsed">Check-in Insurance</span></div>
-        <div class="sb-item" data-title="◫Equipment Rentals"" onclick="nav('rentals',this)"><span class="ico">◫</span><span class="sb-hide-collapsed">Equipment Rentals</span></div>
-        <div class="sb-item" data-title="◬Upsell Portal"" onclick="nav('upsell',this)"><span class="ico">◬</span><span class="sb-hide-collapsed">Upsell Portal</span></div>
-        <div class="sb-item" data-title="⊞Direct Booking"" onclick="nav('directbook',this)"><span class="ico">⊞</span><span class="sb-hide-collapsed">Direct Booking</span></div>
-        <div class="sb-item" data-title="⊛Website Builder"" onclick="nav('website',this)"><span class="ico">⊛</span><span class="sb-hide-collapsed">Website Builder</span></div>
+        <div class="sb-item" onclick="nav('pricing',this)"><span class="ico">💰</span>Nightly Rates</div>
+        <div class="sb-item" onclick="nav('pricing_opt',this)"><span class="ico">💡</span>Pricing Optimizer</div>
+        <div class="sb-item" onclick="nav('checkininsurance',this)"><span class="ico">🛡</span>Check-in Insurance</div>
+        <div class="sb-item" onclick="nav('rentals',this)"><span class="ico">🚲</span>Equipment Rentals</div>
+        <div class="sb-item" onclick="nav('upsell',this)"><span class="ico">🛎</span>Upsell Portal</div>
+        <div class="sb-item" onclick="nav('directbook',this)"><span class="ico">🔗</span>Direct Booking</div>
+        <div class="sb-item" onclick="nav('website',this)"><span class="ico">🌐</span>Website Builder</div>
 
         <div class="sb-sec" style="margin-top:10px">Insights</div>
-        <div class="sb-item" data-title="↗Analytics"" onclick="nav('analytics',this)"><span class="ico">↗</span><span class="sb-hide-collapsed">Analytics</span></div>
-        <div class="sb-item" data-title="▱Reports"" onclick="nav('reports',this)"><span class="ico">▱</span><span class="sb-hide-collapsed">Reports</span></div>
-        <div class="sb-item" data-title="★Reviews"" onclick="nav('reviews',this)"><span class="ico">★</span><span class="sb-hide-collapsed">Reviews</span></div>
-        <div class="sb-item" data-title="¢Expenses"" onclick="nav('expenses',this)"><span class="ico">¢</span><span class="sb-hide-collapsed">Expenses</span></div>
-        <div class="sb-item" data-title="◆Scorecards"" onclick="nav('scorecards',this)"><span class="ico">◆</span><span class="sb-hide-collapsed">Scorecards</span></div>
-        <div class="sb-item" data-title="⊘Damage Claims"" onclick="nav('damage',this)"><span class="ico">⊘</span><span class="sb-hide-collapsed">Damage Claims</span></div>
-        <div class="sb-item" data-title="⊗Guest Blacklist"" onclick="nav('blacklist',this)"><span class="ico">⊗</span><span class="sb-hide-collapsed">Guest Blacklist</span></div>
+        <div class="sb-item" onclick="nav('analytics',this)"><span class="ico">📈</span>Analytics</div>
+        <div class="sb-item" onclick="nav('reports',this)"><span class="ico">📄</span>Reports</div>
+        <div class="sb-item" onclick="nav('reviews',this)"><span class="ico">⭐</span>Reviews</div>
+        <div class="sb-item" onclick="nav('expenses',this)"><span class="ico">💸</span>Expenses</div>
+        <div class="sb-item" onclick="nav('scorecards',this)"><span class="ico">🏆</span>Scorecards</div>
+        <div class="sb-item" onclick="nav('damage',this)"><span class="ico">🛡</span>Damage Claims</div>
+        <div class="sb-item" onclick="nav('blacklist',this)"><span class="ico">🚫</span>Guest Blacklist</div>
 
         <div class="sb-sec" style="margin-top:10px">AUTOMATION</div>
-        <div class="sb-item" data-title="◍AI Office Hours"" onclick="nav('aihours',this)"><span class="ico">◍</span><span class="sb-hide-collapsed">AI Office Hours</span></div>
-        <div class="sb-item" data-title="⚡Automations"" onclick="nav('automations',this)"><span class="ico">⚡</span><span class="sb-hide-collapsed">Automations</span></div>
-        <div class="sb-item" data-title="⊜Affiliates"" onclick="nav('affiliates',this)"><span class="ico">⊜</span><span class="sb-hide-collapsed">Affiliates</span></div>
+        <div class="sb-item" onclick="nav('aihours',this)"><span class="ico">🤖</span>AI Office Hours</div>
+        <div class="sb-item" onclick="nav('automations',this)"><span class="ico">⚡</span>Automations</div>
+        <div class="sb-item" onclick="nav('affiliates',this)"><span class="ico">🤝</span>Affiliates</div>
 
         <div class="sb-sec" style="margin-top:10px">Co-Host</div>
-        <div class="sb-item" data-title="▦Command Center"" onclick="nav('cohost_cmd',this)"><span class="ico">▦</span><span class="sb-hide-collapsed">Command Center</span></div>
-        <div class="sb-item" data-title="⊜Owner Management"" onclick="nav('owners',this)"><span class="ico">⊜</span><span class="sb-hide-collapsed">Owner Management</span></div>
+        <div class="sb-item" onclick="nav('cohost_cmd',this)"><span class="ico">🏢</span>Command Center</div>
+        <div class="sb-item" onclick="nav('owners',this)"><span class="ico">🤝</span>Owner Management</div>
 
         <div class="sb-sec" style="margin-top:10px">Account</div>
-        <div class="sb-item" data-title="⚙Settings"" onclick="nav('settings',this)"><span class="ico">⚙</span><span class="sb-hide-collapsed">Settings</span></div>
-        <div class="sb-item" data-title="⊹Team Access"" id="team-nav-item" style="display:none" onclick="nav('team',this)"><span class="ico">⊹</span><span class="sb-hide-collapsed">Team Access</span></div>
-        <div class="sb-item" data-title="◈Admin Panel"" id="admin-nav-item" style="display:none" onclick="nav('admin',this)"><span class="ico">◈</span><span class="sb-hide-collapsed">Admin Panel</span></div>
+        <div class="sb-item" onclick="nav('settings',this)"><span class="ico">⚙️</span>Settings</div>
+        <div class="sb-item" id="team-nav-item" style="display:none" onclick="nav('team',this)"><span class="ico">👥</span>Team Access</div>
+        <div class="sb-item" id="admin-nav-item" style="display:none" onclick="nav('admin',this)"><span class="ico">👑</span>Admin Panel</div>
       </nav>
       <div class="sb-foot">
         <div class="sb-user">
@@ -3628,6 +3621,116 @@ const ADMIN_EMAIL = __cfg.ADMIN_EMAIL || '';
 let cUid=null, cData=null, cUser=null, activeConvId=null, isAdmin=false;
 let wbTheme={primary:'#C4693A',bg:'#FAF7F2'}, bookFilter='all', obStep=1;
 
+// IndexedDB for images/vault to prevent LocalStorage crashes
+class ImageVaultDB {
+  constructor() {
+    this.dbName = 'CSOImageVault';
+    this.dbVersion = 1;
+    this.db = null;
+  }
+
+  async init() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(this.dbName, this.dbVersion);
+      
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        this.db = request.result;
+        resolve(this.db);
+      };
+      
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains('images')) {
+          db.createObjectStore('images', { keyPath: 'id' });
+        }
+        if (!db.objectStoreNames.contains('vault')) {
+          db.createObjectStore('vault', { keyPath: 'id' });
+        }
+      };
+    });
+  }
+
+  async storeImage(id, imageData) {
+    if (!this.db) await this.init();
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction(['images'], 'readwrite');
+      const store = transaction.objectStore('images');
+      const request = store.put({ id, data: imageData, timestamp: Date.now() });
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async getImage(id) {
+    if (!this.db) await this.init();
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction(['images'], 'readonly');
+      const store = transaction.objectStore('images');
+      const request = store.get(id);
+      request.onsuccess = () => resolve(request.result?.data);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async storeVaultItem(id, itemData) {
+    if (!this.db) await this.init();
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction(['vault'], 'readwrite');
+      const store = transaction.objectStore('vault');
+      const request = store.put({ id, data: itemData, timestamp: Date.now() });
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async getVaultItem(id) {
+    if (!this.db) await this.init();
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction(['vault'], 'readonly');
+      const store = transaction.objectStore('vault');
+      const request = store.get(id);
+      request.onsuccess = () => resolve(request.result?.data);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async clearOldImages(maxAge = 7 * 24 * 60 * 60 * 1000) { // 7 days
+    if (!this.db) await this.init();
+    const cutoff = Date.now() - maxAge;
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction(['images', 'vault'], 'readwrite');
+      const imageStore = transaction.objectStore('images');
+      const vaultStore = transaction.objectStore('vault');
+      
+      let completed = 0;
+      const total = 2;
+      
+      const clearStore = (store) => {
+        const request = store.openCursor();
+        request.onsuccess = (event) => {
+          const cursor = event.target.result;
+          if (cursor) {
+            if (cursor.value.timestamp < cutoff) {
+              cursor.delete();
+            }
+            cursor.continue();
+          } else {
+            completed++;
+            if (completed === total) resolve();
+          }
+        };
+        request.onerror = () => reject(request.error);
+      };
+      
+      clearStore(imageStore);
+      clearStore(vaultStore);
+    });
+  }
+}
+
+const imageVaultDB = new ImageVaultDB();
+
 // Local cache for fast UI — syncs to Supabase (per-user payload obfuscated at rest)
 const LOCAL_KEY = 'hh_local_v1';
 function hhExpandLocalKey(seed, len) {
@@ -4246,7 +4349,6 @@ async function checkAdminStatus(userEmail) {
 async function launchApp(user) {
   // Show dashboard and hide landing page
   showDashboard();
-  restoreSidebarState();
   
   // Show a brief loading overlay so data has time to be ready
   const app = document.getElementById('app');
@@ -4416,7 +4518,7 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 //  NAV
 // ════════════════════════════════════════════
-const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'Staff Portal',marketplace:'Cleaner Marketplace',workorders:'Work Orders',inventory:'Inventory',cohost_cmd:'Command Center',owners:'Owner Management',crm:'Guest CRM',payouts:'Payout Ledger',photovault:'Photo Vault',qrmanual:'QR House Manual',aihours:'AI Office Hours',affiliates:'Affiliate Program',checkininsurance:'Check-in Insurance',rentals:'Equipment Rentals',ical:'iCal Sync',templates:'Message Templates',loyalty:'Guest Loyalty',pricing_opt:'Pricing Optimizer',scorecards:'Property Scorecards',concierge:'Concierge',upsell:'Upsell Portal',directbook:'Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'Reviews',expenses:'Expenses',damage:'Damage Claims',blacklist:'Guest Blacklist',settings:'Settings',team:'Team Access',admin:'Admin Panel',automations:'Automations'};
+const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'👥 Staff Portal',marketplace:'🏪 Cleaner Marketplace',workorders:'🔧 Work Orders',inventory:'📦 Inventory',cohost_cmd:'🏢 Command Center',owners:'🤝 Owner Management',crm:'👤 Guest CRM',payouts:'💳 Payout Ledger',photovault:'📸 Photo Vault',qrmanual:'📱 QR House Manual',aihours:'🤖 AI Office Hours',affiliates:'🤝 Affiliate Program',checkininsurance:'🛡 Check-in Insurance',rentals:'🚲 Equipment Rentals',ical:'iCal Sync',templates:'📝 Message Templates',loyalty:'🎁 Guest Loyalty',pricing_opt:'💡 Pricing Optimizer',scorecards:'🏆 Property Scorecards',concierge:'🎩 Concierge',upsell:'🛎 Upsell Portal',directbook:'🔗 Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'⭐ Reviews',expenses:'💸 Expenses',damage:'🛡 Damage Claims',blacklist:'🚫 Guest Blacklist',settings:'Settings',team:'👥 Team Access',admin:'👑 Admin Panel'};
 function nav(id,el){
   // Reset scroll to top for every tab navigation
   window.scrollTo(0,0);
@@ -4442,13 +4544,14 @@ function nav(id,el){
   const activePg=document.getElementById('page-'+id);
   activePg.classList.add('active');
   activePg.style.display='block';
-  activePg.style.position='relative';
   document.getElementById('page-title').textContent=titles[id]||id;
   closeSidebar();
   updateMobNav(id);
-  // Save last page for refresh restore
-  try{sessionStorage.setItem('hh_last_page',id);}catch(e){}
-  try{localStorage.setItem('hh_last_page',id);}catch(e){}
+  // Save last page for refresh restore - both sessionStorage and localStorage
+  try{
+    sessionStorage.setItem('hh_last_page',id);
+    localStorage.setItem('hh_last_page',id);
+  }catch(e){}
 
   if(id==='website')setTimeout(updateWb,100);
   if(id==='settings'){
@@ -4522,21 +4625,6 @@ function updateMobNav(id) {
 function safeRender(fn, name) {
   try { fn(); } catch(e) { console.warn('[HostHaven] render error in ' + name + ':', e); }
 }
-function toggleSidebarCollapse() {
-  const sb = document.getElementById('sidebar');
-  const btn = document.getElementById('sb-collapse-btn');
-  const collapsed = sb.classList.toggle('collapsed');
-  try { localStorage.setItem('hh_sb_collapsed', collapsed ? '1' : '0'); } catch(e) {}
-}
-
-function restoreSidebarState() {
-  try {
-    if(localStorage.getItem('hh_sb_collapsed') === '1') {
-      document.getElementById('sidebar')?.classList.add('collapsed');
-    }
-  } catch(e) {}
-}
-
 function renderAll(){
   setTimeout(runScheduledAutomations, 2000);
   // Force hide all inactive pages on load
@@ -8999,8 +9087,8 @@ function checkReferralCode() {
 // ════════════════════════════════════════════
 function buyProduct(product) {
   const links = {
-    quickstart: 'https://csoproperty.gumroad.com/l/wnzfh',
-    cohost_kit:  'https://csoproperty.gumroad.com/l/ebqdf'
+    quickstart: 'https://csoproperty.gumroad.com/l/ebqdf',
+    cohost_kit:  'https://csoproperty.gumroad.com/l/wnzfh'
   };
   // If Stripe links not yet set, show contact modal
   if(links[product].includes('placeholder')) {
@@ -9178,38 +9266,8 @@ function runSearch(q) {
 
 // Keyboard shortcut for search
 document.addEventListener('keydown', e=>{
-  if(e.key==='Enter'){
-    const ls=document.getElementById('screen-login');
-    const ae=document.activeElement;
-    if(ls&&ls.style.display!=='none'&&ae&&(ae.id==='login-email'||ae.id==='login-pw')){e.preventDefault();doLogin();return;}
-    const ss=document.getElementById('screen-signup');
-    if(ss&&ss.style.display!=='none'&&ae&&ae.closest('#screen-signup')){e.preventDefault();doSignup();return;}
-    const fs=document.getElementById('screen-forgot');
-    if(fs&&fs.style.display!=='none'&&ae&&ae.closest('#screen-forgot')){e.preventDefault();doForgotPassword();return;}
-  }
   if((e.metaKey||e.ctrlKey) && e.key==='k') { e.preventDefault(); openSearch(); }
   if(e.key==='Escape') { closeModal('search-modal'); }
-  // Enter key submits login/signup forms
-  if(e.key==='Enter') {
-    const loginScreen = document.getElementById('screen-login');
-    const signupScreen = document.getElementById('screen-signup');
-    const forgotScreen = document.getElementById('screen-forgot');
-    if(loginScreen && loginScreen.style.display !== 'none' && getComputedStyle(loginScreen).display !== 'none') {
-      const emailEl = document.getElementById('login-email');
-      const pwEl = document.getElementById('login-pw');
-      if(emailEl && pwEl && (document.activeElement === emailEl || document.activeElement === pwEl)) {
-        doLogin();
-      }
-    }
-    if(signupScreen && signupScreen.style.display !== 'none' && getComputedStyle(signupScreen).display !== 'none') {
-      const activeEl = document.activeElement;
-      if(activeEl && activeEl.closest('#screen-signup')) doSignup();
-    }
-    if(forgotScreen && forgotScreen.style.display !== 'none' && getComputedStyle(forgotScreen).display !== 'none') {
-      const activeEl = document.activeElement;
-      if(activeEl && activeEl.closest('#screen-forgot')) doForgotPassword();
-    }
-  }
 });
 
 // ════════════════════════════════════════════
@@ -10009,7 +10067,10 @@ function printTaxReport() {
 //  AUTH INIT
 // ═════════════════════════════════════════
 async function initAuth() {
-  let _launched = false;
+  // Fix 404 redirects - ensure clean URL
+  if (window.location.pathname !== '/' && window.location.pathname !== '/index_integrated.html') {
+    window.history.replaceState({}, '', '/');
+  }
   
   // Wait for Supabase to be ready
   let sessionCheckAttempts = 0;
@@ -10019,14 +10080,19 @@ async function initAuth() {
     try {
       const { data: { session } } = await sb.auth.getSession();
       if (session?.user) {
-        if(_launched) return;
-        _launched = true;
         cUid = session.user.id;
         cUser = {
           email: session.user.email,
           name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
           role: session.user.user_metadata?.role || 'user'
         };
+        
+        // Force admin access for CSO Property Services owner
+        if (session.user.email === 'csopropertservice@gmail.com') {
+          cUser.role = 'owner';
+          isAdmin = true;
+          cData.plan = 'business';
+        }
         try {
           const data = await loadUserData(cUid);
           cData = data || (buildDemoData ? buildDemoData() : {});
@@ -10072,14 +10138,19 @@ async function initAuth() {
     if(event === 'SIGNED_IN') return;
     if(event === 'INITIAL_SESSION') {
       if(session && session.user) {
-        if(_launched) return;
-        _launched = true;
         cUid = session.user.id;
         cUser = {
           email: session.user.email,
           name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
           role: session.user.user_metadata?.role || 'user'
         };
+        
+        // Force admin access for CSO Property Services owner
+        if (session.user.email === 'csopropertservice@gmail.com') {
+          cUser.role = 'owner';
+          isAdmin = true;
+          cData.plan = 'business';
+        }
         try {
           const data = await loadUserData(cUid);
           cData = data || (buildDemoData ? buildDemoData() : {});
@@ -10090,7 +10161,7 @@ async function initAuth() {
         }
         await launchApp(cUser);
       } else {
-        if(!_launched) showLandingPage();
+        showLandingPage();
       }
     } else if(event === 'SIGNED_OUT') {
       const appVis = document.getElementById('app')?.classList.contains('visible');
@@ -10112,11 +10183,9 @@ async function initAuth() {
 // ═════════════════════════════════════════
 window.addEventListener('load', () => {
   // Fix 404 redirects - clean URL while staying on correct view
-  try {
-    if (window.location.pathname !== '/' && window.location.pathname !== '/index_integrated.html') {
-      window.history.replaceState({}, '', '/');
-    }
-  } catch(e) {}
+  if (window.location.pathname !== '/' && window.location.pathname !== '/index_integrated.html') {
+    window.history.replaceState({}, '', '/');
+  }
   
   // Clear service workers
   if('serviceWorker' in navigator){
