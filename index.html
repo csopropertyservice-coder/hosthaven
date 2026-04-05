@@ -653,7 +653,7 @@ select{color:var(--txt)!important;}
 <!-- ══════════════════════════════════════
      LANDING PAGE - PREMIUM REDESIGN
 ══════════════════════════════════════ -->
-<div id="screen-landing" style="display:none; scroll-behavior:smooth; z-index:10; position:relative;">
+<div id="screen-landing" style="display:block; scroll-behavior:smooth; z-index:10; position:relative; min-height:100vh;">
   <!-- Premium Sticky Navigation with Glassmorphism -->
   <nav class="land-nav" style="position:sticky; top:0; z-index:1000; background:rgba(26,26,27,0.8); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.1);">
     <div class="land-logo">
@@ -683,12 +683,12 @@ select{color:var(--txt)!important;}
       
       <!-- Main Headline -->
       <h1 style="font-family:'Fraunces',serif; font-size:clamp(2.5rem, 5vw, 4rem); font-weight:600; color:var(--text-primary); margin-bottom:24px; line-height:1.1; letter-spacing:-0.02em;">
-        Professional STR Logistics &<br>Property Management
+        Professional STR Logistics &<br>Management
       </h1>
       
       <!-- Sub-headline -->
       <p style="font-size:clamp(1.1rem, 2vw, 1.4rem); color:var(--text-secondary); margin-bottom:48px; line-height:1.6; max-width:600px; margin-left:auto; margin-right:auto;">
-        Tailored management solutions for Dallas-area property owners. Maximize your rental income with our premium, full-service approach.
+        The elite standard for Dallas property owners.
       </p>
       
       <!-- CTA Buttons -->
@@ -932,14 +932,14 @@ select{color:var(--txt)!important;}
 <!-- ══════════════════════════════════════
      AUTH SCREENS - PREMIUM REDESIGN
 ══════════════════════════════════════ -->
-<div id="screen-login" class="auth-wrap" style="display:grid; place-items:center; min-height:100vh; background:linear-gradient(135deg,var(--primary-charcoal) 0%,var(--charcoal-light) 100%); position:relative;">
+<div id="screen-login" class="auth-wrap" style="display:none; grid-template-columns:1fr; place-items:center; min-height:100vh; width:100vw; position:fixed; top:0; left:0; z-index:9999; background:var(--primary-charcoal);">
   <!-- Premium Background Pattern -->
   <div style="position:absolute; inset:0; opacity:0.05; background-image:repeating-linear-gradient(45deg, transparent, transparent 35px, var(--accent-gold) 35px, var(--accent-gold) 70px); pointer-events:none;"></div>
   
   <!-- Premium Login Card -->
-  <div class="auth-card" style="background:var(--card-bg); border-radius:16px; box-shadow:var(--shadow-floating); border:1px solid var(--border-light); padding:40px; width:100%; max-width:420px; position:relative; z-index:1;">
+  <div class="auth-card" style="background:var(--card-bg); border-radius:12px; box-shadow:var(--shadow-floating); border:1px solid var(--border-light); padding:40px; width:100%; max-width:420px; position:relative; z-index:1;">
     <!-- Gold Accent Line -->
-    <div style="position:absolute; top:0; left:0; right:0; height:3px; background:var(--gradient-accent); border-radius:16px 16px 0 0;"></div>
+    <div style="position:absolute; top:0; left:0; right:0; height:3px; background:var(--gradient-accent); border-radius:12px 12px 0 0;"></div>
     
     <!-- Clean Logo -->
     <div style="text-align:center; margin-bottom:32px;">
@@ -4065,12 +4065,41 @@ function toggleDark() {
 //  SCREENS
 // ════════════════════════════════════════════
 function showScreen(name) {
+  // Save current screen to localStorage for persistence
+  localStorage.setItem('cso_current_screen', name);
+  
   ['landing','login','signup','onboard','forgot','reset'].forEach(s=>{
     const el=document.getElementById('screen-'+s);
-    if(el) el.style.display = s===name ? (s==='landing'?'block':'flex') : 'none';
+    if(el) {
+      if(s===name) {
+        el.style.display = s==='landing'?'block':'flex';
+        // Special handling for login screen - ensure full screen coverage
+        if(s==='login') {
+          el.style.position = 'fixed';
+          el.style.top = '0';
+          el.style.left = '0';
+          el.style.width = '100vw';
+          el.style.height = '100vh';
+          el.style.zIndex = '9999';
+        }
+      } else {
+        el.style.display = 'none';
+      }
+    }
   });
   document.getElementById('app').classList.remove('visible');
   window.scrollTo(0,0);
+}
+
+function showLandingPage() {
+  localStorage.setItem('cso_current_screen', 'landing');
+  showScreen('landing');
+}
+
+// Restore screen state on page load
+function restoreScreenState() {
+  const savedScreen = localStorage.getItem('cso_current_screen') || 'landing';
+  showScreen(savedScreen);
 }
 
 function showForgotPassword() {
@@ -10610,12 +10639,4 @@ setTimeout(function(){
 </div>
 
 <div id="mobile-bottom-nav">
-  <button class="mob-nav-item active" id="mob-nav-dashboard" onclick="nav('dashboard',this)"><span class="mob-ico">📊</span><span>Dashboard</span></button>
-  <button class="mob-nav-item" id="mob-nav-bookings" onclick="nav('bookings',this)"><span class="mob-ico">📅</span><span>Bookings</span></button>
-  <button class="mob-nav-item" id="mob-nav-messages" onclick="nav('messages',this)"><span class="mob-ico">💬</span><span>Messages</span></button>
-  <button class="mob-nav-item" id="mob-nav-marketplace" onclick="nav('marketplace',this)"><span class="mob-ico">🏪</span><span>Market</span></button>
-  <button class="mob-nav-item" id="mob-nav-settings" onclick="nav('settings',this)"><span class="mob-ico">⚙️</span><span>Settings</span></button>
-</div>
-
-</body>
-</html>
+  <button class="mob-nav-item acti
