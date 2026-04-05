@@ -65,14 +65,32 @@
   --input-bg:#EDE8DE;--input-border:#D4C9B4;
 }
 [data-theme="dark"] {
-  --bg:#0F0B08;--bg2:#1A1410;--sand:#2A2218;--tan:#3A3028;
-  --espresso:#FAF7F2;--bark:#C4A882;
-  --txt:#F0EBE3;--txt2:#B8A898;--txt3:#7A6E64;
-  --border:#2E2620;--border2:#3A3028;
-  --card:#1A1410;--card2:#221C16;
-  --sh:0 1px 4px rgba(0,0,0,.3);--shm:0 4px 16px rgba(0,0,0,.35);--shl:0 8px 32px rgba(0,0,0,.45);
-  --sb-bg:#0A0806;--sb-txt:rgba(255,255,255,.45);--sb-active:var(--terra);
-  --input-bg:#221C16;--input-border:#3A3028;
+  --bg: var(--primary-charcoal);
+  --bg2: var(--charcoal-light);
+  --bg3: var(--charcoal-dark);
+  --card: var(--card-bg);
+  --card2: var(--card-light);
+  --txt: var(--text-primary);
+  --txt2: var(--text-secondary);
+  --txt3: var(--text-muted);
+  --terra: var(--accent-gold);
+  --terra-l: var(--gold-light);
+  --terra-d: var(--gold-dark);
+  --sage: var(--gold-light);
+  --sage-l: var(--gold-dark);
+  --sand: var(--charcoal-light);
+  --espresso: var(--charcoal-dark);
+  --bark: var(--accent-gold);
+  --border: var(--border-light);
+  --border2: var(--border-dark);
+  --sh: 0 1px 4px rgba(0,0,0,.3);
+  --shm: 0 4px 16px rgba(0,0,0,.35);
+  --shl: 0 8px 32px rgba(0,0,0,.45);
+  --sb-bg: var(--charcoal-dark);
+  --sb-txt: var(--text-muted);
+  --sb-active: var(--accent-gold);
+  --input-bg: var(--card-light);
+  --input-border: var(--border-light);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -558,17 +576,29 @@ select{color:var(--txt)!important;}
 
 
 
-/* CSO PROPERTY SERVICES - PROFESSIONAL THEME v2 */
+/* CSO PROPERTY SERVICES - PREMIUM PROFESSIONAL THEME */
 :root {
-  --burgundy:#722F37;--burgundy-light:#9B4F57;--burgundy-dark:#4A1F25;
-  --rose-gold:#E8B4B8;--champagne:#F7E7CE;--champagne-light:#FAF0E6;
-  --gradient-primary:linear-gradient(135deg,#722F37 0%,#9B4F57 50%,#E8B4B8 100%);
-  --gradient-accent:linear-gradient(45deg,#E8B4B8 0%,#F7E7CE 100%);
-  --gradient-card:linear-gradient(135deg,rgba(26,15,17,.92) 0%,rgba(45,27,31,.92) 100%);
-  --gradient-button:linear-gradient(135deg,#722F37 0%,#9B4F57 100%);
-  --shadow-glow:0 0 20px rgba(114,47,55,.3);
-  --shadow-rose-gold:0 0 20px rgba(232,180,184,.4);
-  --shadow-xl:0 20px 25px -5px rgba(0,0,0,.4),0 10px 10px -5px rgba(0,0,0,.25);
+  --primary-charcoal:#1A1A1B;
+  --charcoal-light:#2D2D2E;
+  --charcoal-dark:#0F0F10;
+  --accent-gold:#C4693A;
+  --gold-light:#D4A574;
+  --gold-dark:#B45A2A;
+  --crisp-white:#FFFFFF;
+  --off-white:#F8F9FA;
+  --text-primary:#FFFFFF;
+  --text-secondary:#B8B8B9;
+  --text-muted:#6C6C6D;
+  --border-light:#2D2D2E;
+  --border-dark:#1A1A1B;
+  --card-bg:#1F1F20;
+  --card-light:#2A2A2B;
+  --gradient-primary:linear-gradient(135deg,#1A1A1B 0%,#2D2D2E 100%);
+  --gradient-accent:linear-gradient(135deg,#C4693A 0%,#D4A574 100%);
+  --gradient-hero:linear-gradient(180deg,rgba(26,26,27,0.9) 0%,rgba(26,26,27,0.7) 100%);
+  --shadow-floating:0 20px 40px rgba(0,0,0,0.3),0 10px 20px rgba(0,0,0,0.2);
+  --shadow-card:0 8px 32px rgba(0,0,0,0.15);
+  --shadow-gold:0 0 20px rgba(196,105,58,0.3);
 }
 .premium-badge{background:var(--gradient-primary);color:var(--champagne);padding:3px 9px;border-radius:12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:inline-flex;align-items:center;gap:3px;flex-shrink:0;}
 .premium-card{background:var(--gradient-card)!important;border:1px solid rgba(232,180,184,.22)!important;box-shadow:var(--shadow-glow)!important;position:relative;overflow:hidden;}
@@ -620,44 +650,55 @@ select{color:var(--txt)!important;}
 .anime-glow::after{content:'';position:absolute;inset:-1px;border-radius:inherit;background:var(--gradient-accent);z-index:-1;opacity:0;transition:opacity .3s;filter:blur(8px);}
 .anime-glow:hover::after{opacity:.45;}
 
-</style>
-</head>
-<body>
-
 <!-- ══════════════════════════════════════
-     LANDING PAGE
+     LANDING PAGE - PREMIUM REDESIGN
 ══════════════════════════════════════ -->
-<div id="screen-landing" style="display:none">
-  <nav class="land-nav">
+<div id="screen-landing" style="display:none; scroll-behavior:smooth; z-index:10; position:relative;">
+  <!-- Premium Sticky Navigation with Glassmorphism -->
+  <nav class="land-nav" style="position:sticky; top:0; z-index:1000; background:rgba(26,26,27,0.8); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.1);">
     <div class="land-logo">
-      <div class="land-logo-icon">🏡</div>
+      <div class="land-logo-icon">🏢</div>
       <div class="land-logo-txt">CSO Property Services</div>
     </div>
     <div class="land-nav-links">
-      <a onclick="scrollToSection('land-features')">Features</a>
-      <a onclick="scrollToSection('land-products')">Products</a>
+      <a onclick="scrollToSection('land-features')">Services</a>
+      <a onclick="scrollToSection('land-products')">Solutions</a>
       <a onclick="scrollToSection('land-pricing')">Pricing</a>
-      <a onclick="showScreen('login')">Sign In</a>
+      <a onclick="showScreen('login')">Client Portal</a>
     </div>
     <div class="land-nav-btns">
-      <button class="btn btn-ghost" style="color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2)" onclick="showScreen('login')">Log In</button>
-      <button class="btn btn-pri" onclick="showScreen('signup')">Start Free →</button>
+      <button class="btn btn-ghost" style="color:rgba(255,255,255,0.8);border-color:rgba(255,255,255,0.2)" onclick="showScreen('login')">Client Login</button>
+      <button class="btn btn-pri" onclick="showScreen('signup')">Get Started →</button>
     </div>
   </nav>
 
-  <section class="land-hero">
-    <div class="land-hero-content">
-      <div class="land-eyebrow">🏡 For Airbnb Hosts &amp; Co-Hosts</div>
-      <h1 class="land-h1">Manage smarter.<br><em>Earn more.</em></h1>
-      <p class="land-sub">One dashboard for your properties, bookings, guests, cleaners, payouts, and revenue. Built for Airbnb, VRBO, and Booking.com hosts. Free to start — no credit card needed.</p>
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:8px">
-        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 14px;font-size:12px;color:rgba(255,255,255,.8)">✓ Airbnb hosts</div>
-        <div style="background:rgba(200,168,75,.2);border:1px solid rgba(200,168,75,.4);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--gold-l)">🏆 Co-hosts &amp; property managers</div>
-        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 14px;font-size:12px;color:rgba(255,255,255,.8)">✓ Multi-property operators</div>
+  <!-- Premium Hero Section with Architectural Background -->
+  <section class="land-hero" style="position:relative; min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,rgba(26,26,27,0.95) 0%,rgba(26,26,27,0.85) 100%), url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1920 1080\"><defs><linearGradient id=\"bg\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"><stop offset=\"0%\" style=\"stop-color:%231A1A1B\"/><stop offset=\"100%\" style=\"stop-color:%232D2D2E\"/></linearGradient></defs><rect width=\"1920\" height=\"1080\" fill=\"url(%23bg)\"/><g opacity=\"0.1\"><rect x=\"100\" y=\"100\" width=\"300\" height=\"600\" fill=\"%23C4693A\" opacity=\"0.3\"/><rect x=\"500\" y=\"200\" width=\"200\" height=\"400\" fill=\"%23C4693A\" opacity=\"0.2\"/><rect x=\"800\" y=\"150\" width=\"250\" height=\"500\" fill=\"%23C4693A\" opacity=\"0.25\"/><rect x=\"1200\" y=\"100\" width=\"350\" height=\"700\" fill=\"%23C4693A\" opacity=\"0.3\"/><rect x=\"1600\" y=\"250\" width=\"180\" height=\"300\" fill=\"%23C4693A\" opacity=\"0.2\"/></g></svg>'); background-size:cover; background-position:center; background-attachment:fixed;">
+    <div style="text-align:center; max-width:800px; padding:0 20px; position:relative; z-index:2;">
+      <!-- Premium Badge -->
+      <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(196,105,58,0.15); color:var(--gold-light); padding:8px 16px; border-radius:20px; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:32px; border:1px solid rgba(196,105,58,0.3);">
+        <span style="width:8px; height:8px; background:var(--accent-gold); border-radius:50%; animation:pulse 2s infinite;"></span>
+        Dallas-Fort Worth Premier Property Management
       </div>
-      <div class="land-cta-row">
-        <button class="btn btn-pri" style="padding:14px 32px;font-size:15px" onclick="showScreen('signup')">Start for Free →</button>
-        <button class="btn btn-ghost" style="padding:14px 32px;font-size:15px;color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2)" onclick="loginDemo()">🚀 See Demo</button>
+      
+      <!-- Main Headline -->
+      <h1 style="font-family:'Fraunces',serif; font-size:clamp(2.5rem, 5vw, 4rem); font-weight:600; color:var(--text-primary); margin-bottom:24px; line-height:1.1; letter-spacing:-0.02em;">
+        Professional STR Logistics &<br>Property Management
+      </h1>
+      
+      <!-- Sub-headline -->
+      <p style="font-size:clamp(1.1rem, 2vw, 1.4rem); color:var(--text-secondary); margin-bottom:48px; line-height:1.6; max-width:600px; margin-left:auto; margin-right:auto;">
+        Tailored management solutions for Dallas-area property owners. Maximize your rental income with our premium, full-service approach.
+      </p>
+      
+      <!-- CTA Buttons -->
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:64px;">
+        <button class="btn btn-pri" style="background:var(--gradient-accent); color:var(--primary-charcoal); font-weight:600; padding:16px 32px; font-size:16px; border-radius:8px; box-shadow:var(--shadow-gold);" onclick="showScreen('signup')">
+          Start Management Consultation →
+        </button>
+        <button class="btn btn-ghost" style="color:var(--text-primary); border-color:rgba(255,255,255,0.3); padding:16px 32px; font-size:16px; border-radius:8px;" onclick="scrollToSection('land-features')">
+          View Our Services
+        </button>
       </div>
       <div class="land-stats">
         <div class="land-stat"><div class="land-stat-num">Free</div><div class="land-stat-label">To start — always</div></div>
@@ -702,7 +743,7 @@ select{color:var(--txt)!important;}
       <!-- Quick Start Pack -->
       <div class="land-prod-card qsp">
         <div class="land-prod-tag">⚡ Most Popular — 11 Files</div>
-        <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);margin-bottom:6px">CSO Quick Start Pack</div>
+        <div style="font-family:Fraunces,serif;font-size:22px;font-weight:500;color:var(--txt);margin-bottom:6px">CSO Ops Setup</div>
         <div style="font-size:13px;color:var(--txt3);margin-bottom:16px">Everything a new short-term rental host needs to look professional from day one — 11 individual files, each focused on one skill</div>
         <div class="land-prod-price">$47 <span>one-time</span></div>
         <ul class="land-prod-feats">
@@ -889,21 +930,59 @@ select{color:var(--txt)!important;}
 </div></div>
 
 <!-- ══════════════════════════════════════
-     AUTH SCREENS
+     AUTH SCREENS - PREMIUM REDESIGN
 ══════════════════════════════════════ -->
-<div id="screen-login" class="auth-wrap">
-  <div class="auth-card">
-    <div class="auth-logo"><div class="auth-logo-icon">🏢</div><div class="auth-logo-txt">CSO Property Services</div></div>
-    <div class="auth-title">Welcome back</div>
-    <div class="auth-sub">Sign in to manage your properties</div>
-    <div class="auth-err" id="login-err"></div>
-    <div class="fi"><label>Email</label><input id="login-email" type="email" placeholder="you@example.com" value=""></div>
-    <div class="fi"><label>Password</label><input id="login-pw" type="password" placeholder="••••••••" value="demo1234"></div>
-    <button class="btn btn-pri btn-w" onclick="doLogin()">Sign In →</button>
-    <div class="auth-switch">No account? <a onclick="showScreen('signup')">Create one free</a> · <a onclick="showLandingPage()">Back to home</a></div>
-    <div class="auth-switch" style="margin-top:6px"><a onclick="showForgotPassword()" style="color:var(--txt3);font-size:12px">Forgot password?</a></div>
-    <div class="auth-divider">or</div>
-    <button class="btn btn-dark btn-w" onclick="loginDemo()">🚀 Launch Demo</button>
+<div id="screen-login" class="auth-wrap" style="display:grid; place-items:center; min-height:100vh; background:linear-gradient(135deg,var(--primary-charcoal) 0%,var(--charcoal-light) 100%); position:relative;">
+  <!-- Premium Background Pattern -->
+  <div style="position:absolute; inset:0; opacity:0.05; background-image:repeating-linear-gradient(45deg, transparent, transparent 35px, var(--accent-gold) 35px, var(--accent-gold) 70px); pointer-events:none;"></div>
+  
+  <!-- Premium Login Card -->
+  <div class="auth-card" style="background:var(--card-bg); border-radius:16px; box-shadow:var(--shadow-floating); border:1px solid var(--border-light); padding:40px; width:100%; max-width:420px; position:relative; z-index:1;">
+    <!-- Gold Accent Line -->
+    <div style="position:absolute; top:0; left:0; right:0; height:3px; background:var(--gradient-accent); border-radius:16px 16px 0 0;"></div>
+    
+    <!-- Clean Logo -->
+    <div style="text-align:center; margin-bottom:32px;">
+      <div style="width:64px; height:64px; background:var(--gradient-accent); border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:28px; box-shadow:var(--shadow-gold);">🏢</div>
+      <div style="font-family:'Fraunces',serif; font-size:24px; font-weight:600; color:var(--text-primary); letter-spacing:-0.02em;">CSO Property Services</div>
+      <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Professional Property Management</div>
+    </div>
+    
+    <!-- Login Form -->
+    <div style="margin-bottom:24px;">
+      <div style="font-size:20px; font-weight:600; color:var(--text-primary); margin-bottom:8px;">Welcome Back</div>
+      <div style="font-size:14px; color:var(--text-secondary); margin-bottom:24px;">Sign in to manage your properties</div>
+    </div>
+    
+    <div class="auth-err" id="login-err" style="margin-bottom:16px;"></div>
+    
+    <div style="margin-bottom:16px;">
+      <label style="display:block; font-size:13px; font-weight:500; color:var(--text-secondary); margin-bottom:8px;">Email Address</label>
+      <input id="login-email" type="email" placeholder="you@example.com" value="" style="width:100%; padding:12px 16px; border:1px solid var(--border-light); border-radius:8px; background:var(--input-bg); color:var(--text-primary); font-size:14px; transition:border-color 0.2s;">
+    </div>
+    
+    <div style="margin-bottom:24px;">
+      <label style="display:block; font-size:13px; font-weight:500; color:var(--text-secondary); margin-bottom:8px;">Password</label>
+      <input id="login-pw" type="password" placeholder="••••••••" value="demo1234" style="width:100%; padding:12px 16px; border:1px solid var(--border-light); border-radius:8px; background:var(--input-bg); color:var(--text-primary); font-size:14px; transition:border-color 0.2s;">
+    </div>
+    
+    <button class="btn btn-pri btn-w" onclick="doLogin()" style="width:100%; padding:14px; background:var(--gradient-accent); color:var(--primary-charcoal); font-weight:600; font-size:14px; border-radius:8px; border:none; cursor:pointer; transition:transform 0.2s, box-shadow 0.2s; margin-bottom:16px;">Sign In →</button>
+    
+    <!-- Subtle Links -->
+    <div style="text-align:center; font-size:13px; color:var(--text-secondary); line-height:1.6;">
+      <div>No account? <a onclick="showScreen('signup')" style="color:var(--accent-gold); text-decoration:none; font-weight:500;">Create one free</a> · <a onclick="showLandingPage()" style="color:var(--accent-gold); text-decoration:none; font-weight:500;">Back to home</a></div>
+      <div style="margin-top:8px;"><a onclick="showForgotPassword()" style="color:var(--text-muted); text-decoration:none; font-size:12px;">Forgot password?</a></div>
+    </div>
+    
+    <!-- Demo Button -->
+    <div style="text-align:center; margin-top:24px; padding-top:24px; border-top:1px solid var(--border-light);">
+      <button class="btn btn-dark btn-w" onclick="loginDemo()" style="background:transparent; color:var(--text-secondary); border:1px solid var(--border-light); padding:10px 20px; font-size:13px; border-radius:6px; cursor:pointer; transition:all 0.2s;">🚀 Launch Demo</button>
+    </div>
+    
+    <!-- Subtle Self Healer Link -->
+    <div style="text-align:center; margin-top:16px;">
+      <a onclick="selfHeal()" style="color:var(--text-muted); font-size:11px; text-decoration:none; opacity:0.7; transition:opacity 0.2s;">System Recovery</a>
+    </div>
   </div>
 </div>
 
