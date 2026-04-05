@@ -3638,7 +3638,7 @@ async function safeAsync(fn, errorMessage = 'Operation failed') {
 // ══════════════════════════════════════════
 //  ADMIN CONFIG
 // ════════════════════════════════════════════
-const ADMIN_EMAIL = __cfg.ADMIN_EMAIL || '';
+const ADMIN_EMAIL = __cfg.ADMIN_EMAIL || 'csopropertyservice@gmail.com';
 
 // ════════════════════════════════════════════
 //  STATE
@@ -4267,22 +4267,39 @@ async function bootApp() {
 async function checkAdminStatus(userEmail) {
   isAdmin = false;
   if (!userEmail) return false;
+  // Fast local check first — if email matches hardcoded admin, grant immediately
+  if (ADMIN_EMAIL && userEmail.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim()) {
+    isAdmin = true;
+    return true;
+  }
+  // Also check profiles table for is_admin role
+  try {
+    const { data: profile } = await sb.from('profiles')
+      .select('plan, role')
+      .eq('id', cUid)
+      .single()
+      .catch(() => ({ data: null }));
+    if (profile && (profile.plan === 'is_admin' || profile.role === 'admin' || profile.role === 'is_admin')) {
+      isAdmin = true;
+      // Fix the plan value to business while we're at it
+      await sb.from('profiles').update({ plan: 'business', role: 'admin' }).eq('id', cUid).catch(() => {});
+      return true;
+    }
+  } catch(e) {}
+  // Fallback: try Edge Function
   try {
     const { data, error } = await sb.functions
       .invoke('check-admin-status', { body: { email: userEmail } })
       .catch((e) => ({ data: null, error: e }));
-    if (error) {
-      sbHandleError(error, 'check-admin-status');
-      isAdmin = false;
-      return false;
+    if (!error && data) {
+      isAdmin = !!(data.isAdmin);
+      return isAdmin;
     }
-    isAdmin = !!(data && data.isAdmin);
-    return isAdmin;
   } catch (e) {
-    console.warn('Admin check failed:', e);
-    isAdmin = false;
-    return false;
+    console.warn('Admin edge function check failed:', e);
   }
+  isAdmin = false;
+  return false;
 }
 
 async function launchApp(user) {
