@@ -31,6 +31,10 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+<!-- Content Security Policy — tighten in production by removing 'unsafe-inline' once styles are extracted -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co https://api.anthropic.com https://api.resend.com; frame-src 'none'; object-src 'none'; base-uri 'self';">
+<!-- ★ Global brand variable — change this one line to white-label the entire UI -->
+<script>window.BRAND_NAME = 'CSO Property Services'; window.BRAND_SHORT = 'CSO';</script>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>CSO Property Services — Smarter Airbnb Management</title>
 <meta name="description" content="CSO Property Services is the all-in-one dashboard for short-term rental hosts and co-hosts. Manage bookings, guests, payouts, cleaning staff, and revenue — with AI built in. Start free.">
@@ -3404,20 +3408,72 @@ select{color:var(--txt)!important;}
       </div>
     </div>
   </div>
-</div>
 
-<!-- ══════════════════════════════════════
-     MODALS
+  <!-- Security Overview -->
+  <div class="card" style="margin-top:18px;border-left:3px solid var(--terra)">
+    <div class="card-hd"><div class="card-title">🔐 Security Overview — Hardware Key (YubiKey) Guide</div></div>
+    <div class="card-body">
+      <div style="font-size:13px;color:var(--txt2);margin-bottom:16px;line-height:1.6">Hardware security keys (YubiKey 5 Series, ~$55) provide phishing-resistant MFA. A stolen password alone cannot access your accounts. Set one up on all three platforms below.</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="background:var(--sand);border-radius:10px;padding:14px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div style="width:32px;height:32px;background:#000;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0">▲</div>
+            <div style="font-weight:600;font-size:14px;color:var(--txt)">Vercel</div>
+            <span style="background:rgba(107,143,113,.15);color:var(--sage);font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">Hosting</span>
+          </div>
+          <div style="font-size:12px;color:var(--txt2);line-height:1.7">1. Go to <strong>vercel.com → Settings → Security</strong><br>2. Under <strong>Two-Factor Authentication</strong>, click <strong>Enable</strong><br>3. Choose <strong>Security Key (WebAuthn)</strong> — not TOTP<br>4. Insert your YubiKey and tap it when prompted<br>5. Save a backup recovery code in your password manager<br><em style="font-size:11px;color:var(--txt3)">✓ Protects: deployments, env vars, domain config</em></div>
+        </div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div style="width:32px;height:32px;background:#3ECF8E;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0">⚡</div>
+            <div style="font-weight:600;font-size:14px;color:var(--txt)">Supabase</div>
+            <span style="background:rgba(107,143,113,.15);color:var(--sage);font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">Database</span>
+          </div>
+          <div style="font-size:12px;color:var(--txt2);line-height:1.7">1. Go to <strong>supabase.com → Account Settings → Security</strong><br>2. Under <strong>Multi-Factor Authentication</strong>, click <strong>Add a Factor</strong><br>3. Supabase currently supports TOTP — use <strong>Authy</strong> or Google Authenticator<br>4. For physical key protection, <strong>secure your GitHub account</strong> (Supabase connects via GitHub OAuth)<br>5. GitHub: Settings → Password & auth → Security keys → Add<br><em style="font-size:11px;color:var(--txt3)">✓ Protects: database, RLS policies, edge functions, API keys</em></div>
+        </div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div style="width:32px;height:32px;background:#EA4335;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0">G</div>
+            <div style="font-weight:600;font-size:14px;color:var(--txt)">Business Gmail</div>
+            <span style="background:rgba(196,105,58,.15);color:var(--terra);font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">Critical</span>
+          </div>
+          <div style="font-size:12px;color:var(--txt2);line-height:1.7">1. Go to <strong>myaccount.google.com → Security → 2-Step Verification</strong><br>2. Scroll to <strong>Security Keys</strong> → click <strong>Add security key</strong><br>3. Insert YubiKey and follow prompts — it registers as a passkey<br>4. Set YubiKey as <strong>primary</strong>, phone as backup only<br>5. Under <strong>Advanced Protection Program</strong> — enroll if you handle contractor payments<br><em style="font-size:11px;color:var(--txt3)">✓ Protects: all password reset emails, Stripe notifications, contractor comms</em></div>
+        </div>
+        <div style="background:rgba(200,168,75,.08);border:1px solid var(--gold);border-radius:10px;padding:12px;font-size:12px;color:var(--txt2);line-height:1.7">
+          <strong style="color:var(--gold)">⚠ Middleman Model Risk:</strong> Your Gmail is the single point of failure for contractor payments and owner communications. A phished Gmail = fraudulent wire instructions to your contractors. The YubiKey on Gmail is your highest-priority security action.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 ══════════════════════════════════════ -->
 
 
 <!-- AFFILIATE MODAL -->
 <div class="modal-bg" id="add-affiliate-modal"><div class="modal"><h2>🤝 Add Affiliate</h2>
-  <div class="g2"><div class="fi"><label>Name</label><input id="aff-name" placeholder="John the Airbnb Guy"></div><div class="fi"><label>Code (unique)</label><input id="aff-code" placeholder="JOHN20" style="text-transform:uppercase"></div></div>
+  <div class="g2"><div class="fi"><label>Name</label><input id="aff-name" placeholder="John the Airbnb Guy"></div><div class="fi"><label>Code (unique)</label><input id="aff-code" placeholder="JOHN20" style="text-transform:uppercase" oninput="previewAffLink()"></div></div>
   <div class="g2"><div class="fi"><label>Email</label><input id="aff-email" type="email" placeholder="john@email.com"></div><div class="fi"><label>Commission (%)</label><input id="aff-commission" type="number" value="20" min="5" max="40"></div></div>
   <div class="fi"><label>Platform / Notes</label><input id="aff-platform" placeholder="YouTube 45k subs, Dallas STR niche"></div>
-  <div id="aff-link-preview" style="display:none;background:var(--sand);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--txt2);margin-top:4px"></div>
+  <div id="aff-link-preview" style="display:none;background:var(--sand);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--txt2);margin-top:4px;word-break:break-all"></div>
   <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('add-affiliate-modal')">Cancel</button><button class="btn btn-pri" onclick="addAffiliate()">Add Affiliate</button></div>
+</div></div>
+
+<!-- LOG REFERRAL MODAL -->
+<div class="modal-bg" id="log-referral-modal"><div class="modal" style="max-width:420px"><h2>+ Log Referral</h2>
+  <div style="font-size:13px;color:var(--txt2);margin-bottom:14px">Record a new user referred by this affiliate.</div>
+  <input type="hidden" id="ref-aff-id">
+  <div class="fi"><label>Referred User Email</label><input id="ref-email" type="email" placeholder="newuser@email.com"></div>
+  <div class="fi"><label>Their Plan</label>
+    <select id="ref-plan" onchange="updateRefCommPreview((cData?.affiliates||[]).find(a=>a.id===document.getElementById('ref-aff-id')?.value)?.commission||20)" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:9px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)">
+      <option value="pro">🚀 Pro — $79/mo</option>
+      <option value="business">💼 Business — $199/mo</option>
+      <option value="cohost">🏆 Co-Host — $299/mo</option>
+      <option value="free">⭐ Free — $0</option>
+    </select>
+  </div>
+  <div class="fi"><label>Joined Date</label><input id="ref-date" type="date"></div>
+  <div id="ref-commission-preview" style="background:rgba(107,143,113,.1);border:1px solid var(--sage);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--txt2);margin-top:4px;display:none"></div>
+  <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('log-referral-modal')">Cancel</button><button class="btn btn-pri" onclick="submitLogReferral()">Log Referral</button></div>
 </div></div>
 
 <!-- FEEDBACK MODAL -->
@@ -3536,7 +3592,7 @@ select{color:var(--txt)!important;}
   </div>
 </div></div>
 
-<div class="modal-bg" id="add-booking-modal"><div class="modal"><h2>📅 Add Booking</h2><div class="fi"><label>Property</label><select id="mb-prop"></select></div><div class="g2"><div class="fi"><label>Guest Name</label><input id="mb-guest" placeholder="Marcus Kim"></div><div class="fi"><label>Guest Email</label><input id="mb-email" type="email"></div></div><div class="g2"><div class="fi"><label>Check-in</label><input id="mb-cin" type="date"></div><div class="fi"><label>Check-out</label><input id="mb-cout" type="date"></div></div><div class="g2"><div class="fi"><label>Guests</label><input id="mb-nguests" type="number" value="2" min="1"></div><div class="fi"><label>Total Price ($)</label><input id="mb-price" type="number" min="0" step="0.01"></div></div><div class="fi"><label>Status</label><select id="mb-status"><option value="confirmed">Confirmed</option><option value="pending">Pending</option><option value="completed">Completed</option></select></div><div class="fi"><label>Source</label><select id="mb-source"><option value="airbnb">Airbnb</option><option value="vrbo">VRBO</option><option value="direct">Direct</option><option value="other">Other</option></select></div><div class="fi"><label>Host Notes (private)</label><textarea id="mb-notes" placeholder="e.g. Guest has a dog, early check-in approved, contact at 555-1234…" style="min-height:60px"></textarea></div>
+<div class="modal-bg" id="add-booking-modal"><div class="modal"><h2>📅 Add Booking</h2><div class="fi"><label>Property</label><select id="mb-prop"></select></div><div class="g2"><div class="fi"><label>Guest Name</label><input id="mb-guest" placeholder="Marcus Kim"></div><div class="fi"><label>Guest Email</label><input id="mb-email" type="email"></div></div><div class="g2"><div class="fi"><label>Check-in</label><input id="mb-cin" type="date"></div><div class="fi"><label>Check-out</label><input id="mb-cout" type="date"></div></div><div class="g2"><div class="fi"><label>Guests</label><input id="mb-nguests" type="number" value="2" min="1"></div><div class="fi"><label>Total Price ($)</label><input id="mb-price" type="number" min="0" step="0.01"></div></div><div class="fi"><label>Status</label><select id="mb-status"><option value="confirmed">Confirmed</option><option value="pending">Pending</option><option value="completed">Completed</option></select></div><div class="fi"><label>Source</label><select id="mb-source"><option value="airbnb">Airbnb</option><option value="vrbo">VRBO</option><option value="booking_com">Booking.com</option><option value="direct">Direct</option><option value="turno">Turno</option><option value="residential">Residential</option><option value="other">Other</option></select></div><div class="fi"><label>Lead Type</label><select id="mb-lead-type" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:9px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt)"><option value="">— None —</option><option value="turno_platform">🔄 Turno Platform</option><option value="direct_inquiry">📧 Direct Inquiry</option><option value="residential_cleaning">🏠 Residential Cleaning</option><option value="repeat_client">⭐ Repeat Client</option><option value="referral">🤝 Referral</option></select></div><div class="fi"><label>Host Notes (private)</label><textarea id="mb-notes" placeholder="e.g. Guest has a dog, early check-in approved, contact at 555-1234…" style="min-height:60px"></textarea></div>
 <div class="fi"><label>📸 Booking Photos</label>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px" id="mb-photos-preview"></div>
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
@@ -4795,10 +4851,14 @@ async function launchApp(user) {
       // Checkout monitor + cleaner card bridge
       setTimeout(()=>checkoutMonitor(), 3000);
       setTimeout(()=>checkJobCardUpdates(), 1000);
+      // Heartbeat monitor for late cleaner check-ins
+      setTimeout(()=>startHeartbeatMonitor(), 4000);
     });
   });
   hhWireSaveButtons();
   hhBindOnlineOffline();
+  // Wire booking draft auto-save after modal fields are in DOM
+  setTimeout(wireBookingDraftSave, 500);
 }
 
 // ════════════════════════════════════════════
@@ -5545,10 +5605,11 @@ function addBooking(){
   const prop=cData.properties.find(p=>p.id===propId);
   const cin=document.getElementById('mb-cin').value,cout=document.getElementById('mb-cout').value;
   const nights=cin&&cout?Math.max(1,Math.round((new Date(cout)-new Date(cin))/86400000)):1;
-  const b={id:'b_'+Date.now(),propId,propName:prop?.name||'Property',propEmoji:prop?.emoji||'🏠',propGradient:prop?.gradient||'pi1',guestName:guest,guestEmail:document.getElementById('mb-email').value,numGuests:parseInt(document.getElementById('mb-nguests').value)||2,checkin:cin,checkout:cout,nights,price:moneyNonNeg(parseFloat(document.getElementById('mb-price').value)),status:document.getElementById('mb-status').value,source:document.getElementById('mb-source').value,notes:document.getElementById('mb-notes')?.value||'',photos:[...tempBookingPhotos],created:Date.now()};
+  const b={id:'b_'+Date.now(),propId,propName:prop?.name||'Property',propEmoji:prop?.emoji||'🏠',propGradient:prop?.gradient||'pi1',guestName:cleanInput(guest),guestEmail:cleanInput(document.getElementById('mb-email').value.trim()),numGuests:parseInt(document.getElementById('mb-nguests').value)||2,checkin:cin,checkout:cout,nights,price:moneyNonNeg(parseFloat(document.getElementById('mb-price').value)),status:document.getElementById('mb-status').value,source:document.getElementById('mb-source').value,leadType:document.getElementById('mb-lead-type')?.value||'',notes:cleanInput(document.getElementById('mb-notes')?.value||''),photos:[...tempBookingPhotos],created:Date.now()};
   tempBookingPhotos=[];
   const previewEl=document.getElementById('mb-photos-preview');if(previewEl)previewEl.innerHTML='';
   cData.bookings.push(b);saveUserData(cUid,cData);closeModal('add-booking-modal');
+  clearDraft('booking');
   toast(`Booking for ${guest} added!`);renderAll();
   // Auto-create cleaning task on checkout date
   if(cout) {
@@ -6562,6 +6623,7 @@ function renderMarketplace(){
         </div>
         <span class="pill ${c.available?'pill-green':'pill-amber'}">${c.available?'Available':'Busy'}</span>
         <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="renderCleanerEarnings('${c.id}')">💰</button>
+        <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="editContractorRate('${c.id}')">✏️ Edit</button>
         <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="toggleCleanerAvail('${c.id}')">${c.available?'Mark Busy':'Mark Free'}</button>
         <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;color:var(--terra)" onclick="removeCleaner('${c.id}')">🗑</button>
       </div>`;
@@ -6578,11 +6640,12 @@ function renderMarketplace(){
       board.innerHTML=jobs.slice().reverse().map(j=>{
         const scoreHtml=j.qualityScore?`<span style="font-size:11px;color:var(--gold)">⭐${j.qualityScore}</span>`:'';
         const windowHtml=j.cleaningWindow?.windowLabel?`<div style="font-size:10px;color:var(--txt3);margin-top:2px">${j.cleaningWindow.windowLabel}</div>`:'';
-        return `<div class="row" style="cursor:default">
+        const heartbeatHtml=j.heartbeatAlerted?`<div style="font-size:10px;color:var(--terra);font-weight:600;margin-top:2px">⚠️ No check-in for ${j.heartbeatLateMin||15}+ min</div>`:'';
+        return `<div class="row" style="cursor:default;${j.heartbeatAlerted?'border-left:3px solid var(--terra);padding-left:10px;':''}">
           <div class="row-info">
             <div class="row-title">${typeLabels[j.type]||j.type} — ${j.propName} ${scoreHtml}</div>
             <div class="row-sub">${j.date} at ${j.time||'TBD'} · ${j.cleanerName}</div>
-            ${windowHtml}
+            ${windowHtml}${heartbeatHtml}
           </div>
           <span class="pill ${sc[j.status]||'pill-amber'}" style="font-size:10px">${j.status.replace('_',' ')}</span>
           <div class="row-price">$${j.pay}</div>
@@ -7377,7 +7440,8 @@ function checkJobCardUpdates() {
       if(!job) return;
       if(upd.action==='accept' && job.status==='open') { job.status='assigned'; job.acceptedAt=upd.time; changed=true; }
       if(upd.action==='decline' && job.status==='open') { job.status='declined'; job.declinedAt=upd.time; changed=true; }
-      if(upd.action==='start' && (job.status==='assigned'||job.status==='open')) { job.status='in_progress'; job.startedAt=upd.time; changed=true; }
+      if(upd.action==='start' && (job.status==='assigned'||job.status==='open')) { job.status='in_progress'; job.startedAt=upd.time; job.lastHeartbeat=upd.time; job.heartbeatAlerted=false; changed=true; }
+      if(upd.action==='heartbeat') { job.lastHeartbeat=upd.time; job.heartbeatAlerted=false; changed=true; }
       if(upd.action==='complete') {
         job.status='completed'; job.completedAt=upd.time;
         if(upd.photos) job.completionPhotos = upd.photos;
@@ -7636,9 +7700,11 @@ function renderCleanerJobCard(jobId) {
     return;
   }
 
-  const TURNOVER_CHECKLIST = ['Strip and replace all bed linens','Wipe all surfaces and furniture','Clean bathrooms (toilet, sink, shower)','Mop or vacuum all floors','Restock toiletries and amenities','Empty all trash bins','Check and restock kitchen supplies','Wipe down kitchen appliances','Check for guest left items','Final walkthrough — close windows, lock doors'];
+  // Dynamic checklist based on job type
+  const _cl = getChecklistForJobType(job.type||'turnover');
+  const _allItems = _cl.sections.reduce((arr,s)=>arr.concat(s.items),[]);
 
-  let checkItems = TURNOVER_CHECKLIST;
+  let checkItems = _allItems.length ? _allItems : ['Strip and replace all bed linens','Wipe all surfaces and furniture','Clean bathrooms (toilet, sink, shower)','Mop or vacuum all floors','Restock toiletries and amenities','Empty all trash bins','Check and restock kitchen supplies','Wipe down kitchen appliances','Check for guest left items','Final walkthrough — close windows, lock doors'];
   let checkState = {};
   try { checkState = JSON.parse(localStorage.getItem('hh_job_check_'+jobId)||'{}'); } catch(e){}
 
@@ -7748,7 +7814,19 @@ function renderCleanerJobCard(jobId) {
     };
     window.startJob = function() {
       job.status='in_progress';
+      job.startedAt = new Date().toISOString();
+      job.lastHeartbeat = new Date().toISOString();
       saveJobUpdate('start');
+      // Ping heartbeat every 5 minutes while job is in progress
+      if(window._hbInterval) clearInterval(window._hbInterval);
+      window._hbInterval = setInterval(function() {
+        if(job.status==='in_progress') {
+          pingCleanerHeartbeat(job.id);
+          job.lastHeartbeat = new Date().toISOString();
+        } else {
+          clearInterval(window._hbInterval);
+        }
+      }, 5 * 60 * 1000);
       render();
     };
     window.submitComplete = function() {
@@ -7993,7 +8071,7 @@ function renderBookings(){
   list.innerHTML=bs.map(b=>`
     <div class="row">
       <div class="row-thumb ${b.propGradient||'pi1'}">${b.propEmoji||'🏠'}</div>
-      <div class="row-info"><div class="row-title">${b.propName} — ${b.guestName}</div><div class="row-sub">👤 ${b.numGuests} guests · ${b.nights}n · ${b.source}</div>${b.cleaningWindow?.windowLabel?`<div style="font-size:10px;margin-top:2px;color:${b.cleaningWindow.tight?'var(--terra)':'var(--sage)'}">${b.cleaningWindow.windowLabel}</div>`:''}</div>
+      <div class="row-info"><div class="row-title">${b.propName} — ${b.guestName}</div><div class="row-sub">👤 ${b.numGuests} guests · ${b.nights}n · ${b.source}${b.leadType?` · <span style="background:var(--sand);border-radius:3px;padding:1px 5px;font-size:9px;color:var(--txt2)">${b.leadType.replace('_',' ')}</span>`:''}</div>${b.cleaningWindow?.windowLabel?`<div style="font-size:10px;margin-top:2px;color:${b.cleaningWindow.tight?'var(--terra)':'var(--sage)'}">${b.cleaningWindow.windowLabel}</div>`:''}</div>
       <span class="pill ${spc[b.status]||'pill-blue'}">${b.status}</span>
       ${b.photos?.length?`<button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;flex-shrink:0" onclick="event.stopPropagation();viewBookingPhotos('${b.id}')">📸 ${b.photos.length}</button>`:''}
       <div style="text-align:right"><div class="row-price">$${b.price.toLocaleString()}</div><div class="row-date">${b.checkin||'TBD'} → ${b.checkout||'TBD'}</div></div>
@@ -9902,7 +9980,7 @@ function setFbRating(val) {
 }
 
 async function submitFeedback() {
-  const message = document.getElementById('fb-message')?.value?.trim();
+  const message = cleanInput(document.getElementById('fb-message')?.value?.trim(), 2000);
   const type = document.getElementById('fb-type')?.value || 'other';
   if(!message){toast('Please write something first');return;}
 
@@ -10009,19 +10087,52 @@ function switchAdminTab(tab) {
 // ════════════════════════════════════════════
 //  AFFILIATE PROGRAM
 // ════════════════════════════════════════════
+// ════════════════════════════════════════════
+//  SECURITY — cleanInput() alias + JWT-ready note
+// ════════════════════════════════════════════
+// cleanInput is the public alias for sanitizeInput — use it on ALL user inputs
+const cleanInput = (v, maxLen) => sanitizeInput(v).substring(0, maxLen||500);
+
+// JWT: Supabase automatically attaches the user JWT to all sb.from() calls
+// via the Authorization: Bearer <token> header. RLS policy example:
+//   CREATE POLICY "user_isolation" ON user_data
+//   FOR ALL USING (auth.uid() = user_id);
+// The anon key + RLS is the correct security model — never expose service_role key client-side.
+
+// ════════════════════════════════════════════
+//  AFFILIATE — Fixed (no prompt(), clipboard fallback, link preview)
+// ════════════════════════════════════════════
+const AFF_BASE_URL = 'https://csopropertyservice-coder.github.io/hosthaven/?ref=';
+
+function previewAffLink() {
+  const code = (document.getElementById('aff-code')?.value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  const preview = document.getElementById('aff-link-preview');
+  if(!preview) return;
+  if(code) {
+    preview.style.display='block';
+    preview.innerHTML='<strong>Preview:</strong> '+AFF_BASE_URL+code;
+  } else {
+    preview.style.display='none';
+  }
+}
+
 function addAffiliate() {
-  const name = document.getElementById('aff-name').value.trim();
-  const code = document.getElementById('aff-code').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
+  const name = cleanInput(document.getElementById('aff-name')?.value.trim());
+  const code = (document.getElementById('aff-code')?.value||'').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
   if(!name){toast('Enter affiliate name');return;}
   if(!code){toast('Enter a unique code (letters/numbers only)');return;}
+  if(code.length < 3){toast('Code must be at least 3 characters');return;}
   if(!cData.affiliates) cData.affiliates=[];
   if(cData.affiliates.find(a=>a.code===code)){toast('That code is already taken');return;}
+  const emailRaw = document.getElementById('aff-email')?.value.trim();
+  if(emailRaw && !isValidEmail(emailRaw)){toast('Enter a valid email');return;}
   cData.affiliates.push({
     id:'aff_'+Date.now(),
     name, code,
-    email:document.getElementById('aff-email').value.trim(),
-    commission:parseFloat(document.getElementById('aff-commission').value)||20,
-    platform:document.getElementById('aff-platform').value.trim(),
+    email: cleanInput(emailRaw),
+    commission: parseFloat(document.getElementById('aff-commission')?.value)||20,
+    platform: cleanInput(document.getElementById('aff-platform')?.value.trim()),
+    link: AFF_BASE_URL+code,
     referredUsers:[],
     totalEarned:0,
     totalPaid:0,
@@ -10030,8 +10141,56 @@ function addAffiliate() {
   });
   saveUserData(cUid,cData);
   closeModal('add-affiliate-modal');
-  toast(name+' added! Share their link: ?ref='+code);
+  ['aff-name','aff-email','aff-platform'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const codeEl = document.getElementById('aff-code'); if(codeEl) codeEl.value='';
+  const prev = document.getElementById('aff-link-preview'); if(prev) prev.style.display='none';
+  toast(name+' added! Their link: ?ref='+code);
   renderAffiliates();
+}
+
+function openLogReferral(affId) {
+  const a = (cData.affiliates||[]).find(x=>x.id===affId);
+  if(!a) return;
+  const idEl = document.getElementById('ref-aff-id'); if(idEl) idEl.value=affId;
+  const dateEl = document.getElementById('ref-date'); if(dateEl) dateEl.value=new Date().toISOString().slice(0,10);
+  const emailEl = document.getElementById('ref-email'); if(emailEl) emailEl.value='';
+  updateRefCommPreview(a.commission);
+  openModal('log-referral-modal');
+}
+
+function updateRefCommPreview(commPct) {
+  const planEl = document.getElementById('ref-plan');
+  const previewEl = document.getElementById('ref-commission-preview');
+  if(!planEl||!previewEl) return;
+  const plan = planEl.value;
+  const val = plan==='cohost'?299:plan==='business'?199:plan==='pro'?79:0;
+  const monthly = val*(commPct/100);
+  if(val>0){
+    previewEl.style.display='block';
+    previewEl.innerHTML='Commission earned: <strong>$'+monthly.toFixed(2)+'/mo</strong> ('+commPct+'% of $'+val+')';
+  } else {
+    previewEl.style.display='none';
+  }
+}
+
+function submitLogReferral() {
+  const affId = document.getElementById('ref-aff-id')?.value;
+  const a = (cData.affiliates||[]).find(x=>x.id===affId);
+  if(!a){toast('Affiliate not found');return;}
+  const email = cleanInput(document.getElementById('ref-email')?.value.trim());
+  if(!email||!isValidEmail(email)){toast('Enter a valid email');return;}
+  const plan = document.getElementById('ref-plan')?.value||'pro';
+  const monthlyValue = plan==='cohost'?299:plan==='business'?199:plan==='pro'?79:0;
+  const joinedDate = document.getElementById('ref-date')?.value||new Date().toISOString().slice(0,10);
+  const monthly = monthlyValue*(a.commission/100);
+  if(!a.referredUsers) a.referredUsers=[];
+  if(a.referredUsers.find(u=>u.email===email)){toast('This email is already logged for this affiliate');return;}
+  a.referredUsers.push({email,plan,monthlyValue,commission:monthly,joinedDate});
+  a.totalEarned = (a.totalEarned||0)+monthly;
+  saveUserData(cUid,cData);
+  closeModal('log-referral-modal');
+  renderAffiliates();
+  toast('Referral logged! '+a.name+' earns $'+monthly.toFixed(2)+'/mo ✓');
 }
 
 function renderAffiliates() {
@@ -10041,11 +10200,7 @@ function renderAffiliates() {
 
   const totalReferred = affiliates.reduce((s,a)=>s+(a.referredUsers||[]).length,0);
   const totalOwed = affiliates.reduce((s,a)=>s+(a.totalEarned||0)-(a.totalPaid||0),0);
-  // Net = what you keep (80% of referred revenue)
-  const totalGross = affiliates.reduce((s,a)=>{
-    const userRevenue = (a.referredUsers||[]).reduce((rs,u)=>rs+(u.monthlyValue||79),0);
-    return s+userRevenue;
-  },0);
+  const totalGross = affiliates.reduce((s,a)=>(a.referredUsers||[]).reduce((rs,u)=>rs+(u.monthlyValue||79),0)+s,0);
   const yourNet = totalGross - affiliates.reduce((s,a)=>s+(a.totalEarned||0),0);
 
   set('aff-total', affiliates.length);
@@ -10055,89 +10210,297 @@ function renderAffiliates() {
 
   const list = document.getElementById('affiliates-list');
   if(!list) return;
+
+  // "My Link" section at top
+  const myCode = (cUser?.email||'').split('@')[0].toUpperCase().replace(/[^A-Z0-9]/g,'').substring(0,8)||'HOST';
+  const myLink = AFF_BASE_URL+myCode;
+
+  let html = `<div class="card" style="margin-bottom:16px;border-left:3px solid var(--gold)">
+    <div class="card-hd"><div class="card-title">🔗 Your Personal Referral Link</div></div>
+    <div class="card-body">
+      <div style="font-size:13px;color:var(--txt2);margin-bottom:10px">Share this link on social media, emails, or your website. Anyone who signs up through it is tracked to you.</div>
+      <div style="display:flex;align-items:center;gap:8px;background:var(--sand);border-radius:8px;padding:10px 12px">
+        <div style="font-size:12px;color:var(--terra);font-family:monospace;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${myLink}</div>
+        <button class="btn btn-pri" style="font-size:11px;padding:4px 10px;flex-shrink:0" onclick="copyAffLink('${myLink}')">📋 Copy</button>
+      </div>
+    </div>
+  </div>`;
+
   if(!affiliates.length){
-    list.innerHTML='<div class="empty-state"><div class="es-i">🤝</div><h3>No affiliates yet</h3><button class="btn btn-pri" onclick="openModal(\"add-affiliate-modal\")" style="margin-top:10px">Add First Affiliate</button></div>';
-    return;
+    html += '<div class="empty-state"><div class="es-i">🤝</div><h3>No affiliates yet</h3><p>Add influencers, STR educators, or Facebook group admins</p><button class="btn btn-pri" onclick="openModal(\'add-affiliate-modal\')" style="margin-top:10px">Add First Affiliate</button></div>';
+    list.innerHTML=html; return;
   }
 
-  const baseUrl = 'https://csopropertyservice-coder.github.io/hosthaven/?ref=';
-  list.innerHTML = affiliates.map(function(a) {
+  html += affiliates.map(function(a) {
     const referred = (a.referredUsers||[]).length;
-    const owed = (a.totalEarned||0)-(a.totalPaid||0);
-    const link = baseUrl+a.code;
+    const owed = Math.max(0,(a.totalEarned||0)-(a.totalPaid||0));
+    const link = a.link||AFF_BASE_URL+a.code;
     const monthlyComm = referred * 79 * (a.commission/100);
-    return '<div class="card" style="margin-bottom:12px">'
-      +'<div class="card-hd">'
-        +'<div style="display:flex;align-items:center;gap:12px">'
-          +'<div style="width:42px;height:42px;border-radius:50%;background:var(--terra);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0">'+a.name[0].toUpperCase()+'</div>'
-          +'<div>'
-            +'<div style="font-size:15px;font-weight:600;color:var(--txt)">'+a.name+'</div>'
-            +'<div style="font-size:12px;color:var(--txt3)">'+(a.platform||'No platform noted')+' · '+(a.commission||20)+'% commission</div>'
-          +'</div>'
-        +'</div>'
-        +'<div style="display:flex;gap:6px">'
-          +'<button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="copyAffLink(this.dataset.link)" data-link="'+link+'">📋 Copy Link</button>'
-          +'<button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="logAffReferral(this.dataset.id)" data-id="'+a.id+'">+ Log Referral</button>'
-          +(owed>0?'<button class="btn btn-ghost" style="font-size:11px;padding:4px 9px;color:var(--sage)" onclick="payAffiliate(this.dataset.id)" data-id="'+a.id+'">Pay $'+Math.round(owed)+'</button>':'')
-          +'<button class="btn btn-ghost" style="font-size:11px;padding:4px 9px;color:var(--terra)" onclick="removeAffiliate(this.dataset.id)" data-id="'+a.id+'">🗑</button>'
-        +'</div>'
-      +'</div>'
-      +'<div class="card-body">'
-        +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">'
-          +'<div style="background:var(--sand);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Referred Users</div><div style="font-family:Fraunces,serif;font-size:20px;color:var(--txt)">'+referred+'</div></div>'
-          +'<div style="background:var(--sand);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Monthly Comm.</div><div style="font-family:Fraunces,serif;font-size:20px;color:var(--gold)">$'+Math.round(monthlyComm)+'</div></div>'
-          +'<div style="background:'+(owed>0?'rgba(107,143,113,.1)':'var(--sand)')+';border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Amount Owed</div><div style="font-family:Fraunces,serif;font-size:20px;color:'+(owed>0?'var(--sage)':'var(--txt3)')+'">$'+Math.round(owed)+'</div></div>'
-          +'<div style="background:rgba(196,105,58,.08);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Total Paid</div><div style="font-family:Fraunces,serif;font-size:20px;color:var(--terra)">$'+Math.round(a.totalPaid||0)+'</div></div>'
-        +'</div>'
-        +'<div style="background:var(--sand);border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px">'
-          +'<div style="font-size:11px;color:var(--txt3);flex-shrink:0">Their link:</div>'
-          +'<div style="font-size:12px;color:var(--terra);font-family:monospace;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+link+'</div>'
-          +'<button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;flex-shrink:0" onclick="copyAffLink(this.dataset.link)" data-link="'+link+'">Copy</button>'
-        +'</div>'
-        +((a.referredUsers||[]).length ? '<div style="margin-top:10px"><div style="font-size:11px;color:var(--txt3);margin-bottom:6px;font-weight:600;letter-spacing:.5px;text-transform:uppercase">Referred Users</div>'+(a.referredUsers||[]).map(function(u){return '<div style="font-size:12px;color:var(--txt2);padding:4px 0;border-bottom:1px solid var(--border2)">'+u.email+' · $'+u.monthlyValue+'/mo · joined '+u.joinedDate+'</div>';}).join('')+'</div>' : '')
-      +'</div>'
-    +'</div>';
+    return `<div class="card" style="margin-bottom:12px">
+      <div class="card-hd">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:42px;height:42px;border-radius:50%;background:var(--terra);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0">${a.name[0].toUpperCase()}</div>
+          <div><div style="font-size:15px;font-weight:600;color:var(--txt)">${a.name}</div>
+          <div style="font-size:12px;color:var(--txt3)">${a.platform||'No platform noted'} · ${a.commission||20}% commission</div></div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="copyAffLink('${link}')">📋 Copy Link</button>
+          <button class="btn btn-ghost" style="font-size:11px;padding:4px 9px" onclick="openLogReferral('${a.id}')">+ Log Referral</button>
+          ${owed>0?`<button class="btn btn-ghost" style="font-size:11px;padding:4px 9px;color:var(--sage)" onclick="payAffiliate('${a.id}')">Pay $${Math.round(owed)}</button>`:''}
+          <button class="btn btn-ghost" style="font-size:11px;padding:4px 9px;color:var(--terra)" onclick="removeAffiliate('${a.id}')">🗑</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
+          <div style="background:var(--sand);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Referred</div><div style="font-family:Fraunces,serif;font-size:20px;color:var(--txt)">${referred}</div></div>
+          <div style="background:var(--sand);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Monthly Comm.</div><div style="font-family:Fraunces,serif;font-size:20px;color:var(--gold)">$${Math.round(monthlyComm)}</div></div>
+          <div style="background:${owed>0?'rgba(107,143,113,.1)':'var(--sand)'};border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Owed</div><div style="font-family:Fraunces,serif;font-size:20px;color:${owed>0?'var(--sage)':'var(--txt3)'}">$${Math.round(owed)}</div></div>
+          <div style="background:rgba(196,105,58,.08);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--txt3);margin-bottom:3px">Paid</div><div style="font-family:Fraunces,serif;font-size:20px;color:var(--terra)">$${Math.round(a.totalPaid||0)}</div></div>
+        </div>
+        <div style="background:var(--sand);border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;margin-bottom:${(a.referredUsers||[]).length?'10px':'0'}">
+          <div style="font-size:11px;color:var(--txt3);flex-shrink:0">Link:</div>
+          <div style="font-size:12px;color:var(--terra);font-family:monospace;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${link}</div>
+          <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;flex-shrink:0" onclick="copyAffLink('${link}')">Copy</button>
+        </div>
+        ${(a.referredUsers||[]).length?`<div><div style="font-size:11px;color:var(--txt3);margin-bottom:6px;font-weight:600;letter-spacing:.5px;text-transform:uppercase">Referred Users</div>${(a.referredUsers||[]).map(u=>`<div style="font-size:12px;color:var(--txt2);padding:5px 0;border-bottom:1px solid var(--border2);display:flex;justify-content:space-between"><span>${u.email}</span><span style="color:var(--sage)">$${u.commission||0}/mo · ${u.joinedDate}</span></div>`).join('')}</div>`:''}
+      </div>
+    </div>`;
   }).join('');
+  list.innerHTML=html;
 }
 
 function copyAffLink(link) {
-  navigator.clipboard.writeText(link).then(()=>toast('Affiliate link copied! ✓'));
+  if(navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(link).then(()=>toast('Affiliate link copied! ✓')).catch(()=>_fallbackCopy(link));
+  } else {
+    _fallbackCopy(link);
+  }
+}
+function _fallbackCopy(text) {
+  const ta=document.createElement('textarea');
+  ta.value=text;ta.style.cssText='position:fixed;top:0;left:0;opacity:0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');toast('Link copied! ✓');}catch(e){toast('Copy failed — select the link manually');}
+  document.body.removeChild(ta);
 }
 
-function logAffReferral(affId) {
-  const a = (cData.affiliates||[]).find(x=>x.id===affId);
-  if(!a){return;}
-  const email = prompt('Referred user email address:');
-  if(!email||!email.includes('@')) return;
-  const plan = prompt('Their plan (free/pro/business/cohost):', 'pro') || 'pro';
-  const monthlyValue = plan==='cohost'?299:plan==='business'?199:79;
-  if(!a.referredUsers) a.referredUsers=[];
-  a.referredUsers.push({email,plan,monthlyValue,joinedDate:new Date().toISOString().slice(0,10)});
-  const monthly = monthlyValue * (a.commission/100);
-  a.totalEarned = (a.totalEarned||0) + monthly;
-  saveUserData(cUid,cData);
-  renderAffiliates();
-  toast('Referral logged! '+a.name+' earns $'+monthly.toFixed(2)+'/mo for this user');
-}
+function logAffReferral(affId) { openLogReferral(affId); }
 
 function payAffiliate(affId) {
   const a = (cData.affiliates||[]).find(x=>x.id===affId);
   if(!a) return;
   const owed = (a.totalEarned||0)-(a.totalPaid||0);
   if(owed<=0){toast('Nothing owed');return;}
-  if(!confirm('Mark $'+Math.round(owed)+' as paid to '+a.name+'?')) return;
-  a.totalPaid = (a.totalPaid||0) + owed;
+  if(!confirm('Mark $'+Math.round(owed)+' as paid to '+a.name+'? This cannot be undone.')) return;
+  a.totalPaid = (a.totalPaid||0)+owed;
   saveUserData(cUid,cData);
   renderAffiliates();
   toast('$'+Math.round(owed)+' marked as paid to '+a.name+' ✓');
 }
 
 function removeAffiliate(affId) {
-  if(!confirm('Remove this affiliate?')) return;
+  if(!confirm('Remove this affiliate? All referral history will be lost.')) return;
   cData.affiliates=(cData.affiliates||[]).filter(x=>x.id!==affId);
   saveUserData(cUid,cData);
   renderAffiliates();
   toast('Affiliate removed');
+}
+
+// ════════════════════════════════════════════
+//  HEARTBEAT MONITOR — Flag late cleaner check-ins
+// ════════════════════════════════════════════
+var _heartbeatTimer = null;
+
+function startHeartbeatMonitor() {
+  // Run once immediately, then every 60 seconds
+  checkCleanerHeartbeats();
+  if(_heartbeatTimer) clearInterval(_heartbeatTimer);
+  _heartbeatTimer = setInterval(checkCleanerHeartbeats, 60000);
+}
+
+function checkCleanerHeartbeats() {
+  if(!cData) return;
+  const now = new Date();
+  const today = now.toISOString().slice(0,10);
+  const jobs = (cData.jobs||[]).filter(j=>j.date===today && j.status==='in_progress');
+  if(!jobs.length) return;
+
+  jobs.forEach(function(j) {
+    if(!j.startedAt) return;
+    const startedMs = new Date(j.startedAt).getTime();
+    const lateMs = 15 * 60 * 1000; // 15 minutes
+    const elapsed = now.getTime() - startedMs;
+
+    // Check for last heartbeat ping (set by cleaner job card)
+    const lastPing = j.lastHeartbeat ? new Date(j.lastHeartbeat).getTime() : startedMs;
+    const silentMs = now.getTime() - lastPing;
+
+    if(silentMs > lateMs && !j.heartbeatAlerted) {
+      j.heartbeatAlerted = true;
+      j.heartbeatLateMin = Math.round(silentMs / 60000);
+      saveUserData(cUid, cData);
+      // Show alert banner
+      toast(`⚠️ ${j.cleanerName} hasn't checked in for ${j.heartbeatLateMin} min — ${j.propName}`);
+      // Update job board if visible
+      if(document.getElementById('page-marketplace')?.classList.contains('active')) {
+        renderMarketplace();
+      }
+    }
+  });
+}
+
+// Called from cleaner job card to update heartbeat
+function pingCleanerHeartbeat(jobId) {
+  try {
+    const updates = JSON.parse(localStorage.getItem('hh_job_updates')||'[]');
+    updates.push({jobId, action:'heartbeat', time:new Date().toISOString()});
+    localStorage.setItem('hh_job_updates', JSON.stringify(updates));
+  } catch(e){}
+}
+
+// ════════════════════════════════════════════
+//  DYNAMIC CHECKLISTS — Residential vs Turno STR
+// ════════════════════════════════════════════
+const CHECKLIST_RESIDENTIAL = {
+  title: '🏠 Residential Cleaning Checklist',
+  sections: [
+    {name:'Kitchen', items:['Wipe all countertops and backsplash','Clean stovetop and burners','Wipe microwave inside and out','Clean sink, faucet, and drain','Wipe cabinet doors and handles','Clean inside of oven if needed','Empty and reline trash can','Sweep and mop floor','Restock dish soap and sponge']},
+    {name:'Bathrooms', items:['Scrub toilet inside and out','Clean sink and polish faucet','Scrub shower or bathtub','Wipe mirror and all surfaces','Replace toilet paper','Restock hand soap','Empty trash and reline','Sweep and mop floor']},
+    {name:'Bedrooms', items:['Dust all surfaces and furniture','Wipe windowsills','Vacuum carpet or sweep/mop','Empty all trash bins','Make beds if linens are out','Check closets and under bed']},
+    {name:'Living Areas', items:['Dust furniture and shelves','Wipe TV screen and remotes','Vacuum all upholstery','Sweep or vacuum floors','Mop hard floors','Empty trash','Wipe light switches and door handles']},
+    {name:'Final', items:['Wipe front door and entry','Check all lights work','Lock windows and doors','Leave client feedback card if provided']},
+  ]
+};
+
+const CHECKLIST_TURNO_STR = {
+  title: '🔄 Turno STR Turnover Checklist',
+  sections: [
+    {name:'Kitchen', items:['Remove all dishes and wash thoroughly','Wipe countertops and backsplash','Clean inside microwave','Wipe stovetop and burners','Clean oven if needed','Empty and wipe fridge — remove leftovers','Wipe refrigerator exterior','Clean sink and polish faucet','Empty and reline trash','Sweep and mop floor','Restock coffee/tea/sugar','Restock dish soap, sponge, paper towels']},
+    {name:'Bathrooms', items:['Scrub and disinfect toilet','Clean sink and wipe mirror','Scrub shower/bathtub','Clean shower glass or curtain','Replace toilet paper (full roll)','Restock shampoo, conditioner, body wash','Replace hand soap if low','Wash bath mats','Replace used towels with fresh set','Empty trash and reline','Sweep and mop floor']},
+    {name:'Bedrooms', items:['Strip all bed linens','Make bed with fresh linens — tight corners','Fluff and arrange all pillows','Check under bed for guest items','Wipe furniture and surfaces','Clean mirrors','Empty all trash bins','Vacuum or sweep floors','Check closets — remove any guest items','Restock extra blankets']},
+    {name:'Living Areas', items:['Dust all surfaces','Wipe TV screen and remote','Vacuum all upholstery','Sweep or vacuum floors','Mop hard floors','Empty trash','Wipe light switches and door handles','Check for damage or missing items']},
+    {name:'STR Specific', items:['Restock welcome amenities','Leave house manual in visible spot','Check door code still works','Stage property for next guest photos','Report any damage via app before leaving','Take completion photos for Photo Vault']},
+  ]
+};
+
+function getChecklistForJobType(jobType) {
+  if(jobType==='residential') return CHECKLIST_RESIDENTIAL;
+  if(jobType==='turno'||jobType==='turnover'||jobType==='deep') return CHECKLIST_TURNO_STR;
+  return CHECKLIST_TURNO_STR; // default to STR
+}
+
+// ════════════════════════════════════════════
+//  CONTRACTOR MANAGEMENT — Pay rates & service areas
+// ════════════════════════════════════════════
+function editContractorRate(cleanerId) {
+  const c = (cData.cleaners||[]).find(x=>x.id===cleanerId);
+  if(!c) return;
+  const existing = document.getElementById('edit-contractor-modal');
+  if(existing) existing.remove();
+
+  const m = document.createElement('div');
+  m.id='edit-contractor-modal';
+  m.className='modal-bg open';
+  const propOptions = (cData.properties||[]).map(p=>
+    `<option value="${p.id}" ${(c.propIds||[]).includes(p.id)?'selected':''}>${p.emoji||'🏠'} ${p.name}</option>`
+  ).join('');
+
+  m.innerHTML=`<div class="modal" style="max-width:460px">
+    <h2>✏️ Edit Contractor — ${c.name}</h2>
+    <div class="g2">
+      <div class="fi"><label>Hourly Rate ($)</label><input id="ec-rate" type="number" value="${c.rate||0}" min="0" step="0.5" placeholder="25.00"></div>
+      <div class="fi"><label>Job Flat Rate ($) <span style="font-weight:400;color:var(--txt3)">(if flat fee)</span></label><input id="ec-flat" type="number" value="${c.flatRate||''}" min="0" step="5" placeholder="Leave blank for hourly"></div>
+    </div>
+    <div class="fi"><label>Service Area(s)</label><input id="ec-area" value="${c.area||''}" placeholder="Downtown Dallas, Irving, Garland"></div>
+    <div class="fi"><label>Specialties</label><input id="ec-skills" value="${c.skills||''}" placeholder="Deep clean, turnover, laundry, residential"></div>
+    <div class="fi"><label>Job Types</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+        ${['Residential','Turno STR','Deep Clean','Move-In/Out','Post-Construction'].map(t=>`
+          <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--txt2);cursor:pointer">
+            <input type="checkbox" value="${t}" ${(c.jobTypes||[]).includes(t)?'checked':''} style="accent-color:var(--terra)"> ${t}
+          </label>`).join('')}
+      </div>
+    </div>
+    <div class="fi"><label>Properties Assigned</label>
+      <select id="ec-props" multiple style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:8px 12px;min-height:80px;font-size:13px;color:var(--txt)">${propOptions}</select>
+    </div>
+    <div class="fi"><label>Notes</label><textarea id="ec-notes" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:8px;padding:10px;font-size:13px;color:var(--txt);font-family:'DM Sans',sans-serif;min-height:60px">${c.notes||''}</textarea></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="document.getElementById('edit-contractor-modal').remove()">Cancel</button>
+      <button class="btn btn-pri" onclick="saveContractorEdit('${cleanerId}')">Save Changes</button>
+    </div>
+  </div>`;
+  document.body.appendChild(m);
+}
+
+function saveContractorEdit(cleanerId) {
+  const c = (cData.cleaners||[]).find(x=>x.id===cleanerId);
+  if(!c) return;
+  c.rate = parseFloat(document.getElementById('ec-rate')?.value)||c.rate||0;
+  const flat = parseFloat(document.getElementById('ec-flat')?.value);
+  c.flatRate = isNaN(flat)?null:flat;
+  c.area = cleanInput(document.getElementById('ec-area')?.value.trim());
+  c.skills = cleanInput(document.getElementById('ec-skills')?.value.trim());
+  c.notes = cleanInput(document.getElementById('ec-notes')?.value.trim());
+  // Job types from checkboxes
+  c.jobTypes = [...document.querySelectorAll('#edit-contractor-modal input[type=checkbox]:checked')].map(cb=>cb.value);
+  // Assigned properties
+  const propSel = document.getElementById('ec-props');
+  c.propIds = propSel?[...propSel.selectedOptions].map(o=>o.value).filter(Boolean):c.propIds||[];
+  saveUserData(cUid,cData);
+  document.getElementById('edit-contractor-modal')?.remove();
+  renderMarketplace();
+  toast(c.name+'\'s details updated ✓');
+}
+
+// ════════════════════════════════════════════
+//  AUTO-SAVE DRAFTS — prevent data loss on refresh
+// ════════════════════════════════════════════
+const DRAFT_KEY = 'hh_form_drafts';
+
+function saveDraft(formId, data) {
+  try {
+    const drafts = JSON.parse(localStorage.getItem(DRAFT_KEY)||'{}');
+    drafts[formId] = {data, ts:Date.now()};
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(drafts));
+  } catch(e){}
+}
+
+function loadDraft(formId) {
+  try {
+    const drafts = JSON.parse(localStorage.getItem(DRAFT_KEY)||'{}');
+    const d = drafts[formId];
+    if(d && (Date.now()-d.ts) < 24*60*60*1000) return d.data; // 24hr expiry
+  } catch(e){}
+  return null;
+}
+
+function clearDraft(formId) {
+  try {
+    const drafts = JSON.parse(localStorage.getItem(DRAFT_KEY)||'{}');
+    delete drafts[formId];
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(drafts));
+  } catch(e){}
+}
+
+function wireBookingDraftSave() {
+  const fields = ['mb-guest','mb-email','mb-cin','mb-cout','mb-nguests','mb-price','mb-notes','mb-source','mb-lead-type'];
+  fields.forEach(function(id) {
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('input', function() {
+      const d = {};
+      fields.forEach(function(fid){const f=document.getElementById(fid);if(f)d[fid]=f.value;});
+      saveDraft('booking', d);
+    });
+  });
+  // Restore draft if any
+  const draft = loadDraft('booking');
+  if(draft) {
+    const hasMeaningful = draft['mb-guest']||draft['mb-cin'];
+    if(hasMeaningful) {
+      fields.forEach(function(fid){const f=document.getElementById(fid);if(f&&draft[fid])f.value=draft[fid];});
+    }
+  }
 }
 
 // Check referral code on app load (called in bootApp)
