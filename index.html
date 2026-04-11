@@ -32,7 +32,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <!-- Content Security Policy — tighten in production by removing 'unsafe-inline' once styles are extracted -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co https://api.anthropic.com https://api.resend.com; frame-src 'none'; object-src 'none'; base-uri 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co https://api.anthropic.com https://api.resend.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; frame-src 'none'; object-src 'none'; base-uri 'self';">
 <!-- ★ Global brand variable — change this one line to white-label the entire UI -->
 <script>window.BRAND_NAME = 'CSO Property Services'; window.BRAND_SHORT = 'CSO';</script>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
@@ -4857,18 +4857,26 @@ function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg
 function showLandingPage() {
   const lp = document.getElementById('screen-landing');
   const dw = document.getElementById('app');
-  const nav = document.getElementById('mobile-bottom-nav');
   const onboarding = document.getElementById('onboarding-wizard-modal');
-  const screenLogin = document.getElementById('screen-login');
-  const screenSignup = document.getElementById('screen-signup');
-  const screenOnboard = document.getElementById('screen-onboard');
   if (dw) { dw.style.display = 'none'; dw.classList.remove('visible'); }
-  if (nav) nav.style.display = 'none';
   if (onboarding) onboarding.style.display = 'none';
-  if (screenLogin) screenLogin.style.display = 'none';
-  if (screenSignup) screenSignup.style.display = 'none';
-  if (screenOnboard) screenOnboard.style.display = 'none';
-  if (lp) { lp.style.display = 'block'; lp.style.visibility = 'visible'; lp.style.zIndex = '1'; }
+  // Fully hide ALL auth screens — clear pointerEvents and visibility
+  // so they don't block clicks on the landing page underneath
+  ['login','signup','onboard','forgot','reset'].forEach(s => {
+    const el = document.getElementById('screen-'+s);
+    if (el) {
+      el.style.display = 'none';
+      el.style.visibility = 'hidden';
+      el.style.pointerEvents = 'none';
+      el.style.zIndex = '-1';
+    }
+  });
+  if (lp) {
+    lp.style.display = 'block';
+    lp.style.visibility = 'visible';
+    lp.style.pointerEvents = 'auto';
+    lp.style.zIndex = '1';
+  }
   document.body.style.display = 'block';
   window.scrollTo(0,0);
 }
@@ -4876,23 +4884,16 @@ function showLandingPage() {
 function showDashboard() {
   const lp = document.getElementById('screen-landing');
   const dw = document.getElementById('app');
-  const nav = document.getElementById('mobile-bottom-nav');
   const onboarding = document.getElementById('onboarding-wizard-modal');
   if (lp) lp.style.display = 'none';
   if (dw) dw.style.display = 'block';
-  if (nav) nav.style.display = 'grid'; // Mobile nav uses grid display
   if (onboarding) onboarding.style.display = 'none';
-  document.body.style.display = 'block'; // Force body to show
-  
-  // Ensure dashboard-wrap is visible
-  const dashboardWrap = document.getElementById('dashboard-wrap');
-  if (dashboardWrap) dashboardWrap.style.display = 'flex';
-  
-  // Show Admin tabs for owner role
-  if (cUser && cUser.role === 'owner') {
-    const adminTabs = document.querySelectorAll('.sb-item[data-admin="true"]');
-    adminTabs.forEach(tab => tab.style.display = 'flex');
-  }
+  // Also fully clear all auth screen overlays so nothing blocks the app
+  ['login','signup','onboard','forgot','reset'].forEach(s => {
+    const el = document.getElementById('screen-'+s);
+    if (el) { el.style.display='none'; el.style.visibility='hidden'; el.style.pointerEvents='none'; el.style.zIndex='-1'; }
+  });
+  document.body.style.display = 'block';
 }
 
 // ════════════════════════════════════════════
