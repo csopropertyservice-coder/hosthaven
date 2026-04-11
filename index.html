@@ -4465,11 +4465,7 @@ const loadUserData = async (uid) => {
       .select('data')
       .eq('user_id', uid)
       .eq('data_type', 'main')
-      .single()
-      .catch(e => {
-        sbHandleError(e, 'loadUserData');
-        return { data: null, error: e };
-      });
+      .single();
     if (error) {
       sbHandleError(error, 'loadUserData');
       return null;
@@ -4536,17 +4532,17 @@ async function syncToSupabase(uid, d) {
       contentHub:        d.contentHub||[],
       softwareMode:      d.softwareMode||false
     };
-    const up1 = await sb.from('user_data').upsert({
+    let up1; try { up1 = await sb.from('user_data').upsert({
       user_id: uid,
       data_type: 'main',
       data: dataToSync,
       updated_at: new Date().toISOString()
-    }, {onConflict:'user_id,data_type'}).catch(e => ({ error: e }));
+    }, {onConflict:'user_id,data_type'}); } catch(e) { up1 = { error: e }; }
     if (up1.error) {
       sbHandleError(up1.error, 'sync user_data');
       return;
     }
-    const up2 = await sb.from('profiles').upsert({id:uid, plan:d.plan, updated_at:new Date().toISOString()}, {onConflict:'id'}).catch(e => ({ error: e }));
+    let up2; try { up2 = await sb.from('profiles').upsert({id:uid, plan:d.plan, updated_at:new Date().toISOString()}, {onConflict:'id'}); } catch(e) { up2 = { error: e }; }
     if (up2.error) {
       sbHandleError(up2.error, 'sync profiles');
       return;
@@ -4558,10 +4554,7 @@ async function syncToSupabase(uid, d) {
 
 async function loadFromSupabase(uid) {
   try {
-    const {data, error} = await sb.from('user_data').select('data').eq('user_id', uid).eq('data_type','main').maybeSingle().catch(e => {
-      sbHandleError(e, 'loadFromSupabase');
-      return { data: null, error: e };
-    });
+    const {data, error} = await sb.from('user_data').select('data').eq('user_id', uid).eq('data_type','main').maybeSingle();
     if (error) {
       sbHandleError(error, 'loadFromSupabase');
       return null;
@@ -4575,9 +4568,7 @@ async function loadFromSupabase(uid) {
 
 async function syncPlanToSupabase(uid, plan) {
   try {
-    await sb.from('profiles').upsert({id:uid, plan, updated_at: new Date().toISOString()}, {onConflict:'id'}).catch(e => {
-      sbHandleError(e, 'syncPlanToSupabase');
-    });
+    await sb.from('profiles').upsert({id:uid, plan, updated_at: new Date().toISOString()}, {onConflict:'id'});
   } catch(e) {
     sbHandleError(e, 'syncPlanToSupabase');
   }
@@ -5016,7 +5007,7 @@ async function checkAdminStatus(userEmail) {
     if (profile && (profile.plan === 'is_admin' || profile.role === 'admin' || profile.role === 'is_admin')) {
       isAdmin = true;
       // Fix the plan value to business while we're at it
-      await sb.from('profiles').update({ plan: 'business', role: 'admin' }).eq('id', cUid).catch(() => {});
+      try { await sb.from('profiles').update({ plan: 'business', role: 'admin' }).eq('id', cUid); } catch(e) {}
       return true;
     }
   } catch(e) {}
@@ -14710,7 +14701,8 @@ async function renderPlatformProfitDashboard(){
   try{
     let rows=[];let fromSupabase=false;
     if(typeof sb!=='undefined'){
-      const{data,error}=await sb.from('platform_earnings').select('uid,job_id,amount,provider_id,created_at').order('created_at',{ascending:false}).catch(e=>({data:null,error:e}));
+      let _peRes; try { _peRes = await sb.from('platform_earnings').select('uid,job_id,amount,provider_id,created_at').order('created_at',{ascending:false}); } catch(e) { _peRes = {data:null,error:e}; }
+      const{data,error}=_peRes||{data:null,error:null};
       if(!error&&data){rows=data;fromSupabase=true;}
     }
     if(!fromSupabase){
@@ -14971,7 +14963,7 @@ function csoInstallScalingFeatures(){
 <!-- PREMIUM WIDGETS -->
 <div id="premium-toast-container"></div>
 
-<button id="shadow-support-toggle" onclick="toggleShadowSupport()" title="Shadow Support AI">🤖</button>
+<button id="shadow-support-toggle" onclick="toggleShadowSupport()" title="Shadow Support AI">💬</button>
 <div id="shadow-support-chat">
   <div class="ss-header">
     <div class="ss-header-title"><span class="health-dot"></span>Shadow Support AI</div>
