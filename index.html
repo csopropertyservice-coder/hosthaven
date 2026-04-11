@@ -247,7 +247,7 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt);
 .shell { overflow:hidden;display:flex;flex:1;background:var(--bg); }
 
 /* SIDEBAR */
-.sidebar { width:230px;min-width:230px;background:var(--sb-bg);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;height:100dvh;overflow-y:auto;transition:background .3s; }
+.sidebar { width:230px;min-width:230px;background:var(--sb-bg);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;height:100dvh;overflow-y:auto;transition:width .25s ease,min-width .25s ease,background .3s; }
 @media(max-width:768px){
   .sidebar { position:fixed;left:-230px;top:0;bottom:0;z-index:200;transition:left .3s,background .3s; }
   .sidebar.open { left:0; }
@@ -5355,8 +5355,12 @@ function finishOnboard(){
 // ════════════════════════════════════════════
 const titles={dashboard:'Dashboard',properties:'Properties',bookings:'Bookings',messages:'Messages',pricing:'Nightly Rates',cleaning:'Tasks',staff:'Staff Portal',marketplace:'Cleaner Marketplace',workorders:'Work Orders',inventory:'Inventory',content_hub:'Content Hub',vendor_mgmt:'Vendor Management',cohost_cmd:'Command Center',cohost_earnings:'Earnings Dashboard',owners:'Owner Management',crm:'Guest CRM',payouts:'Payout Ledger',photovault:'Photo Vault',qrmanual:'QR House Manual',aihours:'AI Office Hours',affiliates:'Affiliate Program',checkininsurance:'Check-in Insurance',rentals:'Equipment Rentals',ical:'iCal Sync',templates:'Message Templates',loyalty:'Guest Loyalty',pricing_opt:'Pricing Optimizer',scorecards:'Property Scorecards',concierge:'Concierge',upsell:'Upsell Portal',directbook:'Direct Booking Kit',website:'Website Builder',portal:'Guest Portal',analytics:'Analytics',reports:'Reports',reviews:'Reviews',expenses:'Expenses',damage:'Damage Claims',blacklist:'Guest Blacklist',settings:'Settings',help:'Help Center',team:'Team Access',admin:'Admin Panel',automations:'Automations'};
 function nav(id,el){
-  // Reset scroll to top for every tab navigation
+  // Reset ALL scroll containers to top on every tab navigation
   window.scrollTo(0,0);
+  const contentEl = document.querySelector('.content');
+  if(contentEl) contentEl.scrollTop = 0;
+  const mainArea = document.querySelector('.main-area');
+  if(mainArea) mainArea.scrollTop = 0;
   
   // Navigation guard - if no user is logged in, redirect to landing page
   if(!cUid || !cUser) {
@@ -14945,7 +14949,10 @@ function csoInstallScalingFeatures(){
 <div id="shadow-support-chat">
   <div class="ss-header">
     <div class="ss-header-title"><span class="health-dot"></span>Shadow Support AI</div>
-    <button class="ss-close" onclick="toggleShadowSupport()">✕</button>
+    <div style="display:flex;align-items:center;gap:6px">
+      <button onclick="toggleSelfHealingMonitor()" title="Self-Healing Monitor" style="background:none;border:none;cursor:pointer;font-size:14px;opacity:.6;padding:2px 4px" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.6'">🛡️</button>
+      <button class="ss-close" onclick="toggleShadowSupport()">✕</button>
+    </div>
   </div>
   <div class="ss-messages" id="ss-messages">
     <div class="ss-msg bot">👋 Ask me anything about your properties, bookings, revenue, guests, or tasks!<br><br>Try: <em>"What's my revenue this month?"</em> or <em>"Which property has the most bookings?"</em><br><br><span style="font-size:11px;opacity:.7">Add your Claude API key in Settings for full AI answers.</span></div>
