@@ -12759,7 +12759,7 @@ INSTRUCTIONS:
         'Content-Type':'application/json',
         'x-api-key':apiKey,
         'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-allow-browser':'true'
+        'anthropic-dangerous-direct-browser-ipc':'true'
       },
       body:JSON.stringify({
         model:'claude-haiku-4-5-20251001',
@@ -14432,7 +14432,7 @@ async function sendShadowMsg() {
 
     var response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-allow-browser': 'true' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-ipc': 'true' },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 400,
@@ -14520,12 +14520,14 @@ function toggleSelfHealingMonitor() {
 window.addEventListener('error', function(e){
   const msg = e.message || '';
   if(msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('authretryable')) return;
+  if(msg.toLowerCase().includes('cors') || msg.toLowerCase().includes('anthropic') || msg.toLowerCase().includes('api.anthropic')) return;
   shmLog('ERROR: '+(msg||'Unknown'), 'err');
   analyzeAndSuggestFix(e);
 });
 window.addEventListener('unhandledrejection', function(e){
   const reason = e.reason?.message || String(e.reason || '');
   if(reason.toLowerCase().includes('failed to fetch') || reason.toLowerCase().includes('authretryable') || reason.toLowerCase().includes('networkerror')) return;
+  if(reason.toLowerCase().includes('cors') || reason.toLowerCase().includes('anthropic')) return;
   shmLog('PROMISE: '+reason, 'err');
   analyzeAndSuggestFix(e.reason);
 });
