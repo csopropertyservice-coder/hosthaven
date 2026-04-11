@@ -1063,11 +1063,17 @@ select{color:var(--txt)!important;}
     <div class="auth-title">Welcome back</div>
     <div class="auth-sub">Sign in to manage your properties</div>
     <div class="auth-err" id="login-err"></div>
-    <div class="fi"><label>Email</label><input id="login-email" type="email" placeholder="you@example.com" value="" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <div class="fi"><label>Password</label><input id="login-pw" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="fi"><label>Email</label><input id="login-email" type="email" placeholder="you@example.com" value="" onkeydown="if(event.key==='Enter')doLogin()" autocomplete="email"></div>
+    <div class="fi"><label>Password</label><input id="login-pw" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" autocomplete="current-password"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:-4px 0 12px">
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:var(--txt2)">
+        <input type="checkbox" id="login-remember" style="width:15px;height:15px;accent-color:var(--terra);cursor:pointer" checked>
+        Remember me
+      </label>
+      <a onclick="showForgotPassword()" style="color:var(--txt3);font-size:12px;cursor:pointer">Forgot password?</a>
+    </div>
     <button class="btn btn-pri btn-w" onclick="doLogin()">Sign In →</button>
     <div class="auth-switch">No account? <a onclick="showScreen('signup')">Create one free</a> · <a onclick="showLandingPage()">Back to home</a></div>
-    <div class="auth-switch" style="margin-top:6px"><a onclick="showForgotPassword()" style="color:var(--txt3);font-size:12px">Forgot password?</a></div>
     <div class="auth-divider">or</div>
     <button class="btn btn-dark btn-w" onclick="loginDemo()">🚀 Launch Demo</button>
   </div>
@@ -4618,6 +4624,20 @@ function showScreen(name) {
       el.style.pointerEvents = 'none';
     }
   });
+  // Pre-fill remembered email when showing login screen
+  if(name === 'login') {
+    try {
+      const remembered = localStorage.getItem('hh_remembered_email');
+      const emailEl = document.getElementById('login-email');
+      const rememberEl = document.getElementById('login-remember');
+      if(remembered && emailEl) {
+        emailEl.value = remembered;
+        if(rememberEl) rememberEl.checked = true;
+        // Focus password field since email is pre-filled
+        setTimeout(() => document.getElementById('login-pw')?.focus(), 100);
+      }
+    } catch(e) {}
+  }
   const app = document.getElementById('app');
   if(app) app.classList.remove('visible');
   window.scrollTo(0,0);
@@ -4663,7 +4683,7 @@ async function doResetPassword() {
   const btn = document.querySelector('#screen-reset .btn-pri');
   if(btn){btn.textContent='Updating…';btn.disabled=true;btn.style.opacity='.7';}
   try {
-    const {error} = await sb.auth.updateUser({password: pw}).catch((e)=>({error:e}));
+    const {error} = await sb.auth.updateUser({password: pw});
     if(error) {
       sbHandleError(error, 'updateUser password');
       throw error;
@@ -4700,6 +4720,7 @@ function scrollToSection(id){
 async function doLogin() {
   const email=document.getElementById('login-email').value.trim().toLowerCase();
   const pw=document.getElementById('login-pw').value;
+  const remember=document.getElementById('login-remember')?.checked !== false;
   if(!email||!pw){showErr('login-err','Please enter email and password');return;}
   const loginBtn = document.querySelector('#screen-login .btn-pri');
   if(loginBtn){loginBtn.textContent='Signing in…';loginBtn.disabled=true;loginBtn.style.opacity='.7';}
@@ -4709,6 +4730,11 @@ async function doLogin() {
       if (!String(error.message||'').toLowerCase().includes('invalid login')) sbHandleError(error, 'signIn');
       throw error;
     }
+    // Save email for remember me
+    try {
+      if(remember) { localStorage.setItem('hh_remembered_email', email); }
+      else { localStorage.removeItem('hh_remembered_email'); }
+    } catch(e) {}
     const user = data.user;
     cUid = user.id;
     cUser = {email:user.email, name:user.user_metadata?.full_name||email.split('@')[0], role:user.user_metadata?.role||'user'};
@@ -4723,7 +4749,7 @@ async function doLogin() {
     getUserData(cUid);
     // Sync plan
     try {
-      const {data:profile, error: profErr} = await sb.from('profiles').select('plan,full_name').eq('id',cUid).single().catch((e) => ({ data: null, error: e }));
+      let _pRes; try { _pRes = await sb.from('profiles').select('plan,full_name').eq('id',cUid).single(); } catch(e) { _pRes = {data:null,error:e}; } const {data:profile, error:profErr} = _pRes||{data:null,error:null};
       if (profErr) sbHandleError(profErr, 'doLogin profiles');
       if(profile){cData.plan=profile.plan||cData.plan;if(profile.full_name)cUser.name=profile.full_name;saveUserData(cUid,cData);}
     } catch(e){ sbHandleError(e, 'doLogin profiles try'); }
@@ -4946,7 +4972,7 @@ async function bootApp() {
     }
     getUserData(cUid);
     try {
-      const {data:profile, error: bootProfErr} = await sb.from('profiles').select('plan,full_name').eq('id',cUid).single().catch((e) => ({ data: null, error: e }));
+      let _bpRes; try { _bpRes = await sb.from('profiles').select('plan,full_name').eq('id',cUid).single(); } catch(e) { _bpRes = {data:null,error:e}; } const {data:profile, error:bootProfErr} = _bpRes||{data:null,error:null};
       if (bootProfErr) sbHandleError(bootProfErr, 'boot profiles');
       if(profile) {
         cData.plan = profile.plan || cData.plan;
@@ -5636,7 +5662,7 @@ async function upgradePlan(uid, email, name, plan) {
     return;
   }
   try {
-    const upr = await sb.from('profiles').upsert({id:uid, email, plan, updated_at:new Date().toISOString()},{onConflict:'id'}).catch((e)=>({error:e}));
+    let upr; try { upr = await sb.from('profiles').upsert({id:uid, email, plan, updated_at:new Date().toISOString()},{onConflict:'id'}); } catch(e) { upr = {error:e}; }
     if (upr.error) {
       sbHandleError(upr.error, 'upgradePlan');
       throw upr.error;
@@ -6333,7 +6359,7 @@ async function inviteTeamMember() {
   if(btn){btn.textContent='Sending…';btn.disabled=true;}
   try {
     const token=Math.random().toString(36).slice(2)+Date.now().toString(36);
-    const insTeam = await sb.from('teams').insert({owner_id:cUid,member_id:cUid,member_email:email,member_name:name||email.split('@')[0],role,status:'pending',invite_token:token}).catch((e)=>({error:e}));
+    let insTeam; try { insTeam = await sb.from('teams').insert({owner_id:cUid,member_id:cUid,member_email:email,member_name:name||email.split('@')[0],role,status:'pending',invite_token:token}); } catch(e) { insTeam = {error:e}; }
     const error = insTeam.error;
     if(error&&!String(error.message||'').includes('unique')){ sbHandleError(error,'inviteTeam'); throw error; }
     closeModal('invite-team-modal');
@@ -6348,7 +6374,7 @@ async function inviteTeamMember() {
 async function removeTeamMember(id, email) {
   if(!confirm(`Remove ${email} from your team?`))return;
   try {
-    const delT = await sb.from('teams').delete().eq('id',id).catch((e)=>({error:e}));
+    let delT; try { delT = await sb.from('teams').delete().eq('id',id); } catch(e) { delT = {error:e}; }
     if(delT.error){ sbHandleError(delT.error,'removeTeam'); throw delT.error; }
     toast(`${email} removed from team`);
     renderTeam();
@@ -11078,7 +11104,7 @@ async function submitFeedback() {
     };
 
     // Store in Supabase feedback table
-    const {error} = await sb.from('feedback').insert([payload]).catch((e)=>({error:e}));
+    let feedbackRes; try { feedbackRes = await sb.from('feedback').insert([payload]); } catch(e) { feedbackRes = {error:e}; } const error = feedbackRes?.error;
 
     if(error && error.code !== '42P01') {
       sbHandleError(error, 'feedback insert');
@@ -14314,12 +14340,12 @@ async function processMarketplaceJob(jobId, amount, providerId) {
         platform_fee: tx.fee, provider_payout: tx.providerPayout,
         fee_pct: PLATFORM_FEE_PCT, status: 'completed',
         completed_at: new Date().toISOString()
-      }).eq('id', jobId).eq('uid', cUid).catch((e)=>({error:e}));
+      }).eq('id', jobId).eq('uid', cUid);
       if (ju.error) sbHandleError(ju.error, 'jobs update');
       const pe = await sb.from('platform_earnings').upsert({
         uid: cUid, job_id: jobId, amount: tx.fee,
         provider_id: providerId, created_at: new Date().toISOString()
-      }).catch((e)=>({error:e}));
+      });
       if (pe.error) sbHandleError(pe.error, 'platform_earnings');
       shmLog('Marketplace tax saved to Supabase', 'fix');
     }
