@@ -12755,7 +12755,12 @@ INSTRUCTIONS:
 
     const response = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':apiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-allow-browser':'true'
+      },
       body:JSON.stringify({
         model:'claude-haiku-4-5-20251001',
         max_tokens:600,
@@ -12775,7 +12780,16 @@ INSTRUCTIONS:
     _tourHistory.push({role:'assistant',content:reply});
 
   } catch(e) {
-    td.innerHTML = `Having trouble connecting to AI right now. Check your API key in <strong>Settings → AI Messaging</strong>, or browse the <strong>Help Center</strong> for step-by-step guides.`;
+    const errMsg = e?.message||'';
+    const isKeyErr = errMsg.includes('401') || errMsg.includes('invalid') || errMsg.includes('authentication');
+    const isCors = errMsg.includes('Failed to fetch') || errMsg.includes('NetworkError') || errMsg.includes('CORS');
+    if(isKeyErr) {
+      td.innerHTML = `Your API key looks incorrect. Go to <strong>Settings → AI Messaging</strong>, clear the key field, paste your key from <a href="https://console.anthropic.com" target="_blank" style="color:var(--terra)">console.anthropic.com</a>, and click <strong>Save Key</strong>.`;
+    } else if(isCors) {
+      td.innerHTML = `Browser security is blocking the AI connection. This is a known issue when calling the Anthropic API directly from a browser. <strong>Workaround:</strong> Make sure your API key starts with <code>sk-ant-</code>, then try again. If it persists, the Help Center has full feature guides that don't require AI.`;
+    } else {
+      td.innerHTML = `AI error: ${errMsg||'Unknown error'}. Check your API key in <strong>Settings → AI Messaging</strong>.`;
+    }
   }
 
   msgBox.scrollTop=msgBox.scrollHeight;
@@ -14418,7 +14432,7 @@ async function sendShadowMsg() {
 
     var response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-allow-browser': 'true' },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 400,
