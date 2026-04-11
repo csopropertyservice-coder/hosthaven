@@ -620,7 +620,7 @@ select{color:var(--txt)!important;}
 .premium-toast.success{border-left-color:var(--sage);}.premium-toast.error{border-left-color:#E53E3E;}
 .premium-toast.warning{border-left-color:var(--gold);}.premium-toast.info{border-left-color:var(--burgundy);}
 @keyframes premToastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
-#shadow-support-toggle{position:fixed;bottom:80px;right:20px;width:52px;height:52px;background:var(--gradient-button);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-xl);z-index:800;transition:all .3s;border:none;font-size:20px;color:#fff;}
+#shadow-support-toggle{position:fixed;bottom:80px;right:20px;width:48px;height:48px;background:var(--gradient-button);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-xl);z-index:800;transition:all .3s;border:none;font-size:20px;color:#fff;}
 #shadow-support-toggle:hover{transform:scale(1.1);box-shadow:var(--shadow-rose-gold);}
 #shadow-support-chat{position:fixed;bottom:80px;right:20px;width:340px;height:480px;background:var(--card);border:1px solid rgba(232,180,184,.3);border-radius:14px;display:none;flex-direction:column;box-shadow:var(--shadow-xl);z-index:800;overflow:hidden;}
 @media(max-width:480px){#shadow-support-chat{width:calc(100vw - 32px);right:16px;left:16px;}}
@@ -1124,7 +1124,10 @@ select{color:var(--txt)!important;}
     <!-- Plan badge -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <div style="font-size:12px;color:var(--txt3)">Setup Wizard</div>
-      <div id="ob-plan-badge" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--sand);color:var(--txt2)">Free Plan</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button onclick="openAITour()" style="background:var(--navy);color:#fff;border:none;border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:5px">🤖 Ask AI Guide</button>
+        <div id="ob-plan-badge" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--sand);color:var(--txt2)">Free Plan</div>
+      </div>
     </div>
     <!-- Step indicators — dynamic count -->
     <div class="ob-steps" id="ob-steps" style="margin-bottom:24px"></div>
@@ -1146,7 +1149,7 @@ select{color:var(--txt)!important;}
   <div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
 
   <!-- Mobile Bottom Nav -->
-  <nav id="mobile-bottom-nav" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--card);border-top:1px solid var(--border);grid-template-columns:repeat(5,1fr);padding:6px 0 max(6px,env(safe-area-inset-bottom))">
+  <nav id="mobile-bottom-nav" style="position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--card);border-top:1px solid var(--border);grid-template-columns:repeat(5,1fr);padding:6px 0 max(6px,env(safe-area-inset-bottom))">
     <div class="mob-nav-item" id="mob-nav-dashboard" onclick="nav('dashboard',this)"><div class="mob-ico">◈</div><div style="font-size:9px">Home</div></div>
     <div class="mob-nav-item" id="mob-nav-bookings" onclick="nav('bookings',this)"><div class="mob-ico">📅</div><div style="font-size:9px">Bookings</div></div>
     <div class="mob-nav-item" id="mob-nav-messages" onclick="nav('messages',this)"><div class="mob-ico">💬</div><div style="font-size:9px">Messages</div></div>
@@ -1155,7 +1158,7 @@ select{color:var(--txt)!important;}
   </nav>
 
   <!-- Floating AI Tour Guide button (visible on all pages) -->
-  <button id="ai-tour-fab" onclick="openAITour()" title="AI Tour Guide" style="position:fixed;bottom:70px;right:16px;width:48px;height:48px;border-radius:50%;background:var(--navy);color:#fff;border:none;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:199;display:none;align-items:center;justify-content:center;transition:transform .15s" onmouseenter="this.style.transform='scale(1.1)'" onmouseleave="this.style.transform='scale(1)'">🤖</button>
+  <button id="ai-tour-fab" onclick="openAITour()" title="AI Tour Guide" style="position:fixed;bottom:140px;right:20px;width:48px;height:48px;border-radius:50%;background:var(--navy);color:#fff;border:none;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:801;display:none;align-items:center;justify-content:center;transition:transform .15s" onmouseenter="this.style.transform='scale(1.1)'" onmouseleave="this.style.transform='scale(1)'">🤖</button>
   <div class="shell">
     <aside class="sidebar" id="sidebar">
       <div class="sb-logo-wrap">
@@ -5075,9 +5078,8 @@ async function launchApp(user) {
   const fab = document.getElementById('ai-tour-fab');
   if(fab) fab.style.display='flex';
 
-  // Show mobile bottom nav
-  const mobileNav = document.getElementById('mobile-bottom-nav');
-  if(mobileNav) mobileNav.style.display='grid';
+  // Mobile bottom nav — visibility controlled by CSS media query only
+  // (removing JS override that was forcing it visible on desktop)
 
   // Init content hub data store
   if(!cData.contentHub) cData.contentHub=[];
@@ -5108,20 +5110,19 @@ async function launchApp(user) {
       if(content){ content.style.opacity='1'; }
       safeRender(renderAll, 'renderAll-frame');
       csoInstallScalingFeatures(); // Feature 1-4 — wire all scaling features
-      // Restore last page after refresh — then clear so stale page doesn't persist on next login
+      // Restore last page on REFRESH only — not on fresh login
+      // Fresh login clears hh_last_page so user always lands on dashboard
       try {
         let lastPage = sessionStorage.getItem('hh_last_page');
         if(!lastPage) lastPage = localStorage.getItem('hh_last_page');
         if(lastPage && lastPage !== 'dashboard') {
           const pageEl = document.getElementById('page-'+lastPage);
           const navEl = document.querySelector(`[onclick*="nav('${lastPage}'"]`);
-          if(pageEl) {
-            nav(lastPage, navEl);
-          }
-          // Clear after consuming — prevents stale restore on next login
-          try{sessionStorage.removeItem('hh_last_page');}catch(e){}
-          try{localStorage.removeItem('hh_last_page');}catch(e){}
+          if(pageEl) nav(lastPage, navEl);
         }
+        // Always clear after consuming — ensures next login goes to dashboard
+        try{sessionStorage.removeItem('hh_last_page');}catch(e){}
+        try{localStorage.removeItem('hh_last_page');}catch(e){}
       } catch(e){}
       setTimeout(()=>{ updateWb(); renderPortal(); }, 300);
       // Auto sync iCal feeds in background
@@ -5284,6 +5285,10 @@ function startOnboard(user) {
   obStep=1;
   const plan = cData?.plan||'free';
   _obSteps = getObSteps(plan);
+
+  // Show AI Tour FAB during onboarding so users can ask questions
+  const fab = document.getElementById('ai-tour-fab');
+  if(fab) fab.style.display='flex';
 
   // Update plan badge
   const badge = document.getElementById('ob-plan-badge');
@@ -14162,7 +14167,28 @@ async function initAuth() {
   // onAuthStateChange handles the rest — suppress fetch errors from its internal retries
   sb.auth.onAuthStateChange(async function(event, session) {
     if(event === 'PASSWORD_RECOVERY') { showScreen('reset'); return; }
-    if(event === 'SIGNED_IN') return;
+    if(event === 'SIGNED_IN') {
+      // Session restored after refresh or token renewal — launch app if not already running
+      if(!_launched && session && session.user) {
+        _launched = true;
+        cUid = session.user.id;
+        cUser = {
+          email: session.user.email,
+          name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
+          role: session.user.user_metadata?.role || 'user'
+        };
+        try {
+          const data = await loadUserData(cUid);
+          cData = data || getLocalData(cUid);
+          if(!data) saveLocalData(cUid, cData);
+        } catch(e) {
+          if(!isNetworkError(e)) sbHandleError(e, 'SIGNED_IN loadUserData');
+          cData = getLocalData(cUid);
+        }
+        await launchApp(cUser);
+      }
+      return;
+    }
     if(event === 'INITIAL_SESSION') {
       if(session && session.user) {
         if(_launched) return;
@@ -14183,12 +14209,18 @@ async function initAuth() {
         }
         await launchApp(cUser);
       } else {
-        if(!_launched) showLandingPage();
+        // Delay before showing landing — Supabase sometimes fires INITIAL_SESSION
+        // with no session before the persisted refresh token is fully restored.
+        // The 800ms window lets the token restore and SIGNED_IN fire first.
+        if(!_launched) setTimeout(() => { if(!_launched) showLandingPage(); }, 800);
       }
     } else if(event === 'SIGNED_OUT') {
       const appVis = document.getElementById('app')?.classList.contains('visible');
       cUid = null; cData = null; cUser = null; isAdmin = false;
       document.getElementById('app')?.classList.remove('visible');
+      // Clear last page so next login always starts at dashboard
+      try{sessionStorage.removeItem('hh_last_page');}catch(e){}
+      try{localStorage.removeItem('hh_last_page');}catch(e){}
       if (appVis) {
         showScreen('login');
         try {
@@ -14544,22 +14576,10 @@ function showPremiumNotification(message, type) {
   setTimeout(function(){ t.style.cssText='opacity:0;transform:translateX(40px);transition:all .3s;'; setTimeout(function(){t.remove();},350); }, 3200);
 }
 
-// TOPBAR BUTTON INJECTION
+// TOPBAR BUTTON INJECTION — only inject SHM button for admin debugging
 function _injectPremiumButtons() {
-  var r = document.querySelector('.topbar-r');
-  if(!r) return;
-  if(!document.getElementById('shm-btn')){
-    var b1=document.createElement('button');
-    b1.id='shm-btn';b1.className='icon-btn';b1.title='Self-Healing Monitor';b1.textContent='🛡️';
-    b1.onclick=toggleSelfHealingMonitor;
-    r.insertBefore(b1,r.firstChild);
-  }
-  if(!document.getElementById('wizard-btn')){
-    var b2=document.createElement('button');
-    b2.id='wizard-btn';b2.className='icon-btn';b2.title='Setup Wizard';b2.textContent='🧙';
-    b2.onclick=openOnboardingWizard;
-    r.insertBefore(b2,r.firstChild);
-  }
+  // SHM and wizard buttons intentionally removed from topbar to reduce clutter.
+  // SHM accessible via Shadow Support AI. Wizard via onboarding flow.
 }
 
 // BOOT
