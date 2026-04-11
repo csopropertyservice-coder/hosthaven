@@ -41,12 +41,12 @@
 <meta property="og:title" content="CSO Property Services — Smarter Airbnb Management">
 <meta property="og:description" content="For STR hosts, co-hosts, property managers, cleaning businesses, cabin owners, and house hackers. Bookings, AI messaging, payout tracking, owner reports — no booking fees ever.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://csopropertyservice-coder.github.io/hosthaven/">
-<meta property="og:image" content="https://csopropertyservice-coder.github.io/hosthaven/og-image.png">
+<meta property="og:url" content="https://csopropertyservices.com/">
+<meta property="og:image" content="https://csopropertyservices.com/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="CSO Property Services — Smarter Airbnb Management">
 <meta name="twitter:description" content="One platform for every kind of host. STR, mid-term, cleaning businesses, co-hosts, and more. Start free.">
-<link rel="canonical" href="https://csopropertyservice-coder.github.io/hosthaven/">
+<link rel="canonical" href="https://csopropertyservices.com/">
 <!-- manifest removed -->
 <meta name="theme-color" content="#C4693A">
 
@@ -3075,7 +3075,7 @@ select{color:var(--txt)!important;}
     <div class="card-hd"><div class="card-title">💡 How the Affiliate Program Works</div></div>
     <div class="card-body">
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">🔗</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">1. Generate Link</div><div style="font-size:12px;color:var(--txt2)">Each affiliate gets a unique tracking URL like csopropertyservice-coder.github.io/hosthaven/?ref=THEIRCODE</div></div>
+        <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">🔗</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">1. Generate Link</div><div style="font-size:12px;color:var(--txt2)">Each affiliate gets a unique tracking URL like csopropertyservices.com/?ref=THEIRCODE</div></div>
         <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">📣</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">2. They Promote</div><div style="font-size:12px;color:var(--txt2)">YouTube, TikTok, Facebook Groups — they bring the audience, you keep 80%</div></div>
         <div style="background:var(--sand);border-radius:10px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:8px">💰</div><div style="font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px">3. You Pay 20%</div><div style="font-size:12px;color:var(--txt2)">Monthly recurring commission for every user they referred. Track it all here.</div></div>
       </div>
@@ -4638,7 +4638,7 @@ async function doForgotPassword() {
   if(btn){btn.textContent='Sending…';btn.disabled=true;btn.style.opacity='.7';}
   try {
     const resPw = await sb.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://csopropertyservice-coder.github.io/hosthaven',
+      redirectTo: 'https://csopropertyservices.com',
     }).catch((e) => ({ error: e }));
     if (resPw && resPw.error) {
       sbHandleError(resPw.error, 'resetPasswordForEmail');
@@ -7558,7 +7558,7 @@ function removeUpsell(id){cData.upsells=(cData.upsells||[]).filter(x=>x.id!==id)
 //  DIRECT BOOKING KIT
 // ════════════════════════════════════════════
 function renderDirectBook(){const directBookings=(cData.bookings||[]).filter(b=>b.source==='direct');const saved=directBookings.reduce((s,b)=>s+b.price*0.03,0);const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};set('db-count',directBookings.length);set('db-saved','$'+Math.round(saved).toLocaleString());}
-function generateDirectBookingLink(){const link=`https://csopropertyservice-coder.github.io/hosthaven/?inquiry=1&host=${encodeURIComponent(cUser?.email||'')}`;const display=document.getElementById('db-link-display');const text=document.getElementById('db-link-text');if(display)display.style.display='block';if(text)text.textContent=link;toast('Direct booking link generated!');}
+function generateDirectBookingLink(){const link=`https://csopropertyservices.com/?inquiry=1&host=${encodeURIComponent(cUser?.email||'')}`;const display=document.getElementById('db-link-display');const text=document.getElementById('db-link-text');if(display)display.style.display='block';if(text)text.textContent=link;toast('Direct booking link generated!');}
 function copyDirectLink(){const text=document.getElementById('db-link-text')?.textContent;if(text)navigator.clipboard.writeText(text).then(()=>toast('Link copied! ✓'));}
 
 // ════════════════════════════════════════════
@@ -10304,7 +10304,7 @@ function generateQRCode() {
   buildQRManual();
 
   // Generate QR using a public API
-  const manualUrl = 'https://csopropertyservice-coder.github.io/hosthaven/?manual='+(prop?.id||'demo');
+  const manualUrl = 'https://csopropertyservices.com/?manual='+(prop?.id||'demo');
   const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data='+encodeURIComponent(manualUrl);
   const container = document.getElementById('qr-placeholder');
   if(container) {
@@ -11625,7 +11625,7 @@ const cleanInput = (v, maxLen) => sanitizeInput(v).substring(0, maxLen||500);
 // ════════════════════════════════════════════
 //  AFFILIATE — Fixed (no prompt(), clipboard fallback, link preview)
 // ════════════════════════════════════════════
-const AFF_BASE_URL = 'https://csopropertyservice-coder.github.io/hosthaven/?ref=';
+const AFF_BASE_URL = 'https://csopropertyservices.com/?ref=';
 
 function previewAffLink() {
   const code = (document.getElementById('aff-code')?.value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
@@ -12822,7 +12822,7 @@ function getBranding() {
     color:   b.color   || '#C4693A',
     tagline: b.tagline || 'Property Management',
     email:   b.email   || 'csopropertyservice@gmail.com',
-    website: b.website || 'https://csopropertyservice-coder.github.io/hosthaven/',
+    website: b.website || 'https://csopropertyservices.com/',
   };
 }
 
