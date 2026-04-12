@@ -1,8 +1,7 @@
-/* CSO Property Services — js/onboarding.js
-   Lines 967–1338 of original JS block
-   DO NOT edit inline in index.html — edit this file instead
-*/
-
+// ════════════════════════════════════════════
+//  ONBOARDING
+// ════════════════════════════════════════════
+// ════════════════════════════════════════════
 //  PLAN-AWARE ONBOARDING
 // ════════════════════════════════════════════
 
@@ -373,4 +372,3 @@ function renderAll(){
   setTimeout(function(){hhEnhanceClickableAria(document.body);},0);
 }
 
-// ════════════════════════════════════════════
