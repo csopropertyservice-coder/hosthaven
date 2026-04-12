@@ -1,69 +1,3 @@
-/* CSO Property Services — js/core.js
-   Lines 0–511 of original JS block
-   DO NOT edit inline in index.html — edit this file instead
-*/
-
-
-// ════════════════════════════════════════════
-//  SUPABASE PAGINATION HELPERS
-//  Why: as bookings/messages grow, fetching ALL
-//  records at once gets slow. Use these helpers
-//  to load data in pages instead.
-// ════════════════════════════════════════════
-
-/**
- * Fetch a paginated slice of any Supabase table.
- * @param {string} table  — e.g. 'user_data'
- * @param {object} opts
- *   uid       {string}  — user_id to filter by
- *   page      {number}  — 0-indexed page number (default 0)
- *   pageSize  {number}  — records per page (default 50)
- *   orderBy   {string}  — column to order by (default 'updated_at')
- *   ascending {boolean} — sort direction (default false = newest first)
- * @returns {data[], count, error}
- *
- * Usage example — load bookings page 0:
- *   const { data } = await sbPaginate('bookings', { uid: cUid, page: 0, pageSize: 25 });
- */
-async function sbPaginate(table, { uid, page = 0, pageSize = 50, orderBy = 'updated_at', ascending = false } = {}) {
-  const from = page * pageSize;
-  const to   = from + pageSize - 1;
-  try {
-    let query = sb.from(table).select('*', { count: 'exact' });
-    if (uid) query = query.eq('user_id', uid);
-    const { data, error, count } = await query
-      .order(orderBy, { ascending })
-      .range(from, to);
-    if (error) { sbHandleError(error, `sbPaginate(${table})`); return { data: [], count: 0, error }; }
-    return { data: data || [], count: count || 0, error: null };
-  } catch(e) {
-    sbHandleError(e, `sbPaginate(${table})`);
-    return { data: [], count: 0, error: e };
-  }
-}
-
-/**
- * Quick helper — load the N most recent bookings for the dashboard.
- * Replaces pulling the entire bookings array from cData for summary views.
- * @param {string} uid
- * @param {number} limit — how many recent bookings to load (default 10)
- */
-async function loadRecentBookings(uid, limit = 10) {
-  return sbPaginate('bookings', { uid, page: 0, pageSize: limit });
-}
-
-/**
- * Quick helper — load the N most recent messages for the dashboard.
- */
-async function loadRecentMessages(uid, limit = 10) {
-  return sbPaginate('messages', { uid, page: 0, pageSize: limit });
-}
-
-// NOTE: The main data model still uses the single JSON blob approach (user_data table).
-// The helpers above are for future migration to row-per-record tables as you scale.
-// When you hit ~500+ bookings per user, open a new session and ask to migrate
-// bookings/messages to their own Supabase tables using these paginated helpers.
-
 // ════════════════════════════════════════════
 //  SUPABASE CONFIG
 // ════════════════════════════════════════════
@@ -321,24 +255,12 @@ function deepMergeUserData(base, patch) {
 
 // Save to both local and Supabase
 const getUserData = uid => { cData = getLocalData(uid); return cData; };
-
-// FIX #5: Debounce syncToSupabase — prevents firing on every keystroke/auto-save
-// Waits 1.5s after the last save call before pushing to Supabase
-let _syncDebounceTimer = null;
-const _debouncedSync = (uid, data) => {
-  if (_syncDebounceTimer) clearTimeout(_syncDebounceTimer);
-  _syncDebounceTimer = setTimeout(() => {
-    if (navigator.onLine) syncToSupabase(uid, data);
-    _syncDebounceTimer = null;
-  }, 1500);
-};
-
 const saveUserData = (uid,d) => {
   if (!uid || d == null) return;
   const base = (cUid === uid && cData) ? cData : getLocalData(uid);
   cData = deepMergeUserData(base, d);
   saveLocalData(uid, cData); // always save locally first, even if offline
-  _debouncedSync(uid, cData); // debounced cloud sync — max 1 Supabase write per 1.5s
+  if (navigator.onLine) syncToSupabase(uid, cData); // best-effort cloud sync
 };
 const loadUserData = async (uid) => {
   try {
@@ -411,12 +333,7 @@ async function syncToSupabase(uid, d) {
       trialStarted:      d.trialStarted||null,
       trialUsed:         d.trialUsed||false,
       contentHub:        d.contentHub||[],
-      softwareMode:      d.softwareMode||false,
-      // FIX #9: These fields were missing from sync — users would lose them on new device login
-      damageClaims:      d.damageClaims||[],
-      automations:       d.automations||{},
-      autoLog:           d.autoLog||[],
-      platformEarnings:  d.platformEarnings||[]
+      softwareMode:      d.softwareMode||false
     };
     let up1; try { up1 = await sb.from('user_data').upsert({
       user_id: uid,
@@ -591,4 +508,3 @@ function scrollToSection(id){
   if(el) setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),50);
 }
 
-// ════════════════════════════════════════════
