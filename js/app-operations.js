@@ -2,6 +2,16 @@
    Split from app.js · DO NOT edit app.js directly
 */
 
+
+// FIX #3: XSS protection — sh() is a short alias for sanitizeHTML()
+// Always use sh() when injecting user-entered text into innerHTML
+const sh = (s) => {
+  if (s == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+};
+
 function addCleaner(){
   const name=document.getElementById('cl-name').value.trim();
   if(!name){toast('Enter cleaner name');return;}
@@ -255,7 +265,7 @@ function renderWorkOrders(){
   if(!filtered.length){list.innerHTML='<div class="empty-state"><div class="es-i">🔧</div><h3>No work orders</h3></div>';return;}
   const ce={plumbing:'🚰',electrical:'⚡',hvac:'❄️',appliance:'🍳',structural:'🏚',cleaning:'🧹',other:'📦'};
   const pc={urgent:'pill-red',high:'pill-amber',medium:'pill-green',low:'pill-blue'};const sc={open:'pill-amber',in_progress:'pill-blue',completed:'pill-green'};
-  list.innerHTML=filtered.map(o=>`<div class="row" style="cursor:default"><div style="font-size:20px">${ce[o.cat]||'📦'}</div><div class="row-info"><div class="row-title">${o.title}</div><div class="row-sub">${o.propName||''}${o.assignedTo?' · '+o.assignedTo:''}</div></div><span class="pill ${pc[o.priority]||'pill-amber'}">${o.priority}</span><span class="pill ${sc[o.status]||'pill-amber'}">${o.status.replace('_',' ')}</span><div class="row-price">$${(o.costActual||o.costEst||0).toLocaleString()}</div><select onchange="updateWOStatus('${o.id}',this.value)" style="font-size:10px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--txt)"><option value="open" ${o.status==='open'?'selected':''}>Open</option><option value="in_progress" ${o.status==='in_progress'?'selected':''}>In Progress</option><option value="completed" ${o.status==='completed'?'selected':''}>Completed</option></select></div>`).join('');
+  list.innerHTML=filtered.map(o=>`<div class="row" style="cursor:default"><div style="font-size:20px">${ce[o.cat]||'📦'}</div><div class="row-info"><div class="row-title">${sh(o.title)}</div><div class="row-sub">${sh(o.propName)||''}${o.assignedTo?' · '+o.assignedTo:''}</div></div><span class="pill ${pc[o.priority]||'pill-amber'}">${o.priority}</span><span class="pill ${sc[o.status]||'pill-amber'}">${o.status.replace('_',' ')}</span><div class="row-price">$${(o.costActual||o.costEst||0).toLocaleString()}</div><select onchange="updateWOStatus('${o.id}',this.value)" style="font-size:10px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--txt)"><option value="open" ${o.status==='open'?'selected':''}>Open</option><option value="in_progress" ${o.status==='in_progress'?'selected':''}>In Progress</option><option value="completed" ${o.status==='completed'?'selected':''}>Completed</option></select></div>`).join('');
 }
 function updateWOStatus(id,status){const o=(cData.workorders||[]).find(x=>x.id===id);if(o){o.status=status;saveUserData(cUid,cData);renderWorkOrders();toast('Work order updated ✓');}}
 
