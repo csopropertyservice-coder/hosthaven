@@ -198,8 +198,9 @@ function showDashboard() {
   const lp = document.getElementById('screen-landing');
   const dw = document.getElementById('app');
   const onboarding = document.getElementById('onboarding-wizard-modal');
-  if (lp) lp.style.display = 'none';
-  if (dw) dw.style.display = 'block';
+  if (lp) { lp.style.display = 'none'; lp.style.visibility = 'hidden'; }
+  // Clear inline display so .app.visible CSS (display:flex) takes over correctly
+  if (dw) { dw.style.display = ''; }
   if (onboarding) onboarding.style.display = 'none';
   // Also fully clear all auth screen overlays so nothing blocks the app
   ['login','signup','onboard','forgot','reset'].forEach(s => {
