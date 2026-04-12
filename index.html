@@ -61,7 +61,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap"></noscript>
 <!-- Inline critical font fallbacks to prevent layout shift before fonts load -->
-<!-- ★ External CSS — theme variables, layout, and components -->
+<!-- ★ External CSS -->
 <link rel="stylesheet" href="./css/theme.css">
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/components.css">
@@ -3584,9 +3584,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 
-<!-- ══════════════════════════════════════
-     EXTERNAL JS — load order matters
-══════════════════════════════════════ -->
+<!-- ★ External JS -->
 <script src="./js/core.js"></script>
 <script src="./js/auth.js"></script>
 <script src="./js/onboarding.js"></script>
@@ -3596,7 +3594,6 @@
 <script src="./js/app-operations.js"></script>
 <script src="./js/app-dashboard.js"></script>
 <script src="./js/features.js"></script>
-
 <!-- PREMIUM WIDGETS -->
 <div id="premium-toast-container"></div>
 
@@ -3667,7 +3664,14 @@
       <div class="fi"><label>Cleaner Name</label><input id="owiz-cleaner-name" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--txt);outline:none;" placeholder="e.g. Maria Garcia"></div>
       <div class="fi"><label>Hourly Rate ($)</label><input id="owiz-cleaner-rate" type="number" style="width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--txt);outline:none;" placeholder="35"></div>
     </div>
-    <div class="owiz-step" id="o
+    <div class="owiz-step" id="owiz-step-4">
+      <div style="font-size:32px;margin-bottom:12px;">🚀</div>
+      <div style="font-family:Fraunces,serif;font-size:18px;color:var(--txt);margin-bottom:6px;">You're all set!</div>
+      <div style="font-size:13px;color:var(--txt2);margin-bottom:18px;">Your CSO Property Services account is ready. Let's launch your dashboard.</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
+      <button onclick="closeOnboardingWizard()" style="background:transparent;border:none;font-size:13px;color:var(--txt3);cursor:pointer;text-decoration:underline">Skip for now</button>
+      <button id="owiz-next-btn" onclick="owizNext()" style="background:var(--terra);color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Next →</button>
     </div>
   </div>
 </div>
