@@ -1,0 +1,69 @@
+/* ═══════════════════════════════════════
+   CSO PROPERTY SERVICES — THEME VARIABLES
+   css/theme.css
+═══════════════════════════════════════ */
+
+/* Font fallbacks — critical, loaded before fonts arrive */
+body { font-family: 'DM Sans', system-ui, -apple-system, sans-serif; }
+.land-h1, .auth-title, .ob-title, .card-title, .plan-price, .kpi-val,
+.land-section-title, .land-prod-price, .prop-name, .row-title {
+  font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+}
+
+/* ── BRAND PALETTE ── */
+:root {
+  --terra:#C4693A;--terra-d:#B05A2E;--terra-l:#F0A882;
+  --sage:#6B8F71;--sage-l:#A8C4AB;
+  --gold:#C8A84B;--gold-l:#E8CC7A;
+  --navy:#1E2D40;
+}
+
+/* ── LIGHT THEME ── */
+[data-theme="light"] {
+  --bg:#FAF7F2;--bg2:#FFFEF9;--sand:#EDE8DE;--tan:#D4C9B4;
+  --espresso:#2C1F14;--bark:#5C3D2E;
+  --txt:#1C1410;--txt2:#6B5D52;--txt3:#9B8E85;
+  --border:#E2DBD0;--border2:#EDE8DE;
+  --card:#FFFEF9;--card2:#F5F1EB;
+  --sh:0 1px 4px rgba(44,31,20,.08);--shm:0 4px 16px rgba(44,31,20,.10);--shl:0 8px 32px rgba(44,31,20,.14);
+  --sb-bg:#2C1F14;--sb-txt:rgba(255,255,255,.55);--sb-active:var(--terra);
+  --input-bg:#EDE8DE;--input-border:#D4C9B4;
+}
+
+/* ── DARK THEME ── */
+[data-theme="dark"] {
+  --bg:#0F0B08;--bg2:#1A1410;--sand:#2A2218;--tan:#3A3028;
+  --espresso:#FAF7F2;--bark:#C4A882;
+  --txt:#F0EBE3;--txt2:#B8A898;--txt3:#7A6E64;
+  --border:#2E2620;--border2:#3A3028;
+  --card:#1A1410;--card2:#221C16;
+  --sh:0 1px 4px rgba(0,0,0,.3);--shm:0 4px 16px rgba(0,0,0,.35);--shl:0 8px 32px rgba(0,0,0,.45);
+  --sb-bg:#0A0806;--sb-txt:rgba(255,255,255,.45);--sb-active:var(--terra);
+  --input-bg:#221C16;--input-border:#3A3028;
+}
+
+/* ── PREMIUM DARK ANIME PALETTE ── */
+:root {
+  --burgundy:#722F37;--burgundy-light:#9B4F57;--burgundy-dark:#4A1F25;
+  --rose-gold:#E8B4B8;--champagne:#F7E7CE;--champagne-light:#FAF0E6;
+  --gradient-primary:linear-gradient(135deg,#722F37 0%,#9B4F57 50%,#E8B4B8 100%);
+  --gradient-accent:linear-gradient(45deg,#E8B4B8 0%,#F7E7CE 100%);
+  --gradient-card:linear-gradient(135deg,rgba(26,15,17,.92) 0%,rgba(45,27,31,.92) 100%);
+  --gradient-button:linear-gradient(135deg,#722F37 0%,#9B4F57 100%);
+  --shadow-glow:0 0 20px rgba(114,47,55,.3);
+  --shadow-rose-gold:0 0 20px rgba(232,180,184,.4);
+  --shadow-xl:0 20px 25px -5px rgba(0,0,0,.4),0 10px 10px -5px rgba(0,0,0,.25);
+}
+
+/* ── BASE RESET ── */
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:auto; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt); transition:background .3s,color .3s; }
+select { color:var(--txt)!important; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+@keyframes spin { to{transform:rotate(360deg)} }
+@keyframes dotPulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+@keyframes premToastIn { from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:translateX(0)} }
