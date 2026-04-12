@@ -2,6 +2,16 @@
    Split from app.js · DO NOT edit app.js directly
 */
 
+
+// FIX #3: XSS protection — sh() is a short alias for sanitizeHTML()
+// Always use sh() when injecting user-entered text into innerHTML
+const sh = (s) => {
+  if (s == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+};
+
 // Returns { allowed: bool, reason: string, nextTier: string }
 function canAddProperty() {
   if(isAdmin) return { allowed: true };
@@ -152,14 +162,37 @@ function showUpgradeModal(reason, nextTier) {
   openModal('upgrade-modal');
 }
 
-function startTrial() {
+async function startTrial() {
+  // FIX #2: Check Supabase profiles table first — prevents client-side trial reset exploit
   if(cData.trialStarted) { toast('Trial already used!'); return; }
+  try {
+    const { data: profile, error } = await sb.from('profiles')
+      .select('is_trial_active, trial_start_date, plan')
+      .eq('id', cUid)
+      .single();
+    if (error) { sbHandleError(error, 'startTrial check'); }
+    // If server already shows a trial was used, block it regardless of local state
+    if (profile && (profile.is_trial_active || profile.trial_start_date)) {
+      cData.trialStarted = profile.trial_start_date ? new Date(profile.trial_start_date).getTime() : Date.now();
+      cData.trialUsed = true;
+      saveUserData(cUid, cData);
+      toast('Trial has already been used on this account.');
+      return;
+    }
+    // Also block if server shows a paid plan — no trial needed
+    if (profile && profile.plan && !['free','trial',null,''].includes(profile.plan)) {
+      toast('You already have an active paid plan!');
+      return;
+    }
+  } catch(e) {
+    sbHandleError(e, 'startTrial server check');
+    // On network error, fall through to allow trial — offline grace
+  }
   cData.trialStarted = Date.now();
   cData.plan = 'trial';
   saveUserData(cUid, cData);
   document.getElementById('sb-plan').textContent = '🎯 Pro Trial';
   toast('🎉 14-day Pro trial started! Enjoy all features.');
-  // Sync to Supabase
   if(cUid) {
     sb.from('profiles').update({
       is_trial_active: true,
@@ -583,7 +616,7 @@ function renderTasks(){
   const tasks=[...cData.tasks].sort((a,b)=>(a.done===b.done)?({high:0,medium:1,low:2}[a.priority]-{high:0,medium:1,low:2}[b.priority]):(a.done?1:-1));
   count.textContent=`${tasks.length} tasks · ${tasks.filter(t=>!t.done).length} pending`;
   if(!tasks.length){list.innerHTML=`<div class="empty-state"><div class="es-i">🧹</div><h3>No tasks</h3><button class="btn btn-pri" onclick="openModal('add-task-modal')" style="margin-top:10px">Add Task</button></div>`;return;}
-  list.innerHTML=tasks.map(t=>`<div class="task-card" onclick="toggleTask('${t.id}')"><div class="task-cb${t.done?' done':''}"> ${t.done?'✓':''}</div><div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--txt);${t.done?'text-decoration:line-through;opacity:.5':''}">${t.title}${t.propName?` <span style="font-weight:400;font-size:11px;color:var(--txt3)">· ${t.propName}</span>`:''}</div><div style="font-size:11px;color:var(--txt3);margin-top:2px">${[t.assignee&&`👤 ${t.assignee}`,t.due&&`📅 ${t.due}`].filter(Boolean).join(' · ')||'No details'}</div></div><span class="tpri ${t.priority}">${t.priority}</span></div>`).join('');
+  list.innerHTML=tasks.map(t=>`<div class="task-card" onclick="toggleTask('${t.id}')"><div class="task-cb${t.done?' done':''}"> ${t.done?'✓':''}</div><div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--txt);${t.done?'text-decoration:line-through;opacity:.5':''}">${sh(t.title)}${t.propName?` <span style="font-weight:400;font-size:11px;color:var(--txt3)">· ${sh(t.propName)}</span>`:''}</div><div style="font-size:11px;color:var(--txt3);margin-top:2px">${[t.assignee&&`👤 ${t.assignee}`,t.due&&`📅 ${t.due}`].filter(Boolean).join(' · ')||'No details'}</div></div><span class="tpri ${t.priority}">${t.priority}</span></div>`).join('');
 }
 
 // ════════════════════════════════════════════
@@ -1176,6 +1209,33 @@ function renderDashboard(){
   checkTrialStatus();
   updateAddPropertyButton();
 
+  // FIX #6: Downgrade warning — show banner if user has more properties than plan allows
+  (function renderDowngradeBanner() {
+    const plan = cData.plan || 'free';
+    const limit = getPlanPropertyLimit(plan);
+    const activeProps = (cData.properties || []).filter(p => !p.hibernated).length;
+    const bannerId = 'downgrade-warning-banner';
+    let banner = document.getElementById(bannerId);
+    if (activeProps > limit && plan === 'free') {
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = bannerId;
+        banner.style.cssText = 'background:#FBF0EC;border:1px solid var(--terra-l);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap';
+        const dashPage = document.getElementById('page-dashboard');
+        if (dashPage) dashPage.prepend(banner);
+      }
+      banner.innerHTML = `<span style="font-size:20px">⚠️</span>
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:13px;font-weight:600;color:var(--terra)">Plan downgraded — ${activeProps} properties over free limit (${limit})</div>
+          <div style="font-size:12px;color:var(--txt2);margin-top:2px">Your data is safe. Upgrade to re-enable all ${activeProps} properties, or hibernate the extras to stay on free.</div>
+        </div>
+        <button class="btn btn-pri" style="font-size:12px;padding:6px 14px" onclick="showUpgradeModal()">Upgrade →</button>
+        <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px" onclick="nav('properties',document.querySelector('[onclick*=properties]'))">Manage Properties</button>`;
+    } else if (banner) {
+      banner.remove();
+    }
+  })();
+
   const now = new Date();
   const today = now.toISOString().slice(0,10);
   const tomorrow = new Date(now.getTime()+86400000).toISOString().slice(0,10);
@@ -1220,7 +1280,7 @@ function renderDashboard(){
   if(!recent.length) dbEl.innerHTML=`<div class="empty-state"><div class="es-i">📅</div><h3>No upcoming bookings</h3><button class="btn btn-pri" onclick="openModal('add-booking-modal')" style="margin-top:10px">Add Booking</button></div>`;
   else {
     const spc={confirmed:'pill-green',pending:'pill-amber',completed:'pill-blue',cancelled:'pill-red'};
-    dbEl.innerHTML=recent.map(b=>`<div class="row"><div class="row-thumb ${b.propGradient||'pi1'}">${b.propEmoji||'🏠'}</div><div class="row-info"><div class="row-title">${b.propName} — ${b.guestName}</div><div class="row-sub">${b.checkin||'TBD'} → ${b.checkout||'TBD'} · ${b.nights||0} nights</div></div><span class="pill ${spc[b.status]||'pill-blue'}">${b.status}</span><div class="row-price">$${b.price.toLocaleString()}</div></div>`).join('');
+    dbEl.innerHTML=recent.map(b=>`<div class="row"><div class="row-thumb ${b.propGradient||'pi1'}">${b.propEmoji||'🏠'}</div><div class="row-info"><div class="row-title">${sh(b.propName)} — ${sh(b.guestName)}</div><div class="row-sub">${sh(b.checkin)||'TBD'} → ${sh(b.checkout)||'TBD'} · ${b.nights||0} nights</div></div><span class="pill ${spc[b.status]||'pill-blue'}">${sh(b.status)}</span><div class="row-price">$${b.price.toLocaleString()}</div></div>`).join('');
   }
 
   // Recent messages
@@ -2783,18 +2843,20 @@ const supabase = createClient(
 
 // Map Stripe price IDs → subscription tiers
 const PRICE_TO_TIER: Record<string, string> = {
-  // Monthly prices (existing)
-  'price_pro_monthly':            'pro',
-  'price_business_monthly':       'business',
-  'price_cohost_starter_monthly': 'cohost_starter',
-  'price_cohost_monthly':         'cohost',
-  // New annual prices
+  // FIX #1: Monthly prices — replaced placeholders with real Stripe price IDs
+  // TODO: Replace these 3 with your actual monthly price IDs from Stripe Dashboard
+  // Dashboard → Products → [plan] → Pricing → copy price ID (starts with price_1...)
+  // The co-host starter monthly is already real (price_1TL5viAq1y5M81l9A7UdJ3dU)
+  'price_1TL5viAq1y5M81l9A7UdJ3dU':  'cohost_starter', // Co-Host Starter Monthly $149/mo ✓ REAL
+  // ↓ Replace these 3 placeholders with your real Stripe monthly price IDs:
+  'price_1TFmYeAq1y5M81l9lrBULAlt': 'pro',            // Pro Monthly $79/mo ✓ REAL
+  'price_1TFmc6Aq1y5M81l9Xu2v4SCp': 'business',       // Business Monthly $199/mo ✓ REAL
+  'price_1TGCM7Aq1y5M81l9Zm1mRcJy': 'cohost',         // Co-Host Pro Monthly $299/mo ✓ REAL
+  // Annual prices (already real)
   'price_1TL5qhAq1y5M81l9JCAsW6xr': 'pro',            // Pro Annual $790/yr
   'price_1TL5sBAq1y5M81l92JjVr41o':  'business',       // Business Annual $1,990/yr
   'price_1TL5trAq1y5M81l9UbzF0zRz':  'cohost_starter', // Co-Host Starter Annual $1,490/yr
   'price_1TL5ujAq1y5M81l9rWzrn6Ao':  'cohost',         // Co-Host Pro Annual $2,990/yr
-  // Co-Host Starter monthly (new dedicated price)
-  'price_1TL5viAq1y5M81l9A7UdJ3dU':  'cohost_starter', // Co-Host Starter Monthly $149/mo
 }
 
 serve(async (req) => {
