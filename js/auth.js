@@ -190,8 +190,6 @@ function showLandingPage() {
     lp.style.visibility = 'visible';
     lp.style.pointerEvents = 'auto';
     lp.style.zIndex = '1';
-    lp.style.position = 'relative';
-    lp.style.top = '';
   }
   document.body.style.display = 'block';
   window.scrollTo(0,0);
@@ -201,21 +199,10 @@ function showDashboard() {
   const lp = document.getElementById('screen-landing');
   const dw = document.getElementById('app');
   const onboarding = document.getElementById('onboarding-wizard-modal');
-  // FIX: pull landing page fully out of document flow so it contributes zero height
-  if (lp) {
-    lp.style.display = 'none';
-    lp.style.visibility = 'hidden';
-    lp.style.pointerEvents = 'none';
-    lp.style.position = 'absolute';
-    lp.style.top = '-9999px';
-  }
-  // FIX: use classList.add('visible') — the CSS handles display:flex via .app.visible
-  // Do NOT set dw.style.display manually — it conflicts with the CSS class
-  if (dw) {
-    dw.style.display = '';  // clear any inline override first
-    dw.classList.add('visible');
-  }
+  if (lp) lp.style.display = 'none';
+  if (dw) dw.style.display = 'block';
   if (onboarding) onboarding.style.display = 'none';
+  // Also fully clear all auth screen overlays so nothing blocks the app
   ['login','signup','onboard','forgot','reset'].forEach(s => {
     const el = document.getElementById('screen-'+s);
     if (el) { el.style.display='none'; el.style.visibility='hidden'; el.style.pointerEvents='none'; el.style.zIndex='-1'; }
