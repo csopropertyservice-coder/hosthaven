@@ -1,17 +1,6 @@
-/* CSO Property Services — js/app-operations.js
-   Split from app.js · DO NOT edit app.js directly
-*/
-
-
-// FIX #3: XSS protection — sh() is a short alias for sanitizeHTML()
-// Always use sh() when injecting user-entered text into innerHTML
-const sh = (s) => {
-  if (s == null) return '';
-  const d = document.createElement('div');
-  d.textContent = String(s);
-  return d.innerHTML;
-};
-
+// ════════════════════════════════════════════
+//  CLEANER MARKETPLACE
+// ════════════════════════════════════════════
 function addCleaner(){
   const name=document.getElementById('cl-name').value.trim();
   if(!name){toast('Enter cleaner name');return;}
@@ -265,7 +254,7 @@ function renderWorkOrders(){
   if(!filtered.length){list.innerHTML='<div class="empty-state"><div class="es-i">🔧</div><h3>No work orders</h3></div>';return;}
   const ce={plumbing:'🚰',electrical:'⚡',hvac:'❄️',appliance:'🍳',structural:'🏚',cleaning:'🧹',other:'📦'};
   const pc={urgent:'pill-red',high:'pill-amber',medium:'pill-green',low:'pill-blue'};const sc={open:'pill-amber',in_progress:'pill-blue',completed:'pill-green'};
-  list.innerHTML=filtered.map(o=>`<div class="row" style="cursor:default"><div style="font-size:20px">${ce[o.cat]||'📦'}</div><div class="row-info"><div class="row-title">${sh(o.title)}</div><div class="row-sub">${sh(o.propName)||''}${o.assignedTo?' · '+o.assignedTo:''}</div></div><span class="pill ${pc[o.priority]||'pill-amber'}">${o.priority}</span><span class="pill ${sc[o.status]||'pill-amber'}">${o.status.replace('_',' ')}</span><div class="row-price">$${(o.costActual||o.costEst||0).toLocaleString()}</div><select onchange="updateWOStatus('${o.id}',this.value)" style="font-size:10px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--txt)"><option value="open" ${o.status==='open'?'selected':''}>Open</option><option value="in_progress" ${o.status==='in_progress'?'selected':''}>In Progress</option><option value="completed" ${o.status==='completed'?'selected':''}>Completed</option></select></div>`).join('');
+  list.innerHTML=filtered.map(o=>`<div class="row" style="cursor:default"><div style="font-size:20px">${ce[o.cat]||'📦'}</div><div class="row-info"><div class="row-title">${o.title}</div><div class="row-sub">${o.propName||''}${o.assignedTo?' · '+o.assignedTo:''}</div></div><span class="pill ${pc[o.priority]||'pill-amber'}">${o.priority}</span><span class="pill ${sc[o.status]||'pill-amber'}">${o.status.replace('_',' ')}</span><div class="row-price">$${(o.costActual||o.costEst||0).toLocaleString()}</div><select onchange="updateWOStatus('${o.id}',this.value)" style="font-size:10px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--txt)"><option value="open" ${o.status==='open'?'selected':''}>Open</option><option value="in_progress" ${o.status==='in_progress'?'selected':''}>In Progress</option><option value="completed" ${o.status==='completed'?'selected':''}>Completed</option></select></div>`).join('');
 }
 function updateWOStatus(id,status){const o=(cData.workorders||[]).find(x=>x.id===id);if(o){o.status=status;saveUserData(cUid,cData);renderWorkOrders();toast('Work order updated ✓');}}
 
@@ -1526,3 +1515,557 @@ function getPlanPropertyLimit(plan) {
 }
 
 // ── canAddProperty(): named guard function — used by addProperty() and UI
+// Returns { allowed: bool, reason: string, nextTier: string }
+function canAddProperty() {
+  if(isAdmin) return { allowed: true };
+  const plan = cData?.plan || 'free';
+  const limit = getPlanPropertyLimit(plan);
+  const count = (cData?.properties || []).length;
+
+  if(count < limit) return { allowed: true };
+
+  const next = PLAN_NEXT_TIER[plan] || 'pro';
+  const nextName = PLAN_NAMES[next] || 'Pro';
+  const nextPrice = PLAN_PRICES[next] || '$79';
+
+  return {
+    allowed: false,
+    reason: `You've reached your ${count}-property limit on the ${PLAN_NAMES[plan]} plan.`,
+    nextTier: next,
+    cta: `Upgrade to ${nextName} (${nextPrice}/mo) for ${next === 'business' || next === 'cohost' ? 'unlimited' : '10'} properties`
+  };
+}
+
+// ── Enhanced checkTrialStatus — syncs expiry to Supabase profiles
+async function checkTrialStatus() {
+  if(!cData) return;
+  const plan = cData.plan;
+  if(plan !== 'free' && plan !== 'trial') return; // already paid, skip
+
+  if(cData.trialStarted && !cData.trialUsed) {
+    const daysSince = (Date.now() - cData.trialStarted) / (1000*60*60*24);
+    const daysLeft = Math.max(0, Math.ceil(14 - daysSince));
+
+    if(daysSince <= 14) {
+      // Trial still active
+      cData.plan = 'trial';
+      const pill = document.getElementById('sb-plan');
+      if(pill) pill.textContent = '🎯 Trial';
+      showTrialBanner(daysLeft);
+
+      // Sync is_trial_active to Supabase profiles
+      if(cUid) {
+        sb.from('profiles').update({
+          is_trial_active: true,
+          trial_start_date: new Date(cData.trialStarted).toISOString(),
+          trial_expires_at: new Date(cData.trialStarted + 14*86400000).toISOString(),
+          subscription_tier: 'trial',
+          plan: 'trial',
+          updated_at: new Date().toISOString()
+        }).eq('id', cUid).catch(e => sbHandleError(e, 'trial sync'));
+      }
+
+    } else {
+      // Trial expired
+      cData.trialUsed = true;
+      cData.plan = 'free';
+      saveUserData(cUid, cData);
+
+      const pill = document.getElementById('sb-plan');
+      if(pill) pill.textContent = '⭐ Free';
+
+      // Sync expiry to Supabase
+      if(cUid) {
+        sb.from('profiles').update({
+          is_trial_active: false,
+          subscription_tier: 'free',
+          plan: 'free',
+          updated_at: new Date().toISOString()
+        }).eq('id', cUid).catch(e => sbHandleError(e, 'trial expiry sync'));
+      }
+
+      showTrialBanner(0); // Show expired state
+      updateAddPropertyButton();
+      renderProperties(); // Re-render with locked cards if needed
+    }
+  }
+}
+
+// ── Trial countdown banner
+function showTrialBanner(daysLeft) {
+  const banner = document.getElementById('trial-banner');
+  if(!banner) return;
+
+  if(daysLeft > 0) {
+    const urgency = daysLeft <= 3 ? 'var(--terra)' : daysLeft <= 7 ? 'var(--gold)' : 'var(--sage)';
+    const urgencyBg = daysLeft <= 3 ? 'rgba(196,105,58,.08)' : daysLeft <= 7 ? 'rgba(200,168,75,.08)' : 'rgba(107,143,113,.08)';
+    const urgencyBorder = daysLeft <= 3 ? 'var(--terra-l)' : daysLeft <= 7 ? 'var(--gold)' : 'var(--sage)';
+    banner.style.display = 'block';
+    banner.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;background:${urgencyBg};border:1px solid ${urgencyBorder};border-radius:10px;padding:11px 16px">
+        <div style="font-size:18px;flex-shrink:0">${daysLeft <= 3 ? '⚠️' : '🎯'}</div>
+        <div style="flex:1">
+          <span style="font-size:13px;font-weight:600;color:${urgency}">${daysLeft} day${daysLeft!==1?'s':''} remaining in your Pro Trial</span>
+          <span style="font-size:12px;color:var(--txt2);margin-left:8px">All features unlocked until ${new Date(cData.trialStarted + 14*86400000).toLocaleDateString()}</span>
+        </div>
+        <button onclick="showUpgradeModal('Lock in your Pro features before your trial ends.','pro')" class="btn btn-pri" style="font-size:11px;padding:5px 12px;flex-shrink:0">Upgrade Now →</button>
+        <button onclick="document.getElementById('trial-banner').style.display='none'" style="background:none;border:none;color:var(--txt3);cursor:pointer;font-size:16px;padding:2px 4px;flex-shrink:0">✕</button>
+      </div>`;
+  } else if(cData.trialUsed) {
+    // Expired state
+    banner.style.display = 'block';
+    banner.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;background:rgba(196,105,58,.08);border:1px solid var(--terra-l);border-radius:10px;padding:11px 16px">
+        <div style="font-size:18px;flex-shrink:0">⏰</div>
+        <div style="flex:1">
+          <span style="font-size:13px;font-weight:600;color:var(--terra)">Your Pro Trial has ended</span>
+          <span style="font-size:12px;color:var(--txt2);margin-left:8px">You're now on Free (1 property). Your data is safe.</span>
+        </div>
+        <button onclick="showUpgradeModal('Reactivate Pro to unlock all your properties and features.','pro')" class="btn btn-pri" style="font-size:11px;padding:5px 12px;flex-shrink:0">Reactivate →</button>
+      </div>`;
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
+// ── Enhanced showUpgradeModal with next-tier CTA
+function showUpgradeModal(reason, nextTier) {
+  const el = document.getElementById('upgrade-modal-reason');
+  const plan = cData?.plan || 'free';
+  const tier = nextTier || PLAN_NEXT_TIER[plan] || 'pro';
+
+  if(el) el.innerHTML = reason ||'Upgrade to unlock more features.';
+
+  // Update modal CTA buttons to highlight the recommended tier
+  const modal = document.getElementById('upgrade-modal');
+  if(modal) {
+    const btns = modal.querySelectorAll('.btn-w, .btn-pri, .btn-ghost');
+    btns.forEach(function(btn) {
+      const btnTier = btn.getAttribute('onclick')?.match(/openStripe\('([^']+)'\)/)?.[1];
+      if(btnTier === tier) {
+        btn.style.outline = '2px solid var(--gold)';
+        btn.style.outlineOffset = '2px';
+        // Add recommended label
+        if(!btn.querySelector('.rec-badge')) {
+          const badge = document.createElement('span');
+          badge.className = 'rec-badge';
+          badge.style.cssText = 'background:var(--gold);color:#2C1F14;font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;margin-left:8px;vertical-align:middle;letter-spacing:.5px';
+          badge.textContent = 'RECOMMENDED';
+          btn.appendChild(badge);
+        }
+      } else {
+        btn.style.outline = '';
+        btn.style.outlineOffset = '';
+        const existing = btn.querySelector('.rec-badge');
+        if(existing) existing.remove();
+      }
+    });
+  }
+
+  openModal('upgrade-modal');
+}
+
+function startTrial() {
+  if(cData.trialStarted) { toast('Trial already used!'); return; }
+  cData.trialStarted = Date.now();
+  cData.plan = 'trial';
+  saveUserData(cUid, cData);
+  document.getElementById('sb-plan').textContent = '🎯 Pro Trial';
+  toast('🎉 14-day Pro trial started! Enjoy all features.');
+  // Sync to Supabase
+  if(cUid) {
+    sb.from('profiles').update({
+      is_trial_active: true,
+      trial_start_date: new Date(cData.trialStarted).toISOString(),
+      trial_expires_at: new Date(cData.trialStarted + 14*86400000).toISOString(),
+      subscription_tier: 'trial',
+      plan: 'trial',
+      updated_at: new Date().toISOString()
+    }).eq('id', cUid).catch(e => sbHandleError(e, 'startTrial sync'));
+  }
+  renderAll();
+  showTrialBanner(14);
+}
+
+// ════════════════════════════════════════════
+//  BOOKING CALENDAR
+// ════════════════════════════════════════════
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+
+function filterBook(f, el) {
+  bookFilter = f;
+  document.querySelectorAll('[id^=bf-]').forEach(b=>{b.className='btn btn-ghost'; b.style.background='';});
+  el.className='btn btn-pri'; el.style.background='var(--espresso)';
+  const listEl = document.getElementById('bookings-list');
+  const calEl = document.getElementById('bookings-calendar');
+  if(f === 'calendar') {
+    if(listEl) listEl.style.display='none';
+    if(calEl) calEl.style.display='block';
+    renderBookingCalendar();
+  } else {
+    if(listEl) listEl.style.display='block';
+    if(calEl) calEl.style.display='none';
+    renderBookings();
+  }
+}
+
+function changeCalMonth(dir) {
+  calMonth += dir;
+  if(calMonth > 11) { calMonth = 0; calYear++; }
+  if(calMonth < 0) { calMonth = 11; calYear--; }
+  renderBookingCalendar();
+}
+
+function renderBookingCalendar() {
+  const grid = document.getElementById('cal-grid');
+  const title = document.getElementById('cal-month-title');
+  if(!grid) return;
+
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  if(title) title.textContent = monthNames[calMonth] + ' ' + calYear;
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const today = new Date();
+
+  let html = '';
+  for(let i=0; i<firstDay; i++) {
+    html += `<div style="aspect-ratio:1"></div>`;
+  }
+
+  for(let d=1; d<=daysInMonth; d++) {
+    // Use local date string to avoid timezone issues
+    const dateStr = calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const dayBookings = cData.bookings.filter(b => {
+      if(!b.checkin || !b.checkout || b.status==='cancelled') return false;
+      // Compare as strings to avoid timezone offset issues
+      return b.checkin <= dateStr && b.checkout > dateStr;
+    });
+    const isToday = today.getDate()===d && today.getMonth()===calMonth && today.getFullYear()===calYear;
+    const hasBooking = dayBookings.length > 0;
+    const bg = hasBooking ? 'var(--terra)' : 'var(--sand)';
+    const color = hasBooking ? '#fff' : 'var(--txt2)';
+    const outline = isToday ? 'outline:2px solid var(--gold);outline-offset:1px;' : '';
+    html += `<div onclick="showCalDay('${dateStr}')" style="aspect-ratio:1;border-radius:6px;background:${bg};color:${color};display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity .15s;${outline}font-size:12px;font-weight:${isToday?'700':'500'}" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+      <div>${d}</div>
+      ${hasBooking ? `<div style="font-size:8px;opacity:.85">${dayBookings.length} stay${dayBookings.length>1?'s':''}</div>` : ''}
+    </div>`;
+  }
+  grid.innerHTML = html;
+
+  const detail = document.getElementById('cal-day-detail');
+  if(detail) detail.style.display = 'none';
+}
+
+function showCalDay(dateStr) {
+  const detail = document.getElementById('cal-day-detail');
+  const dayTitle = document.getElementById('cal-day-title');
+  const dayBookings = document.getElementById('cal-day-bookings');
+  if(!detail) return;
+
+  const bookingsOnDay = cData.bookings.filter(b => {
+    if(!b.checkin || !b.checkout || b.status==='cancelled') return false;
+    return b.checkin <= dateStr && b.checkout > dateStr;
+  });
+
+  // Parse date without timezone issues
+  const parts = dateStr.split('-');
+  const d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+  if(dayTitle) dayTitle.textContent = d.toLocaleDateString('default',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+
+  if(!bookingsOnDay.length) {
+    if(dayBookings) dayBookings.innerHTML = `<div style="font-size:13px;color:var(--txt3);padding:8px 0">No bookings on this day — available!</div>`;
+  } else {
+    const spc={confirmed:'pill-green',pending:'pill-amber',completed:'pill-blue'};
+    if(dayBookings) dayBookings.innerHTML = bookingsOnDay.map(b=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)">
+        <div style="font-size:18px">${b.propEmoji||'🏠'}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:500;color:var(--txt)">${b.propName} — ${b.guestName}</div>
+          <div style="font-size:11px;color:var(--txt3)">${b.checkin} → ${b.checkout} · ${b.numGuests} guests</div>
+        </div>
+        <span class="pill ${spc[b.status]||'pill-blue'}">${b.status}</span>
+        <div style="font-family:Fraunces,serif;font-size:14px;font-weight:600;color:var(--txt)">$${b.price.toLocaleString()}</div>
+      </div>`).join('');
+  }
+  detail.style.display = 'block';
+}
+function renderBookings(){
+  const list=document.getElementById('bookings-list');
+  let bs=[...cData.bookings];
+  if(bookFilter!=='all'&&bookFilter!=='calendar')bs=bs.filter(b=>b.status===bookFilter);
+  bs.sort((a,b)=>b.created-a.created);
+  if(!bs.length){list.innerHTML=`<div class="empty-state"><div class="es-i">📅</div><h3>No bookings</h3><button class="btn btn-pri" onclick="openModal('add-booking-modal')" style="margin-top:10px">Add Booking</button></div>`;return;}
+  const spc={confirmed:'pill-green',pending:'pill-amber',completed:'pill-blue',cancelled:'pill-red'};
+  list.innerHTML=bs.map(b=>`
+    <div class="row">
+      <div class="row-thumb ${b.propGradient||'pi1'}">${b.propEmoji||'🏠'}</div>
+      <div class="row-info"><div class="row-title">${b.propName} — ${b.guestName}</div><div class="row-sub">👤 ${b.numGuests} guests · ${b.nights}n · ${b.source}${b.leadType?` · <span style="background:var(--sand);border-radius:3px;padding:1px 5px;font-size:9px;color:var(--txt2)">${b.leadType.replace('_',' ')}</span>`:''}</div>${b.cleaningWindow?.windowLabel?`<div style="font-size:10px;margin-top:2px;color:${b.cleaningWindow.tight?'var(--terra)':'var(--sage)'}">${b.cleaningWindow.windowLabel}</div>`:''}</div>
+      <span class="pill ${spc[b.status]||'pill-blue'}">${b.status}</span>
+      ${b.photos?.length?`<button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;flex-shrink:0" onclick="event.stopPropagation();viewBookingPhotos('${b.id}')">📸 ${b.photos.length}</button>`:''}
+      <div style="text-align:right"><div class="row-price">$${b.price.toLocaleString()}</div><div class="row-date">${b.checkin||'TBD'} → ${b.checkout||'TBD'}</div></div>
+      <div style="display:flex;gap:4px;flex-shrink:0">
+        <button class="btn btn-ghost" style="font-size:10px;padding:4px 9px" onclick="event.stopPropagation();openEditBooking('${b.id}')">✏️ Edit</button>
+        <button class="btn btn-ghost" style="font-size:10px;padding:4px 9px;color:var(--terra)" onclick="event.stopPropagation();deleteBooking('${b.id}','${b.guestName}')">🗑</button>
+      </div>
+    </div>`).join('');
+}
+
+function deleteBooking(id, guestName) {
+  if(!confirm(`Delete booking for ${guestName}? This cannot be undone.`)) return;
+  cData.bookings = cData.bookings.filter(b=>b.id!==id);
+  saveUserData(cUid, cData);
+  toast(`Booking for ${guestName} deleted`);
+  renderAll();
+  if(bookFilter==='calendar') renderBookingCalendar();
+}
+
+function openEditBooking(id) {
+  const b = cData.bookings.find(x=>x.id===id);
+  if(!b) return;
+  // Populate dropdowns
+  const propSel = document.getElementById('mb-prop');
+  if(propSel) propSel.innerHTML = cData.properties.map(p=>`<option value="${p.id}" ${p.id===b.propId?'selected':''}>${p.emoji} ${p.name}</option>`).join('');
+  document.getElementById('mb-guest').value = b.guestName||'';
+  document.getElementById('mb-email').value = b.guestEmail||'';
+  document.getElementById('mb-cin').value = b.checkin||'';
+  document.getElementById('mb-cout').value = b.checkout||'';
+  document.getElementById('mb-nguests').value = b.numGuests||2;
+  document.getElementById('mb-price').value = b.price||0;
+  document.getElementById('mb-status').value = b.status||'confirmed';
+  document.getElementById('mb-source').value = b.source||'airbnb';
+  const mbNotes = document.getElementById('mb-notes');
+  if(mbNotes) mbNotes.value = b.notes||'';
+  // Change modal title and button to edit mode
+  const modal = document.querySelector('#add-booking-modal h2');
+  if(modal) modal.textContent = '✏️ Edit Booking';
+  const saveBtn = document.querySelector('#add-booking-modal .btn-pri');
+  if(saveBtn) { saveBtn.textContent = 'Save Changes'; saveBtn.onclick = ()=>saveEditBooking(id); }
+  document.getElementById('add-booking-modal').classList.add('open');
+}
+
+function saveEditBooking(id) {
+  const b = cData.bookings.find(x=>x.id===id);
+  if(!b) return;
+  const propId = document.getElementById('mb-prop').value;
+  const prop = cData.properties.find(p=>p.id===propId);
+  const cin = document.getElementById('mb-cin').value;
+  const cout = document.getElementById('mb-cout').value;
+  b.propId = propId;
+  b.propName = prop?.name||b.propName;
+  b.propEmoji = prop?.emoji||b.propEmoji;
+  b.propGradient = prop?.gradient||b.propGradient;
+  b.guestName = document.getElementById('mb-guest').value.trim()||b.guestName;
+  b.guestEmail = document.getElementById('mb-email').value;
+  b.checkin = cin;
+  b.checkout = cout;
+  b.nights = cin&&cout?Math.max(1,Math.round((new Date(cout)-new Date(cin))/86400000)):b.nights;
+  b.numGuests = parseInt(document.getElementById('mb-nguests').value)||b.numGuests;
+  b.price = moneyNonNeg(parseFloat(document.getElementById('mb-price').value)||b.price);
+  b.status = document.getElementById('mb-status').value;
+  b.source = document.getElementById('mb-source').value;
+  b.notes = document.getElementById('mb-notes')?.value||'';
+  saveUserData(cUid,cData);
+  closeModal('add-booking-modal');
+  // Reset modal back to add mode
+  const modal = document.querySelector('#add-booking-modal h2');
+  if(modal) modal.textContent = '📅 Add Booking';
+  const saveBtn = document.querySelector('#add-booking-modal .btn-pri');
+  if(saveBtn) { saveBtn.textContent = 'Add Booking'; saveBtn.onclick = addBooking; }
+  toast('Booking updated! ✓');
+  // Trigger review automation if marked complete
+  if(b.status==='completed') onBookingCompleted(b);
+  renderAll();
+  if(bookFilter==='calendar') renderBookingCalendar();
+}
+
+// ════════════════════════════════════════════
+//  MESSAGES + AI
+// ════════════════════════════════════════════
+function addConversation(){
+  const name=document.getElementById('mm-name').value.trim();
+  const msg=document.getElementById('mm-msg').value.trim();
+  if(!name||!msg){toast('Fill in name and message');return;}
+  const propId=document.getElementById('mm-prop').value;
+  const prop=cData.properties.find(p=>p.id===propId);
+  const bookingId=document.getElementById('mm-booking')?.value||'';
+  const booking=cData.bookings.find(b=>b.id===bookingId);
+  const cols=[['#F5E6D3','#C4693A'],['#D3E8E0','#4A7D50'],['#D3DCE8','#2E4460'],['#E8D3D3','#8B3A3A'],['#E8E3D3','#6B5A2E']];
+  const c=cols[cData.messages.length%cols.length];
+  const conv={id:'c_'+Date.now(),guestName:name,propId,propName:prop?.name||'',bookingId:bookingId||null,checkin:booking?.checkin||null,checkout:booking?.checkout||null,initials:name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2),avatarBg:c[0],avatarColor:c[1],messages:[{role:'guest',text:msg,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}],unread:true,created:Date.now()};
+  cData.messages.push(conv);saveUserData(cUid,cData);closeModal('add-message-modal');
+  document.getElementById('mm-name').value='';document.getElementById('mm-msg').value='';
+  toast('Conversation started!');renderMessages();updateBadges();
+  sendNotification('new_message', {
+    guestName: name,
+    propName: prop?.name||'your property',
+    message: msg
+  });
+}
+function renderMessages(){
+  if(!cData||!cData.messages){return;}
+  const list=document.getElementById('msg-conv-list');
+  if(!list){return;}
+  const convs=[...cData.messages].sort((a,b)=>b.created-a.created);
+  if(!convs.length){list.innerHTML=`<div class="empty-state" style="padding:24px 10px"><div class="es-i">💬</div><p style="font-size:12px">No conversations</p></div>`;return;}
+  list.innerHTML=convs.map(c=>{
+    const msgs=c.messages||[];
+    const last=msgs.length?msgs[msgs.length-1]:{text:''};
+    const raw=(last.text||'');
+    const prev=raw.length>44?raw.substring(0,44)+'…':raw;
+    return `<div class="msg-li${activeConvId===c.id?' active':''}" id="cli-${c.id}" onclick="openConv('${c.id}')"><div class="msg-av" style="background:${c.avatarBg};color:${c.avatarColor}">${c.initials||'?'}</div><div style="flex:1;min-width:0"><div class="msg-li-name" style="font-weight:${c.unread?'700':'500'}">${c.guestName||'Guest'}</div><div class="msg-li-prev">${prev}</div></div>${c.unread?`<div style="width:6px;height:6px;background:var(--terra);border-radius:50%;flex-shrink:0;margin-top:4px"></div>`:''}</div>`;
+  }).join('');
+}
+function openConv(id){
+  activeConvId=id;const c=cData.messages.find(m=>m.id===id);if(!c)return;
+  c.unread=false;saveUserData(cUid,cData);renderMessages();updateBadges();
+  const panel=document.getElementById('msg-detail-panel');
+  panel.innerHTML=`
+    <div class="msg-detail-hd">
+      <div class="msg-av" style="width:38px;height:38px;background:${c.avatarBg};color:${c.avatarColor};font-size:13px">${c.initials}</div>
+      <div style="flex:1"><div style="font-size:14px;font-weight:500;font-family:Fraunces,serif;color:var(--txt)">${c.guestName}</div><div style="font-size:11px;color:var(--txt3)">${c.propName||'No property'}${c.checkin?' · '+c.checkin+' → '+c.checkout:''}</div></div>
+      <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="openSMSModal('${id}')">📱 Send SMS</button>
+    </div>
+    <div class="chat-area" id="ca-${id}">
+      ${c.messages.map(m=>`<div style="display:flex;flex-direction:column;align-items:${m.role==='host'?'flex-end':'flex-start'}"><div class="bubble ${m.role}">${m.text}</div><div class="bubble-time" style="text-align:${m.role==='host'?'right':'left'};padding:0 3px">${m.role==='host'?'You':'Guest'} · ${m.time||''}</div></div>`).join('')}
+    </div>
+    <div class="msg-input-area">
+      <div class="ai-status" id="ai-st-${id}"></div>
+      <div class="ai-bar">
+        <button class="ai-btn" onclick="aiDraft('${id}','reply')">🤖 AI Reply</button>
+        <button class="ai-btn" onclick="aiDraft('${id}','checkin')">🔑 Check-in</button>
+        <button class="ai-btn" onclick="aiDraft('${id}','tips')">🍽️ Local Tips</button>
+        <button class="ai-btn" onclick="aiDraft('${id}','rules')">📋 Rules</button>
+      </div>
+      <div class="msg-row">
+        <textarea class="msg-ta" id="ta-${id}" placeholder="Type reply…" rows="2"></textarea>
+        <button class="btn btn-pri" onclick="sendMsg('${id}')">Send ↑</button>
+      </div>
+    </div>`;
+  const area=document.getElementById('ca-'+id);if(area)area.scrollTop=area.scrollHeight;
+}
+
+function openSMSModal(convId) {
+  const c = cData.messages.find(m=>m.id===convId);
+  if(!c) return;
+  const ta = document.getElementById('ta-'+convId);
+  const draft = ta?.value?.trim() || '';
+  // Create SMS modal dynamically
+  const existing = document.getElementById('sms-modal-dynamic');
+  if(existing) existing.remove();
+  const div = document.createElement('div');
+  div.id = 'sms-modal-dynamic';
+  div.className = 'modal-bg open';
+  div.innerHTML = `<div class="modal">
+    <h2>📱 Send SMS to ${c.guestName}</h2>
+    <div style="font-size:13px;color:var(--txt2);margin-bottom:14px;line-height:1.5">Send a text message directly to your guest's phone.</div>
+    <div class="fi"><label>Guest Phone Number</label><input id="sms-phone" type="tel" placeholder="+1 555 000 0000" value="${c.guestPhone||''}"></div>
+    <div class="fi"><label>Message</label><textarea id="sms-body" style="min-height:80px">${draft||'Hi '+c.guestName+'! '}</textarea></div>
+    <div style="font-size:11px;color:var(--txt3);margin-bottom:8px" id="sms-char-count">0 / 160 characters</div>
+    <div class="auth-err" id="sms-err"></div>
+    <div class="auth-err" id="sms-success" style="display:none;background:rgba(107,143,113,.15);border-color:var(--sage);color:var(--sage)"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="document.getElementById('sms-modal-dynamic').remove()">Cancel</button>
+      <button class="btn btn-pri" onclick="sendSMS('${convId}')">📱 Send SMS</button>
+    </div>
+  </div>`;
+  document.body.appendChild(div);
+  // Character counter
+  const bodyEl = document.getElementById('sms-body');
+  const countEl = document.getElementById('sms-char-count');
+  bodyEl.addEventListener('input', ()=>{
+    const len = bodyEl.value.length;
+    countEl.textContent = `${len} / 160 characters`;
+    countEl.style.color = len > 160 ? 'var(--terra)' : 'var(--txt3)';
+  });
+  bodyEl.dispatchEvent(new Event('input'));
+}
+
+async function sendSMS(convId) {
+  const c = cData.messages.find(m=>m.id===convId);
+  const phone = document.getElementById('sms-phone').value.trim();
+  const message = document.getElementById('sms-body').value.trim();
+  const errEl = document.getElementById('sms-err');
+  const sucEl = document.getElementById('sms-success');
+  const btn = document.querySelector('#sms-modal-dynamic .btn-pri');
+
+  if(!phone){if(errEl){errEl.textContent='Enter a phone number';errEl.style.display='block';}return;}
+  if(!message){if(errEl){errEl.textContent='Enter a message';errEl.style.display='block';}return;}
+
+  if(btn){btn.textContent='Sending…';btn.disabled=true;}
+  if(errEl) errEl.style.display='none';
+
+  try {
+    const res = await fetch('https://vdnyqwpznsysrvyvbqga.supabase.co/functions/v1/send-sms', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({ to: phone, message }),
+    });
+    const result = await res.json();
+    if(result.ok) {
+      // Save phone to conversation
+      if(c) { c.guestPhone = phone; saveUserData(cUid, cData); }
+      if(sucEl){sucEl.textContent=`✓ SMS sent to ${phone}!`;sucEl.style.display='block';}
+      if(btn){btn.textContent='Sent! ✓';btn.style.background='var(--sage)';}
+      setTimeout(()=>document.getElementById('sms-modal-dynamic')?.remove(), 2000);
+    } else {
+      const errMsg = result.data?.message || 'Failed to send SMS. Check the phone number.';
+      if(errEl){errEl.textContent=errMsg;errEl.style.display='block';}
+      if(btn){btn.textContent='📱 Send SMS';btn.disabled=false;}
+    }
+  } catch(e) {
+    if(errEl){errEl.textContent='Error: '+e.message;errEl.style.display='block';}
+    if(btn){btn.textContent='📱 Send SMS';btn.disabled=false;}
+  }
+}
+async function aiDraft(convId,type){
+  const c=cData.messages.find(m=>m.id===convId);if(!c)return;
+  const st=document.getElementById('ai-st-'+convId);const ta=document.getElementById('ta-'+convId);
+  document.querySelectorAll('.ai-btn').forEach(b=>b.classList.add('loading'));
+  st.innerHTML=`<div class="spinner"></div> Claude is drafting…`;
+  const lastGuest=[...c.messages].reverse().find(m=>m.role==='guest')?.text||'';
+  const prop=cData.properties.find(p=>p.id===c.propId);
+  const userName = cUser?.name || 'Your Host';
+  const prompts={
+    reply:`You are ${userName}, a warm Airbnb host. Guest ${c.guestName} at ${c.propName||'your property'} wrote: "${lastGuest}". Write a friendly, helpful 2-4 sentence reply. Sign off naturally.`,
+    checkin:`You are ${userName}. Write a warm check-in message for ${c.guestName} at ${prop?.name||'the property'}. Door code: ${prop?.doorCode||'[code]'}, WiFi: ${prop?.wifi||'[name]'} / ${prop?.wifiPw||'[pw]'}, Parking: ${prop?.parking||'see listing'}. Keep it under 5 sentences.`,
+    tips:`You are a friendly local Airbnb host named ${userName}. Recommend 2-3 local restaurants and 1-2 activities near ${prop?.name||'your property'} to ${c.guestName}. Sound like a local friend.`,
+    rules:`You are ${userName}. Write a friendly house rules reminder to ${c.guestName}: no smoking, no parties, quiet 10pm-8am. Keep it warm and brief.`
+  };
+  const fb={
+    reply:`Hi ${c.guestName}! Thanks for reaching out — happy to help! ${lastGuest.toLowerCase().includes('early')?'Early check-in around 1pm should work perfectly!':'Let me know how I can assist.'} Looking forward to hosting you! 😊`,
+    checkin:`Hi ${c.guestName}! Excited for your stay at ${prop?.name||'the property'}! 🔑 Door: ${prop?.doorCode||'[see confirmation]'} | WiFi: ${prop?.wifi||'[see welcome book]'} / ${prop?.wifiPw||''} | Parking: ${prop?.parking||'see listing'}. Check-in after 3pm, checkout by 11am. Message me anytime!`,
+    tips:`Hi ${c.guestName}! For food: 🍳 Morning Plate (amazing brunch nearby), 🍝 Nonna's Kitchen (best pasta in the area), ☕ Grounds & Grains (my daily coffee spot). For activities — the weekend farmers market on Main St is a must! Enjoy ✨`,
+    rules:`Hi ${c.guestName}! Quick friendly note — quiet hours after 10pm, no smoking indoors, and please keep guests to the listed count. Other than that, make yourself completely at home! 🏡`
+  };
+  try{
+    const res = await fetch('https://vdnyqwpznsysrvyvbqga.supabase.co/functions/v1/ai-draft',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbnlxd3B6bnN5c3J2eXZicWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NjM4NjUsImV4cCI6MjA5MDIzOTg2NX0.VxwNE_lMR2JV_70SVr9rio_UgfbKGnYFyeitkTuWYkM'
+      },
+      body:JSON.stringify({prompt:prompts[type]})
+    });
+    const data=await res.json();
+    if(data.error) throw new Error(data.error);
+    ta.value=data.text||fb[type];
+    st.innerHTML=`<span style="color:var(--sage)">✓ Ready — edit before sending</span>`;
+  } catch(e){
+    st.innerHTML=`<span style="color:var(--gold)">⚡ Demo draft</span>`;
+    ta.value=fb[type];
+  }
+  document.querySelectorAll('.ai-btn').forEach(b=>b.classList.remove('loading'));
+}
+function sendMsg(convId){
+  const ta=document.getElementById('ta-'+convId);const text=ta.value.trim();if(!text)return;
+  const c=cData.messages.find(m=>m.id===convId);if(!c)return;
+  c.messages.push({role:'host',text,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});
+  c.created=Date.now();ta.value='';document.getElementById('ai-st-'+convId).innerHTML='';
+  saveUserData(cUid,cData);openConv(convId);renderMessages();toast('Sent! ✓');
+}
+
