@@ -2,6 +2,16 @@
    Split from app.js · DO NOT edit app.js directly
 */
 
+
+// FIX #3: XSS protection — sh() is a short alias for sanitizeHTML()
+// Always use sh() when injecting user-entered text into innerHTML
+const sh = (s) => {
+  if (s == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+};
+
   if(!cData){toast('Session not ready');return;}
   if(!cData.bookings)cData.bookings=[];
   if(!cData.properties)cData.properties=[];
