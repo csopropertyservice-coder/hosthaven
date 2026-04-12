@@ -1,6 +1,5 @@
 /* CSO Property Services — js/auth.js
-   Lines 511–967 of original JS block
-   DO NOT edit inline in index.html — edit this file instead
+   ORIGINAL — no modifications from source
 */
 
 //  AUTH — Supabase powered
